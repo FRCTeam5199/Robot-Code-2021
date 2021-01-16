@@ -1,11 +1,11 @@
 package frc.robot;
 
-public class RobotMap{
+public class RobotMap {
     //public static final int [NAME] = [ID];
     //public static final int wristMotor = 5; <-- EXAMPLE
     public static final String GOAL_CAM_NAME = "GoalCam";
     public static final String BALL_CAM_NAME = "BallCam";
-    
+
     //Drive Motors
     public static final int DRIVE_LEADER_L = 1; //neo
     public static final int DRIVE_FOLLOWER_L1 = 2; //neo
@@ -31,27 +31,27 @@ public class RobotMap{
     //shooter motors
     public static final int shooterLeader = 7; //neo
     public static final int shooterFollower = 8;  //neo
-    */ 
+    */
     //turret
-    public static final int turretYaw = 33; //550
+    public static final int TURRET_YAW = 33; //550
     //climber
-    public static final int climberA = 8; //victor
-    public static final int climberB = 9; //victor
+    public static final int CLIMBER_A = 8; //victor
+    public static final int CLIMBER_B = 9; //victor
     //hopper
-    public static final int agitatorMotor = 10; //victor 
-    public static final int indexerMotor = 11; //victor
+    public static final int AGITATOR_MOTOR = 10; //victor
+    public static final int INDEXER_MOTOR = 11; //victor
     //intake
-    public static final int intakeMotor = 12; //victor
+    public static final int INTAKE_MOTOR = 12; //victor
 
-    public static final int pigeon = 22; //pigeon
-    public static final int pcm = 23; //pcm
+    public static final int PIGEON = 22; //pigeon
+    public static final int PCM = 23; //pcm
 
     //pneumatics
-    public static final int intakeOut = 4;
-    public static final int intakeIn = 5;
-    public static final int buddyUnlock = 0;
-    public static final int shifters = 6;
-    public static final int climberLockIn = 2;
-    public static final int climberLockOut = 3;
-   
+    public static final int INTAKE_OUT = 4;
+    public static final int INTAKE_IN = 5;
+    public static final int BUDDY_UNLOCK = 0;
+    public static final int SHIFTERS = 6;
+    public static final int CLIMBER_LOCK_IN = 2;
+    public static final int CLIMBER_LOCK_OUT = 3;
+
 }
