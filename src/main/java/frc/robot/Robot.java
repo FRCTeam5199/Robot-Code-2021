@@ -5,16 +5,23 @@ import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import frc.drive.*;
-//import frc.spinner.*;
-//import frc.shooter.*;
-//import frc.power.*;
-//import frc.climber.*;
+
+import frc.robot.RobotToggles;
+
+import frc.drive.*;
 
 public class Robot extends TimedRobot {
+    public DriveManager driver;
+
     @Override
     public void robotInit() {
-        
+        if (RobotToggles.ENABLE_DRIVE){
+            driver = new DriveManager();
+            driver.init();
+        }
+        if (RobotToggles.ENABLE_INTAKE){
+            //init intake
+        }
     }
 
     @Override
