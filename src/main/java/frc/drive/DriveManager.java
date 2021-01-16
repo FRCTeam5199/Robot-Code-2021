@@ -17,6 +17,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.InvertType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -44,7 +47,10 @@ import edu.wpi.first.networktables.*;
 
 import java.lang.Math;
 
+
 public class DriveManager {
+    private ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
+    private NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry();
     private PigeonIMU pigeon = new PigeonIMU(RobotMap.pigeon);
     // private Logger logger = new Logger("drive");
     // private Logger posLogger = new Logger("positions");
@@ -57,6 +63,10 @@ public class DriveManager {
     private XBoxController controller;
     private CANSparkMax leaderL, leaderR;
     private FollowerMotors followerL, followerR;
+
+    private TalonSRX leaderLTalon, leaderRTalon;
+    private TalonSRX followerLTalon1, followerLTalon2, followerRTalon1, followerRTalon2;
+
 
     private CANPIDController leftPID;
     private CANPIDController rightPID;
@@ -114,8 +124,7 @@ public class DriveManager {
         initPID();
         initMisc();
     }
-
-    public void updateTest(){
+    public void updateTeleop(){
         double turn = -controller.getStickRX();
         double drive;
         if(invert){
@@ -124,8 +133,23 @@ public class DriveManager {
         else{
             drive = controller.getStickLY();
         }
+        if(RobotToggles.DRIVE_USE_SPARKS){
         leaderL.set(0);
         leaderR.set(0);
+        drive(drive, turn);
+        } else {
+            driveTalon(drive, turn);
+            /*leaderLTalon.set(ControlMode.PercentOutput, drive);
+            leaderRTalon.set(ControlMode.PercentOutput, drive); */
+        }
+    }
+
+    public void updateTest(){
+
+    }
+
+    public void updateGeneric(){
+        
     }
 
 
@@ -158,12 +182,53 @@ public class DriveManager {
         }
     }
 
+    private void drive(double forward, double rotation){
+        drivePure(adjustedDrive(forward), adjustedRotation(rotation));
+    }
+
+    private void driveTalon(double forward, double rotation){
+        drivePure(adjustedDrive(forward), adjustedRotation(rotation));
+    }
+
+    private void drivePure(double FPS, double omega){
+        omega *= driveRotMult.getDouble(RobotNumbers.TURN_SCALE);
+        currentOmega = omega;
+        var chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
+        double leftVelocity = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
+        double rightVelocity = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
+        double mult = 3.8*2.16*RobotNumbers.DRIVE_SCALE;
+        if (RobotToggles.DRIVE_USE_SPARKS){
+            //System.out.println("FPS: "+leftVelocity+"  "+rightVelocity+" RPM: "+convertFPStoRPM(leftVelocity)+" "+convertFPStoRPM(rightVelocity));
+            leftPID.setReference(convertFPStoRPM(leftVelocity)*mult, ControlType.kVelocity);
+            rightPID.setReference(convertFPStoRPM(rightVelocity)*mult, ControlType.kVelocity);
+            //System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
+        } else {
+            //TODO find out how to control the falcon 500's
+            //double targetVelocity_UnitsPer100ms = leftYstick * 2000.0 * 2048.0 / 600.0;
+            //leaderLTalon.set(ControlMode.Velocity, convertFPStoRPM(leftVelocity)*mult);
+            //leaderRTalon.set(ControlMode.Velocity, convertFPStoRPM(rightVelocity)*mult);
+        }
+    }
+        
+    private double convertFPStoRPM(double FPS){
+        return FPS*(RobotNumbers.maxMotorSpeed/RobotNumbers.maxSpeed);
+    }
+
+    private double adjustedDrive(double input){
+        return input*RobotNumbers.maxSpeed;
+    }
+
+    private double adjustedRotation(double input){
+        return input*RobotNumbers.maxRotation;
+    }
+
     private void createDriveMotors() throws RuntimeException {
         try {
             if (RobotToggles.DRIVE_USE_SPARKS) {
                 leaderL = new CANSparkMax(RobotMap.DRIVE_LEADER_L, MotorType.kBrushless);
                 leaderR = new CANSparkMax(RobotMap.DRIVE_LEADER_R, MotorType.kBrushless);
-                if (RobotToggles.DRIVE_USE_6_WHEELS) {
+                if (RobotToggles.DRIVE_USE_6_MOTORS) {
                     followerL = new FollowerMotors(true).createFollowers(MotorType.kBrushless,
                             RobotMap.DRIVE_FOLLOWER_L1, RobotMap.DRIVE_FOLLOWER_L2);
                     followerR = new FollowerMotors(true).createFollowers(MotorType.kBrushless,
@@ -175,8 +240,32 @@ public class DriveManager {
                 leaderL.setInverted(true);
                 leaderR.setInverted(false);
             } else {
-                // TODO Implement Victor drive base motor system
-                throw new IllegalStateException("Non-Spark motors not implemented.");
+                leaderLTalon = new TalonSRX(RobotMap.DRIVE_LEADER_L);
+                leaderRTalon = new TalonSRX(RobotMap.DRIVE_LEADER_R);
+                followerLTalon1 = new TalonSRX(RobotMap.DRIVE_FOLLOWER_L1);
+                followerRTalon1 = new TalonSRX(RobotMap.DRIVE_FOLLOWER_R1);
+
+                followerLTalon1.follow(leaderLTalon);
+                followerRTalon1.follow(leaderRTalon);
+
+                leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
+                leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
+
+                followerRTalon1.setInverted(InvertType.FollowMaster);
+                followerLTalon1.setInverted(InvertType.FollowMaster);
+                if (RobotToggles.DRIVE_USE_6_MOTORS){
+                    followerLTalon2 = new TalonSRX(RobotMap.DRIVE_FOLLOWER_L2);
+                    followerRTalon2 = new TalonSRX(RobotMap.DRIVE_FOLLOWER_R2);
+
+                    followerLTalon2.follow(leaderLTalon);
+                    followerRTalon2.follow(leaderRTalon);
+
+                    followerRTalon2.setInverted(InvertType.FollowMaster);
+                    followerLTalon2.setInverted(InvertType.FollowMaster);
+                }
+
+                // TODO Implement Talon drive base motor system
+                //throw new IllegalStateException("Non-Spark motors not implemented.");
             }
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong creating Spark Max Motors in the drive base.");
