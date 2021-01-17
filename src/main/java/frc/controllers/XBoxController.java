@@ -1,11 +1,11 @@
 package frc.controllers;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.RobotNumbers;
 
 public class XBoxController {
-    private final Joystick stick;
+    private Joystick stick;
     private boolean triggerFlag = false;
 
     public XBoxController(int n) {
@@ -73,11 +73,11 @@ public class XBoxController {
     }
 
     public void setTriggerSensitivity(double sens) {
-        RobotNumbers.TRIGGER_SENSITIVITY = sens;
+        RobotNumbers.triggerSensitivity = sens;
     }
 
     public boolean getRTriggerPressed() {
-        return getRTrigger() > RobotNumbers.TRIGGER_SENSITIVITY;
+        return getRTrigger() > RobotNumbers.triggerSensitivity;
     }
 
     public boolean getRTriggerMomentary() {
@@ -94,7 +94,7 @@ public class XBoxController {
     }
 
     public boolean getLTriggerPressed() {
-        return getRTrigger() > RobotNumbers.TRIGGER_SENSITIVITY;
+        return getRTrigger() > RobotNumbers.triggerSensitivity;
     }
 
     public boolean getLTriggerMomentary() {

@@ -1,28 +1,56 @@
 package frc.drive;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.util.Units;
-import frc.controllers.XBoxController;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 
+import frc.controllers.XBoxController;
+
+import java.io.IOException;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax.FaultID;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.ControlType;
+
+import com.ctre.phoenix.sensors.PigeonIMU;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.controller.PIDController;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+
+//import frc.util.Logger;
+
+//import frc.vision.BallChameleon;
+
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.networktables.*;
+
+import java.lang.Math;
+
 public class DriveManager {
-    private final PigeonIMU pigeon = new PigeonIMU(RobotMap.PIGEON);
+    private PigeonIMU pigeon = new PigeonIMU(RobotMap.pigeon);
     // private Logger logger = new Logger("drive");
     // private Logger posLogger = new Logger("positions");
     // private Permalogger odo = new Permalogger("distance");
     // wheelbase 27"
-    private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
+    private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
     DifferentialDriveOdometry odometer;
     // private BallChameleon chameleon = new BallChameleon();
 
@@ -54,7 +82,7 @@ public class DriveManager {
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
 
-    private final double feetDriven = 0;
+    private double feetDriven = 0;
 
     // private ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     // private NetworkTableEntry driveP = tab2.add("P",
@@ -78,7 +106,7 @@ public class DriveManager {
     /**
      * Initialize the Driver object.
      */
-    public void init() {
+    public void init(){
         autoStage = 0;
         autoComplete = false;
         createDriveMotors();
@@ -87,12 +115,13 @@ public class DriveManager {
         initMisc();
     }
 
-    public void updateTest() {
+    public void updateTest(){
         double turn = -controller.getStickRX();
         double drive;
-        if (invert) {
+        if(invert){
             drive = -controller.getStickLY();
-        } else {
+        }
+        else{
             drive = controller.getStickLY();
         }
         leaderL.set(0);
@@ -100,7 +129,7 @@ public class DriveManager {
     }
 
 
-    private void initMisc() throws RuntimeException {
+    private void initMisc() throws RuntimeException{
         try {
             controller = new XBoxController(0);
         } catch (Exception e) {
@@ -112,7 +141,7 @@ public class DriveManager {
         try {
             leftPID = leaderL.getPIDController();
             rightPID = leaderR.getPIDController();
-            setPID(RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D, RobotNumbers.DRIVEBASE_F);
+            setPID(RobotNumbers.drivebaseP, RobotNumbers.drivebaseI, RobotNumbers.drivebaseD, RobotNumbers.drivebaseF);
         } catch (Exception e) {
             throw new RuntimeException("Pigeon has caused some problems during initialization.");
         }
@@ -135,8 +164,10 @@ public class DriveManager {
                 leaderL = new CANSparkMax(RobotMap.DRIVE_LEADER_L, MotorType.kBrushless);
                 leaderR = new CANSparkMax(RobotMap.DRIVE_LEADER_R, MotorType.kBrushless);
                 if (RobotToggles.DRIVE_USE_6_WHEELS) {
-                    followerL = new FollowerMotors(true).createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWER_L1, RobotMap.DRIVE_FOLLOWER_L2);
-                    followerR = new FollowerMotors(true).createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWER_R1, RobotMap.DRIVE_FOLLOWER_R2);
+                    followerL = new FollowerMotors(true).createFollowers(MotorType.kBrushless,
+                            RobotMap.DRIVE_FOLLOWER_L1, RobotMap.DRIVE_FOLLOWER_L2);
+                    followerR = new FollowerMotors(true).createFollowers(MotorType.kBrushless,
+                            RobotMap.DRIVE_FOLLOWER_R1, RobotMap.DRIVE_FOLLOWER_R2);
                 }
 
                 followerL.follow(leaderL);
@@ -153,8 +184,8 @@ public class DriveManager {
     }
 
     public void drivePID(double left, double right) {
-        leftPID.setReference(left * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
-        rightPID.setReference(right * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
+        leftPID.setReference(left * RobotNumbers.maxMotorSpeed, ControlType.kVelocity);
+        rightPID.setReference(right * RobotNumbers.maxMotorSpeed, ControlType.kVelocity);
     }
 
     private void setPID(double P, double I, double D, double F) {
@@ -191,7 +222,7 @@ public class DriveManager {
 
     // Any Operation that you do on one motor, implement in here so that a seamless
     // transition can occur
-    public static class FollowerMotors {
+    public class FollowerMotors {
         private final boolean USE_TWO_MOTORS;
 
         private final CANSparkMax[] motors;
@@ -205,9 +236,8 @@ public class DriveManager {
         // if using two followers, the first int is the first motor id, and the second
         // the second
         public FollowerMotors createFollowers(MotorType motorType, int... ids) {
-            if ((this.USE_TWO_MOTORS) == (ids.length == 2)) {
+            if ((this.USE_TWO_MOTORS) == (ids.length == 2))
                 throw new RuntimeException("I need to have an equal number of motor IDs as motors in use");
-            }
             for (int i = 0; i < ids.length; i++) {
                 this.motors[i] = new CANSparkMax(ids[i], motorType);
             }
@@ -215,9 +245,8 @@ public class DriveManager {
         }
 
         public void follow(CANSparkMax leader) {
-            for (CANSparkMax follower : this.motors) {
+            for (CANSparkMax follower : this.motors)
                 follower.follow(leader);
-            }
         }
     }
 }
