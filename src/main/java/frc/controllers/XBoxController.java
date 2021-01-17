@@ -1,11 +1,11 @@
 package frc.controllers;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.RobotNumbers;
 
 public class XBoxController {
-    private Joystick stick;
+    private final Joystick stick;
     private boolean triggerFlag = false;
 
     public XBoxController(int n) {
