@@ -2,7 +2,13 @@ package frc.robot;
 
 public class RobotToggles {
     //Subsystems
+    /**
+    *  Determines if the drivetrain will do the do
+    */
     public static final boolean ENABLE_DRIVE = true;
+    /**
+     *  Determines if the intake will do the do
+     */
     public static final boolean ENABLE_INTAKE = false;
     public static final boolean ENABLE_CLIMBER = false;
     public static final boolean ENABLE_SHOOTER = false;
@@ -16,4 +22,7 @@ public class RobotToggles {
 
     //Misc
     public static final boolean ENABLE_IMU = false;
+
+    //SHOOTER
+    public static final boolean SHOOTER_USE_SPARKS = false;
 }

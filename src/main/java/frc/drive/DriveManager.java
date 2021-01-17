@@ -75,8 +75,6 @@ public class DriveManager {
     // RobotNumbers.drivebaseF).getEntry();
     // private NetworkTableEntry driveRotMult = tab2.add("Rotation Factor",
     // RobotNumbers.turnScale).getEntry();
-    // private DoubleSolenoid solenoidShifterL, solenoidShifterR;
-    // private Solenoid shifter;
     // Pigeon IMU
     private double startYaw;
 
@@ -289,9 +287,17 @@ public class DriveManager {
         // I assume that both motors are of the same type
         // if using two followers, the first int is the first motor id, and the second
         // the second
-        public SparkFollowerMotors createFollowers(MotorType motorType, int... ids) {
+
+        /**
+         * Creates Spark Motor followers based on
+         * @param motorType Brushless or brushed motor
+         * @param ids The id's of the motors to be used. Must match RobotToggles.DRIVE_USE_6_MOTORS
+         * @throws IllegalArgumentException if RobotToggles.DRIVE_USE_6_MOTORS motor count != #of id's passed in
+         * @return this object (factory style construction)
+         */
+        public SparkFollowerMotors createFollowers(MotorType motorType, int... ids) throws IllegalArgumentException{
             if ((this.USE_TWO_MOTORS) == (ids.length == 2)) {
-                throw new RuntimeException("I need to have an equal number of motor IDs as motors in use");
+                throw new IllegalArgumentException("I need to have an equal number of motor IDs as motors in use");
             }
             for (int i = 0; i < ids.length; i++) {
                 this.motors[i] = new CANSparkMax(ids[i], motorType);
