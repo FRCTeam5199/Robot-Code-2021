@@ -11,16 +11,19 @@ import java.io.IOException;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax.FaultID;
-import com.revrobotics.CANSparkMax.IdleMode;
+//import com.revrobotics.CANSparkMax.FaultID;
+//import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.InvertType;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+//import edu.wpi.first.wpilibj.DoubleSolenoid;
+//import edu.wpi.first.wpilibj.Solenoid;
+//import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.controller.PIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,6 +32,9 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -42,14 +48,20 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.*;
 
-import java.lang.Math;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
+//import java.lang.Math;
+
 
 public class DriveManager {
+    private ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
+    private NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry();
     private PigeonIMU pigeon = new PigeonIMU(RobotMap.pigeon);
     // private Logger logger = new Logger("drive");
     // private Logger posLogger = new Logger("positions");
     // private Permalogger odo = new Permalogger("distance");
     // wheelbase 27"
+
     private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
     DifferentialDriveOdometry odometer;
     // private BallChameleon chameleon = new BallChameleon();
@@ -58,8 +70,17 @@ public class DriveManager {
     private CANSparkMax leaderL, leaderR;
     private FollowerMotors followerL, followerR;
 
+    private WPI_TalonFX leaderLTalon, leaderRTalon;
+    private WPI_TalonFX followerLTalon1, followerLTalon2, followerRTalon1, followerRTalon2;
+    SpeedControllerGroup talonLeft = new SpeedControllerGroup(leaderLTalon, followerLTalon1);
+    SpeedControllerGroup talonRight = new SpeedControllerGroup(leaderRTalon, followerRTalon1);
+    DifferentialDrive differentialDrive = new DifferentialDrive(talonLeft, talonRight);
+
+
+
     private CANPIDController leftPID;
     private CANPIDController rightPID;
+    
 
     // private double targetHeading;
 
@@ -69,20 +90,20 @@ public class DriveManager {
     public double currentOmega;
 
     // private boolean chaseBall;
-    private boolean pointBall;
+    //private boolean pointBall;
 
     private boolean invert;
 
     public int autoStage = 0;
     public boolean autoComplete = false;
-    private double relLeft;
-    private double relRight;
+    //private double relLeft;
+    //private double relRight;
 
     public Pose2d robotPose;
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
 
-    private double feetDriven = 0;
+    //private double feetDriven = 0;
 
     // private ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     // private NetworkTableEntry driveP = tab2.add("P",
@@ -106,6 +127,8 @@ public class DriveManager {
     /**
      * Initialize the Driver object.
      */
+
+     
     public void init(){
         autoStage = 0;
         autoComplete = false;
@@ -114,8 +137,7 @@ public class DriveManager {
         initPID();
         initMisc();
     }
-
-    public void updateTest(){
+    public void updateTeleop(){
         double turn = -controller.getStickRX();
         double drive;
         if(invert){
@@ -124,8 +146,23 @@ public class DriveManager {
         else{
             drive = controller.getStickLY();
         }
+        if(RobotToggles.DRIVE_USE_SPARKS){
         leaderL.set(0);
         leaderR.set(0);
+        drive(drive, turn);
+        } else {
+            driveTalon(drive, turn);
+            /*leaderLTalon.set(ControlMode.PercentOutput, drive);
+            leaderRTalon.set(ControlMode.PercentOutput, drive); */
+        }
+    }
+
+    public void updateTest(){
+
+    }
+
+    public void updateGeneric(){
+        
     }
 
 
@@ -139,11 +176,15 @@ public class DriveManager {
 
     private void initPID() throws RuntimeException {
         try {
-            leftPID = leaderL.getPIDController();
-            rightPID = leaderR.getPIDController();
-            setPID(RobotNumbers.drivebaseP, RobotNumbers.drivebaseI, RobotNumbers.drivebaseD, RobotNumbers.drivebaseF);
+            if (RobotToggles.DRIVE_USE_SPARKS) {
+                leftPID = leaderL.getPIDController();
+                rightPID = leaderR.getPIDController();
+                setPID(RobotNumbers.drivebaseP, RobotNumbers.drivebaseI, RobotNumbers.drivebaseD, RobotNumbers.drivebaseF);
+            } else {
+                
+            }
         } catch (Exception e) {
-            throw new RuntimeException("Pigeon has caused some problems during initialization.");
+            throw new RuntimeException("PID Init errored during initialization.");
         }
     }
 
@@ -158,12 +199,56 @@ public class DriveManager {
         }
     }
 
+    private void drive(double forward, double rotation){
+        drivePure(adjustedDrive(forward), adjustedRotation(rotation));
+    }
+
+    
+    private void driveTalon(double forward, double rotation){
+        differentialDrive.arcadeDrive(forward, rotation);
+        //drivePure(adjustedDrive(forward), adjustedRotation(rotation));
+    }
+
+    private void drivePure(double FPS, double omega){
+        omega *= driveRotMult.getDouble(RobotNumbers.TURN_SCALE);
+        currentOmega = omega;
+        var chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
+        double leftVelocity = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
+        double rightVelocity = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
+        double mult = 3.8*2.16*RobotNumbers.DRIVE_SCALE;
+        if (RobotToggles.DRIVE_USE_SPARKS){
+            //System.out.println("FPS: "+leftVelocity+"  "+rightVelocity+" RPM: "+convertFPStoRPM(leftVelocity)+" "+convertFPStoRPM(rightVelocity));
+            leftPID.setReference(convertFPStoRPM(leftVelocity)*mult, ControlType.kVelocity);
+            rightPID.setReference(convertFPStoRPM(rightVelocity)*mult, ControlType.kVelocity);
+            //System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
+        } else {
+            //TODO change to closed loop system
+
+            //double targetVelocity_UnitsPer100ms = leftYstick * 2000.0 * 2048.0 / 600.0;
+            //leaderLTalon.set(ControlMode.Velocity, convertFPStoRPM(leftVelocity)*mult);
+            //leaderRTalon.set(ControlMode.Velocity, convertFPStoRPM(rightVelocity)*mult);
+        }
+    }
+        
+    private double convertFPStoRPM(double FPS){
+        return FPS*(RobotNumbers.maxMotorSpeed/RobotNumbers.maxSpeed);
+    }
+
+    private double adjustedDrive(double input){
+        return input*RobotNumbers.maxSpeed;
+    }
+
+    private double adjustedRotation(double input){
+        return input*RobotNumbers.maxRotation;
+    }
+
     private void createDriveMotors() throws RuntimeException {
         try {
             if (RobotToggles.DRIVE_USE_SPARKS) {
                 leaderL = new CANSparkMax(RobotMap.DRIVE_LEADER_L, MotorType.kBrushless);
                 leaderR = new CANSparkMax(RobotMap.DRIVE_LEADER_R, MotorType.kBrushless);
-                if (RobotToggles.DRIVE_USE_6_WHEELS) {
+                if (RobotToggles.DRIVE_USE_6_MOTORS) {
                     followerL = new FollowerMotors(true).createFollowers(MotorType.kBrushless,
                             RobotMap.DRIVE_FOLLOWER_L1, RobotMap.DRIVE_FOLLOWER_L2);
                     followerR = new FollowerMotors(true).createFollowers(MotorType.kBrushless,
@@ -175,31 +260,62 @@ public class DriveManager {
                 leaderL.setInverted(true);
                 leaderR.setInverted(false);
             } else {
-                // TODO Implement Victor drive base motor system
-                throw new IllegalStateException("Non-Spark motors not implemented.");
+                leaderLTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_L);
+                leaderRTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_R);
+                followerLTalon1 = new WPI_TalonFX(RobotMap.DRIVE_FOLLOWER_L1);
+                followerRTalon1 = new WPI_TalonFX(RobotMap.DRIVE_FOLLOWER_R1);
+
+
+
+                followerLTalon1.follow(leaderLTalon);
+                followerRTalon1.follow(leaderRTalon);
+
+                leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
+                leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
+
+                followerRTalon1.setInverted(InvertType.FollowMaster);
+                followerLTalon1.setInverted(InvertType.FollowMaster);
+
+                if (RobotToggles.DRIVE_USE_6_MOTORS){
+                    followerLTalon2 = new WPI_TalonFX(RobotMap.DRIVE_FOLLOWER_L2);
+                    followerRTalon2 = new WPI_TalonFX(RobotMap.DRIVE_FOLLOWER_R2);
+
+                    followerLTalon2.follow(leaderLTalon);
+                    followerRTalon2.follow(leaderRTalon);
+
+                    followerRTalon2.setInverted(InvertType.FollowMaster);
+                    followerLTalon2.setInverted(InvertType.FollowMaster);
+                }
+
+                // TODO Implement Talon drive base motor system
+                //throw new IllegalStateException("Non-Spark motors not implemented.");
             }
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong creating Spark Max Motors in the drive base.");
         }
     }
 
-    public void drivePID(double left, double right) {
+    public void drivePIDSparks(double left, double right) {
         leftPID.setReference(left * RobotNumbers.maxMotorSpeed, ControlType.kVelocity);
         rightPID.setReference(right * RobotNumbers.maxMotorSpeed, ControlType.kVelocity);
     }
 
     private void setPID(double P, double I, double D, double F) {
-        leftPID.setP(P);
-        leftPID.setI(I);
-        leftPID.setD(D);
-        leftPID.setFF(F);
-        rightPID.setP(P);
-        rightPID.setI(I);
-        rightPID.setD(D);
-        rightPID.setFF(F);
+        if (RobotToggles.DRIVE_USE_SPARKS){
+            leftPID.setP(P);
+            leftPID.setI(I);
+            leftPID.setD(D);
+            leftPID.setFF(F);
+            rightPID.setP(P);
+            rightPID.setI(I);
+            rightPID.setD(D);
+            rightPID.setFF(F);
 
-        leftPID.setOutputRange(-1, 1);
-        rightPID.setOutputRange(-1, 1);
+            leftPID.setOutputRange(-1, 1);
+            rightPID.setOutputRange(-1, 1);
+        } else {
+
+        }
     }
 
     // Pigeon IMU

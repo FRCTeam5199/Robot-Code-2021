@@ -11,4 +11,6 @@ public class RobotNumbers {
     public static final double wheelDiameter = 6; //update: now it's used once
     public static final double maxMotorSpeed = 5000; //theoretical max motor speed
     public static final double XBOX_CONTROLLER_DEADZONE = 0.07;
+    public static final double TURN_SCALE = 0.7;
+    public static final double DRIVE_SCALE = 0;
 }
