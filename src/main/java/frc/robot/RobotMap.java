@@ -8,12 +8,10 @@ public class RobotMap {
 
     //Drive Motors
     public static final int DRIVE_LEADER_L = 1; //talon
-    public static final int DRIVE_FOLLOWER_L1 = 2; //talon
-    public static final int DRIVE_FOLLOWER_L2 = 3; //NONE
+    public static final int[] DRIVE_FOLLOWERS_L = {2, 3}; //talon
 
     public static final int DRIVE_LEADER_R = 4; //talon
-    public static final int DRIVE_FOLLOWER_R1 = 5; //talon
-    public static final int DRIVE_FOLLOWER_R2 = 6; //NONE
+    public static final int[] DRIVE_FOLLOWERS_R = {5, 6}; //talon
 
     //Shooter Motors
     public static final int SHOOTER_LEADER = 7; //talon
