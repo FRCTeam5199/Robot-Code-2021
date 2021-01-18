@@ -10,7 +10,6 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         if (RobotToggles.ENABLE_DRIVE) {
             driver = new DriveManager();
-            driver.init();
         }
         if (RobotToggles.ENABLE_INTAKE) {
             //init intake
@@ -35,6 +34,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        if (RobotToggles.ENABLE_DRIVE) {
+            driver.updateTeleop();
+        }
     }
 
     @Override

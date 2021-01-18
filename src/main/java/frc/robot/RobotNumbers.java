@@ -2,7 +2,7 @@ package frc.robot;
 
 public class RobotNumbers {
     public static double triggerSensitivity = 0.25;
-    public static int XBOX_CONTROLLER_SLOT = 1;
+    public static int XBOX_CONTROLLER_SLOT = 0;
     public static int FLIGHT_STICK_SLOT = 2;
     public static int BUTTON_PANEL_SLOT = 3;
 
@@ -21,7 +21,7 @@ public class RobotNumbers {
     public static final double XBOX_CONTROLLER_DEADZONE = 0.07;
 
     public static final double TURN_SCALE = 0.7;
-    public static final double DRIVE_SCALE = 0;
+    public static final double DRIVE_SCALE = 1;
 
     public static final double SHOOTER_P = 0.00035;
     public static final double SHOOTER_I = 0;

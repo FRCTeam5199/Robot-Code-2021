@@ -60,7 +60,7 @@ public class DriveManager {
     //private double relRight;
     private CANPIDController leftPID;
     private CANPIDController rightPID;
-    private boolean invert;
+    private boolean invert = false;
 
     //private double feetDriven = 0;
 
@@ -108,6 +108,7 @@ public class DriveManager {
 
                 followerL.follow(leaderL);
                 followerR.follow(leaderR);
+
                 leaderL.setInverted(true);
                 leaderR.setInverted(false);
             } else {
@@ -126,7 +127,7 @@ public class DriveManager {
                 followerLTalon.setInverted(InvertType.FollowMaster);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Something went wrong creating Drivetrain Motors in the drive base.");
+            throw new RuntimeException("Something went wrong creating Drivetrain Motors in the drive base. ");
         }
     }
 
@@ -236,7 +237,7 @@ public class DriveManager {
             DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
             double leftVelocity = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
             double rightVelocity = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
-            //System.out.println("FPS: "+leftVelocity+"  "+rightVelocity+" RPM: "+convertFPStoRPM(leftVelocity)+" "+convertFPStoRPM(rightVelocity));
+            System.out.println("FPS: "+leftVelocity+"  "+rightVelocity+" RPM: "+convertFPStoRPM(leftVelocity)+" "+convertFPStoRPM(rightVelocity));
             leftPID.setReference(convertFPStoRPM(leftVelocity) * mult, ControlType.kVelocity);
             rightPID.setReference(convertFPStoRPM(rightVelocity) * mult, ControlType.kVelocity);
             //System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
@@ -281,7 +282,7 @@ public class DriveManager {
 
         public SparkFollowerMotors() {
             this.USE_TWO_MOTORS = RobotToggles.DRIVE_USE_6_MOTORS;
-            this.motors = new CANSparkMax[2];
+            this.motors = new CANSparkMax[USE_TWO_MOTORS ? 2 : 1];
         }
 
         // I assume that both motors are of the same type
@@ -296,7 +297,7 @@ public class DriveManager {
          * @return this object (factory style construction)
          */
         public SparkFollowerMotors createFollowers(MotorType motorType, int... ids) throws IllegalArgumentException{
-            if ((this.USE_TWO_MOTORS) == (ids.length == 2)) {
+            if ((this.USE_TWO_MOTORS) != (ids.length == 2)) {
                 throw new IllegalArgumentException("I need to have an equal number of motor IDs as motors in use");
             }
             for (int i = 0; i < ids.length; i++) {
@@ -319,14 +320,14 @@ public class DriveManager {
 
         public TalonFollowerMotors() {
             this.USE_TWO_MOTORS = RobotToggles.DRIVE_USE_6_MOTORS;
-            this.motors = new WPI_TalonFX[2];
+            this.motors = new WPI_TalonFX[USE_TWO_MOTORS ? 2 : 1];
         }
 
         // I assume that both motors are of the same type
         // if using two followers, the first int is the first motor id, and the second
         // the second
         public TalonFollowerMotors createFollowers(int... ids) {
-            if ((this.USE_TWO_MOTORS) == (ids.length == 2)) {
+            if ((this.USE_TWO_MOTORS) != (ids.length == 2)) {
                 throw new RuntimeException("I need to have an equal number of motor IDs as motors in use");
             }
             for (int i = 0; i < ids.length; i++) {
