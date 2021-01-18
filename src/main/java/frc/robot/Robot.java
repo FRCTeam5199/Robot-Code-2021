@@ -6,6 +6,9 @@ import frc.drive.DriveManager;
 public class Robot extends TimedRobot {
     public DriveManager driver;
 
+    /**
+     * Init everything
+     */
     @Override
     public void robotInit() {
         if (RobotToggles.ENABLE_DRIVE) {
