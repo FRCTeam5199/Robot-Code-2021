@@ -1,0 +1,1 @@
+You need to run the bat as administrator since drive station has to run as administrator. The shortcut will auto prompt for administrator so put it on your desktop or next to the driver station shortcut.

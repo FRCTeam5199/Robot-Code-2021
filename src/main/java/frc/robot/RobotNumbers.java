@@ -3,8 +3,8 @@ package frc.robot;
 public class RobotNumbers {
     public static double triggerSensitivity = 0.25;
     public static int XBOX_CONTROLLER_SLOT = 0;
-    public static int FLIGHT_STICK_SLOT = 2;
-    public static int BUTTON_PANEL_SLOT = 3;
+    public static int FLIGHT_STICK_SLOT = 1;
+    public static int BUTTON_PANEL_SLOT = 2;
 
     public static final double DRIVEBASE_P = 0;
     public static final double DRIVEBASE_I = 0;

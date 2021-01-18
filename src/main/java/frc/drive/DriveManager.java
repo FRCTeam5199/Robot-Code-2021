@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -103,7 +104,6 @@ public class DriveManager {
 
             followerL = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_L);
             followerR = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_R);
-
             try {
                 followerL.follow(leaderL);
                 followerR.follow(leaderR);
@@ -117,6 +117,8 @@ public class DriveManager {
             } catch (Exception e) {
                 throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
             }
+
+            setAllMotorCurrentLimits(50);
         } else {
             leaderLTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_L);
             leaderRTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_R);
@@ -126,15 +128,20 @@ public class DriveManager {
             followerLTalon.follow(leaderLTalon);
             followerRTalon.follow(leaderRTalon);
 
-            leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
-            leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
+            try {
+                leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
+                leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
+            } catch (Exception e) {
+                throw new InitializationFailureException("An error has occured linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
+            }
 
-            followerRTalon.setInverted(InvertType.FollowMaster);
-            followerLTalon.setInverted(InvertType.FollowMaster);
+            try {
+                followerRTalon.setInverted(InvertType.FollowMaster);
+                followerLTalon.setInverted(InvertType.FollowMaster);
+            } catch (Exception e) {
+                throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
+            }
         }
-        /*} catch (Exception e) {
-            throw new RuntimeException("Something went wrong creating Drivetrain Motors in the drive base. ");
-        }*/
     }
 
     private void initIMU() throws InitializationFailureException {
@@ -160,7 +167,6 @@ public class DriveManager {
             followerLTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
             followerRTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
         }
-
     }
 
     private void initMisc() {
@@ -195,7 +201,7 @@ public class DriveManager {
         }
     }
 
-    private static void configureTalon(WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD){
+    private static void configureTalon(WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
         int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
 
         motor.config_kF(idx, kF, timeout);
@@ -268,6 +274,13 @@ public class DriveManager {
         rightPID.setReference(right * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
     }
 
+    public void setAllMotorCurrentLimits(int limit) {
+        leaderL.setSmartCurrentLimit(limit);
+        leaderR.setSmartCurrentLimit(limit);
+        followerL.setCurrentLimit(limit);
+        followerR.setCurrentLimit(limit);
+    }
+
     // Any Operation that you do on one motor, implement in here so that a seamless
     // transition can occur
     public static class SparkFollowerMotors {
@@ -305,6 +318,20 @@ public class DriveManager {
         public void follow(CANSparkMax leader) {
             for (CANSparkMax follower : this.motors) {
                 follower.follow(leader);
+            }
+        }
+
+        public void brake(boolean brake) {
+            for (CANSparkMax follower : this.motors) {
+                if (brake) {
+                    follower.setIdleMode(IdleMode.kCoast);
+                }
+            }
+        }
+
+        public void setCurrentLimit(int limit) {
+            for (CANSparkMax follower : this.motors) {
+                follower.setSmartCurrentLimit(limit);
             }
         }
     }
@@ -350,4 +377,5 @@ public class DriveManager {
             }
         }
     }
+
 }
