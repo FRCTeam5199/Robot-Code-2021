@@ -160,7 +160,7 @@ public class DriveManager {
 
     private void initMisc() throws RuntimeException {
         try {
-            controller = new XBoxController(0);
+            controller = new XBoxController(RobotNumbers.XBOX_CONTROLLER_SLOT);
         } catch (Exception e) {
             throw new RuntimeException("Xbox controller errored during initialization. You're probably screwed.");
         }
