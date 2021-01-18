@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Units;
+import frc.controllers.ControllerEnums.XboxAxes;
 import frc.controllers.XBoxController;
 import frc.misc.InitializationFailureException;
 import frc.robot.RobotMap;
@@ -33,25 +34,23 @@ public class DriveManager {
     // wheelbase 27"
 
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
+    private final boolean invert = false;
     public double[] ypr = new double[3];
     // private BallChameleon chameleon = new BallChameleon();
     public double[] startypr = new double[3];
     public double currentOmega;
     public int autoStage = 0;
-    public boolean autoComplete = false;
     //public Pose2d robotPose;
     /*SpeedControllerGroup talonLeft = new SpeedControllerGroup(leaderLTalon, followerLTalon1);
     SpeedControllerGroup talonRight = new SpeedControllerGroup(leaderRTalon, followerRTalon1);
     DifferentialDrive differentialDrive = new DifferentialDrive(talonLeft, talonRight);*/
     //public Translation2d robotTranslation;
     //public Rotation2d robotRotation;
-
-
+    public boolean autoComplete = false;
     // private double targetHeading;
     //DifferentialDriveOdometry odometer;
     private XBoxController controller;
     private CANSparkMax leaderL, leaderR;
-
     // private boolean chaseBall;
     //private boolean pointBall;
     private SparkFollowerMotors followerL, followerR;
@@ -62,10 +61,8 @@ public class DriveManager {
     //private double relRight;
     private CANPIDController leftPID;
     private CANPIDController rightPID;
-    private boolean invert = false;
 
     //private double feetDriven = 0;
-
     // private ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     // private NetworkTableEntry driveP = tab2.add("P",
     // RobotNumbers.drivebaseP).getEntry();
@@ -80,16 +77,42 @@ public class DriveManager {
     // Pigeon IMU
     private double startYaw;
 
-    public DriveManager() throws RuntimeException, IllegalArgumentException {
+    public DriveManager() throws RuntimeException {
         init();
         // headControl = new PIDController(Kp, Ki, Kd);
     }
 
+    private static void configureTalon(WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
+        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
+
+        motor.config_kF(idx, kF, timeout);
+        motor.config_kF(idx, kP, timeout);
+        motor.config_kI(idx, kI, timeout);
+        motor.config_kD(idx, kD, timeout);
+    }
+
+    private static double adjustedDrive(double input) {
+        return input * RobotNumbers.MAX_SPEED;
+    }
+
+    private static double adjustedRotation(double input) {
+        return input * RobotNumbers.MAX_ROTATION;
+    }
+
+    private static double convertFPStoRPM(double FPS) {
+        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
+    }
+
+    private static double getTargetVelocity(double FPS) {
+        return FPS * convertFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
+    }
+
     /**
-     * Initialize the Driver object.
+     * Initialize the driver
+     *
+     * @throws IllegalArgumentException       When IDs for follower motors are too few or too many
+     * @throws InitializationFailureException When something fails to init properly
      */
-
-
     public void init() throws IllegalArgumentException, InitializationFailureException {
         createDriveMotors();
         initIMU();
@@ -173,6 +196,13 @@ public class DriveManager {
         controller = new XBoxController(RobotNumbers.XBOX_CONTROLLER_SLOT);
     }
 
+    public void setAllMotorCurrentLimits(int limit) {
+        leaderL.setSmartCurrentLimit(limit);
+        leaderR.setSmartCurrentLimit(limit);
+        followerL.setCurrentLimit(limit);
+        followerR.setCurrentLimit(limit);
+    }
+
     public void resetPigeon() {
         updatePigeon();
         startypr = ypr;
@@ -201,15 +231,6 @@ public class DriveManager {
         }
     }
 
-    private static void configureTalon(WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
-        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
-
-        motor.config_kF(idx, kF, timeout);
-        motor.config_kF(idx, kP, timeout);
-        motor.config_kI(idx, kI, timeout);
-        motor.config_kD(idx, kD, timeout);
-    }
-
     public double yawAbs() { // return absolute yaw of pigeon
         updatePigeon();
         return ypr[0];
@@ -220,45 +241,36 @@ public class DriveManager {
             leaderL.set(0);
             leaderR.set(0);
         }
-        if (invert) {
-            drive(-controller.getStickLY(), -controller.getStickRX());
+        double invertedDrive = invert ? -1 : 1;
+        if (RobotToggles.TANK_DRIVE) {
+            drive(invertedDrive * controller.get(XboxAxes.LEFT_JOY_Y), -controller.get(XboxAxes.RIGHT_JOY_X));
         } else {
-            drive(controller.getStickLY(), -controller.getStickRX());
+            drive(invertedDrive * controller.get(XboxAxes.LEFT_JOY_Y), -controller.get(XboxAxes.LEFT_JOY_X));
         }
     }
 
-    private void drive(double forward, double rotation) { drivePure(adjustedDrive(forward), adjustedRotation(rotation)); }
+    private void drive(double forward, double rotation) {
+        drivePure(adjustedDrive(forward), adjustedRotation(rotation));
+    }
 
     private void drivePure(double FPS, double omega) {
         omega *= driveRotMult.getDouble(RobotNumbers.TURN_SCALE);
         currentOmega = omega;
         double mult = 3.8 * 2.16 * RobotNumbers.DRIVE_SCALE;
+        var chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
+        double leftFPS = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
+        double rightFPS = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
+
         if (RobotToggles.DRIVE_USE_SPARKS) {
-            var chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
-            DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
-            double leftVelocity = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
-            double rightVelocity = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
-            System.out.println("FPS: " + leftVelocity + "  " + rightVelocity + " RPM: " + convertFPStoRPM(leftVelocity) + " " + convertFPStoRPM(rightVelocity));
-            leftPID.setReference(convertFPStoRPM(leftVelocity) * mult, ControlType.kVelocity);
-            rightPID.setReference(convertFPStoRPM(rightVelocity) * mult, ControlType.kVelocity);
+            //System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + convertFPStoRPM(leftFPS) + " " + convertFPStoRPM(rightFPS));
+            leftPID.setReference(convertFPStoRPM(leftFPS) * mult, ControlType.kVelocity);
+            rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
             //System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
         } else {
-            double targetVelocity = FPS * convertFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0; //Convert RPM to Units/100ms
-            leaderLTalon.set(ControlMode.Velocity, targetVelocity * mult);
-            leaderRTalon.set(ControlMode.Velocity, targetVelocity * mult);
+            leaderLTalon.set(ControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
+            leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
         }
-    }
-
-    private double adjustedDrive(double input) {
-        return input * RobotNumbers.MAX_SPEED;
-    }
-
-    private double adjustedRotation(double input) {
-        return input * RobotNumbers.MAX_ROTATION;
-    }
-
-    private double convertFPStoRPM(double FPS) {
-        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
     }
 
     public void updateTest() {
@@ -272,13 +284,6 @@ public class DriveManager {
     public void drivePIDSparks(double left, double right) {
         leftPID.setReference(left * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
         rightPID.setReference(right * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
-    }
-
-    public void setAllMotorCurrentLimits(int limit) {
-        leaderL.setSmartCurrentLimit(limit);
-        leaderR.setSmartCurrentLimit(limit);
-        followerL.setCurrentLimit(limit);
-        followerR.setCurrentLimit(limit);
     }
 
     // Any Operation that you do on one motor, implement in here so that a seamless
@@ -377,5 +382,4 @@ public class DriveManager {
             }
         }
     }
-
 }

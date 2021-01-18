@@ -19,6 +19,7 @@ public class RobotToggles {
     public static final boolean DRIVE_USE_6_MOTORS = false;
     public static final boolean DRIVE_INVERT_LEFT = true;
     public static final boolean DRIVE_INVERT_RIGHT = false;
+    public static final boolean TANK_DRIVE = false;
 
     //Misc
     public static final boolean ENABLE_IMU = false;

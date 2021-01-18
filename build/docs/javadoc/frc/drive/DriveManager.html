@@ -233,7 +233,7 @@ double&nbsp;right)</code></th>
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Initialize the Driver object.</div>
+<div class="block">Initialize the driver</div>
 </td>
 </tr>
 <tr class="altColor" id="i2">
@@ -337,12 +337,10 @@ double&nbsp;right)</code></th>
 <section class="detail">
 <h3><a id="&lt;init&gt;()">DriveManager</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">DriveManager</span>()
-             throws <span class="exceptions">java.lang.RuntimeException,
-java.lang.IllegalArgumentException</span></div>
+             throws <span class="exceptions">java.lang.RuntimeException</span></div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.RuntimeException</code></dd>
-<dd><code>java.lang.IllegalArgumentException</code></dd>
 </dl>
 </section>
 </li>
@@ -362,12 +360,18 @@ java.lang.IllegalArgumentException</span></div>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()
           throws <span class="exceptions">java.lang.IllegalArgumentException,
 <a href="../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a></span></div>
-<div class="block">Initialize the Driver object.</div>
+<div class="block">Initialize the driver</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.IllegalArgumentException</code></dd>
-<dd><code><a href="../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a></code></dd>
+<dd><code>java.lang.IllegalArgumentException</code> - When IDs for follower motors are too few or too many</dd>
+<dd><code><a href="../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a></code> - When something fails to init properly</dd>
 </dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="setAllMotorCurrentLimits(int)">setAllMotorCurrentLimits</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setAllMotorCurrentLimits</span>&#8203;(<span class="arguments">int&nbsp;limit)</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -411,12 +415,6 @@ java.lang.IllegalArgumentException</span></div>
 <h3><a id="drivePIDSparks(double,double)">drivePIDSparks</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">drivePIDSparks</span>&#8203;(<span class="arguments">double&nbsp;left,
 double&nbsp;right)</span></div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="setAllMotorCurrentLimits(int)">setAllMotorCurrentLimits</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setAllMotorCurrentLimits</span>&#8203;(<span class="arguments">int&nbsp;limit)</span></div>
 </section>
 </li>
 </ul>

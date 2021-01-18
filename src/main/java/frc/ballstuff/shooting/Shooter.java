@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.ButtonPanel;
+import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
 import frc.robot.RobotMap;
@@ -22,8 +23,13 @@ import frc.robot.RobotToggles;
 
 public class Shooter {
 
-    public final String[] data = {"match time", "init time", "speed", "target speed", "motor temperature", "motor current", "powered", "P", "I", "D", "rP", "rI", "rD", "distance"};
-    public final String[] units = {"seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"};
+    public final String[] data = {
+            "match time", "init time", "speed", "target speed", "motor temperature", "motor current", "powered", "P",
+            "I", "D", "rP", "rI", "rD", "distance"
+    };
+    public final String[] units = {
+            "seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"
+    };
     private final double pulleyRatio = RobotNumbers.motorPulleySize / RobotNumbers.driverPulleySize;
     public double speed;
     public boolean atSpeed = false;
@@ -45,7 +51,7 @@ public class Shooter {
     private Timer timer = new Timer();
     private double targetRPM;
     private int ballsShot = 0;
-    private boolean poweredState;
+    private boolean poweredState = false;
     private boolean spunUp = false;
     private boolean recoveryPID = false;
     private double lastSpeed;
@@ -55,7 +61,6 @@ public class Shooter {
 
     public Shooter() {
         init();
-        poweredState = false;
     }
 
     /**
@@ -112,10 +117,10 @@ public class Shooter {
         }
         checkState();
         //put code here to set speed based on distance to goal
-        boolean disabled = false;
+        boolean disabled;
         double closeDist = 3;
 
-        if (!panel.getButton(13)) {
+        if (panel.getButton(13) == ButtonStatus.DOWN) {
             speed = 4200 * ((joystickController.getSlider() * 0.25) + 1); //4200
             disabled = false;
         } else {
@@ -174,7 +179,7 @@ public class Shooter {
     /**
      * Set drive wheel RPM
      *
-     * @param rpm
+     * @param rpm speed to set
      */
     public void setSpeed(double rpm) {
         //System.out.println("setSpeed1");
@@ -188,6 +193,7 @@ public class Shooter {
      * @param P - P value
      * @param I - I value
      * @param D - D value
+     * @param F - F value
      */
     private void setPID(double P, double I, double D, double F) {
         speedo.setP(P);
@@ -204,7 +210,7 @@ public class Shooter {
      * Get motor speed based
      *
      * @param distance
-     * @return
+     * @return 0
      */
     private double getSpeedBasedOnDistance(double distance) {
         return 0;

@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -145,81 +145,31 @@ extends java.lang.Object</pre>
 </thead>
 <tbody>
 <tr class="altColor" id="i0">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButton(int)">getButton</a></span>&#8203;(int&nbsp;n)</code></th>
+<td class="colFirst"><code>double</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(frc.controllers.ControllerEnums.XboxAxes)">get</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i1">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButtonDown(int)">getButtonDown</a></span>&#8203;(int&nbsp;n)</code></th>
+<td class="colFirst"><code><a href="ControllerEnums.ButtonStatus.html" title="enum in frc.controllers">ControllerEnums.ButtonStatus</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButtonStatus(int)">getButtonStatus</a></span>&#8203;(int&nbsp;n)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i2">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButtonUp(int)">getButtonUp</a></span>&#8203;(int&nbsp;n)</code></th>
+<td class="colFirst"><code>double</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getIgnoreSensitivity(frc.controllers.ControllerEnums.XboxAxes)">getIgnoreSensitivity</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i3">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLTrigger()">getLTrigger</a></span>()</code></th>
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTriggerMomentary(frc.controllers.ControllerEnums.XboxAxes)">getTriggerMomentary</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLTriggerMomentary()">getLTriggerMomentary</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTriggerPressed(frc.controllers.ControllerEnums.XboxAxes)">getTriggerPressed</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i5">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLTriggerPressed()">getLTriggerPressed</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i6">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRTrigger()">getRTrigger</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i7">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRTriggerMomentary()">getRTriggerMomentary</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i8">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRTriggerPressed()">getRTriggerPressed</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i9">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getStickLX()">getStickLX</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i10">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getStickLY()">getStickLY</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i11">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getStickRX()">getStickRX</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i12">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getStickRY()">getStickRY</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i13">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setLRumble(double)">setLRumble</a></span>&#8203;(double&nbsp;n)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i14">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setRRumble(double)">setRRumble</a></span>&#8203;(double&nbsp;n)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i15">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setTriggerSensitivity(double)">setTriggerSensitivity</a></span>&#8203;(double&nbsp;sens)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -264,68 +214,8 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <section class="detail">
-<h3><a id="getStickLX()">getStickLX</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getStickLX</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getStickLY()">getStickLY</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getStickLY</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getStickRX()">getStickRX</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getStickRX</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getStickRY()">getStickRY</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getStickRY</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getLTrigger()">getLTrigger</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getLTrigger</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getRTrigger()">getRTrigger</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getRTrigger</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getButton(int)">getButton</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">getButton</span>&#8203;(<span class="arguments">int&nbsp;n)</span></div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getButtonDown(int)">getButtonDown</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">getButtonDown</span>&#8203;(<span class="arguments">int&nbsp;n)</span></div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getButtonUp(int)">getButtonUp</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">getButtonUp</span>&#8203;(<span class="arguments">int&nbsp;n)</span></div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="setLRumble(double)">setLRumble</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setLRumble</span>&#8203;(<span class="arguments">double&nbsp;n)</span></div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="setRRumble(double)">setRRumble</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setRRumble</span>&#8203;(<span class="arguments">double&nbsp;n)</span></div>
+<h3><a id="getButtonStatus(int)">getButtonStatus</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ControllerEnums.ButtonStatus.html" title="enum in frc.controllers">ControllerEnums.ButtonStatus</a></span>&nbsp;<span class="memberName">getButtonStatus</span>&#8203;(<span class="arguments">int&nbsp;n)</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -336,26 +226,31 @@ extends java.lang.Object</pre>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getRTriggerPressed()">getRTriggerPressed</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">getRTriggerPressed</span>()</div>
+<h3><a id="getTriggerMomentary(frc.controllers.ControllerEnums.XboxAxes)">getTriggerMomentary</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">getTriggerMomentary</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</span>
+                            throws <span class="exceptions">java.lang.IllegalArgumentException</span></div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getRTriggerMomentary()">getRTriggerMomentary</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">getRTriggerMomentary</span>()</div>
+<h3><a id="getTriggerPressed(frc.controllers.ControllerEnums.XboxAxes)">getTriggerPressed</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">getTriggerPressed</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getLTriggerPressed()">getLTriggerPressed</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">getLTriggerPressed</span>()</div>
+<h3><a id="get(frc.controllers.ControllerEnums.XboxAxes)">get</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">get</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getLTriggerMomentary()">getLTriggerMomentary</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">getLTriggerMomentary</span>()</div>
+<h3><a id="getIgnoreSensitivity(frc.controllers.ControllerEnums.XboxAxes)">getIgnoreSensitivity</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getIgnoreSensitivity</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</span></div>
 </section>
 </li>
 </ul>

@@ -11,8 +11,8 @@ public class ButtonPanel{
 		lastButton = -1;
 	}
 
-	public boolean getButton(int n) {
-		return button.getRawButton(n);
+	public ControllerEnums.ButtonStatus getButton(int n) {
+		return ControllerEnums.ButtonStatus.get(button.getRawButton(n));
 	}
 
 	public boolean getButtonDown(int n) {

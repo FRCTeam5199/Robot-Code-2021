@@ -35,6 +35,4 @@ public class RobotNumbers {
 
     public static final double motorPulleySize = 0;//?;
     public static final double driverPulleySize = 0;//?;
-
-
 }
