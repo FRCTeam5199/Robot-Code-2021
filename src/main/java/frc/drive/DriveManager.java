@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.controllers.XBoxController;
+import frc.misc.InitializationFailureException;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
@@ -78,7 +79,7 @@ public class DriveManager {
     // Pigeon IMU
     private double startYaw;
 
-    public DriveManager() {
+    public DriveManager() throws RuntimeException, IllegalArgumentException {
         init();
         // headControl = new PIDController(Kp, Ki, Kd);
     }
@@ -88,83 +89,82 @@ public class DriveManager {
      */
 
 
-    public void init() {
-        autoStage = 0;
-        autoComplete = false;
+    public void init() throws IllegalArgumentException, InitializationFailureException {
         createDriveMotors();
         initIMU();
         initPID();
         initMisc();
     }
 
-    private void createDriveMotors() throws RuntimeException {
-        try {
-            if (RobotToggles.DRIVE_USE_SPARKS) {
-                leaderL = new CANSparkMax(RobotMap.DRIVE_LEADER_L, MotorType.kBrushless);
-                leaderR = new CANSparkMax(RobotMap.DRIVE_LEADER_R, MotorType.kBrushless);
+    private void createDriveMotors() throws InitializationFailureException, IllegalArgumentException {
+        if (RobotToggles.DRIVE_USE_SPARKS) {
+            leaderL = new CANSparkMax(RobotMap.DRIVE_LEADER_L, MotorType.kBrushless);
+            leaderR = new CANSparkMax(RobotMap.DRIVE_LEADER_R, MotorType.kBrushless);
 
-                followerL = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_L);
-                followerR = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_R);
+            followerL = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_L);
+            followerR = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_R);
 
+            try {
                 followerL.follow(leaderL);
                 followerR.follow(leaderR);
+            } catch (Exception e) {
+                throw new InitializationFailureException("An error has occured linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
+            }
 
+            try {
                 leaderL.setInverted(true);
                 leaderR.setInverted(false);
-            } else {
-                leaderLTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_L);
-                leaderRTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_R);
-                followerLTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_L);
-                followerRTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_R);
-
-                followerLTalon.follow(leaderLTalon);
-                followerRTalon.follow(leaderRTalon);
-
-                leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
-                leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
-
-                followerRTalon.setInverted(InvertType.FollowMaster);
-                followerLTalon.setInverted(InvertType.FollowMaster);
+            } catch (Exception e) {
+                throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Something went wrong creating Drivetrain Motors in the drive base. ");
+        } else {
+            leaderLTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_L);
+            leaderRTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_R);
+            followerLTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_L);
+            followerRTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_R);
+
+            followerLTalon.follow(leaderLTalon);
+            followerRTalon.follow(leaderRTalon);
+
+            leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
+            leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
+
+            followerRTalon.setInverted(InvertType.FollowMaster);
+            followerLTalon.setInverted(InvertType.FollowMaster);
         }
+        /*} catch (Exception e) {
+            throw new RuntimeException("Something went wrong creating Drivetrain Motors in the drive base. ");
+        }*/
     }
 
-    private void initIMU() throws RuntimeException {
+    private void initIMU() throws InitializationFailureException {
         try {
             if (RobotToggles.ENABLE_IMU) {
                 resetPigeon();
                 updatePigeon();
             }
         } catch (Exception e) {
-            throw new RuntimeException("Pigeon IMU Failed");
+            throw new InitializationFailureException("Pigeon IMU Failed to init", "Ensure the pigeon is plugged in and other hardware is operating nomially. Can also disable RobotToggles.ENABLE_IMU");
         }
     }
 
-    private void initPID() throws RuntimeException {
-        try {
-            if (RobotToggles.DRIVE_USE_SPARKS) {
-                leftPID = leaderL.getPIDController();
-                rightPID = leaderR.getPIDController();
-                setPID(RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D, RobotNumbers.DRIVEBASE_F);
-            } else {
-                DriveManager.configureTalon(leaderLTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-                DriveManager.configureTalon(leaderRTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-                followerLTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-                followerRTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("PID Init errored during initialization.");
+    //risk of exception super low
+    private void initPID() {
+        if (RobotToggles.DRIVE_USE_SPARKS) {
+            leftPID = leaderL.getPIDController();
+            rightPID = leaderR.getPIDController();
+            setPID(RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D, RobotNumbers.DRIVEBASE_F);
+        } else {
+            DriveManager.configureTalon(leaderLTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
+            DriveManager.configureTalon(leaderRTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
+            followerLTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
+            followerRTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
         }
+
     }
 
-    private void initMisc() throws RuntimeException {
-        try {
-            controller = new XBoxController(RobotNumbers.XBOX_CONTROLLER_SLOT);
-        } catch (Exception e) {
-            throw new RuntimeException("Xbox controller errored during initialization. You're probably screwed.");
-        }
+    private void initMisc() {
+        controller = new XBoxController(RobotNumbers.XBOX_CONTROLLER_SLOT);
     }
 
     public void resetPigeon() {
@@ -195,13 +195,8 @@ public class DriveManager {
         }
     }
 
-    private static void configureTalon(WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
+    private static void configureTalon(WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD){
         int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
-
-        /*motor.configNominalOutputForward(0, timeout);
-        motor.configNominalOutputReverse(0, timeout);
-        motor.configPeakOutputForward(1, timeout);
-        motor.configPeakOutputReverse(-1, timeout);*/
 
         motor.config_kF(idx, kF, timeout);
         motor.config_kF(idx, kP, timeout);
@@ -226,7 +221,7 @@ public class DriveManager {
         }
     }
 
-    private void drive(double forward, double rotation) { drivePure(adjustedDrive(forward), adjustedRotation(rotation));  }
+    private void drive(double forward, double rotation) { drivePure(adjustedDrive(forward), adjustedRotation(rotation)); }
 
     private void drivePure(double FPS, double omega) {
         omega *= driveRotMult.getDouble(RobotNumbers.TURN_SCALE);
@@ -237,7 +232,7 @@ public class DriveManager {
             DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
             double leftVelocity = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
             double rightVelocity = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
-            System.out.println("FPS: "+leftVelocity+"  "+rightVelocity+" RPM: "+convertFPStoRPM(leftVelocity)+" "+convertFPStoRPM(rightVelocity));
+            System.out.println("FPS: " + leftVelocity + "  " + rightVelocity + " RPM: " + convertFPStoRPM(leftVelocity) + " " + convertFPStoRPM(rightVelocity));
             leftPID.setReference(convertFPStoRPM(leftVelocity) * mult, ControlType.kVelocity);
             rightPID.setReference(convertFPStoRPM(rightVelocity) * mult, ControlType.kVelocity);
             //System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
@@ -291,12 +286,13 @@ public class DriveManager {
 
         /**
          * Creates Spark Motor followers based on
+         *
          * @param motorType Brushless or brushed motor
-         * @param ids The id's of the motors to be used. Must match RobotToggles.DRIVE_USE_6_MOTORS
-         * @throws IllegalArgumentException if RobotToggles.DRIVE_USE_6_MOTORS motor count != #of id's passed in
+         * @param ids       The id's of the motors to be used. Must match RobotToggles.DRIVE_USE_6_MOTORS
          * @return this object (factory style construction)
+         * @throws IllegalArgumentException if RobotToggles.DRIVE_USE_6_MOTORS motor count != #of id's passed in
          */
-        public SparkFollowerMotors createFollowers(MotorType motorType, int... ids) throws IllegalArgumentException{
+        public SparkFollowerMotors createFollowers(MotorType motorType, int... ids) throws IllegalArgumentException {
             if ((this.USE_TWO_MOTORS) != (ids.length == 2)) {
                 throw new IllegalArgumentException("I need to have an equal number of motor IDs as motors in use");
             }
@@ -326,9 +322,9 @@ public class DriveManager {
         // I assume that both motors are of the same type
         // if using two followers, the first int is the first motor id, and the second
         // the second
-        public TalonFollowerMotors createFollowers(int... ids) {
+        public TalonFollowerMotors createFollowers(int... ids) throws IllegalArgumentException {
             if ((this.USE_TWO_MOTORS) != (ids.length == 2)) {
-                throw new RuntimeException("I need to have an equal number of motor IDs as motors in use");
+                throw new IllegalArgumentException("I need to have an equal number of motor IDs as motors in use");
             }
             for (int i = 0; i < ids.length; i++) {
                 this.motors[i] = new WPI_TalonFX(ids[i]);

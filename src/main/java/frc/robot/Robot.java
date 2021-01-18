@@ -10,7 +10,7 @@ public class Robot extends TimedRobot {
      * Init everything
      */
     @Override
-    public void robotInit() {
+    public void robotInit() throws IllegalStateException{
         if (RobotToggles.ENABLE_DRIVE) {
             driver = new DriveManager();
         }
@@ -55,5 +55,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
+    }
+
+    private static void assertValidStartConditions() throws IllegalStateException{
+
     }
 }

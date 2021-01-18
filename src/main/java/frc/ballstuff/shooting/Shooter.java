@@ -48,7 +48,6 @@ public class Shooter {
     private boolean poweredState;
     private boolean spunUp = false;
     private boolean recoveryPID = false;
-    private double P, I, D, F, recoveryP, recoveryI, recoveryD;
     private double lastSpeed;
     private double[][] sizeSpeedsArray = {{0, 0}, {45, 4100}, {55, 4150}, {65, 4170}, {75, 4150}, {85, 4500},};
     private double speedMult = 1;
@@ -74,9 +73,7 @@ public class Shooter {
         if (RobotToggles.SHOOTER_USE_SPARKS) {
             leader = new CANSparkMax(RobotMap.SHOOTER_LEADER, MotorType.kBrushless);
             follower = new CANSparkMax(RobotMap.SHOOTER_FOLLOWER, MotorType.kBrushless);
-            //if (RobotToggles.shooterPID) {
-                speedo = leader.getPIDController();
-            //}
+
             leader.setInverted(true);
             follower.follow(leader, true);
 
@@ -87,20 +84,18 @@ public class Shooter {
 
             leader.getEncoder().setPosition(0);
             leader.setOpenLoopRampRate(40);
-
-            speedo = leader.getPIDController();
             encoder = leader.getEncoder();
             //setPID(4e-5, 0, 0);
-            speedo.setOutputRange(-1, 1);
-            //setPID(1,0,0);
-
+            speedo = leader.getPIDController();
             speedo.setOutputRange(-1, 1);
         } else {
             falconLeader = new TalonFX(RobotMap.SHOOTER_LEADER);
             falconLeader.setInverted(TalonFXInvertType.Clockwise);
+
             falconFollower = new TalonFX(RobotMap.SHOOTER_FOLLOWER);
             falconFollower.setInverted(TalonFXInvertType.CounterClockwise);
             falconFollower.follow(falconLeader);
+
             falconLeader.setNeutralMode(NeutralMode.Coast);
             falconFollower.setNeutralMode(NeutralMode.Coast);
         }
@@ -131,16 +126,6 @@ public class Shooter {
         if (!interpolationEnabled) {
             speed = 4200;
         }
-
-        P = RobotNumbers.SHOOTER_P;
-        I = RobotNumbers.SHOOTER_I;
-        D = RobotNumbers.SHOOTER_D;
-        F = RobotNumbers.SHOOTER_F;
-
-        //3.00E-04	1.00E-07	0.07 (tentative values, not perfect yet)
-        recoveryP = RobotNumbers.SHOOTER_RECOVERY_P;
-        recoveryI = RobotNumbers.SHOOTER_RECOVERY_I;
-        recoveryD = RobotNumbers.SHOOTER_RECOVERY_D;
 
         //setPID(P,I,D);
 
@@ -179,10 +164,10 @@ public class Shooter {
             spunUp = false;
         }
         if (recoveryPID) {
-            setPID(recoveryP, recoveryI, recoveryD, F);
+            setPID(RobotNumbers.SHOOTER_RECOVERY_P, RobotNumbers.SHOOTER_RECOVERY_I, RobotNumbers.SHOOTER_RECOVERY_D, RobotNumbers.SHOOTER_F);
             //setPID(P,I,D, F);
         } else {
-            setPID(P, I, D, F);
+            setPID(RobotNumbers.SHOOTER_P, RobotNumbers.SHOOTER_I, RobotNumbers.SHOOTER_D, RobotNumbers.SHOOTER_F);
         }
     }
 
