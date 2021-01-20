@@ -125,11 +125,11 @@ public class DriveManager {
             leaderL = new CANSparkMax(RobotMap.DRIVE_LEADER_L, MotorType.kBrushless);
             leaderR = new CANSparkMax(RobotMap.DRIVE_LEADER_R, MotorType.kBrushless);
 
-            followerL = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_L);
-            followerR = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_R);
+            //followerL = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_L);
+            //followerR = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_R);
             try {
-                followerL.follow(leaderL);
-                followerR.follow(leaderR);
+                //followerL.follow(leaderL);
+                //followerR.follow(leaderR);
             } catch (Exception e) {
                 throw new InitializationFailureException("An error has occured linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
             }
@@ -141,7 +141,7 @@ public class DriveManager {
                 throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
             }
 
-            setAllMotorCurrentLimits(50);
+            //setAllMotorCurrentLimits(50);
         } else {
             leaderLTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_L);
             leaderRTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_R);
@@ -238,8 +238,8 @@ public class DriveManager {
 
     public void updateTeleop() {
         if (RobotToggles.DRIVE_USE_SPARKS) {
-            leaderL.set(0);
-            leaderR.set(0);
+            //leaderL.set(0);
+            //leaderR.set(0);
         }
         double invertedDrive = invert ? -1 : 1;
         if (RobotToggles.TANK_DRIVE) {
