@@ -9,7 +9,7 @@ public class RobotNumbers {
     public static final double DRIVEBASE_P = 0;
     public static final double DRIVEBASE_I = 0;
     public static final double DRIVEBASE_D = 0.000005;
-    public static final double DRIVEBASE_F = 0.000001;
+    public static final double DRIVEBASE_F = 0.00002;
     public static final int DRIVE_TIMEOUT_MS = 30;
 
     public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
@@ -20,8 +20,8 @@ public class RobotNumbers {
 
     public static final double XBOX_CONTROLLER_DEADZONE = 0.07;
 
-    public static final double TURN_SCALE = 1;
-    public static final double DRIVE_SCALE = 20;
+    public static final double TURN_SCALE = 0.7;
+    public static final double DRIVE_SCALE = 1;
 
     public static final double SHOOTER_P = 0.00035;
     public static final double SHOOTER_I = 0;
