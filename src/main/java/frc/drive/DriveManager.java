@@ -27,6 +27,7 @@ import frc.robot.RobotToggles;
 public class DriveManager {
     private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry();
+    private final NetworkTableEntry driveScaleMult = tab2.add("Speed Factor", RobotNumbers.DRIVE_SCALE).getEntry();
     private final PigeonIMU pigeon = new PigeonIMU(RobotMap.PIGEON);
     // private Logger logger = new Logger("drive");
     // private Logger posLogger = new Logger("positions");
@@ -255,6 +256,7 @@ public class DriveManager {
 
     private void drivePure(double FPS, double omega) {
         omega *= driveRotMult.getDouble(RobotNumbers.TURN_SCALE);
+        FPS *= driveScaleMult.getDouble(RobotNumbers.DRIVE_SCALE);
         currentOmega = omega;
         double mult = 3.8 * 2.16 * RobotNumbers.DRIVE_SCALE;
         var chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
