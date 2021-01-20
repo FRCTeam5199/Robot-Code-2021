@@ -20,8 +20,8 @@ public class RobotNumbers {
 
     public static final double XBOX_CONTROLLER_DEADZONE = 0.07;
 
-    public static final double TURN_SCALE = 0.7;
-    public static final double DRIVE_SCALE = 1;
+    public static final double TURN_SCALE = 1;
+    public static final double DRIVE_SCALE = 20;
 
     public static final double SHOOTER_P = 0.00035;
     public static final double SHOOTER_I = 0;
