@@ -34,7 +34,7 @@ public class DriveManager {
     // wheelbase 27"
 
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
-    private final boolean invert = false;
+    private final boolean invert = true;
     public double[] ypr = new double[3];
     // private BallChameleon chameleon = new BallChameleon();
     public double[] startypr = new double[3];
@@ -125,11 +125,11 @@ public class DriveManager {
             leaderL = new CANSparkMax(RobotMap.DRIVE_LEADER_L, MotorType.kBrushless);
             leaderR = new CANSparkMax(RobotMap.DRIVE_LEADER_R, MotorType.kBrushless);
 
-            //followerL = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_L);
-            //followerR = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_R);
+            followerL = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_L);
+            followerR = new SparkFollowerMotors().createFollowers(MotorType.kBrushless, RobotMap.DRIVE_FOLLOWERS_R);
             try {
-                //followerL.follow(leaderL);
-                //followerR.follow(leaderR);
+                followerL.follow(leaderL);
+                followerR.follow(leaderR);
             } catch (Exception e) {
                 throw new InitializationFailureException("An error has occured linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
             }
@@ -141,7 +141,7 @@ public class DriveManager {
                 throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
             }
 
-            //setAllMotorCurrentLimits(50);
+            setAllMotorCurrentLimits(50);
         } else {
             leaderLTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_L);
             leaderRTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_R);
@@ -263,7 +263,7 @@ public class DriveManager {
         double rightFPS = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
 
         if (RobotToggles.DRIVE_USE_SPARKS) {
-            //System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + convertFPStoRPM(leftFPS) + " " + convertFPStoRPM(rightFPS));
+            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + convertFPStoRPM(leftFPS) + " " + convertFPStoRPM(rightFPS));
             leftPID.setReference(convertFPStoRPM(leftFPS) * mult, ControlType.kVelocity);
             rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
             //System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
@@ -328,8 +328,10 @@ public class DriveManager {
 
         public void brake(boolean brake) {
             for (CANSparkMax follower : this.motors) {
-                if (brake) {
+                if (!brake) {
                     follower.setIdleMode(IdleMode.kCoast);
+                } else {
+                    follower.setIdleMode(IdleMode.kBrake);
                 }
             }
         }
