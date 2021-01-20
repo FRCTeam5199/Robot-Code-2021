@@ -16,10 +16,10 @@ public class RobotToggles {
 
     //Drivetrain
     public static final boolean DRIVE_USE_SPARKS = true;
-    public static final boolean DRIVE_USE_6_MOTORS = false;
+    public static final boolean DRIVE_USE_6_MOTORS = true;
     public static final boolean DRIVE_INVERT_LEFT = true;
     public static final boolean DRIVE_INVERT_RIGHT = false;
-    public static final boolean TANK_DRIVE = false;
+    public static final boolean TANK_DRIVE = true;
 
     //Misc
     public static final boolean ENABLE_IMU = false;
