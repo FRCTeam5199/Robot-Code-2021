@@ -133,14 +133,14 @@ public class DriveManager {
                 followerL.follow(leaderL);
                 followerR.follow(leaderR);
             } catch (Exception e) {
-                throw new InitializationFailureException("An error has occured linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
+                throw new InitializationFailureException("An error has occurred linking follower drive motors to leaders", "Make sure the motors are plugged in and identified properly");
             }
 
             try {
                 leaderL.setInverted(true);
                 leaderR.setInverted(false);
             } catch (Exception e) {
-                throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
+                throw new InitializationFailureException("An error has occurred inverting leader drivetrain motors", "Start debugging");
             }
 
             setAllMotorCurrentLimits(50);
@@ -167,14 +167,14 @@ public class DriveManager {
                 leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
                 leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
             } catch (Exception e) {
-                throw new InitializationFailureException("An error has occured linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
+                throw new InitializationFailureException("An error has occurred linking follower drive motors to leaders", "Make sure the motors are plugged in and identified properly");
             }
 
             try {
                 followerRTalon.setInverted(InvertType.FollowMaster);
                 followerLTalon.setInverted(InvertType.FollowMaster);
             } catch (Exception e) {
-                throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
+                throw new InitializationFailureException("An error has occurred inverting leader drivetrain motors", "Start debugging");
             }
         }
     }
@@ -186,7 +186,7 @@ public class DriveManager {
                 updatePigeon();
             }
         } catch (Exception e) {
-            throw new InitializationFailureException("Pigeon IMU Failed to init", "Ensure the pigeon is plugged in and other hardware is operating nomially. Can also disable RobotToggles.ENABLE_IMU");
+            throw new InitializationFailureException("Pigeon IMU Failed to init", "Ensure the pigeon is plugged in and other hardware is operating normally. Can also disable RobotToggles.ENABLE_IMU");
         }
     }
 
