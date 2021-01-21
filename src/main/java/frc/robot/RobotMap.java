@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+
 public class RobotMap {
     //public static final int [NAME] = [ID];
     //public static final int wristMotor = 5; <-- EXAMPLE
@@ -12,6 +14,8 @@ public class RobotMap {
 
     public static final int DRIVE_LEADER_R = 3; //talon
     public static final int[] DRIVE_FOLLOWERS_R = {4}; //talon
+
+    public static final TalonFXFeedbackDevice DRIVE_SENSOR_TYPE = TalonFXFeedbackDevice.IntegratedSensor;
 
     //Shooter Motors
     public static final int SHOOTER_LEADER = 7; //talon

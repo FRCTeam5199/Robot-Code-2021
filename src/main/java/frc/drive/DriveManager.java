@@ -1,6 +1,7 @@
 package frc.drive;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -148,6 +149,16 @@ public class DriveManager {
             leaderRTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_R);
             followerLTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_L);
             followerRTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_R);
+
+            leaderLTalon.configFactoryDefault();
+            leaderRTalon.configFactoryDefault();
+            followerLTalon.configFactoryDefault();
+            followerRTalon.configFactoryDefault();
+
+            leaderLTalon.configSelectedFeedbackSensor(RobotMap.DRIVE_SENSOR_TYPE, 0, RobotNumbers.DRIVE_TIMEOUT_MS);
+            leaderRTalon.configSelectedFeedbackSensor(RobotMap.DRIVE_SENSOR_TYPE, 0, RobotNumbers.DRIVE_TIMEOUT_MS);
+            followerLTalon.configSensor(RobotMap.DRIVE_SENSOR_TYPE, 0, RobotNumbers.DRIVE_TIMEOUT_MS);
+            followerRTalon.configSensor(RobotMap.DRIVE_SENSOR_TYPE, 0, RobotNumbers.DRIVE_TIMEOUT_MS);
 
             followerLTalon.follow(leaderLTalon);
             followerRTalon.follow(leaderRTalon);
@@ -383,6 +394,18 @@ public class DriveManager {
         public void setInverted(InvertType followMaster) {
             for (WPI_TalonFX follower : this.motors) {
                 follower.setInverted(followMaster);
+            }
+        }
+
+        public void configSensor(TalonFXFeedbackDevice sensor, int idx, int timeout) {
+            for (WPI_TalonFX follower : this.motors) {
+                follower.configSelectedFeedbackSensor(sensor, idx, timeout);
+            }
+        }
+
+        public void configFactoryDefault() {
+            for (WPI_TalonFX follower : this.motors) {
+                follower.configFactoryDefault();
             }
         }
 
