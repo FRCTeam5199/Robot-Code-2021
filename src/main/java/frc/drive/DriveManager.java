@@ -1,6 +1,6 @@
 package frc.drive;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -270,8 +270,14 @@ public class DriveManager {
             rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
             //System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
         } else {
-            leaderLTalon.set(ControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
-            leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
+            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + convertFPStoRPM(leftFPS) + " " + convertFPStoRPM(rightFPS) + " Left TargetVelocity: " + getTargetVelocity(leftFPS));
+            //leaderLTalon.set(TalonFXControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
+            //leaderRTalon.set(TalonFXControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
+
+            //leaderLTalon.set(TalonFXControlMode.Velocity, convertFPStoRPM(leftFPS) * mult);
+            //leaderRTalon.set(TalonFXControlMode.Velocity, convertFPStoRPM(rightFPS) * mult);
+            leaderLTalon.set(TalonFXControlMode.PercentOutput, 0.2);
+            leaderRTalon.set(TalonFXControlMode.PercentOutput, 0.2);
         }
     }
 
