@@ -2,6 +2,7 @@ package frc.controllers;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.controllers.ControllerEnums.ButtonStatus;
+import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
 import frc.robot.RobotNumbers;
 
@@ -11,10 +12,6 @@ public class XBoxController {
 
     public XBoxController(int n) {
         stick = new Joystick(n);
-    }
-
-    public ButtonStatus getButtonStatus(int n) {
-        return ButtonStatus.get(stick.getRawButton(n));
     }
 
     public void setTriggerSensitivity(double sens) {
@@ -44,6 +41,10 @@ public class XBoxController {
     public double get(XboxAxes axis) {
         if (Math.abs(stick.getRawAxis(axis.AXIS_VALUE)) > axis.DEADZONE) return stick.getRawAxis(axis.AXIS_VALUE);
         return 0;
+    }
+
+    public ButtonStatus get(XBoxButtons button) {
+        return ButtonStatus.get(stick.getRawButton(button.AXIS_VALUE));
     }
 
     public double getIgnoreSensitivity(XboxAxes axis) {

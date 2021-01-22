@@ -32,6 +32,23 @@ public class ControllerEnums {
         }
     }
 
+    public enum XBoxButtons {
+        A_CROSS(1),
+        B_CIRCLE(2),
+        X_SQUARE(3),
+        Y_TRIANGLE(4),
+        LEFT_BUMPER(5),
+        RIGHT_BUMPER(6),
+        GUIDE(7),
+        MENU(8);
+
+        public final int AXIS_VALUE;
+
+        XBoxButtons(int axis) {
+            this.AXIS_VALUE = axis;
+        }
+    }
+
     public enum JoystickAxis {
         X(0),
         Y(1),
@@ -52,7 +69,7 @@ public class ControllerEnums {
 
         public final int[] ACCEPTED_VALUES;
 
-        JoystickHatDirection(int...values){
+        JoystickHatDirection(int... values) {
             this.ACCEPTED_VALUES = values;
         }
     }

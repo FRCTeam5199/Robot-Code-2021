@@ -1,8 +1,8 @@
 package frc.drive;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANPIDController;
@@ -17,12 +17,15 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Units;
+import frc.controllers.ControllerEnums.ButtonStatus;
+import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
 import frc.controllers.XBoxController;
 import frc.misc.InitializationFailureException;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
+import org.jetbrains.annotations.NotNull;
 
 
 public class DriveManager {
@@ -190,7 +193,9 @@ public class DriveManager {
         }
     }
 
-    //risk of exception super low
+    /**
+     * Initialize the PID for the motor controllers.
+     */
     private void initPID() {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             leftPID = leaderL.getPIDController();
@@ -249,15 +254,13 @@ public class DriveManager {
     }
 
     public void updateTeleop() {
-        if (RobotToggles.DRIVE_USE_SPARKS) {
-            //leaderL.set(0);
-            //leaderR.set(0);
-        }
         double invertedDrive = invert ? -1 : 1;
+        double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+        double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
         if (RobotToggles.TANK_DRIVE) {
-            drive(invertedDrive * controller.get(XboxAxes.LEFT_JOY_Y), -controller.get(XboxAxes.RIGHT_JOY_X));
+            drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
         } else {
-            drive(invertedDrive * controller.get(XboxAxes.LEFT_JOY_Y), -controller.get(XboxAxes.LEFT_JOY_X));
+            drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.LEFT_JOY_X));
         }
     }
 
@@ -265,6 +268,12 @@ public class DriveManager {
         drivePure(adjustedDrive(forward), adjustedRotation(rotation));
     }
 
+    /**
+     * This takes a speed in feet per second, a requested turn speed in radians/sec
+     *
+     * @param FPS   Speed in Feet per Second
+     * @param omega Rotation in Radians per Second
+     */
     private void drivePure(double FPS, double omega) {
         omega *= driveRotMult.getDouble(RobotNumbers.TURN_SCALE);
         FPS *= driveScaleMult.getDouble(RobotNumbers.DRIVE_SCALE);
@@ -375,7 +384,7 @@ public class DriveManager {
         // I assume that both motors are of the same type
         // if using two followers, the first int is the first motor id, and the second
         // the second
-        public TalonFollowerMotors createFollowers(int... ids) throws IllegalArgumentException {
+        public TalonFollowerMotors createFollowers(@NotNull int... ids) throws IllegalArgumentException {
             if ((this.USE_TWO_MOTORS) != (ids.length == 2)) {
                 throw new IllegalArgumentException("I need to have an equal number of motor IDs as motors in use");
             }
