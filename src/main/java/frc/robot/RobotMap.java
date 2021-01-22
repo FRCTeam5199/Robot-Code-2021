@@ -10,10 +10,14 @@ public class RobotMap {
 
     //Drive Motors
     public static final int DRIVE_LEADER_L = 1; //talon
-    public static final int[] DRIVE_FOLLOWERS_L = {2}; //talon
+    public static final int[] DRIVE_FOLLOWERS_L = {2, 3}; //talon
+    
+    {
+        
+    }
 
-    public static final int DRIVE_LEADER_R = 3; //talon
-    public static final int[] DRIVE_FOLLOWERS_R = {4}; //talon
+    public static final int DRIVE_LEADER_R = 4; //talon
+    public static final int[] DRIVE_FOLLOWERS_R = {5 , 6}; //talon
 
     public static final TalonFXFeedbackDevice DRIVE_SENSOR_TYPE = TalonFXFeedbackDevice.IntegratedSensor;
 

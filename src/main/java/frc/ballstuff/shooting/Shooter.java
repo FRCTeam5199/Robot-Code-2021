@@ -70,8 +70,8 @@ public class Shooter {
         createAndInitMotors();
 
         SmartDashboard.putString("ZONE", "none");
-        joystickController = new JoystickController(1);
-        panel = new ButtonPanel(2);
+        joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
+        panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
     }
 
     private void createAndInitMotors() {

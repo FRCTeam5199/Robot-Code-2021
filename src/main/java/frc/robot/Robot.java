@@ -1,7 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.ballstuff.intake.Intake;
+import frc.ballstuff.intaking.Intake;
 import frc.drive.DriveManager;
 
 public class Robot extends TimedRobot {
@@ -20,6 +20,7 @@ public class Robot extends TimedRobot {
         if (RobotToggles.ENABLE_DRIVE) {
             driver = new DriveManager();
         }
+
         if (RobotToggles.ENABLE_INTAKE) {
             intake = new Intake();
         }

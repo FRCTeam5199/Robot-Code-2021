@@ -25,7 +25,7 @@ public class InitializationFailureException extends RuntimeException {
         super(cause);
     }
 
-    public String getPossibleFix(){
+    public String getPossibleFix() {
         return this.possibleFix;
     }
 }

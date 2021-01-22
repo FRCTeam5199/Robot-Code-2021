@@ -87,7 +87,7 @@ public class DriveManager {
         // headControl = new PIDController(Kp, Ki, Kd);
     }
 
-    private static void configureTalon(WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
+    private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
         int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
 
         motor.config_kF(idx, kF, timeout);
@@ -125,6 +125,12 @@ public class DriveManager {
         initMisc();
     }
 
+    /**
+     * Creates the drive motors
+     *
+     * @throws IllegalArgumentException       When IDs for follower motors are too few or too many
+     * @throws InitializationFailureException When follower drive motors fail to link to leaders or when leader drivetrain motors fail to invert
+     */
     private void createDriveMotors() throws InitializationFailureException, IllegalArgumentException {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             leaderL = new CANSparkMax(RobotMap.DRIVE_LEADER_L, MotorType.kBrushless);
@@ -182,6 +188,11 @@ public class DriveManager {
         }
     }
 
+    /**
+     * Initialize the IMU
+     *
+     * @throws InitializationFailureException When the Pigeon IMU fails to init
+     */
     private void initIMU() throws InitializationFailureException {
         try {
             if (RobotToggles.ENABLE_IMU) {
@@ -209,10 +220,18 @@ public class DriveManager {
         }
     }
 
+    /**
+     * Creates xbox controller n stuff
+     */
     private void initMisc() {
         controller = new XBoxController(RobotNumbers.XBOX_CONTROLLER_SLOT);
     }
 
+    /**
+     * Set all motor current limits
+     *
+     * @param limit Current limit in amps
+     */
     public void setAllMotorCurrentLimits(int limit) {
         leaderL.setSmartCurrentLimit(limit);
         leaderR.setSmartCurrentLimit(limit);
@@ -220,15 +239,22 @@ public class DriveManager {
         followerR.setCurrentLimit(limit);
     }
 
+    /**
+     * Resets the Pigeon IMU
+     */
     public void resetPigeon() {
         updatePigeon();
         startypr = ypr;
         startYaw = yawAbs();
     }
 
+    /**
+     * Updates the Pigeon IMU
+     */
     public void updatePigeon() {
         pigeon.getYawPitchRoll(ypr);
     }
+
 
     private void setPID(double P, double I, double D, double F) {
         if (RobotToggles.DRIVE_USE_SPARKS) {
@@ -257,7 +283,7 @@ public class DriveManager {
         double invertedDrive = invert ? -1 : 1;
         double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
         double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-        if (RobotToggles.TANK_DRIVE) {
+        if (!RobotToggles.EXPERIMENTAL_DRIVE) {
             drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
         } else {
             drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.LEFT_JOY_X));
@@ -314,8 +340,9 @@ public class DriveManager {
         rightPID.setReference(right * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
     }
 
-    // Any Operation that you do on one motor, implement in here so that a seamless
-    // transition can occur
+    /**
+     * Any Operation that you do on one motor, implement in here so that a seamless transition can occur
+     */
     public static class SparkFollowerMotors {
         private final boolean USE_TWO_MOTORS;
 
@@ -338,7 +365,7 @@ public class DriveManager {
          * @return this object (factory style construction)
          * @throws IllegalArgumentException if RobotToggles.DRIVE_USE_6_MOTORS motor count != #of id's passed in
          */
-        public SparkFollowerMotors createFollowers(MotorType motorType, int... ids) throws IllegalArgumentException {
+        public SparkFollowerMotors createFollowers(MotorType motorType, @NotNull int... ids) throws IllegalArgumentException {
             if ((this.USE_TWO_MOTORS) != (ids.length == 2)) {
                 throw new IllegalArgumentException("I need to have an equal number of motor IDs as motors in use");
             }
@@ -348,7 +375,7 @@ public class DriveManager {
             return this;
         }
 
-        public void follow(CANSparkMax leader) {
+        public void follow(@NotNull CANSparkMax leader) {
             for (CANSparkMax follower : this.motors) {
                 follower.follow(leader);
             }
@@ -394,7 +421,7 @@ public class DriveManager {
             return this;
         }
 
-        public void follow(WPI_TalonFX leader) {
+        public void follow(@NotNull WPI_TalonFX leader) {
             for (WPI_TalonFX follower : this.motors) {
                 follower.follow(leader);
             }

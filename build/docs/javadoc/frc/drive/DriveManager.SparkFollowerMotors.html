@@ -102,6 +102,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public static class <span class="typeNameLabel">DriveManager.SparkFollowerMotors</span>
 extends java.lang.Object</pre>
+<div class="block">Any Operation that you do on one motor, implement in here so that a seamless transition can occur</div>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -155,15 +156,15 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="DriveManager.SparkFollowerMotors.html" title="class in frc.drive">DriveManager.SparkFollowerMotors</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createFollowers(com.revrobotics.CANSparkMaxLowLevel.MotorType,int...)">createFollowers</a></span>&#8203;(com.revrobotics.CANSparkMaxLowLevel.MotorType&nbsp;motorType,
-int...&nbsp;ids)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createFollowers(com.revrobotics.CANSparkMaxLowLevel.MotorType,@org.jetbrains.annotations.NotNullint...)">createFollowers</a></span>&#8203;(com.revrobotics.CANSparkMaxLowLevel.MotorType&nbsp;motorType,
+@org.jetbrains.annotations.NotNull int...&nbsp;ids)</code></th>
 <td class="colLast">
 <div class="block">Creates Spark Motor followers based on</div>
 </td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#follow(com.revrobotics.CANSparkMax)">follow</a></span>&#8203;(com.revrobotics.CANSparkMax&nbsp;leader)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#follow(com.revrobotics.CANSparkMax)">follow</a></span>&#8203;(@NotNull com.revrobotics.CANSparkMax&nbsp;leader)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i3">
@@ -211,9 +212,10 @@ int...&nbsp;ids)</code></th>
 <ul class="blockList">
 <li class="blockList">
 <section class="detail">
-<h3><a id="createFollowers(com.revrobotics.CANSparkMaxLowLevel.MotorType,int...)">createFollowers</a></h3>
+<h3><a id="createFollowers(com.revrobotics.CANSparkMaxLowLevel.MotorType,@org.jetbrains.annotations.NotNullint...)">createFollowers</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="DriveManager.SparkFollowerMotors.html" title="class in frc.drive">DriveManager.SparkFollowerMotors</a></span>&nbsp;<span class="memberName">createFollowers</span>&#8203;(<span class="arguments">com.revrobotics.CANSparkMaxLowLevel.MotorType&nbsp;motorType,
-int...&nbsp;ids)</span>
+@NotNull
+@org.jetbrains.annotations.NotNull int...&nbsp;ids)</span>
                                                  throws <span class="exceptions">java.lang.IllegalArgumentException</span></div>
 <div class="block">Creates Spark Motor followers based on</div>
 <dl>
@@ -230,7 +232,8 @@ int...&nbsp;ids)</span>
 <li class="blockList">
 <section class="detail">
 <h3><a id="follow(com.revrobotics.CANSparkMax)">follow</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">follow</span>&#8203;(<span class="arguments">com.revrobotics.CANSparkMax&nbsp;leader)</span></div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">follow</span>&#8203;(<span class="arguments">@NotNull
+@NotNull com.revrobotics.CANSparkMax&nbsp;leader)</span></div>
 </section>
 </li>
 <li class="blockList">
