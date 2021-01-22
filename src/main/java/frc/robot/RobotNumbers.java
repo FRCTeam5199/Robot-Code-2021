@@ -6,11 +6,11 @@ public class RobotNumbers {
     public static int FLIGHT_STICK_SLOT = 1;
     public static int BUTTON_PANEL_SLOT = 2;
 
-    public static final double DRIVEBASE_P = 0;
+    public static final double DRIVEBASE_P = 0.08;
     public static final double DRIVEBASE_I = 0;
-    public static final double DRIVEBASE_D = 0.000005;
-    public static final double DRIVEBASE_F = 0.00002;
-    public static final int DRIVE_TIMEOUT_MS = 30;
+    public static final double DRIVEBASE_D = 0;
+    public static final double DRIVEBASE_F = 0;
+    public static final int DRIVE_TIMEOUT_MS = 0;
 
     public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
     public static final double MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
@@ -21,7 +21,7 @@ public class RobotNumbers {
     public static final double XBOX_CONTROLLER_DEADZONE = 0.07;
 
     public static final double TURN_SCALE = 0.7;
-    public static final double DRIVE_SCALE = 1;
+    public static final double DRIVE_SCALE = 0.1;
 
     public static final double SHOOTER_P = 0.00035;
     public static final double SHOOTER_I = 0;

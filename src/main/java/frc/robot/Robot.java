@@ -49,9 +49,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testPeriodic() {
-        if (RobotToggles.ENABLE_DRIVE) {
-            driver.updateTeleop();
-        }
+        // if (RobotToggles.ENABLE_DRIVE) {
+        //     driver.updateTeleop();
+        // }
+        //driver.driveOne();
+        driver.updateTest();
     }
 
     @Override

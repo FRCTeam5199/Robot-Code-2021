@@ -56,6 +56,10 @@ public class DriveManager {
     //private boolean pointBall;
     private SparkFollowerMotors followerL, followerR;
     private WPI_TalonFX leaderLTalon, leaderRTalon;
+
+    private WPI_TalonFX followerLT, followerRT;
+
+
     //private WPI_TalonFX followerLTalon1, followerLTalon2, followerRTalon1, followerRTalon2;
     private TalonFollowerMotors followerLTalon, followerRTalon;
     //private double relLeft;
@@ -105,8 +109,8 @@ public class DriveManager {
     }
 
     private static double getTargetVelocity(double FPS) {
-        return FPS * convertFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
-    }
+        return convertFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
+    } 
 
     /**
      * Initialize the driver
@@ -144,13 +148,18 @@ public class DriveManager {
 
             setAllMotorCurrentLimits(50);
         } else {
+            System.out.println("Setting up Talons");
             leaderLTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_L);
             leaderRTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_R);
-            followerLTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_L);
-            followerRTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_R);
+            // followerLTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_L);
+            // followerRTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_R);
+            followerLT = new WPI_TalonFX(2);
+            followerRT = new WPI_TalonFX(4);
 
-            followerLTalon.follow(leaderLTalon);
-            followerRTalon.follow(leaderRTalon);
+            // followerLTalon.follow(leaderLTalon);
+            // followerRTalon.follow(leaderRTalon);
+            followerLT.follow(leaderLTalon);
+            followerRT.follow(leaderRTalon);
 
             try {
                 leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
@@ -160,8 +169,8 @@ public class DriveManager {
             }
 
             try {
-                followerRTalon.setInverted(InvertType.FollowMaster);
-                followerLTalon.setInverted(InvertType.FollowMaster);
+                // followerRTalon.setInverted(InvertType.FollowMaster);
+                // followerLTalon.setInverted(InvertType.FollowMaster);
             } catch (Exception e) {
                 throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
             }
@@ -188,8 +197,8 @@ public class DriveManager {
         } else {
             DriveManager.configureTalon(leaderLTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
             DriveManager.configureTalon(leaderRTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            followerLTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            followerRTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
+            // followerLTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
+            // followerRTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
         }
     }
 
@@ -250,6 +259,10 @@ public class DriveManager {
         }
     }
 
+    public void driveOne(){
+        leaderLTalon.set(ControlMode.Velocity, 10000);
+    }
+
     private void drive(double forward, double rotation) {
         drivePure(adjustedDrive(forward), adjustedRotation(rotation));
     }
@@ -271,12 +284,18 @@ public class DriveManager {
             //System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
         } else {
             leaderLTalon.set(ControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
+            // System.out.println(getTargetVelocity(leftFPS)*mult);
             leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
         }
     }
 
     public void updateTest() {
+        System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
+        leaderLTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y)+controller.get(XboxAxes.RIGHT_JOY_X)*0.5)*12000);
+        leaderRTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y)-controller.get(XboxAxes.RIGHT_JOY_X)*0.5)*12000);
 
+        //leaderLTalon.set(ControlMode.PercentOutput, 0.1);
+        //leaderRTalon.set(ControlMode.PercentOutput, 0.1);
     }
 
     public void updateGeneric() {
