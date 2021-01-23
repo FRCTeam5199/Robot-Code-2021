@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.ballstuff.intaking.*;
+import frc.ballstuff.shooting.*;
 import frc.drive.DriveManager;
 
 public class Robot extends TimedRobot {

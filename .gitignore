@@ -155,7 +155,7 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 # # IDEA Specific Java Settings
-.idea
+.idea/misc.xml
 
 # # VS Code Specific Java Settings
 .classpath
