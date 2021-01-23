@@ -98,21 +98,27 @@ public class Hopper {
         SmartDashboard.putBoolean("indexer enable", indexerActive);
         SmartDashboard.putBoolean("agitator enable", agitatorActive);
         SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
-        boolean indexerOverride = false;
+        boolean indexerOverride;//??i c it says that if the ball is close to turn off if the ineder is active !?
+        indexed = indexerSensorRange() < 9;
+        //indexerOverride = indexerSensorRange() > 9;
 
-        if (indexerSensorRange() > 9) {
-            indexer.set(ControlMode.PercentOutput, 0.3);
-            agitator.set(ControlMode.PercentOutput, 0.3);
-            indexed = false;
-            indexerOverride = true;
-        }
-        if (indexerSensorRange() < 9) {
+        if (!indexed) {
+            indexer.set(ControlMode.PercentOutput, 0.8); //0.3
+            agitator.set(ControlMode.PercentOutput, 0.6); //0.3
+        } else {
             indexer.set(ControlMode.PercentOutput, 0);
             agitator.set(ControlMode.PercentOutput, 0);
-            indexed = true;
-            indexerOverride = false;
         }
-
+        /*Joeys redo attempt
+        if (indexerActive){
+            indexer.set(ControlMode.PercentOutput, 0.8);
+        }else if (indexerSensorRange() < 9){
+            indexer.set(ControlMode.PercentOutput, 0)
+        }else{
+            indexer.set(ControlMode.PercentOutput, 0.3);
+        }
+        */
+/*
         if (indexerActive) {
             indexer.set(ControlMode.PercentOutput, 0.8);
         } else if (!indexerOverride) {
@@ -133,7 +139,7 @@ public class Hopper {
             agitator.set(ControlMode.PercentOutput, 0.6);
             indexer.set(ControlMode.PercentOutput, 0.8);
         }
-
+*/
     }
 
     public double indexerSensorRange() {
@@ -188,7 +194,7 @@ public class Hopper {
         //     agitator.set(ControlMode.PercentOutput, 0);
         // }
     }
-
+    /*
     public void updateStuff() {
         //if there are any balls in the hopper, attempt to agitate and index
         boolean ballsInHopper = true;
@@ -212,4 +218,5 @@ public class Hopper {
     public void fireBall() {
         fireOffset = 0.5;
     }
+    */
 }

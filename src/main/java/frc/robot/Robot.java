@@ -61,8 +61,6 @@ public class Robot extends TimedRobot {
         }
         if (RobotToggles.ENABLE_HOPPER) {
             hopper.update();
-            hopper.updateSimple();
-            //hopper.updateStuff();
         }
     }
 

@@ -18,23 +18,19 @@ public class XBoxController {
         RobotNumbers.triggerSensitivity = sens;
     }
 
-    public boolean getTriggerMomentary(XboxAxes trigger) throws IllegalArgumentException {
+    public boolean isTriggerPressedMomentary(XboxAxes trigger) throws IllegalArgumentException {
         if (trigger != XboxAxes.LEFT_TRIGGER && trigger != XboxAxes.RIGHT_TRIGGER) {
             throw new IllegalArgumentException("trigger must be an xbox trigger");
         }
-        boolean returnBool = false;
-        if (getTriggerPressed(trigger) && !triggerFlag) {
-            triggerFlag = true;
-            returnBool = true;
-        } else if (!getTriggerPressed(trigger) && triggerFlag) {
-            triggerFlag = false;
-        } else {
-            returnBool = false;
+        boolean out = false;
+        if (isTriggerPressed(trigger) != triggerFlag) {
+            out = true;
         }
-        return returnBool;
+        triggerFlag = isTriggerPressed(trigger);
+        return out;
     }
 
-    public boolean getTriggerPressed(XboxAxes trigger) {
+    public boolean isTriggerPressed(XboxAxes trigger) {
         return get(trigger) > RobotNumbers.triggerSensitivity;
     }
 

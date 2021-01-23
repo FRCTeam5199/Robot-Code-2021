@@ -1,8 +1,5 @@
 package frc.drive;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -116,7 +113,7 @@ public class DriveManager {
 
     private static double getTargetVelocity(double FPS) {
         return convertFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
-    } 
+    }
 
     /**
      * Initialize the driver
@@ -281,17 +278,21 @@ public class DriveManager {
     }
 
     public void updateTeleop() {
-        double invertedDrive = invert ? -1 : 1;
-        double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-        double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-        if (!RobotToggles.EXPERIMENTAL_DRIVE) {
-            drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
+        if (RobotToggles.DRIVE_USE_SPARKS) {
+            double invertedDrive = invert ? -1 : 1;
+            double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+            double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+            if (!RobotToggles.EXPERIMENTAL_DRIVE) {
+                drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
+            } else {
+                drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.LEFT_JOY_X));
+            }
         } else {
-            drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.LEFT_JOY_X));
+
         }
     }
 
-    public void driveOne(){
+    public void driveOne() {
         leaderLTalon.set(ControlMode.Velocity, 10000);
     }
 
@@ -321,16 +322,15 @@ public class DriveManager {
             rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
             //System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
         } else {
-            leaderLTalon.set(ControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
-            // System.out.println(getTargetVelocity(leftFPS)*mult);
-            leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
+            //leaderLTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y)+controller.get(XboxAxes.RIGHT_JOY_X)*0.5)*12000);
+            //leaderRTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y)-controller.get(XboxAxes.RIGHT_JOY_X)*0.5)*12000);
         }
     }
 
     public void updateTest() {
         System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
-        leaderLTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y)+controller.get(XboxAxes.RIGHT_JOY_X)*0.5)*12000);
-        leaderRTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y)-controller.get(XboxAxes.RIGHT_JOY_X)*0.5)*12000);
+        leaderLTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) + controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
+        leaderRTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) - controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
 
         //leaderLTalon.set(ControlMode.PercentOutput, 0.1);
         //leaderRTalon.set(ControlMode.PercentOutput, 0.1);
@@ -346,7 +346,7 @@ public class DriveManager {
     }
 
     /**
-     * Any Operation that you do on one motor, implement in here so that a seamless transition can occur
+     * Any Operation that you do on one follower motor, implement in here so that a seamless transition can occur
      */
     public static class SparkFollowerMotors {
         private final boolean USE_TWO_MOTORS;

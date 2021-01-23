@@ -50,9 +50,10 @@ public class ControllerEnums {
     }
 
     public enum JoystickAxis {
-        X(0),
-        Y(1),
-        Z(2);
+        X_AXIS(0),
+        Y_AXIS(1),
+        Z_ROTATE(2),
+        SLIDER(3);
 
         public final int AXIS_VALUE;
 
@@ -71,6 +72,39 @@ public class ControllerEnums {
 
         JoystickHatDirection(int... values) {
             this.ACCEPTED_VALUES = values;
+        }
+    }
+
+    //Uh. theyre all numbered so idk what to do here
+    public enum JoystickButtons {
+        ONE(1);
+
+        public final int AXIS_VALUE;
+
+        JoystickButtons(int value) {
+            this.AXIS_VALUE = value;
+        }
+    }
+
+    public enum ButtonPanelButtons {
+        RAISE_CLIMBER(1),
+        LOWER_CLIMBER(2),
+        CLIMBER_LOCK(3),
+        CLIMBER_UNLOCK(4),
+        BUDDY_CLIMB(5),
+        AUX_TOP(6),
+        AUX_BOTTOM(7),
+        INTAKE_UP(8),
+        INTAKE_DOWN(9),
+        HOPPER_IN(10),
+        HOPPER_OUT(11),
+        TARGET(12),
+        SOLID_SPEED(13);
+
+        public final int AXIS_VALUE;
+
+        ButtonPanelButtons(int value) {
+            this.AXIS_VALUE = value;
         }
     }
 }

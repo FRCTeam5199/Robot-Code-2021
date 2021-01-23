@@ -17,7 +17,7 @@ public class Intake {
         joystick = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
     }
 
-    public void init() {
+    public void init() throws InitializationFailureException{
         try {
             victor = new VictorSPX(RobotMap.INTAKE_MOTOR);
         } catch (Exception e) {

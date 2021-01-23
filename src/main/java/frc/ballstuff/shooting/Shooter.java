@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.ButtonPanel;
+import frc.controllers.ControllerEnums.*;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
@@ -120,8 +121,8 @@ public class Shooter {
         boolean disabled;
         double closeDist = 3;
 
-        if (panel.getButton(13) == ButtonStatus.DOWN) {
-            speed = 4200 * ((joystickController.getSlider() * 0.25) + 1); //4200
+        if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
+            speed = 4200 * ((joystickController.get(JoystickAxis.SLIDER) * 0.25) + 1); //4200
             disabled = false;
         } else {
             speed = 0;
@@ -209,7 +210,7 @@ public class Shooter {
     /**
      * Get motor speed based
      *
-     * @param distance
+     * @param distance ignored
      * @return 0
      */
     private double getSpeedBasedOnDistance(double distance) {
