@@ -310,7 +310,7 @@ public class DriveManager {
         FPS *= driveScaleMult.getDouble(RobotNumbers.DRIVE_SCALE);
         currentOmega = omega;
         double mult = 3.8 * 2.16 * RobotNumbers.DRIVE_SCALE;
-        var chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
+        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         double leftFPS = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
         double rightFPS = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);

@@ -9,10 +9,6 @@ public class Robot extends TimedRobot {
     public Intake intake;
     public Hopper hopper;
 
-    private static void assertValidStartConditions() throws IllegalStateException {
-
-    }
-
     /**
      * Init everything
      */

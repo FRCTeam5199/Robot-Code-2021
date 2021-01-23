@@ -51,14 +51,16 @@ public class Hopper {
     //         agitator.set(ControlMode.PercentOutput, 0);
     //     }
     // }
-    
-    public Hopper(){
+
+    public Hopper() {
         init();
     }
-    
+
     public void init() {
         if (autoIndex) {
             indexSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighAccuracy);
+            indexSensor.setEnabled(true);
+            indexSensor.setAutomaticMode(true);
         }
         agitator = new VictorSPX(RobotMap.AGITATOR_MOTOR);
         indexer = new VictorSPX(RobotMap.INDEXER_MOTOR);
@@ -72,6 +74,7 @@ public class Hopper {
 
     /**
      * Activates or deactivates the indexer based on the parameter
+     *
      * @param set What to set activation status to
      */
     public void setIndexer(boolean set) {
@@ -80,6 +83,7 @@ public class Hopper {
 
     /**
      * Sets the robot to reverse based on the parameter
+     *
      * @param reverse What to set status to
      */
     public void setReverse(boolean reverse) {
@@ -139,8 +143,9 @@ public class Hopper {
         return -2;
     }
 
-    public void updateSimple(){
-        SmartDashboard.putNumber("Range Onboard", indexSensor.getRange());
+    public void updateSimple() {
+        //SmartDashboard.putNumber("Sensor Range", indexSensor.getRange());
+        System.out.println("Index Sensor: " + indexSensor.getRange());
         int out = -1;
         // if(joy.getRawButton(3)){
         //     agitator.set(ControlMode.PercentOutput, 0.5);
@@ -151,15 +156,13 @@ public class Hopper {
         // else{
         //     agitator.set(ControlMode.PercentOutput, 0);
         // }
-        if(joy.getRawButton(8)){
+        if (joy.getRawButton(8)) {
             indexer.set(ControlMode.PercentOutput, 0.5);
             out = 1;
-        }
-        else if(joy.getRawButton(9)){
+        } else if (joy.getRawButton(9)) {
             indexer.set(ControlMode.PercentOutput, -0.5);
             out = 2;
-        }
-        else{
+        } else {
             agitator.set(ControlMode.PercentOutput, 0);
             out = 0;
         }
@@ -186,33 +189,27 @@ public class Hopper {
         // }
     }
 
-    public void updateStuff(){
-         //if there are any balls in the hopper, attempt to agitate and index
-         boolean ballsInHopper = true;
-         if(ballsInHopper){
-             //if no ball in the proper index spot, run agitator and indexer until there is
-             boolean indexed = indexSensor.getRange() > 5 && indexSensor.getRange() < 7;
-             if(!indexed){
-                 indexer.set(ControlMode.PercentOutput, 0.5+fireOffset);
-                 agitator.set(ControlMode.PercentOutput, 0.5+fireOffset);
-             }
-             else{
-                 indexer.set(ControlMode.PercentOutput, fireOffset);
-                 agitator.set(ControlMode.PercentOutput, fireOffset);
-             }
-         }
-         else{
-             indexer.set(ControlMode.PercentOutput, 0);
-             agitator.set(ControlMode.PercentOutput, 0);
-         }
-         fireOffset = 0;
-     }
+    public void updateStuff() {
+        //if there are any balls in the hopper, attempt to agitate and index
+        boolean ballsInHopper = true;
+        if (ballsInHopper) {
+            //if no ball in the proper index spot, run agitator and indexer until there is
+            boolean indexed = indexSensor.getRange() > 5 && indexSensor.getRange() < 7;
+            if (!indexed) {
+                indexer.set(ControlMode.PercentOutput, 0.5 + fireOffset);
+                agitator.set(ControlMode.PercentOutput, 0.5 + fireOffset);
+            } else {
+                indexer.set(ControlMode.PercentOutput, fireOffset);
+                agitator.set(ControlMode.PercentOutput, fireOffset);
+            }
+        } else {
+            indexer.set(ControlMode.PercentOutput, 0);
+            agitator.set(ControlMode.PercentOutput, 0);
+        }
+        fireOffset = 0;
+    }
 
-     public void fireBall(){
-         fireOffset = 0.5;
-     }
-
-     public void setupSensor(){
-         indexSensor.setAutomaticMode(true);
-     }
+    public void fireBall() {
+        fireOffset = 0.5;
+    }
 }
