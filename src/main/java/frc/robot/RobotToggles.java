@@ -9,17 +9,17 @@ public class RobotToggles {
     /**
      *  Determines if the intake will do the do
      */
-    public static final boolean ENABLE_INTAKE = false;
+    public static final boolean ENABLE_INTAKE = true;
     public static final boolean ENABLE_CLIMBER = false;
     public static final boolean ENABLE_SHOOTER = false;
-    public static final boolean ENABLE_HOPPER = false;
+    public static final boolean ENABLE_HOPPER = true;
 
     //Drivetrain
-    public static final boolean DRIVE_USE_SPARKS = false;
+    public static final boolean DRIVE_USE_SPARKS = true;
     public static final boolean DRIVE_USE_6_MOTORS = true;
     public static final boolean DRIVE_INVERT_LEFT = true;
     public static final boolean DRIVE_INVERT_RIGHT = false;
-    public static final boolean EXPERIMENTAL_DRIVE = true;
+    public static final boolean EXPERIMENTAL_DRIVE = false;
 
     //Misc
     public static final boolean ENABLE_IMU = false;

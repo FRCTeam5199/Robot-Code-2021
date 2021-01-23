@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.ButtonPanel;
 import frc.robot.RobotMap;
+import frc.robot.RobotNumbers;
 
 public class Hopper {
     public VictorSPX agitator, indexer;
@@ -61,8 +62,8 @@ public class Hopper {
         }
         agitator = new VictorSPX(RobotMap.AGITATOR_MOTOR);
         indexer = new VictorSPX(RobotMap.INDEXER_MOTOR);
-        panel = new ButtonPanel(3);
-        //joy = new Joystick(3);
+        panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
+        joy = new Joystick(RobotNumbers.FLIGHT_STICK_SLOT);
     }
 
     public void setAgitator(boolean set) {
@@ -138,7 +139,8 @@ public class Hopper {
         return -2;
     }
 
-    /*public void updateSimple(){
+    public void updateSimple(){
+        SmartDashboard.putNumber("Range Onboard", indexSensor.getRange());
         int out = -1;
         // if(joy.getRawButton(3)){
         //     agitator.set(ControlMode.PercentOutput, 0.5);
@@ -149,7 +151,6 @@ public class Hopper {
         // else{
         //     agitator.set(ControlMode.PercentOutput, 0);
         // }
-
         if(joy.getRawButton(8)){
             indexer.set(ControlMode.PercentOutput, 0.5);
             out = 1;
@@ -183,35 +184,35 @@ public class Hopper {
         // else{
         //     agitator.set(ControlMode.PercentOutput, 0);
         // }
-    }*/
+    }
 
-    // public void update(){
-    //     //if there are any balls in the hopper, attempt to agitate and index
-    //     boolean ballsInHopper = true;
-    //     if(ballsInHopper){
-    //         //if no ball in the proper index spot, run agitator and indexer until there is
-    //         boolean indexed = indexSensor.getRange() > 5 && indexSensor.getRange() < 7;
-    //         if(!indexed){
-    //             indexer.set(ControlMode.PercentOutput, 0.5+fireOffset);
-    //             agitator.set(ControlMode.PercentOutput, 0.5+fireOffset);
-    //         }
-    //         else{
-    //             indexer.set(ControlMode.PercentOutput, fireOffset);
-    //             agitator.set(ControlMode.PercentOutput, fireOffset);
-    //         }
-    //     }
-    //     else{
-    //         indexer.set(ControlMode.PercentOutput, 0);
-    //         agitator.set(ControlMode.PercentOutput, 0);
-    //     }
-    //     fireOffset = 0;
-    // }
+    public void updateStuff(){
+         //if there are any balls in the hopper, attempt to agitate and index
+         boolean ballsInHopper = true;
+         if(ballsInHopper){
+             //if no ball in the proper index spot, run agitator and indexer until there is
+             boolean indexed = indexSensor.getRange() > 5 && indexSensor.getRange() < 7;
+             if(!indexed){
+                 indexer.set(ControlMode.PercentOutput, 0.5+fireOffset);
+                 agitator.set(ControlMode.PercentOutput, 0.5+fireOffset);
+             }
+             else{
+                 indexer.set(ControlMode.PercentOutput, fireOffset);
+                 agitator.set(ControlMode.PercentOutput, fireOffset);
+             }
+         }
+         else{
+             indexer.set(ControlMode.PercentOutput, 0);
+             agitator.set(ControlMode.PercentOutput, 0);
+         }
+         fireOffset = 0;
+     }
 
-    // public void fireBall(){
-    //     fireOffset = 0.5;
-    // }
+     public void fireBall(){
+         fireOffset = 0.5;
+     }
 
-    // public void setupSensor(){
-    //     indexSensor.setAutomaticMode(true);
-    // }
+     public void setupSensor(){
+         indexSensor.setAutomaticMode(true);
+     }
 }

@@ -1,12 +1,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.ballstuff.intaking.Intake;
+import frc.ballstuff.intaking.*;
 import frc.drive.DriveManager;
 
 public class Robot extends TimedRobot {
     public DriveManager driver;
     public Intake intake;
+    public Hopper hopper;
 
     private static void assertValidStartConditions() throws IllegalStateException {
 
@@ -23,6 +24,10 @@ public class Robot extends TimedRobot {
 
         if (RobotToggles.ENABLE_INTAKE) {
             intake = new Intake();
+        }
+
+        if (RobotToggles.ENABLE_HOPPER) {
+            hopper = new Hopper();
         }
     }
 
@@ -56,6 +61,11 @@ public class Robot extends TimedRobot {
         }
         if (RobotToggles.ENABLE_INTAKE) {
             intake.updateTeleop();
+        }
+        if (RobotToggles.ENABLE_HOPPER) {
+            hopper.update();
+            hopper.updateSimple();
+            //hopper.updateStuff();
         }
     }
 
