@@ -12,7 +12,7 @@ public class RobotNumbers {
     public static final double WHEEL_DIAMETER = 6; //update: now it's used once
     public static final double MAX_MOTOR_SPEED = 5000; //theoretical max motor speed in rpm
     public static final double TURN_SCALE = 0.7;
-    public static final double DRIVE_SCALE = 1;
+    public static final double DRIVE_SCALE = 0.1;
 
     public static final double SHOOTER_P = 0.00035;
     public static final double SHOOTER_I = 0;
