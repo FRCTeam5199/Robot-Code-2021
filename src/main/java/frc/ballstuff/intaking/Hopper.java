@@ -9,10 +9,12 @@ import com.revrobotics.Rev2mDistanceSensor.Unit;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.ButtonPanel;
+import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
+import frc.robot.RobotToggles;
 
-public class Hopper {
+public class Hopper implements ISubsystem {
     public VictorSPX agitator, indexer;
     public Rev2mDistanceSensor indexSensor;
     public boolean autoIndex = true;
@@ -56,6 +58,7 @@ public class Hopper {
         init();
     }
 
+    @Override
     public void init() {
         if (autoIndex) {
             indexSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighAccuracy);
@@ -68,78 +71,20 @@ public class Hopper {
         joy = new Joystick(RobotNumbers.FLIGHT_STICK_SLOT);
     }
 
-    public void setAgitator(boolean set) {
-        agitatorActive = set;
-    }
-
-    /**
-     * Activates or deactivates the indexer based on the parameter
-     *
-     * @param set What to set activation status to
-     */
-    public void setIndexer(boolean set) {
-        indexerActive = set;
-    }
-
-    /**
-     * Sets the robot to reverse based on the parameter
-     *
-     * @param reverse What to set status to
-     */
-    public void setReverse(boolean reverse) {
-        isReversed = reverse;
-    }
-
-    public void setForced(boolean forced) {
-        isForced = forced;
-    }
-
-    public void update() {
-        SmartDashboard.putBoolean("indexer enable", indexerActive);
-        SmartDashboard.putBoolean("agitator enable", agitatorActive);
-        SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
-        boolean indexerOverride;//??i c it says that if the ball is close to turn off if the ineder is active !?
-        indexed = indexerSensorRange() < 9;
-        //indexerOverride = indexerSensorRange() > 9;
-
-        if (!indexed) {
+    @Override
+    public void updateGeneric() {
+        if (RobotToggles.DEBUG) {
+            SmartDashboard.putBoolean("indexer enable", indexerActive);
+            SmartDashboard.putBoolean("agitator enable", agitatorActive);
+            SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
+        }
+        if (indexerSensorRange() > 9) {
             indexer.set(ControlMode.PercentOutput, 0.8); //0.3
             agitator.set(ControlMode.PercentOutput, 0.6); //0.3
         } else {
             indexer.set(ControlMode.PercentOutput, 0);
             agitator.set(ControlMode.PercentOutput, 0);
         }
-        /*Joeys redo attempt
-        if (indexerActive){
-            indexer.set(ControlMode.PercentOutput, 0.8);
-        }else if (indexerSensorRange() < 9){
-            indexer.set(ControlMode.PercentOutput, 0)
-        }else{
-            indexer.set(ControlMode.PercentOutput, 0.3);
-        }
-        */
-/*
-        if (indexerActive) {
-            indexer.set(ControlMode.PercentOutput, 0.8);
-        } else if (!indexerOverride) {
-            indexer.set(ControlMode.PercentOutput, 0);
-        }
-        if (agitatorActive) {
-            agitator.set(ControlMode.PercentOutput, 0.6);
-        } else if (!indexerOverride) {
-            agitator.set(ControlMode.PercentOutput, 0);
-        }
-
-        if (isReversed) {
-            agitator.set(ControlMode.PercentOutput, -1);
-            //indexer.set(ControlMode.PercentOutput, -1);
-        }
-
-        if (isForced) {
-            agitator.set(ControlMode.PercentOutput, 0.6);
-            indexer.set(ControlMode.PercentOutput, 0.8);
-        }
-*/
     }
 
     public double indexerSensorRange() {
@@ -149,6 +94,22 @@ public class Hopper {
         return -2;
     }
 
+    @Override
+    public void updateTest() {
+        updateGeneric();
+    }
+
+    @Override
+    public void updateTeleop() {
+        updateGeneric();
+    }
+
+    @Override
+    public void updateAuton() {
+
+    }
+    
+/*
     public void updateSimple() {
         //SmartDashboard.putNumber("Sensor Range", indexSensor.getRange());
         System.out.println("Index Sensor: " + indexSensor.getRange());
@@ -194,7 +155,7 @@ public class Hopper {
         //     agitator.set(ControlMode.PercentOutput, 0);
         // }
     }
-    /*
+
     public void updateStuff() {
         //if there are any balls in the hopper, attempt to agitate and index
         boolean ballsInHopper = true;

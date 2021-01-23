@@ -14,15 +14,17 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.ButtonPanel;
-import frc.controllers.ControllerEnums.*;
+import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
+import frc.controllers.ControllerEnums.JoystickAxis;
 import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
+import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 
-public class Shooter {
+public class Shooter implements ISubsystem {
 
     public final String[] data = {
             "match time", "init time", "speed", "target speed", "motor temperature", "motor current", "powered", "P",
@@ -32,6 +34,12 @@ public class Shooter {
             "seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"
     };
     private final double pulleyRatio = RobotNumbers.motorPulleySize / RobotNumbers.driverPulleySize;
+    private final Timer timer = new Timer();
+    private final int ballsShot = 0;
+    private final boolean poweredState = false;
+    private final double[][] sizeSpeedsArray = {{0, 0}, {45, 4100}, {55, 4150}, {65, 4170}, {75, 4150}, {85, 4500},};
+    private final double speedMult = 1;
+    private final double[][] voltageFFArray = {{0, 0}, {11, 190}, {13, 185}};
     public double speed;
     public boolean atSpeed = false;
     public double actualRPM;
@@ -49,16 +57,10 @@ public class Shooter {
     private boolean enabled = true;
     private JoystickController joystickController;
     private ButtonPanel panel;
-    private Timer timer = new Timer();
     private double targetRPM;
-    private int ballsShot = 0;
-    private boolean poweredState = false;
     private boolean spunUp = false;
     private boolean recoveryPID = false;
     private double lastSpeed;
-    private double[][] sizeSpeedsArray = {{0, 0}, {45, 4100}, {55, 4150}, {65, 4170}, {75, 4150}, {85, 4500},};
-    private double speedMult = 1;
-    private double[][] voltageFFArray = {{0, 0}, {11, 190}, {13, 185}};
 
     public Shooter() {
         init();
@@ -67,6 +69,7 @@ public class Shooter {
     /**
      * Initialize the Shooter object.
      */
+    @Override
     public void init() {
         createAndInitMotors();
 
@@ -75,19 +78,25 @@ public class Shooter {
         panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
     }
 
+
     private void createAndInitMotors() {
         if (RobotToggles.SHOOTER_USE_SPARKS) {
             leader = new CANSparkMax(RobotMap.SHOOTER_LEADER, MotorType.kBrushless);
-            follower = new CANSparkMax(RobotMap.SHOOTER_FOLLOWER, MotorType.kBrushless);
+            if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
+                follower = new CANSparkMax(RobotMap.SHOOTER_FOLLOWER, MotorType.kBrushless);
+            }
 
             leader.setInverted(true);
-            follower.follow(leader, true);
+            if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
+                follower.follow(leader, true);
+            }
 
             leader.setSmartCurrentLimit(80);
-            follower.setSmartCurrentLimit(80);
+            if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
+                follower.setSmartCurrentLimit(80);
+                follower.setIdleMode(IdleMode.kCoast);
+            }
             leader.setIdleMode(IdleMode.kCoast);
-            follower.setIdleMode(IdleMode.kCoast);
-
             leader.getEncoder().setPosition(0);
             leader.setOpenLoopRampRate(40);
             encoder = leader.getEncoder();
@@ -98,12 +107,15 @@ public class Shooter {
             falconLeader = new TalonFX(RobotMap.SHOOTER_LEADER);
             falconLeader.setInverted(TalonFXInvertType.Clockwise);
 
-            falconFollower = new TalonFX(RobotMap.SHOOTER_FOLLOWER);
-            falconFollower.setInverted(TalonFXInvertType.CounterClockwise);
-            falconFollower.follow(falconLeader);
+            if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
+                falconFollower = new TalonFX(RobotMap.SHOOTER_FOLLOWER);
+                falconFollower.setInverted(TalonFXInvertType.CounterClockwise);
+                falconFollower.follow(falconLeader);
+                falconFollower.setNeutralMode(NeutralMode.Coast);
+            }
 
             falconLeader.setNeutralMode(NeutralMode.Coast);
-            falconFollower.setNeutralMode(NeutralMode.Coast);
+
         }
     }
 
@@ -118,15 +130,12 @@ public class Shooter {
         }
         checkState();
         //put code here to set speed based on distance to goal
-        boolean disabled;
-        double closeDist = 3;
+        boolean disabled = panel.get(ButtonPanelButtons.SOLID_SPEED) != ButtonStatus.DOWN;
 
-        if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
+        if (!disabled) {
             speed = 4200 * ((joystickController.get(JoystickAxis.SLIDER) * 0.25) + 1); //4200
-            disabled = false;
         } else {
             speed = 0;
-            disabled = true;
         }
 
         if (!interpolationEnabled) {
@@ -145,12 +154,14 @@ public class Shooter {
             }
         }
 
-        SmartDashboard.putNumber("RPM", actualRPM);
-        SmartDashboard.putNumber("Target RPM", speed);
+        if (RobotToggles.DEBUG) {
+            SmartDashboard.putNumber("RPM", actualRPM);
+            SmartDashboard.putNumber("Target RPM", speed);
 
-        SmartDashboard.putBoolean("atSpeed", atSpeed);
-        SmartDashboard.putNumber("ballsShot", ballsShot);
-        SmartDashboard.putBoolean("shooter enable", enabled);
+            SmartDashboard.putBoolean("atSpeed", atSpeed);
+            SmartDashboard.putNumber("ballsShot", ballsShot);
+            SmartDashboard.putBoolean("shooter enable", enabled);
+        }
     }
 
     private void checkState() {
@@ -257,5 +268,25 @@ public class Shooter {
         double speedGap = voltageFFArray[index][1] - voltageFFArray[index + 1][1];
         double outSpeed = voltageFFArray[index][1] + speedGap * portionOfGap; //low end + gap * portion
         return 0;
+    }
+
+    @Override
+    public void updateTest() {
+        updateGeneric();
+    }
+
+    @Override
+    public void updateTeleop() {
+        updateGeneric();
+    }
+
+    @Override
+    public void updateAuton() {
+
+    }
+
+    @Override
+    public void updateGeneric() {
+        update();
     }
 }

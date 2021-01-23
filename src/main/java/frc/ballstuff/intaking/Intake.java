@@ -2,12 +2,15 @@ package frc.ballstuff.intaking;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.JoystickController;
+import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
+import frc.robot.RobotToggles;
 
-public class Intake {
+public class Intake implements ISubsystem {
     private VictorSPX victor;
     private JoystickController joystick;
     private int intakeMult;
@@ -17,7 +20,8 @@ public class Intake {
         joystick = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
     }
 
-    public void init() throws InitializationFailureException{
+    @Override
+    public void init() throws InitializationFailureException {
         try {
             victor = new VictorSPX(RobotMap.INTAKE_MOTOR);
         } catch (Exception e) {
@@ -49,17 +53,23 @@ public class Intake {
             //deployn't intake
             //intake.setDeploy(false);
         }
+        if (RobotToggles.DEBUG) {
+            SmartDashboard.putNumber("Intake Speed", intakeMult);
+        }
     }
 
+    @Override
     public void updateTeleop() {
         updateGeneric();
     }
 
+    @Override
     public void updateTest() {
         updateGeneric();
     }
 
-    public void updateAutonomous() {
+    @Override
+    public void updateAuton() {
     }
 
 }

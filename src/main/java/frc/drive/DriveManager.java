@@ -20,6 +20,7 @@ import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
 import frc.controllers.XBoxController;
+import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
@@ -27,7 +28,7 @@ import frc.robot.RobotToggles;
 import org.jetbrains.annotations.NotNull;
 
 
-public class DriveManager {
+public class DriveManager implements ISubsystem {
     private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry();
     private final NetworkTableEntry driveScaleMult = tab2.add("Speed Factor", RobotNumbers.DRIVE_SCALE).getEntry();
@@ -60,8 +61,6 @@ public class DriveManager {
     private SparkFollowerMotors followerL, followerR;
     private WPI_TalonFX leaderLTalon, leaderRTalon;
 
-    private WPI_TalonFX followerLT, followerRT;
-
 
     //private WPI_TalonFX followerLTalon1, followerLTalon2, followerRTalon1, followerRTalon2;
     private TalonFollowerMotors followerLTalon, followerRTalon;
@@ -87,7 +86,6 @@ public class DriveManager {
 
     public DriveManager() throws RuntimeException {
         init();
-        // headControl = new PIDController(Kp, Ki, Kd);
     }
 
     private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
@@ -121,6 +119,7 @@ public class DriveManager {
      * @throws IllegalArgumentException       When IDs for follower motors are too few or too many
      * @throws InitializationFailureException When something fails to init properly
      */
+    @Override
     public void init() throws IllegalArgumentException, InitializationFailureException {
         createDriveMotors();
         initIMU();
@@ -149,37 +148,32 @@ public class DriveManager {
             }
 
             try {
-                leaderL.setInverted(true);
-                leaderR.setInverted(false);
+                leaderL.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
+                leaderR.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
             } catch (Exception e) {
                 throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
             }
 
             setAllMotorCurrentLimits(50);
         } else {
-            System.out.println("Setting up Talons");
             leaderLTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_L);
             leaderRTalon = new WPI_TalonFX(RobotMap.DRIVE_LEADER_R);
-            // followerLTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_L);
-            // followerRTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_R);
-            followerLT = new WPI_TalonFX(2);
-            followerRT = new WPI_TalonFX(4);
+            followerLTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_L);
+            followerRTalon = new TalonFollowerMotors().createFollowers(RobotMap.DRIVE_FOLLOWERS_R);
 
             // followerLTalon.follow(leaderLTalon);
             // followerRTalon.follow(leaderRTalon);
-            followerLT.follow(leaderLTalon);
-            followerRT.follow(leaderRTalon);
 
             try {
-                leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
-                leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
+                followerLTalon.follow(leaderLTalon);
+                followerRTalon.follow(leaderRTalon);
             } catch (Exception e) {
                 throw new InitializationFailureException("An error has occured linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
             }
 
             try {
-                // followerRTalon.setInverted(InvertType.FollowMaster);
-                // followerLTalon.setInverted(InvertType.FollowMaster);
+                leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
+                leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
             } catch (Exception e) {
                 throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
             }
@@ -213,8 +207,8 @@ public class DriveManager {
         } else {
             DriveManager.configureTalon(leaderLTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
             DriveManager.configureTalon(leaderRTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            // followerLTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            // followerRTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
+            followerLTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
+            followerRTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
         }
     }
 
@@ -277,6 +271,7 @@ public class DriveManager {
         return ypr[0];
     }
 
+    @Override
     public void updateTeleop() {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             double invertedDrive = invert ? -1 : 1;
@@ -291,6 +286,8 @@ public class DriveManager {
 
         }
     }
+
+
 
     public void driveOne() {
         leaderLTalon.set(ControlMode.Velocity, 10000);
@@ -317,18 +314,27 @@ public class DriveManager {
         double rightFPS = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
 
         if (RobotToggles.DRIVE_USE_SPARKS) {
-            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + convertFPStoRPM(leftFPS) + " " + convertFPStoRPM(rightFPS));
+            if (RobotToggles.DEBUG) {
+                System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + convertFPStoRPM(leftFPS) + " " + convertFPStoRPM(rightFPS));
+            }
             leftPID.setReference(convertFPStoRPM(leftFPS) * mult, ControlType.kVelocity);
             rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
-            //System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
+            /*
+            if (RobotToggles.DEBUG) {
+                System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
+            }
+            */
         } else {
             //leaderLTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y)+controller.get(XboxAxes.RIGHT_JOY_X)*0.5)*12000);
             //leaderRTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y)-controller.get(XboxAxes.RIGHT_JOY_X)*0.5)*12000);
         }
     }
 
+    @Override
     public void updateTest() {
-        System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
+        if (RobotToggles.DEBUG) {
+            System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
+        }
         leaderLTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) + controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
         leaderRTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) - controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
 
@@ -336,6 +342,7 @@ public class DriveManager {
         //leaderRTalon.set(ControlMode.PercentOutput, 0.1);
     }
 
+    @Override
     public void updateGeneric() {
 
     }
@@ -343,6 +350,11 @@ public class DriveManager {
     public void drivePIDSparks(double left, double right) {
         leftPID.setReference(left * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
         rightPID.setReference(right * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
+    }
+
+    @Override
+    public void updateAuton() {
+
     }
 
     /**

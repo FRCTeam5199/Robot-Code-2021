@@ -1,14 +1,16 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.ballstuff.intaking.*;
-import frc.ballstuff.shooting.*;
+import frc.ballstuff.intaking.Hopper;
+import frc.ballstuff.intaking.Intake;
+import frc.ballstuff.shooting.Shooter;
 import frc.drive.DriveManager;
 
 public class Robot extends TimedRobot {
     public DriveManager driver;
     public Intake intake;
     public Hopper hopper;
+    public Shooter shooter;
 
     /**
      * Init everything
@@ -26,6 +28,10 @@ public class Robot extends TimedRobot {
         if (RobotToggles.ENABLE_HOPPER) {
             hopper = new Hopper();
         }
+
+        if (RobotToggles.ENABLE_SHOOTER) {
+            shooter = new Shooter();
+        }
     }
 
     @Override
@@ -42,7 +48,10 @@ public class Robot extends TimedRobot {
             //driver.updateAutonomous();
         }
         if (RobotToggles.ENABLE_INTAKE) {
-            intake.updateAutonomous();
+            intake.updateAuton();
+        }
+        if (RobotToggles.ENABLE_SHOOTER) {
+            //shooter.updateAutonomous();
         }
     }
 
@@ -60,7 +69,10 @@ public class Robot extends TimedRobot {
             intake.updateTeleop();
         }
         if (RobotToggles.ENABLE_HOPPER) {
-            hopper.update();
+            hopper.updateTeleop();
+        }
+        if (RobotToggles.ENABLE_SHOOTER) {
+            shooter.updateTeleop();
         }
     }
 
@@ -75,6 +87,12 @@ public class Robot extends TimedRobot {
         }
         if (RobotToggles.ENABLE_INTAKE) {
             intake.updateTest();
+        }
+        if (RobotToggles.ENABLE_SHOOTER) {
+            shooter.updateTest();
+        }
+        if (RobotToggles.ENABLE_HOPPER) {
+            hopper.updateTest();
         }
     }
 
