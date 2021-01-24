@@ -58,7 +58,7 @@ public class Turret implements ISubsystem {
     // private NetworkTableEntry spinButton = tab.add("rotate", false).getEntry();
     private NetworkTableEntry angleOffset = tab.add("angle offset", -2.9).getEntry();
     private NetworkTableEntry rotSpeed = tab.add("rotationSpeed", 0).getEntry();
-    private GoalChameleon chameleon;
+    //private GoalChameleon chameleon;
     private double rpmOut;
     private int scanDirection = -1;
     private double targetAngle = 225;
@@ -66,11 +66,16 @@ public class Turret implements ISubsystem {
     public Turret() {
         init();
     }
+
+    public void teleopInit() {
+        encoder = motor.getEncoder();
+        encoder.setPosition(0);
+    }
     @Override
     public void init() {
         joy = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
         pigeon = new PigeonIMU(RobotMap.PIGEON);
-        chameleon = new GoalChameleon();
+        //chameleon = new GoalChameleon();
         motor = new CANSparkMax(RobotMap.TURRET_YAW, MotorType.kBrushless);
         encoder = motor.getEncoder();
         encoder.setPosition(0);
@@ -93,7 +98,7 @@ public class Turret implements ISubsystem {
         setMotorPID(0.5, 0, 0);
         setPosPID(0.02, 0, 0);
         motor.setIdleMode(IdleMode.kBrake);
-        chameleon.init();
+        //chameleon.init();
         setBrake(true);
     }
 
@@ -141,7 +146,7 @@ public class Turret implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (RobotToggles.DEBUG) {
-            //System.out.println(turretDegrees());
+            System.out.println(turretDegrees());
         }
         //SmartDashboard.putNumber("slider",joy.getSlider());
         fMultiplier = fMult.getDouble(0);
@@ -160,9 +165,10 @@ public class Turret implements ISubsystem {
         if 270>position>0 then offset WHATEVER speed it is turning at by -driveOmega to counterrotate
         */
         double omegaSetpoint;
+        /*
         if (271 > turretDegrees() && turretDegrees() > -1) {
             omegaSetpoint = 0;
-            omegaSetpoint += -driveOmega * arbDriveMult.getDouble(-0.28);
+            //omegaSetpoint += -driveOmega * arbDriveMult.getDouble(-0.28);
             if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
                 omegaSetpoint += joy.get(ControllerEnums.JoystickAxis.X_AXIS);
             }
@@ -191,20 +197,21 @@ public class Turret implements ISubsystem {
             SmartDashboard.putString("mode", "Facing Target");
             omegaSetpoint += positionControl.calculate(-chameleon.getGoalAngle(), angleOffset.getDouble(-2.9));
         }
-
+        */
+        omegaSetpoint = 0;
         if (joy.get(ControllerEnums.JoystickButtons.TWO) == ControllerEnums.ButtonStatus.DOWN) {
-            omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.X_AXIS) * 2;
+            omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * 2 * -1;
         }
 
         //omegaSetpoint += positionControl.calculate(turretDegrees(), targetPosition);
-        omegaSetpoint *= -1;
-
+        //omegaSetpoint *= -1;
+        /*
         if (Math.abs(omegaSetpoint) < 0.01) {
             atTarget = true;
         } else {
             atTarget = false;
         }
-
+           */
         boolean safe = turretDegrees() < 271 && turretDegrees() > -1;
         if (safe) {
             if (/*spinButton.getBoolean(false)&&*/true) {
@@ -241,7 +248,7 @@ public class Turret implements ISubsystem {
         // SmartDashboard.putBoolean("Turret Safe", safe);
         // SmartDashboard.putNumber("Turret North", limitAngle(235+yawWrap()-360));
         // SmartDashboard.putNumber("YawWrap", yawWrap()-360);
-        // SmartDashboard.putBoolean("Turret At Target", atTarget);
+        // SmartDashboard.putBoolean("Turret At Target", atTarget);FR
         // //chasingTarget = false;
         // SmartDashboard.putNumber("Turret Heading from North", fieldHeading());
         // SmartDashboard.putBoolean("Turret Track", track);

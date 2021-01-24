@@ -60,7 +60,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-
+        if (RobotToggles.ENABLE_SHOOTER) {
+            turret.teleopInit();
+        }
     }
 
     @Override
