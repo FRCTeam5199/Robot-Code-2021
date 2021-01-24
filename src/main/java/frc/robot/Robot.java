@@ -8,11 +8,11 @@ import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
 
 public class Robot extends TimedRobot {
-    public DriveManager driver;
-    public Intake intake;
-    public Hopper hopper;
-    public Shooter shooter;
-    public Turret turret;
+    public static DriveManager driver;
+    public static Intake intake;
+    public static Hopper hopper;
+    public static Shooter shooter;
+    public static Turret turret;
 
     /**
      * Init everything
@@ -76,7 +76,7 @@ public class Robot extends TimedRobot {
         }
         if (RobotToggles.ENABLE_SHOOTER) {
             shooter.updateTeleop();
-            turret.update();
+            turret.updateTeleop();
         }
     }
 
@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
         }
         if (RobotToggles.ENABLE_SHOOTER) {
             shooter.updateTest();
-            turret.update();
+            turret.updateTest();
         }
         if (RobotToggles.ENABLE_HOPPER) {
             hopper.updateTest();
@@ -103,5 +103,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
+        if (RobotToggles.ENABLE_SHOOTER) {
+            turret.disabledInit();
+        }
     }
 }

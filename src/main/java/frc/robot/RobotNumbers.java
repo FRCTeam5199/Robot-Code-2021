@@ -14,14 +14,15 @@ public class RobotNumbers {
     public static final double TURN_SCALE = 0.7;
     public static final double DRIVE_SCALE = 0.1;
 
-    public static final double SHOOTER_P = 0.00035;
-    public static final double SHOOTER_I = 0;
-    public static final double SHOOTER_D = 0;
-    public static final double SHOOTER_F = 0.00019;
-    public static final double SHOOTER_RECOVERY_P = 0.00037;
-    public static final double SHOOTER_RECOVERY_I = 0;
-    public static final double SHOOTER_RECOVERY_D = 0;
-    public static final double SHOOTER_RECOVERY_F = 0.00019;
+    public static final double SHOOTER_P = 0.001;
+    public static final double SHOOTER_I = 0.00003;
+    public static final double SHOOTER_D = 0.0001;
+    public static final double SHOOTER_F = 0.001;
+    public static final double SHOOTER_RECOVERY_P = SHOOTER_P;//= 0.00037;
+    public static final double SHOOTER_RECOVERY_I = SHOOTER_I;//= 0;
+    public static final double SHOOTER_RECOVERY_D = SHOOTER_D;//= 0;
+    public static final double SHOOTER_RECOVERY_F = SHOOTER_F;//= 0.00019;
+    public static final double SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
     public static final double motorPulleySize = 0;//?;
     public static final double driverPulleySize = 0;//?;
 
@@ -31,6 +32,7 @@ public class RobotNumbers {
     public static final double TURRET_GEAR_RATIO = 7;
     public static final double TURRET_MAX_POS = 270;
     public static final double TURRET_MIN_POS = 0;
+    public static final int SHOOTER_TIMEOUT_MS = 20;
     public static double triggerSensitivity = 0.25;
     public static int XBOX_CONTROLLER_SLOT = 0;
     public static int FLIGHT_STICK_SLOT = 1;

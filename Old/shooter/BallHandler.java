@@ -140,6 +140,7 @@ public class BallHandler{
         shooter.closeLogger();
     }
 
+
     public void fireHighSpeed(){
         // boolean visOverride = hopper.visionOverride.getBoolean(false);
         // boolean spinOverride = hopper.spinupOverride.getBoolean(false);

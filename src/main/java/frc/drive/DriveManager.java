@@ -88,6 +88,16 @@ public class DriveManager implements ISubsystem {
         init();
     }
 
+    /**
+     *  Configures motors
+     *
+     * @param motor - motor
+     * @param idx - PID loop, by default 0
+     * @param kF - Feed forward
+     * @param kP - Proportional constant
+     * @param kI - Integral constant
+     * @param kD - Derivative constant
+     */
     private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
         int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
 
@@ -97,6 +107,12 @@ public class DriveManager implements ISubsystem {
         motor.config_kD(idx, kD, timeout);
     }
 
+    /**
+    *
+    *
+    * @param input
+    *
+    */
     private static double adjustedDrive(double input) {
         return input * RobotNumbers.MAX_SPEED;
     }
@@ -288,7 +304,6 @@ public class DriveManager implements ISubsystem {
     }
 
 
-
     public void driveOne() {
         leaderLTalon.set(ControlMode.Velocity, 10000);
     }
@@ -333,7 +348,9 @@ public class DriveManager implements ISubsystem {
     @Override
     public void updateTest() {
         if (RobotToggles.DEBUG) {
-            System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
+            if (!RobotToggles.DRIVE_USE_SPARKS) {
+                System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
+            }
         }
         leaderLTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) + controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
         leaderRTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) - controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);

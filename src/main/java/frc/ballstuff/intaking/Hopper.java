@@ -57,6 +57,21 @@ public class Hopper implements ISubsystem {
     public Hopper() {
         init();
     }
+    
+    public void setAgitator(boolean set){
+        agitatorActive = set;
+    }
+    public void setIndexer(boolean set){
+        indexerActive = set;
+    }
+
+    public void setReverse(boolean reverse){
+        isReversed = reverse;
+    }
+
+    public void setForced(boolean forced){
+        isForced = forced;
+    }
 
     @Override
     public void init() {
@@ -81,9 +96,11 @@ public class Hopper implements ISubsystem {
         if (indexerSensorRange() > 9) {
             indexer.set(ControlMode.PercentOutput, 0.8); //0.3
             agitator.set(ControlMode.PercentOutput, 0.6); //0.3
+            indexed = false;
         } else {
             indexer.set(ControlMode.PercentOutput, 0);
             agitator.set(ControlMode.PercentOutput, 0);
+            indexed = true;
         }
     }
 

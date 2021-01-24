@@ -30,6 +30,14 @@ public class ControllerEnums {
             this.AXIS_VALUE = axis;
             this.DEADZONE = deadzone;
         }
+
+        @Deprecated
+        public static XboxAxes get(int id) throws NoSuchFieldException {
+            for (XboxAxes axis : XboxAxes.values())
+                if (axis.AXIS_VALUE == id)
+                    return axis;
+            throw new NoSuchFieldException("There is no Xbox axis with an ID of " + id);
+        }
     }
 
     public enum XBoxButtons {
@@ -47,6 +55,14 @@ public class ControllerEnums {
         XBoxButtons(int axis) {
             this.AXIS_VALUE = axis;
         }
+
+        @Deprecated
+        public static XBoxButtons get(int id) throws NoSuchFieldException {
+            for (XBoxButtons axis : XBoxButtons.values())
+                if (axis.AXIS_VALUE == id)
+                    return axis;
+            throw new NoSuchFieldException("There is no Xbox button with an ID of " + id);
+        }
     }
 
     public enum JoystickAxis {
@@ -59,6 +75,14 @@ public class ControllerEnums {
 
         JoystickAxis(int value) {
             this.AXIS_VALUE = value;
+        }
+
+        @Deprecated
+        public static JoystickAxis get(int id) throws NoSuchFieldException {
+            for (JoystickAxis axis : JoystickAxis.values())
+                if (axis.AXIS_VALUE == id)
+                    return axis;
+            throw new NoSuchFieldException("There is no Controller axis with an ID of " + id);
         }
     }
 
@@ -73,17 +97,29 @@ public class ControllerEnums {
         JoystickHatDirection(int... values) {
             this.ACCEPTED_VALUES = values;
         }
+
+
     }
 
     //Uh. theyre all numbered so idk what to do here
     public enum JoystickButtons {
         ONE(1),
-        TWO(2);
+        TWO(2),
+        EIGHT(8),
+        ELEVEN(11);
 
         public final int AXIS_VALUE;
 
         JoystickButtons(int value) {
             this.AXIS_VALUE = value;
+        }
+
+        @Deprecated
+        public static JoystickButtons get(int id) throws NoSuchFieldException {
+            for (JoystickButtons axis : JoystickButtons.values())
+                if (axis.AXIS_VALUE == id)
+                    return axis;
+            throw new NoSuchFieldException("There is no Joystick Button with an ID of " + id);
         }
     }
 
@@ -106,6 +142,14 @@ public class ControllerEnums {
 
         ButtonPanelButtons(int value) {
             this.AXIS_VALUE = value;
+        }
+
+        @Deprecated
+        public static ButtonPanelButtons get(int id) throws NoSuchFieldException {
+            for (ButtonPanelButtons axis : ButtonPanelButtons.values())
+                if (axis.AXIS_VALUE == id)
+                    return axis;
+            throw new NoSuchFieldException("There is no Button Panel Button with an ID of " + id);
         }
     }
 }

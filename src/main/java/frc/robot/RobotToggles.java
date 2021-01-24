@@ -1,13 +1,13 @@
 package frc.robot;
 
 public class RobotToggles {
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     //Subsystems
 
     public static final boolean ENABLE_DRIVE = true;
     public static final boolean ENABLE_INTAKE = true;
     public static final boolean ENABLE_CLIMBER = false;
-    public static final boolean ENABLE_SHOOTER = false;
+    public static final boolean ENABLE_SHOOTER = true;
     public static final boolean ENABLE_HOPPER = true;
 
     //Drivetrain

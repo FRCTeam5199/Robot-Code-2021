@@ -21,9 +21,7 @@ public class JoystickController {
     public double get(JoystickAxis axis) {
         return ((1 - joy.getRawAxis(axis.AXIS_VALUE)) / 2);
     }
-
-    //TODO change to an enum where button is named
-    //@Deprecated
+    
     public ButtonStatus get(JoystickButtons button) {
         return ButtonStatus.get(joy.getRawButton(button.AXIS_VALUE));
     }
