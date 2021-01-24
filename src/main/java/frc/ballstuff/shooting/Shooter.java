@@ -155,7 +155,7 @@ public class Shooter implements ISubsystem {
 
         if (!disabled) {
             
-            speed = 4200 * ((joystickController.get(JoystickAxis.SLIDER) * 0.25) + 1); //4200
+            speed = 4200 * ((joystickController.getPositive(JoystickAxis.SLIDER) * 0.25) + 1); //4200
         } else {
             speed = 0;
         }
@@ -327,6 +327,8 @@ public class Shooter implements ISubsystem {
     public void updateGeneric() {
         update();
         updateControls();
+        fireIndexerDependent();
+        //indexing = joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN;
     }
 
     public void updateControls() {

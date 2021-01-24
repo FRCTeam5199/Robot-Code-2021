@@ -19,6 +19,10 @@ public class JoystickController {
     }
 
     public double get(JoystickAxis axis) {
+        return joy.getRawAxis(axis.AXIS_VALUE);//return ((1 - joy.getRawAxis(axis.AXIS_VALUE)) / 2);
+    }
+
+    public double getPositive(JoystickAxis axis) {
         return ((1 - joy.getRawAxis(axis.AXIS_VALUE)) / 2);
     }
     

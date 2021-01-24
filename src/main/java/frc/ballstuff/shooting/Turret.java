@@ -78,7 +78,6 @@ public class Turret implements ISubsystem {
         //chameleon = new GoalChameleon();
         motor = new CANSparkMax(RobotMap.TURRET_YAW, MotorType.kBrushless);
         encoder = motor.getEncoder();
-        encoder.setPosition(0);
         panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
         fMultiplier = 0;
         //control = new PIDController(0, 0, 0);
@@ -146,7 +145,7 @@ public class Turret implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (RobotToggles.DEBUG) {
-            System.out.println(turretDegrees());
+            //System.out.println(turretDegrees());
         }
         //SmartDashboard.putNumber("slider",joy.getSlider());
         fMultiplier = fMult.getDouble(0);
@@ -200,7 +199,10 @@ public class Turret implements ISubsystem {
         */
         omegaSetpoint = 0;
         if (joy.get(ControllerEnums.JoystickButtons.TWO) == ControllerEnums.ButtonStatus.DOWN) {
-            omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * 2 * -1;
+            if (RobotToggles.DEBUG) {
+                System.out.println("Joystick is at " + joy.get(ControllerEnums.JoystickAxis.Z_ROTATE));
+            }
+            omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * -2;
         }
 
         //omegaSetpoint += positionControl.calculate(turretDegrees(), targetPosition);
@@ -212,24 +214,25 @@ public class Turret implements ISubsystem {
             atTarget = false;
         }
            */
-        boolean safe = turretDegrees() < 271 && turretDegrees() > -1;
+        double deg = turretDegrees();
+        boolean safe = deg < 271 && deg > 100;
         if (safe) {
-            if (/*spinButton.getBoolean(false)&&*/true) {
+            //if (/*spinButton.getBoolean(false)&&*/true) {
                 // if(panel.getButton(12)){
                 //     omegaSetpoint = 2*joy.getXAxis();
                 // }
                 rotateTurret(omegaSetpoint);
                 if (RobotToggles.DEBUG) {
-                    System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
+                    //System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
                 }
-            } else {
-                rotateTurret(0);
-            }
+            //} else {
+                //rotateTurret(0);
+            //}
         } else {
-            if (turretDegrees() > 268) {
-                rotateTurret(0.1); //rotate back towards safety
-            } else if (turretDegrees() < 2) {
-                rotateTurret(-0.1); //rotate back towards safety
+            if (turretDegrees() >= 271) {
+                rotateTurret(0.25); //rotate back towards safety
+            } else if (turretDegrees() <= 100) {
+                rotateTurret(-0.25); //rotate back towards safety
             } else {
                 motor.set(0); //this shouldn't happen but if it does, stop turning to prevent rapid unscheduled disassembly
             }
@@ -240,19 +243,21 @@ public class Turret implements ISubsystem {
         }
 
         //setF(1);
-        // SmartDashboard.putNumber("Turret DB Omega offset", -driveOmega*arbDriveMult.getDouble(-0.28));
-        // SmartDashboard.putNumber("Turret Omega", omegaSetpoint);
-        // SmartDashboard.putNumber("Turret Position", turretDegrees());
-        // SmartDashboard.putNumber("Turret Speed", encoder.getVelocity());
-        // SmartDashboard.putNumber("Turret FF", controller.getFF());
-        // SmartDashboard.putBoolean("Turret Safe", safe);
-        // SmartDashboard.putNumber("Turret North", limitAngle(235+yawWrap()-360));
-        // SmartDashboard.putNumber("YawWrap", yawWrap()-360);
-        // SmartDashboard.putBoolean("Turret At Target", atTarget);FR
-        // //chasingTarget = false;
-        // SmartDashboard.putNumber("Turret Heading from North", fieldHeading());
-        // SmartDashboard.putBoolean("Turret Track", track);
-        // SmartDashboard.putBoolean("Turret at Target", atTarget);
+        if (RobotToggles.DEBUG) {
+             SmartDashboard.putNumber("Turret DB Omega offset", -driveOmega*arbDriveMult.getDouble(-0.28));
+             SmartDashboard.putNumber("Turret Omega", omegaSetpoint);
+             SmartDashboard.putNumber("Turret Position", turretDegrees());
+             SmartDashboard.putNumber("Turret Speed", encoder.getVelocity());
+             SmartDashboard.putNumber("Turret FF", controller.getFF());
+             SmartDashboard.putBoolean("Turret Safe", safe);
+             SmartDashboard.putNumber("Turret North", limitAngle(235+yawWrap()-360));
+             SmartDashboard.putNumber("YawWrap", yawWrap()-360);
+             SmartDashboard.putBoolean("Turret At Target", atTarget);
+             //chasingTarget = false;
+             SmartDashboard.putNumber("Turret Heading from North", fieldHeading());
+             SmartDashboard.putBoolean("Turret Track", track);
+             SmartDashboard.putBoolean("Turret at Target", atTarget);
+        }
     }
 
     public boolean setTargetAngle(double target) {
@@ -291,7 +296,7 @@ public class Turret implements ISubsystem {
     }
 
     private double turretDegrees() {
-        return 270 - encoder.getPosition();
+        return 270 - encoder.getPosition();//return encoder.getPosition();
     }
 
     public void setDriveOmega(double omega) {
