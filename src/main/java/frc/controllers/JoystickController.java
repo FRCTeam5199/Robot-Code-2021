@@ -23,7 +23,7 @@ public class JoystickController {
     }
 
     //TODO change to an enum where button is named
-    @Deprecated
+    //@Deprecated
     public ButtonStatus get(JoystickButtons button) {
         return ButtonStatus.get(joy.getRawButton(button.AXIS_VALUE));
     }

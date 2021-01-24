@@ -26,6 +26,11 @@ public class RobotNumbers {
     public static final double driverPulleySize = 0;//?;
 
     public static final double XBOX_CONTROLLER_DEADZONE = 0.07;
+    public static final double MOTOR_SPROCKET_SIZE = 1;
+    public static final double TURRET_SPROCKET_SIZE = 11.1;
+    public static final double TURRET_GEAR_RATIO = 7;
+    public static final double TURRET_MAX_POS = 270;
+    public static final double TURRET_MIN_POS = 0;
     public static double triggerSensitivity = 0.25;
     public static int XBOX_CONTROLLER_SLOT = 0;
     public static int FLIGHT_STICK_SLOT = 1;

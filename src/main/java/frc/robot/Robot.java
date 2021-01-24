@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.ballstuff.intaking.Hopper;
 import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
+import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
 
 public class Robot extends TimedRobot {
@@ -11,6 +12,7 @@ public class Robot extends TimedRobot {
     public Intake intake;
     public Hopper hopper;
     public Shooter shooter;
+    public Turret turret;
 
     /**
      * Init everything
@@ -31,6 +33,7 @@ public class Robot extends TimedRobot {
 
         if (RobotToggles.ENABLE_SHOOTER) {
             shooter = new Shooter();
+            turret = new Turret();
         }
     }
 
@@ -73,6 +76,7 @@ public class Robot extends TimedRobot {
         }
         if (RobotToggles.ENABLE_SHOOTER) {
             shooter.updateTeleop();
+            turret.update();
         }
     }
 
@@ -90,6 +94,7 @@ public class Robot extends TimedRobot {
         }
         if (RobotToggles.ENABLE_SHOOTER) {
             shooter.updateTest();
+            turret.update();
         }
         if (RobotToggles.ENABLE_HOPPER) {
             hopper.updateTest();

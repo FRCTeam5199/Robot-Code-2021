@@ -288,5 +288,6 @@ public class Shooter implements ISubsystem {
     @Override
     public void updateGeneric() {
         update();
+        
     }
 }

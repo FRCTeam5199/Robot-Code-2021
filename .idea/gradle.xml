@@ -6,8 +6,8 @@
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../Gradle/gradle-6.7.1" />
-        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="gradleHome" value="$PROJECT_DIR$/../NVPACK/gradle-4.1-rc-2" />
+        <option name="gradleJvm" value="13" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />

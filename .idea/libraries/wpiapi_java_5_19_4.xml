@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="wpiapi-java-5.19.4">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/maven_com/ctre/phoenix/wpiapi-java/5.19.4/wpiapi-java-5.19.4.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

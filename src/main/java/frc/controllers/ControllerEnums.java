@@ -77,7 +77,8 @@ public class ControllerEnums {
 
     //Uh. theyre all numbered so idk what to do here
     public enum JoystickButtons {
-        ONE(1);
+        ONE(1),
+        TWO(2);
 
         public final int AXIS_VALUE;
 
