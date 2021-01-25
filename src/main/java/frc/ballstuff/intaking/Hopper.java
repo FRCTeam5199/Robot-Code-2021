@@ -71,6 +71,11 @@ public class Hopper implements ISubsystem {
         joy = new Joystick(RobotNumbers.FLIGHT_STICK_SLOT);
     }
 
+    public void setAll(boolean set){
+        setAgitator(set);
+        setIndexer(set);
+    }
+
     public void setAgitator(boolean set) {
         agitatorActive = set;
     }
