@@ -14,8 +14,12 @@ public class JoystickController {
         joy = new Joystick(n);
     }
 
-    public int getHat() {
-        return joy.getPOV();
+    public JoystickHatDirection getHat() {
+        for (JoystickHatDirection dir : JoystickHatDirection.values())
+            for (int acceptedValue : dir.ACCEPTED_VALUES)
+                if (acceptedValue == joy.getPOV())
+                    return dir;
+        throw new IllegalStateException("I could not wrap " + joy.getPOV() + " inside the JoystickHatDirection enumeration.");
     }
 
     public double get(JoystickAxis axis) {
@@ -25,7 +29,7 @@ public class JoystickController {
     public double getPositive(JoystickAxis axis) {
         return ((1 - joy.getRawAxis(axis.AXIS_VALUE)) / 2);
     }
-    
+
     public ButtonStatus get(JoystickButtons button) {
         return ButtonStatus.get(joy.getRawButton(button.AXIS_VALUE));
     }

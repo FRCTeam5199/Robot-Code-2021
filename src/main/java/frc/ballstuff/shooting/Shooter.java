@@ -1,6 +1,7 @@
 package frc.ballstuff.shooting;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -88,15 +89,17 @@ public class Shooter implements ISubsystem {
         SmartDashboard.putString("ZONE", "none");
         joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
         panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
+        //chameleon = new GoalChameleon();
+        createTimers();
+    }
 
+    private void createTimers(){
         shootTimer = new Timer();
         indexTimer = new Timer();
         indexTimer.stop();
         indexTimer.reset();
         shootTimer.stop();
         shootTimer.reset();
-        //chameleon = new GoalChameleon();
-
     }
 
     private void createAndInitMotors() {
@@ -106,9 +109,9 @@ public class Shooter implements ISubsystem {
                 follower = new CANSparkMax(RobotMap.SHOOTER_FOLLOWER, MotorType.kBrushless);
             }
 
-            leader.setInverted(true);
+            leader.setInverted(RobotToggles.SHOOTER_INVERTED);
             if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
-                follower.follow(leader, true);
+                follower.follow(leader, RobotToggles.SHOOTER_INVERTED);
             }
 
             leader.setSmartCurrentLimit(80);
@@ -126,11 +129,12 @@ public class Shooter implements ISubsystem {
             speedo.setOutputRange(-1, 1);
         } else {
             falconLeader = new TalonFX(RobotMap.SHOOTER_LEADER);
-            falconLeader.setInverted(TalonFXInvertType.CounterClockwise);
-
+            TalonFXInvertType leaderDirection = RobotToggles.SHOOTER_INVERTED ? TalonFXInvertType.CounterClockwise : TalonFXInvertType.Clockwise;
+            falconLeader.setInverted(leaderDirection);
             if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
                 falconFollower = new TalonFX(RobotMap.SHOOTER_FOLLOWER);
-                falconFollower.setInverted(TalonFXInvertType.Clockwise);
+                TalonFXInvertType followerDirection = !RobotToggles.SHOOTER_INVERTED ? TalonFXInvertType.CounterClockwise : TalonFXInvertType.Clockwise;
+                falconFollower.setInverted(followerDirection);
                 falconFollower.follow(falconLeader);
                 falconFollower.setNeutralMode(NeutralMode.Coast);
             }
@@ -146,22 +150,18 @@ public class Shooter implements ISubsystem {
         if (RobotToggles.SHOOTER_USE_SPARKS) {
             actualRPM = leader.getEncoder().getVelocity();
         } else {
-            actualRPM = falconLeader.getSelectedSensorVelocity(); //do math: 4096 units/rotation, units/100ms
-            actualRPM *= 600 / RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION;
+            actualRPM = falconLeader.getSelectedSensorVelocity() * 600 / RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION; //do math: 4096 units/rotation, units/100ms
         }
         checkState();
         //put code here to set speed based on distance to goal
-        boolean disabled = panel.get(ButtonPanelButtons.SOLID_SPEED) != ButtonStatus.DOWN;
-
-        if (!disabled) {
-            
-            speed = 4200 * ((joystickController.getPositive(JoystickAxis.SLIDER) * 0.25) + 1); //4200
-        } else {
-            speed = 0;
-        }
+        boolean disabled = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.UP;
 
         if (!interpolationEnabled) {
             speed = 4200;
+        }else if (!disabled) {
+            speed = 4200 * ((joystickController.getPositive(JoystickAxis.SLIDER) * 0.25) + 1); //4200
+        } else {
+            speed = 0;
         }
 
         //setPID(P,I,D);

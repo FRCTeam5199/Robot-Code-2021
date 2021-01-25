@@ -23,4 +23,5 @@ public class RobotToggles {
     //SHOOTER
     public static final boolean SHOOTER_USE_SPARKS = false;
     public static final boolean SHOOTER_USE_TWO_MOTORS = true;
+    public static final boolean SHOOTER_INVERTED = true;
 }

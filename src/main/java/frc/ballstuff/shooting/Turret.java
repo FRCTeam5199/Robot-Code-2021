@@ -71,6 +71,7 @@ public class Turret implements ISubsystem {
         encoder = motor.getEncoder();
         encoder.setPosition(0);
     }
+
     @Override
     public void init() {
         joy = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);

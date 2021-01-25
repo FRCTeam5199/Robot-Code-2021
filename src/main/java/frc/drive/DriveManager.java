@@ -89,14 +89,14 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     *  Configures motors
+     * Configures motors
      *
      * @param motor - motor
-     * @param idx - PID loop, by default 0
-     * @param kF - Feed forward
-     * @param kP - Proportional constant
-     * @param kI - Integral constant
-     * @param kD - Derivative constant
+     * @param idx   - PID loop, by default 0
+     * @param kF    - Feed forward
+     * @param kP    - Proportional constant
+     * @param kI    - Integral constant
+     * @param kD    - Derivative constant
      */
     private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
         int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
@@ -108,11 +108,8 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-    *
-    *
-    * @param input
-    *
-    */
+     * @param input
+     */
     private static double adjustedDrive(double input) {
         return input * RobotNumbers.MAX_SPEED;
     }

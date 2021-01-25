@@ -57,21 +57,6 @@ public class Hopper implements ISubsystem {
     public Hopper() {
         init();
     }
-    
-    public void setAgitator(boolean set){
-        agitatorActive = set;
-    }
-    public void setIndexer(boolean set){
-        indexerActive = set;
-    }
-
-    public void setReverse(boolean reverse){
-        isReversed = reverse;
-    }
-
-    public void setForced(boolean forced){
-        isForced = forced;
-    }
 
     @Override
     public void init() {
@@ -86,6 +71,22 @@ public class Hopper implements ISubsystem {
         joy = new Joystick(RobotNumbers.FLIGHT_STICK_SLOT);
     }
 
+    public void setAgitator(boolean set) {
+        agitatorActive = set;
+    }
+
+    public void setIndexer(boolean set) {
+        indexerActive = set;
+    }
+
+    public void setReverse(boolean reverse) {
+        isReversed = reverse;
+    }
+
+    public void setForced(boolean forced) {
+        isForced = forced;
+    }
+
     @Override
     public void updateGeneric() {
         if (RobotToggles.DEBUG) {
@@ -93,10 +94,10 @@ public class Hopper implements ISubsystem {
             SmartDashboard.putBoolean("agitator enable", agitatorActive);
             SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
         }
-        if (indexerActive){
+        if (indexerActive) {
             indexer.set(ControlMode.PercentOutput, 0.8);
             agitator.set(ControlMode.PercentOutput, 0.6);
-        }else if (indexerSensorRange() > 9) {
+        } else if (indexerSensorRange() > 9) {
             indexer.set(ControlMode.PercentOutput, 0.3); //0.3
             agitator.set(ControlMode.PercentOutput, 0.3); //0.3
             indexed = false;
