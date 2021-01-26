@@ -37,7 +37,7 @@ public class Intake implements ISubsystem {
     /**
      * Set intake direction
      *
-     * @param input - -1 for out, 1 for in, 0 for none
+     * @param input -1 for out, 1 for in, 0 for none
      */
     public void setIntake(int input) {
         intakeMult = input;

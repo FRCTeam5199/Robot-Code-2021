@@ -6,7 +6,5 @@ package frc.drive;
  * @author jojo2357
  */
 public class AutonManager {
-
-    
     
 }

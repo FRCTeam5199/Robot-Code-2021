@@ -108,7 +108,6 @@ public class BallHandler{
             hopper.setForced(false);
         }
 
-
         if(panel.getButtonDown(6)){
             forceDisable = true;
         }

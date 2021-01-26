@@ -20,7 +20,6 @@ import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
-import frc.vision.GoalChameleon;
 
 public class Turret implements ISubsystem {
     public boolean track;
@@ -166,6 +165,17 @@ public class Turret implements ISubsystem {
         */
         double omegaSetpoint;
         /*
+        if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) {
+            if (chameleon.validTarget()) {
+                omegaSetpoint = positionControl.calculate(turretDegrees(), targetAngle);
+            } else {
+                scan();
+            }
+        }
+        */
+
+
+        /*
         if (271 > turretDegrees() && turretDegrees() > -1) {
             omegaSetpoint = 0;
             //omegaSetpoint += -driveOmega * arbDriveMult.getDouble(-0.28);
@@ -219,15 +229,15 @@ public class Turret implements ISubsystem {
         boolean safe = deg < 271 && deg > 100;
         if (safe) {
             //if (/*spinButton.getBoolean(false)&&*/true) {
-                // if(panel.getButton(12)){
-                //     omegaSetpoint = 2*joy.getXAxis();
-                // }
-                rotateTurret(omegaSetpoint);
-                if (RobotToggles.DEBUG) {
-                    //System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
-                }
+            // if(panel.getButton(12)){
+            //     omegaSetpoint = 2*joy.getXAxis();
+            // }
+            rotateTurret(omegaSetpoint);
+            if (RobotToggles.DEBUG) {
+                //System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
+            }
             //} else {
-                //rotateTurret(0);
+            //rotateTurret(0);
             //}
         } else {
             if (turretDegrees() >= 271) {
@@ -245,19 +255,19 @@ public class Turret implements ISubsystem {
 
         //setF(1);
         if (RobotToggles.DEBUG) {
-             SmartDashboard.putNumber("Turret DB Omega offset", -driveOmega*arbDriveMult.getDouble(-0.28));
-             SmartDashboard.putNumber("Turret Omega", omegaSetpoint);
-             SmartDashboard.putNumber("Turret Position", turretDegrees());
-             SmartDashboard.putNumber("Turret Speed", encoder.getVelocity());
-             SmartDashboard.putNumber("Turret FF", controller.getFF());
-             SmartDashboard.putBoolean("Turret Safe", safe);
-             SmartDashboard.putNumber("Turret North", limitAngle(235+yawWrap()-360));
-             SmartDashboard.putNumber("YawWrap", yawWrap()-360);
-             SmartDashboard.putBoolean("Turret At Target", atTarget);
-             //chasingTarget = false;
-             SmartDashboard.putNumber("Turret Heading from North", fieldHeading());
-             SmartDashboard.putBoolean("Turret Track", track);
-             SmartDashboard.putBoolean("Turret at Target", atTarget);
+            SmartDashboard.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
+            SmartDashboard.putNumber("Turret Omega", omegaSetpoint);
+            SmartDashboard.putNumber("Turret Position", turretDegrees());
+            SmartDashboard.putNumber("Turret Speed", encoder.getVelocity());
+            SmartDashboard.putNumber("Turret FF", controller.getFF());
+            SmartDashboard.putBoolean("Turret Safe", safe);
+            SmartDashboard.putNumber("Turret North", limitAngle(235 + yawWrap() - 360));
+            SmartDashboard.putNumber("YawWrap", yawWrap() - 360);
+            SmartDashboard.putBoolean("Turret At Target", atTarget);
+            //chasingTarget = false;
+            SmartDashboard.putNumber("Turret Heading from North", fieldHeading());
+            SmartDashboard.putBoolean("Turret Track", track);
+            SmartDashboard.putBoolean("Turret at Target", atTarget);
         }
     }
 
@@ -371,14 +381,9 @@ public class Turret implements ISubsystem {
      * Scan the turret back and forth to find a target.
      */
     private void scan() {
-        if (turretDegrees() > 250) {
-            scanDirection = 1;
-        } else if (turretDegrees() < 20) {
-            scanDirection = -1;
-        }
+        scanDirection = (turretDegrees() > 250) ? 1 : ((turretDegrees() < 20) ? -1 : scanDirection);
         rotateTurret(scanDirection * 2);
     }
-
 
     //pigeon ------------------------------------------------------------------------------------------------------------------------
     public void updatePigeon() {
@@ -404,13 +409,14 @@ public class Turret implements ISubsystem {
     }
 
     public double yawWrap() {
-        double yaw = yawRel();
+        return yawRel() - Math.floor(yawRel() / 360D) * 360D;
+        /*double yaw = yawRel();
         while (yaw > 360) {
             yaw -= 360;
         }
         while (yaw < 0) {
             yaw += 360;
         }
-        return yaw;
+        return yaw;*/
     }
 }

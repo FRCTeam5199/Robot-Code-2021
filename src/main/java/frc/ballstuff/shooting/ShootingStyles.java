@@ -29,7 +29,7 @@ public class ShootingStyles {
 
     public void fireTimed() {
         if (shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN) {
-            shooter.shooting = true;
+            //shooter.shooting = true;
             if (shooter.atSpeed()) {
                 shooter.ensureTimerStarted();
                 if (shooter.getShootTimer().hasPeriodPassed(0.5)) {

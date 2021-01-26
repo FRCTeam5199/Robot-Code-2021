@@ -15,8 +15,9 @@ public class JoystickController {
     }
 
     /**
+     *
      * @return The status of the hat on the joystick
-     * @throws IllegalStateException
+     * @throws IllegalStateException if the current direction doesnt have a matching enum
      */
     public JoystickHatDirection getHat() throws IllegalStateException {
         for (JoystickHatDirection dir : JoystickHatDirection.values())
