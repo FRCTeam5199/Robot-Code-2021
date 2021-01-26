@@ -26,6 +26,7 @@ import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 import org.jetbrains.annotations.NotNull;
+import frc.misc.UtilFunctions;
 
 
 public class DriveManager implements ISubsystem {
@@ -109,6 +110,7 @@ public class DriveManager implements ISubsystem {
 
     /**
      * @param input
+     * @return product of input and max speed of the robot
      */
     private static double adjustedDrive(double input) {
         return input * RobotNumbers.MAX_SPEED;
@@ -123,7 +125,7 @@ public class DriveManager implements ISubsystem {
     }
 
     private static double getTargetVelocity(double FPS) {
-        return convertFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
+        return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
     }
 
     /**
@@ -260,7 +262,6 @@ public class DriveManager implements ISubsystem {
         pigeon.getYawPitchRoll(ypr);
     }
 
-
     private void setPID(double P, double I, double D, double F) {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             leftPID.setP(P);
@@ -329,6 +330,7 @@ public class DriveManager implements ISubsystem {
             if (RobotToggles.DEBUG) {
                 System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + convertFPStoRPM(leftFPS) + " " + convertFPStoRPM(rightFPS));
             }
+
             leftPID.setReference(convertFPStoRPM(leftFPS) * mult, ControlType.kVelocity);
             rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
             /*

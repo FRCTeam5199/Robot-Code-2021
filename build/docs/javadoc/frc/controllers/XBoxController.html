@@ -119,7 +119,9 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(int)">XBoxController</a></span>&#8203;(int&nbsp;n)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates a new Xbox Controller object on a specified usb port</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -147,27 +149,37 @@ extends java.lang.Object</pre>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(frc.controllers.ControllerEnums.XboxAxes)">get</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">get the state of an xbox axis</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="ControllerEnums.ButtonStatus.html" title="enum in frc.controllers">ControllerEnums.ButtonStatus</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(frc.controllers.ControllerEnums.XBoxButtons)">get</a></span>&#8203;(<a href="ControllerEnums.XBoxButtons.html" title="enum in frc.controllers">ControllerEnums.XBoxButtons</a>&nbsp;button)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Gets the status of a button on the xbox controller</div>
+</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getIgnoreSensitivity(frc.controllers.ControllerEnums.XboxAxes)">getIgnoreSensitivity</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">get joystick axis value regardless of deadzone</div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isTriggerPressed(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressed</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">get joystick axis value regardless of deadzone</div>
+</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isTriggerPressedMomentary(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressedMomentary</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Gets the momentary status of a trigger</div>
+</td>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><code>void</code></td>
@@ -200,6 +212,11 @@ extends java.lang.Object</pre>
 <section class="detail">
 <h3><a id="&lt;init&gt;(int)">XBoxController</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">XBoxController</span>&#8203;(<span class="arguments">int&nbsp;n)</span></div>
+<div class="block">Creates a new Xbox Controller object on a specified usb port</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>n</code> - the usb port that the controller is on</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -223,7 +240,12 @@ extends java.lang.Object</pre>
 <h3><a id="isTriggerPressedMomentary(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressedMomentary</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">isTriggerPressedMomentary</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</span>
                                   throws <span class="exceptions">java.lang.IllegalArgumentException</span></div>
+<div class="block">Gets the momentary status of a trigger</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>trigger</code> - the trigger to query</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the trigger has changed its state being pressed down</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalArgumentException</code></dd>
 </dl>
@@ -233,24 +255,56 @@ extends java.lang.Object</pre>
 <section class="detail">
 <h3><a id="isTriggerPressed(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressed</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">isTriggerPressed</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</span></div>
+<div class="block">get joystick axis value regardless of deadzone</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>trigger</code> - trigger position to query</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>returns true when trigger is past its "deadzone"</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="get(frc.controllers.ControllerEnums.XboxAxes)">get</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">get</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</span></div>
+<div class="block">get the state of an xbox axis</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>axis</code> - xbox controller axis to query</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the state of inputted axis on a scale of [-1,1]</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#get(frc.controllers.ControllerEnums.XBoxButtons)"><code>get(XBoxButtons)</code></a></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="get(frc.controllers.ControllerEnums.XBoxButtons)">get</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ControllerEnums.ButtonStatus.html" title="enum in frc.controllers">ControllerEnums.ButtonStatus</a></span>&nbsp;<span class="memberName">get</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XBoxButtons.html" title="enum in frc.controllers">ControllerEnums.XBoxButtons</a>&nbsp;button)</span></div>
+<div class="block">Gets the status of a button on the xbox controller</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>button</code> - the button to query</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the status of queried button</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#get(frc.controllers.ControllerEnums.XboxAxes)"><code>get(XboxAxes)</code></a></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="getIgnoreSensitivity(frc.controllers.ControllerEnums.XboxAxes)">getIgnoreSensitivity</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getIgnoreSensitivity</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</span></div>
+<div class="block">get joystick axis value regardless of deadzone</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>axis</code> - xbox controller axis to query</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>returns stick axis value regardless of deadzone</dd>
+</dl>
 </section>
 </li>
 </ul>

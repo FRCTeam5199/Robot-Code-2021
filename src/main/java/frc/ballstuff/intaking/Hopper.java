@@ -71,7 +71,7 @@ public class Hopper implements ISubsystem {
         joy = new Joystick(RobotNumbers.FLIGHT_STICK_SLOT);
     }
 
-    public void setAll(boolean set){
+    public void setAll(boolean set) {
         setAgitator(set);
         setIndexer(set);
     }
@@ -91,7 +91,10 @@ public class Hopper implements ISubsystem {
     public void setForced(boolean forced) {
         isForced = forced;
     }
-
+    /**
+    * Runs every tick. Runs the indexer and agitator motors.
+    *
+    */
     @Override
     public void updateGeneric() {
         if (RobotToggles.DEBUG) {
@@ -99,18 +102,9 @@ public class Hopper implements ISubsystem {
             SmartDashboard.putBoolean("agitator enable", agitatorActive);
             SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
         }
-        if (indexerActive) {
-            indexer.set(ControlMode.PercentOutput, 0.8);
-            agitator.set(ControlMode.PercentOutput, 0.6);
-        } else if (indexerSensorRange() > 9) {
-            indexer.set(ControlMode.PercentOutput, 0.3); //0.3
-            agitator.set(ControlMode.PercentOutput, 0.3); //0.3
-            indexed = false;
-        } else {
-            indexer.set(ControlMode.PercentOutput, 0);
-            agitator.set(ControlMode.PercentOutput, 0);
-            indexed = true;
-        }
+        indexer.set(ControlMode.PercentOutput, (!indexerActive && !agitatorActive) ? (indexerSensorRange() > 9 ? 0.3 : 0) : (indexerActive ? 0.8 : 0));
+        agitator.set(ControlMode.PercentOutput, (!indexerActive && !agitatorActive) ? (indexerSensorRange() > 9 ? 0.3 : 0) : (agitatorActive ? 0.6 : 0));
+        indexed = (!indexerActive && !agitatorActive) ? indexerSensorRange() > 9 : indexed;
     }
 
     public double indexerSensorRange() {
@@ -134,7 +128,7 @@ public class Hopper implements ISubsystem {
     public void updateAuton() {
 
     }
-    
+
 /*
     public void updateSimple() {
         //SmartDashboard.putNumber("Sensor Range", indexSensor.getRange());

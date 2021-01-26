@@ -5,24 +5,28 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.ControllerEnums;
 import frc.controllers.JoystickController;
+import frc.controllers.ButtonPanel;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
+import frc.controllers.ControllerEnums.JoystickHatDirection;
 
 public class Intake implements ISubsystem {
     private VictorSPX victor;
     private JoystickController joystick;
     private int intakeMult;
+    private ButtonPanel buttonPanel;
 
     public Intake() throws InitializationFailureException {
         init();
     }
-
+    
     @Override
     public void init() throws InitializationFailureException {
         joystick = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
+        buttonPanel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
         try {
             victor = new VictorSPX(RobotMap.INTAKE_MOTOR);
         } catch (Exception e) {
@@ -41,18 +45,12 @@ public class Intake implements ISubsystem {
 
     public void updateGeneric() {
         victor.set(ControlMode.PercentOutput, 0.8 * intakeMult);
-        if (joystick.hatIs(ControllerEnums.JoystickHatDirection.DOWN)) {
+        if (joystick.hatIs(JoystickHatDirection.DOWN) ){//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
             setIntake(1);
-            //deploy intake
-            //intake.setDeploy(true);
-        } else if (joystick.hatIs(ControllerEnums.JoystickHatDirection.UP)) {
+        } else if (joystick.hatIs(JoystickHatDirection.UP)) {
             setIntake(-1);
-            //deploy intake
-            //intake.setDeploy(true);
         } else {
             setIntake(0);
-            //deployn't intake
-            //intake.setDeploy(false);
         }
         if (RobotToggles.DEBUG) {
             SmartDashboard.putNumber("Intake Speed", intakeMult);

@@ -99,6 +99,9 @@ public class Shooter implements ISubsystem {
         shootTimer.reset();
     }
 
+    /**
+     * Initialize the motors. Checks for SHOOTER_USE_SPARKS and SHOOTER_USE_TWO_MOTORS to allow modularity.
+     */
     private void createAndInitMotors() {
         if (RobotToggles.SHOOTER_USE_SPARKS) {
             leader = new CANSparkMax(RobotMap.SHOOTER_LEADER, MotorType.kBrushless);

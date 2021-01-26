@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -151,18 +151,25 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="ControllerEnums.ButtonStatus.html" title="enum in frc.controllers">ControllerEnums.ButtonStatus</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getButton(int)">getButton</a></span>&#8203;(int&nbsp;button)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(frc.controllers.ControllerEnums.JoystickButtons)">get</a></span>&#8203;(<a href="ControllerEnums.JoystickButtons.html" title="enum in frc.controllers">ControllerEnums.JoystickButtons</a>&nbsp;button)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i2">
-<td class="colFirst"><code>int</code></td>
+<td class="colFirst"><code><a href="ControllerEnums.JoystickHatDirection.html" title="enum in frc.controllers">ControllerEnums.JoystickHatDirection</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getHat()">getHat</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i3">
+<td class="colFirst"><code>double</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPositive(frc.controllers.ControllerEnums.JoystickAxis)">getPositive</a></span>&#8203;(<a href="ControllerEnums.JoystickAxis.html" title="enum in frc.controllers">ControllerEnums.JoystickAxis</a>&nbsp;axis)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i4">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hatIs(frc.controllers.ControllerEnums.JoystickHatDirection)">hatIs</a></span>&#8203;(<a href="ControllerEnums.JoystickHatDirection.html" title="enum in frc.controllers">ControllerEnums.JoystickHatDirection</a>&nbsp;direction)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Return true if joystick direction is an accepted value, false if not</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -205,7 +212,14 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <section class="detail">
 <h3><a id="getHat()">getHat</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">getHat</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ControllerEnums.JoystickHatDirection.html" title="enum in frc.controllers">ControllerEnums.JoystickHatDirection</a></span>&nbsp;<span class="memberName">getHat</span>()
+                                            throws <span class="exceptions">java.lang.IllegalStateException</span></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The status of the hat on the joystick</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalStateException</code> - if</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -216,14 +230,27 @@ extends java.lang.Object</pre>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getButton(int)">getButton</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ControllerEnums.ButtonStatus.html" title="enum in frc.controllers">ControllerEnums.ButtonStatus</a></span>&nbsp;<span class="memberName">getButton</span>&#8203;(<span class="arguments">int&nbsp;button)</span></div>
+<h3><a id="getPositive(frc.controllers.ControllerEnums.JoystickAxis)">getPositive</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getPositive</span>&#8203;(<span class="arguments"><a href="ControllerEnums.JoystickAxis.html" title="enum in frc.controllers">ControllerEnums.JoystickAxis</a>&nbsp;axis)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="get(frc.controllers.ControllerEnums.JoystickButtons)">get</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ControllerEnums.ButtonStatus.html" title="enum in frc.controllers">ControllerEnums.ButtonStatus</a></span>&nbsp;<span class="memberName">get</span>&#8203;(<span class="arguments"><a href="ControllerEnums.JoystickButtons.html" title="enum in frc.controllers">ControllerEnums.JoystickButtons</a>&nbsp;button)</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="hatIs(frc.controllers.ControllerEnums.JoystickHatDirection)">hatIs</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">hatIs</span>&#8203;(<span class="arguments"><a href="ControllerEnums.JoystickHatDirection.html" title="enum in frc.controllers">ControllerEnums.JoystickHatDirection</a>&nbsp;direction)</span></div>
+<div class="block">Return true if joystick direction is an accepted value, false if not</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>direction</code> - - the direction of the joystick hat</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if and only if the direction of the hat is included in the enum passed in</dd>
+</dl>
 </section>
 </li>
 </ul>

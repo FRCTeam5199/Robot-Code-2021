@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -95,9 +95,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="inheritance">frc.drive.DriveManager</div>
 </div>
 <section class="description">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 <hr>
 <pre>public class <span class="typeNameLabel">DriveManager</span>
-extends java.lang.Object</pre>
+extends java.lang.Object
+implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></pre>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -259,27 +264,32 @@ double&nbsp;right)</code></th>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i6">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updatePigeon()">updatePigeon</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Updates the Pigeon IMU</div>
 </td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr class="altColor" id="i8">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i8">
+<tr class="rowColor" id="i9">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="altColor" id="i10">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawAbs()">yawAbs</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -375,6 +385,8 @@ double&nbsp;right)</code></th>
 <a href="../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a></span></div>
 <div class="block">Initialize the driver</div>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../misc/ISubsystem.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalArgumentException</code> - When IDs for follower motors are too few or too many</dd>
 <dd><code><a href="../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a></code> - When something fails to init properly</dd>
@@ -416,6 +428,10 @@ double&nbsp;right)</code></th>
 <section class="detail">
 <h3><a id="updateTeleop()">updateTeleop</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTeleop</span>()</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../misc/ISubsystem.html#updateTeleop()">updateTeleop</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -428,12 +444,20 @@ double&nbsp;right)</code></th>
 <section class="detail">
 <h3><a id="updateTest()">updateTest</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTest</span>()</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="updateGeneric()">updateGeneric</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateGeneric</span>()</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -441,6 +465,16 @@ double&nbsp;right)</code></th>
 <h3><a id="drivePIDSparks(double,double)">drivePIDSparks</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">drivePIDSparks</span>&#8203;(<span class="arguments">double&nbsp;left,
 double&nbsp;right)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="updateAuton()">updateAuton</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateAuton</span>()</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../misc/ISubsystem.html#updateAuton()">updateAuton</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 </section>
 </li>
 </ul>

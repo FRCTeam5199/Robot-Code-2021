@@ -73,7 +73,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="frc/controllers/package-tree.html">frc.controllers</a>, </li>
 <li><a href="frc/drive/package-tree.html">frc.drive</a>, </li>
 <li><a href="frc/misc/package-tree.html">frc.misc</a>, </li>
-<li><a href="frc/robot/package-tree.html">frc.robot</a></li>
+<li><a href="frc/robot/package-tree.html">frc.robot</a>, </li>
+<li><a href="frc/vision/package-tree.html">frc.vision</a></li>
 </ul>
 </div>
 <div class="contentContainer">
@@ -83,13 +84,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">java.lang.Object
 <ul>
 <li class="circle">frc.drive.<a href="frc/drive/AutonManager.html" title="class in frc.drive"><span class="typeNameLink">AutonManager</span></a></li>
+<li class="circle">frc.vision.<a href="frc/vision/BallChameleon.html" title="class in frc.vision"><span class="typeNameLink">BallChameleon</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ButtonPanel.html" title="class in frc.controllers"><span class="typeNameLink">ButtonPanel</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.html" title="class in frc.controllers"><span class="typeNameLink">ControllerEnums</span></a></li>
-<li class="circle">frc.drive.<a href="frc/drive/DriveManager.html" title="class in frc.drive"><span class="typeNameLink">DriveManager</span></a></li>
+<li class="circle">frc.drive.<a href="frc/drive/DriveManager.html" title="class in frc.drive"><span class="typeNameLink">DriveManager</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
 <li class="circle">frc.drive.<a href="frc/drive/DriveManager.SparkFollowerMotors.html" title="class in frc.drive"><span class="typeNameLink">DriveManager.SparkFollowerMotors</span></a></li>
 <li class="circle">frc.drive.<a href="frc/drive/DriveManager.TalonFollowerMotors.html" title="class in frc.drive"><span class="typeNameLink">DriveManager.TalonFollowerMotors</span></a></li>
-<li class="circle">frc.ballstuff.intaking.<a href="frc/ballstuff/intaking/Hopper.html" title="class in frc.ballstuff.intaking"><span class="typeNameLink">Hopper</span></a></li>
-<li class="circle">frc.ballstuff.intaking.<a href="frc/ballstuff/intaking/Intake.html" title="class in frc.ballstuff.intaking"><span class="typeNameLink">Intake</span></a></li>
+<li class="circle">frc.vision.<a href="frc/vision/GoalChameleon.html" title="class in frc.vision"><span class="typeNameLink">GoalChameleon</span></a></li>
+<li class="circle">frc.ballstuff.intaking.<a href="frc/ballstuff/intaking/Hopper.html" title="class in frc.ballstuff.intaking"><span class="typeNameLink">Hopper</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
+<li class="circle">frc.ballstuff.intaking.<a href="frc/ballstuff/intaking/Intake.html" title="class in frc.ballstuff.intaking"><span class="typeNameLink">Intake</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
 <li class="circle">frc.controllers.<a href="frc/controllers/JoystickController.html" title="class in frc.controllers"><span class="typeNameLink">JoystickController</span></a></li>
 <li class="circle">frc.robot.<a href="frc/robot/Main.html" title="class in frc.robot"><span class="typeNameLink">Main</span></a></li>
 <li class="circle">edu.wpi.first.wpilibj.RobotBase (implements java.lang.AutoCloseable)
@@ -108,7 +111,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">frc.robot.<a href="frc/robot/RobotMap.html" title="class in frc.robot"><span class="typeNameLink">RobotMap</span></a></li>
 <li class="circle">frc.robot.<a href="frc/robot/RobotNumbers.html" title="class in frc.robot"><span class="typeNameLink">RobotNumbers</span></a></li>
 <li class="circle">frc.robot.<a href="frc/robot/RobotToggles.html" title="class in frc.robot"><span class="typeNameLink">RobotToggles</span></a></li>
-<li class="circle">frc.ballstuff.shooting.<a href="frc/ballstuff/shooting/Shooter.html" title="class in frc.ballstuff.shooting"><span class="typeNameLink">Shooter</span></a></li>
+<li class="circle">frc.ballstuff.shooting.<a href="frc/ballstuff/shooting/Shooter.html" title="class in frc.ballstuff.shooting"><span class="typeNameLink">Shooter</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
+<li class="circle">frc.ballstuff.shooting.<a href="frc/ballstuff/shooting/ShootingStyles.html" title="class in frc.ballstuff.shooting"><span class="typeNameLink">ShootingStyles</span></a></li>
 <li class="circle">java.lang.Throwable (implements java.io.Serializable)
 <ul>
 <li class="circle">java.lang.Exception
@@ -122,9 +126,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
+<li class="circle">frc.ballstuff.shooting.<a href="frc/ballstuff/shooting/Turret.html" title="class in frc.ballstuff.shooting"><span class="typeNameLink">Turret</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
+<li class="circle">frc.misc.<a href="frc/misc/UtilFunctions.html" title="class in frc.misc"><span class="typeNameLink">UtilFunctions</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/XBoxController.html" title="class in frc.controllers"><span class="typeNameLink">XBoxController</span></a></li>
 </ul>
 </li>
+</ul>
+</section>
+<section class="hierarchy">
+<h2 title="Interface Hierarchy">Interface Hierarchy</h2>
+<ul>
+<li class="circle">frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc"><span class="typeNameLink">ISubsystem</span></a></li>
 </ul>
 </section>
 <section class="hierarchy">
@@ -137,6 +149,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.ButtonPanelButtons.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.ButtonPanelButtons</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.ButtonStatus.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.ButtonStatus</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.JoystickAxis.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.JoystickAxis</span></a></li>
+<li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.JoystickButtons.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.JoystickButtons</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.JoystickHatDirection.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.JoystickHatDirection</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.XboxAxes.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.XboxAxes</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.XBoxButtons.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.XBoxButtons</span></a></li>

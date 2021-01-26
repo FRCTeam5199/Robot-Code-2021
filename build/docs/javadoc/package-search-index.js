@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"frc.ballstuff.intaking"},{"l":"frc.ballstuff.shooting"},{"l":"frc.controllers"},{"l":"frc.drive"},{"l":"frc.misc"},{"l":"frc.robot"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"frc.ballstuff.intaking"},{"l":"frc.ballstuff.shooting"},{"l":"frc.controllers"},{"l":"frc.drive"},{"l":"frc.misc"},{"l":"frc.robot"},{"l":"frc.vision"}]

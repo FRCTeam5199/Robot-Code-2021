@@ -31,6 +31,13 @@ public class ControllerEnums {
             this.DEADZONE = deadzone;
         }
 
+        /**
+         * @deprecated Feature that should <b>never</b> be used. Gets the xbox axis from a provided int
+         *
+         * @param id - the xbox axis id requested
+         * @return the XboxAxis enum with id mathing input
+         * @throws NoSuchFieldException if there is no xbox axis with that id
+         */
         @Deprecated
         public static XboxAxes get(int id) throws NoSuchFieldException {
             for (XboxAxes axis : XboxAxes.values())
@@ -39,7 +46,7 @@ public class ControllerEnums {
             throw new NoSuchFieldException("There is no Xbox axis with an ID of " + id);
         }
     }
-
+ 
     public enum XBoxButtons {
         A_CROSS(1),
         B_CIRCLE(2),
