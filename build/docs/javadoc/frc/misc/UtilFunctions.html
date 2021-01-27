@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":9,"i1":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -154,6 +154,15 @@ extends java.lang.Object</pre>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTargetVelocity(double)">getTargetVelocity</a></span>&#8203;(double&nbsp;FPS)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr class="altColor" id="i2">
+<td class="colFirst"><code>static double</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#weightedAverage(double,double%5B%5D,double%5B%5D)">weightedAverage</a></span>&#8203;(double&nbsp;voltage,
+double[]&nbsp;uppers,
+double[]&nbsp;lowers)</code></th>
+<td class="colLast">
+<div class="block">Used in  to get the weighted average between two points</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -202,6 +211,23 @@ extends java.lang.Object</pre>
 <section class="detail">
 <h3><a id="getTargetVelocity(double)">getTargetVelocity</a></h3>
 <div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getTargetVelocity</span>&#8203;(<span class="arguments">double&nbsp;FPS)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="weightedAverage(double,double[],double[])">weightedAverage</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">weightedAverage</span>&#8203;(<span class="arguments">double&nbsp;voltage,
+double[]&nbsp;uppers,
+double[]&nbsp;lowers)</span></div>
+<div class="block">Used in  to get the weighted average between two points</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>voltage</code> - the voltage to be in between</dd>
+<dd><code>uppers</code> - the entry from the voltage table for the higher voltage {voltage, value}</dd>
+<dd><code>lowers</code> - the entry from the voltage table for the lower voltage {voltage, value}</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the weighted average between the upper and lower voltage with respect to the battery voltage</dd>
+</dl>
 </section>
 </li>
 </ul>

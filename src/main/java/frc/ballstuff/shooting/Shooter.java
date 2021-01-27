@@ -23,8 +23,10 @@ import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
+import frc.vision.GoalChameleon;
 
 import static frc.ballstuff.shooting.ShootingStyles.fireIndexerDependent;
+import static frc.misc.UtilFunctions.weightedAverage;
 import static frc.robot.Robot.hopper;
 import static frc.robot.Robot.shooter;
 
@@ -62,7 +64,7 @@ public class Shooter implements ISubsystem {
     private TalonFX falconLeader, falconFollower;
     private CANPIDController speedo;
     private CANEncoder encoder;
-    //private GoalChameleon chameleon;
+    private GoalChameleon chameleon;
     // private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
     // private NetworkTableEntry shooterSpeed = tab.add("Shooter Speed", 0).getEntry();
     // private NetworkTableEntry shooterToggle = tab.add("Shooter Toggle", false).getEntry();
@@ -93,8 +95,23 @@ public class Shooter implements ISubsystem {
         createAndInitMotors();
 
         //SmartDashboard.putString("ZONE", "none");
-        //chameleon = new GoalChameleon();
+        if (RobotToggles.ENABLE_VISION) {
+            chameleon = new GoalChameleon();
+        }
+
         createTimers();
+        if (!makeSurePreconditionsMet())
+            System.err.println("sizeSpeedsArray or voltageFFArray is not sorted right. please do this");
+    }
+
+    private boolean makeSurePreconditionsMet() {
+        for (int i = 0; i < sizeSpeedsArray.length - 1; i++)
+            if (sizeSpeedsArray[i][0] > sizeSpeedsArray[i + 1][0])
+                return false;
+        for (int i = 0; i < voltageFFArray.length - 1; i++)
+            if (voltageFFArray[i][0] > voltageFFArray[i + 1][0])
+                return false;
+        return true;
     }
 
     private void createTimers() {
@@ -158,8 +175,10 @@ public class Shooter implements ISubsystem {
         checkState();
         //put code here to set speed based on distance to goal
         boolean solidSpeed = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN;
-        speed = !interpolationEnabled ? 4200 : ((solidSpeed) ? (4200 * ((joystickController.getPositive(JoystickAxis.SLIDER) * 0.25) + 1)) : 0);
-
+        speed = (!interpolationEnabled) ? (4200) : ((solidSpeed) ? (4200 * joystickController.getPositive(JoystickAxis.SLIDER) * 0.25 + 1) : 0);
+        if (RobotToggles.ENABLE_VISION) {
+            trackingTarget = chameleon.validTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
+        }
         //setPID(P,I,D);
 
         if (solidSpeed) {
@@ -293,31 +312,48 @@ public class Shooter implements ISubsystem {
     }
 
     /**
-     * Probably was going to be used at one point, not quite sure why it does, you'll have to ask Conor
+     * adjusts speed based on distance based on {@link GoalChameleon#getGoalSize() chameleon.getGoalSize()}
      *
-     * @author Conor
-     * @deprecated
+     * @return the adjusted speed in RPM based on vision determined distance
      */
-    @Deprecated
-    private double interpolateFF() {
-        double voltage = RobotController.getBatteryVoltage();
-        int index = 0;
-        for (int i = 0; i < voltageFFArray.length; i++) {
-            if (voltage > voltageFFArray[i][0]) {
-                index = i;
+    public double interpolateSpeed() {
+        double size = chameleon.getGoalSize();
+        double finalMult = (joystickController.get(JoystickAxis.SLIDER) * 0.25) + 1;
+        if (size > sizeSpeedsArray[sizeSpeedsArray.length - 1][0]) {
+            SmartDashboard.putNumber("Interpolating Shooter Speed", sizeSpeedsArray[sizeSpeedsArray.length - 1][1] * finalMult * speedMult);
+            return sizeSpeedsArray[sizeSpeedsArray.length - 1][1] * finalMult * speedMult;
+        }
+        if (size < sizeSpeedsArray[0][0]) {
+            SmartDashboard.putNumber("Interpolating Shooter Speed", sizeSpeedsArray[0][1] * speedMult * finalMult);
+            return sizeSpeedsArray[0][1] * finalMult * speedMult;
+        }
+        for (int i = sizeSpeedsArray.length - 2; i >= 0; i--) {
+            if (size > sizeSpeedsArray[i][0]) {
+                SmartDashboard.putNumber("Interpolating Shooter Speed", weightedAverage(size, sizeSpeedsArray[i + 1], sizeSpeedsArray[i]) * finalMult * speedMult);
+                return weightedAverage(size, sizeSpeedsArray[i + 1], sizeSpeedsArray[i]) * finalMult * speedMult;
             }
         }
-        //now index is the index of the low end, index+1 = high end
-        if (index + 1 >= voltageFFArray.length) {
-            return voltageFFArray[sizeSpeedsArray.length - 1][1];
-        }
-        double sizeGap = voltageFFArray[index][0] - voltageFFArray[index + 1][0];
-        double gapFromLowEnd = voltage - voltageFFArray[index][0];
-        double portionOfGap = gapFromLowEnd / sizeGap;
+        throw new IllegalStateException("The only way to get here is no not have sizeSpeedsArray sorted in ascending order based on the first value of each entry. Please ensure that it is sorted as such and try again.");
+        //throw new IllegalStateException("(Shooter.java) This is literally impossible. If you somehow get here, mechanical broke something. The robot is literally on fire.");
+    }
 
-        double speedGap = voltageFFArray[index][1] - voltageFFArray[index + 1][1];
-        double outSpeed = voltageFFArray[index][1] + speedGap * portionOfGap; //low end + gap * portion
-        return 0;
+    /**
+     * Probably was going to be used at one point, not quite sure why it does, you'll have to ask Conor
+     *
+     * @return returns a value that
+     */
+    private double interpolateFF() {
+        double voltage = RobotController.getBatteryVoltage();
+        if (voltage > voltageFFArray[voltageFFArray.length - 1][0])
+            return voltageFFArray[voltageFFArray.length - 1][1];
+        if (voltage < voltageFFArray[0][0])
+            return voltageFFArray[0][0];
+        for (int i = voltageFFArray.length - 2; i >= 0; i--) {
+            if (voltage > voltageFFArray[i][0]) {
+                return weightedAverage(voltage, voltageFFArray[i + 1], voltageFFArray[i]);
+            }
+        }
+        throw new IllegalStateException("Battery voltage " + voltage + " could not be interpolated");
     }
 
     @Override
@@ -353,9 +389,12 @@ public class Shooter implements ISubsystem {
     }
 
     public boolean validTarget() {
-        return true;//return chameleon.validTarget();
+        if (RobotToggles.ENABLE_VISION) {
+            return chameleon.validTarget();
+        } else {
+            return false;
+        }
     }
-
 
     public void feedIn() {
 
@@ -363,7 +402,8 @@ public class Shooter implements ISubsystem {
 
     public void stopFiring() {
         toggle(false);
-        hopper.setAll(false);
+        if (RobotToggles.ENABLE_HOPPER)
+            hopper.setAll(false);
         shooting = false;
     }
 

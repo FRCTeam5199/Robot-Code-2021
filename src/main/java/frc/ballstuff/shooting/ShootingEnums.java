@@ -1,10 +1,10 @@
 package frc.ballstuff.shooting;
 
 import frc.controllers.ControllerEnums;
+import frc.robot.RobotToggles;
 
 import java.util.function.Consumer;
 
-import static frc.ballstuff.shooting.ShootingStyles.fireIndexerDependent;
 import static frc.robot.Robot.hopper;
 
 public enum ShootingEnums {
@@ -14,24 +14,25 @@ public enum ShootingEnums {
         // boolean spinOverride = hopper.spinupOverride.getBoolean(false);
         boolean runDisable = false;//hopper.disableOverride.getBoolean(false);
         shooter.toggle(true);
-        hopper.setAgitator((shooter.atSpeed() || false));//&&(validTarget()||visOverride)&&!runDisable);
-        hopper.setIndexer((shooter.atSpeed() || false));//&&(validTarget()||visOverride)&&!runDisable);
+        if (RobotToggles.ENABLE_HOPPER)
+            hopper.setAll(shooter.atSpeed());
     }),
 
     FIRE_HIGH_SPEED(shooter -> {
-        // boolean visOverride = hopper.visionOverride.getBoolean(false);
-        // boolean spinOverride = hopper.spinupOverride.getBoolean(false);
-        // boolean runDisable = hopper.disableOverride.getBoolean(false);
-        
-        //shooter.toggle(true);
-        shooter.setSpeed(0);
-        hopper.setAgitator((shooter.spunUp() || shooter.recovering() || false) && (shooter.validTarget() || false) && !false);
-        hopper.setIndexer((shooter.spunUp() || shooter.recovering() || false) && (shooter.validTarget() || false) && !false);
+        //shooter.setSpeed(0);
+        if (RobotToggles.ENABLE_VISION) {
+            shooter.setSpeed(shooter.interpolateSpeed());
+        } else {
+            shooter.setSpeed(4200 * (shooter.joystickController.get(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
+        }
+        if (RobotToggles.ENABLE_HOPPER)
+            hopper.setAll((shooter.spunUp() || shooter.recovering()) && (shooter.validTarget()));
     }),
 
     FIRE_INDEXER_INDEPENDENT(shooter -> {
         if (shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN) {
-            hopper.setIndexer(shooter.atSpeed() && hopper.indexed);
+            if (RobotToggles.ENABLE_HOPPER)
+                hopper.setIndexer(shooter.atSpeed() && hopper.indexed);
         }
     }),
 
@@ -41,16 +42,19 @@ public enum ShootingEnums {
             if (shooter.atSpeed()) {
                 shooter.ensureTimerStarted();
                 if (shooter.getShootTimer().hasPeriodPassed(0.5)) {
-                    hopper.setIndexer(true);
+                    if (RobotToggles.ENABLE_HOPPER)
+                        hopper.setIndexer(true);
                     //hopper.setAgitator(true);
                 }
             } else {
-                hopper.setAll(false);
+                if (RobotToggles.ENABLE_HOPPER)
+                    hopper.setAll(false);
                 shooter.resetShootTimer();
             }
         } else {
             shooter.shooting = false;
-            hopper.setAll(false);
+            if (RobotToggles.ENABLE_HOPPER)
+                hopper.setAll(false);
             shooter.resetShootTimer();
         }
     }),
@@ -58,29 +62,31 @@ public enum ShootingEnums {
     FIRE_MIXED(shooter -> {
         shooter.shooting = shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN;
         if (shooter.shooting) {
-            if (shooter.atSpeed() && hopper.indexed) {
+            if (shooter.atSpeed() && (!RobotToggles.ENABLE_HOPPER || hopper.indexed)) {
                 shooter.ensureTimerStarted();
                 if (shooter.getShootTimer().hasPeriodPassed(0.1)) {
                     hopper.setIndexer(true);
                     //hopper.setAgitator(true);
                 }
             } else {
-                hopper.setAll(false);
+                if (RobotToggles.ENABLE_HOPPER)
+                    hopper.setAll(false);
                 shooter.resetShootTimer();
             }
         } else {
-            hopper.setAll(false);
+            if (RobotToggles.ENABLE_HOPPER)
+                hopper.setAll(false);
             shooter.resetShootTimer();
         }
     });
 
     public final Consumer<Shooter> function;
 
-    ShootingEnums(Consumer<Shooter> f){
+    ShootingEnums(Consumer<Shooter> f) {
         function = f;
     }
 
-    public void shoot(Shooter shooter){
+    public void shoot(Shooter shooter) {
         this.function.accept(shooter);
     }
 }

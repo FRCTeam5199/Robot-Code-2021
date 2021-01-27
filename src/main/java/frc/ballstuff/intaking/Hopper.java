@@ -14,6 +14,10 @@ import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 
+/**
+ * The Hopper subsystem effectively takes a ball from the front (where the {@link frc.ballstuff.intaking.Intake intake} is )
+ * to the {@link frc.ballstuff.shooting.Shooter}
+ */
 public class Hopper implements ISubsystem {
     public VictorSPX agitator, indexer;
     public Rev2mDistanceSensor indexSensor;
@@ -91,10 +95,10 @@ public class Hopper implements ISubsystem {
     public void setForced(boolean forced) {
         isForced = forced;
     }
+
     /**
-    * Runs every tick. Runs the indexer and agitator motors.
-    *
-    */
+     * Runs every tick. Runs the indexer and agitator motors.
+     */
     @Override
     public void updateGeneric() {
         if (RobotToggles.DEBUG) {

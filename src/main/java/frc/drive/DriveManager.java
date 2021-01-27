@@ -22,11 +22,11 @@ import frc.controllers.ControllerEnums.XboxAxes;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
+import frc.misc.UtilFunctions;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 import org.jetbrains.annotations.NotNull;
-import frc.misc.UtilFunctions;
 
 
 public class DriveManager implements ISubsystem {
@@ -109,7 +109,7 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     * @param input
+     * @param input -1 to 1 drive amount
      * @return product of input and max speed of the robot
      */
     private static double adjustedDrive(double input) {
@@ -220,8 +220,8 @@ public class DriveManager implements ISubsystem {
             rightPID = leaderR.getPIDController();
             setPID(RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D, RobotNumbers.DRIVEBASE_F);
         } else {
-            DriveManager.configureTalon(leaderLTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            DriveManager.configureTalon(leaderRTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
+            configureTalon(leaderLTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
+            configureTalon(leaderRTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
             followerLTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
             followerRTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
         }
@@ -468,7 +468,7 @@ public class DriveManager implements ISubsystem {
 
         public void configureMotors(int idx, double kF, double kP, double kI, double kD) {
             for (WPI_TalonFX follower : this.motors) {
-                DriveManager.configureTalon(follower, idx, kF, kP, kI, kD);
+                configureTalon(follower, idx, kF, kP, kI, kD);
             }
         }
     }

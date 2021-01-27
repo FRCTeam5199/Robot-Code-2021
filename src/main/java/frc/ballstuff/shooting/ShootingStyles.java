@@ -1,6 +1,7 @@
 package frc.ballstuff.shooting;
 
 import frc.controllers.ControllerEnums;
+import frc.robot.RobotToggles;
 
 import static frc.robot.Robot.hopper;
 import static frc.robot.Robot.shooter;
@@ -9,20 +10,21 @@ public class ShootingStyles {
     public static void fireMixed() {
         shooter.shooting = shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN;
         if (shooter.shooting) {
-            if (shooter.atSpeed() && hopper.indexed) {
+            if (shooter.atSpeed() && (!RobotToggles.ENABLE_HOPPER || hopper.indexed)) {
                 shooter.ensureTimerStarted();
                 if (shooter.getShootTimer().hasPeriodPassed(0.1)) {
-                    hopper.setIndexer(true);
+                    if (RobotToggles.ENABLE_HOPPER)
+                        hopper.setIndexer(true);
                     //hopper.setAgitator(true);
                 }
             } else {
-                hopper.setIndexer(false);
-                hopper.setAgitator(false);
+                if (RobotToggles.ENABLE_HOPPER)
+                    hopper.setAll(false);
                 shooter.resetShootTimer();
             }
         } else {
-            hopper.setIndexer(false);
-            hopper.setAgitator(false);
+            if (RobotToggles.ENABLE_HOPPER)
+                hopper.setAll(false);
             shooter.resetShootTimer();
         }
     }
@@ -33,23 +35,27 @@ public class ShootingStyles {
             if (shooter.atSpeed()) {
                 shooter.ensureTimerStarted();
                 if (shooter.getShootTimer().hasPeriodPassed(0.5)) {
-                    hopper.setIndexer(true);
+                    if (RobotToggles.ENABLE_HOPPER)
+                        hopper.setIndexer(true);
                     //hopper.setAgitator(true);
                 }
             } else {
-                hopper.setAll(false);
+                if (RobotToggles.ENABLE_HOPPER)
+                    hopper.setAll(false);
                 shooter.resetShootTimer();
             }
         } else {
             shooter.shooting = false;
-            hopper.setAll(false);
+            if (RobotToggles.ENABLE_HOPPER)
+                hopper.setAll(false);
             shooter.resetShootTimer();
         }
     }
 
     public static void fireIndexerDependent() {
         if (shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN) {
-            hopper.setIndexer(shooter.atSpeed() && hopper.indexed);
+            if (RobotToggles.ENABLE_HOPPER)
+                hopper.setIndexer(shooter.atSpeed() && hopper.indexed);
         }
     }
 
@@ -58,9 +64,9 @@ public class ShootingStyles {
         // boolean spinOverride = hopper.spinupOverride.getBoolean(false);
         // boolean runDisable = hopper.disableOverride.getBoolean(false);
         shooter.toggle(true);
-        hopper.setAgitator((shooter.spunUp() || shooter.recovering() || false) && (shooter.validTarget() || false) && !false);
-        hopper.setAgitator((shooter.spunUp() || shooter.recovering() || false) && (shooter.validTarget() || false) && !false);
-        hopper.setIndexer((shooter.spunUp() || shooter.recovering() || false) && (shooter.validTarget() || false) && !false);
+        if (RobotToggles.ENABLE_HOPPER) {
+            hopper.setAll((shooter.spunUp() || shooter.recovering()) && (shooter.validTarget()));
+        }
     }
 
     public void fireHighAccuracy() {
@@ -68,8 +74,8 @@ public class ShootingStyles {
         // boolean spinOverride = hopper.spinupOverride.getBoolean(false);
         boolean runDisable = false;//hopper.disableOverride.getBoolean(false);
         shooter.toggle(true);
-        hopper.setAgitator((shooter.atSpeed() || false));//&&(validTarget()||visOverride)&&!runDisable);
-        hopper.setIndexer((shooter.atSpeed() || false));//&&(validTarget()||visOverride)&&!runDisable);
+        if (RobotToggles.ENABLE_HOPPER)
+            hopper.setAll(shooter.atSpeed());
     }
 
     //TODO Likely broken please review
