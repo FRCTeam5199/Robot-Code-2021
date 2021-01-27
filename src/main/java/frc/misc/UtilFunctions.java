@@ -1,6 +1,5 @@
 package frc.misc;
 
-import frc.ballstuff.shooting.Shooter;
 import frc.robot.RobotNumbers;
 
 public class UtilFunctions {

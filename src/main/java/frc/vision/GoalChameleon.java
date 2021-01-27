@@ -3,9 +3,8 @@ package frc.vision;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.RobotMap;
-
 import edu.wpi.first.wpilibj.LinearFilter;
+import frc.robot.RobotMap;
 
 public class GoalChameleon{
     public NetworkTableEntry yaw;

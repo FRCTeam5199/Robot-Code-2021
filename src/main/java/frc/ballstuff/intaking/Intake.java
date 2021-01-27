@@ -3,15 +3,14 @@ package frc.ballstuff.intaking;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.controllers.ControllerEnums;
-import frc.controllers.JoystickController;
 import frc.controllers.ButtonPanel;
+import frc.controllers.ControllerEnums.JoystickHatDirection;
+import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
-import frc.controllers.ControllerEnums.JoystickHatDirection;
 
 public class Intake implements ISubsystem {
     private VictorSPX victor;
