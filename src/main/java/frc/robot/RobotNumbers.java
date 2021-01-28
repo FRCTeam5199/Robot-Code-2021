@@ -36,6 +36,12 @@ public class RobotNumbers {
     public static final double TURRET_MAX_POS = 270;
     public static final double TURRET_MIN_POS = 0;
     public static final int SHOOTER_TIMEOUT_MS = 20;
+    public static final double AUTON_TOLERANCE = 1;
+    public static final double HEADING_P = 0;
+    public static final double HEADING_I = 0;
+    public static final double HEADING_D = 0;
+    public static final double AUTO_SPEED = 1;
+    public static final double AUTO_ROTATION_SPEED = 1;
     public static double triggerSensitivity = 0.25;
     public static int XBOX_CONTROLLER_SLOT = 0;
     public static int FLIGHT_STICK_SLOT = 1;

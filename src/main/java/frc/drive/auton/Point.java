@@ -9,11 +9,15 @@ public class Point {
         Y = y;
     }
 
-    public boolean isWithin(double distance, Point otherPoint){
+    public boolean isWithin(double distance, Point otherPoint) {
         return distance > getDistanceFromPoint(otherPoint);
     }
 
-    public double getDistanceFromPoint(Point otherPoint){
+    public double getDistanceFromPoint(Point otherPoint) {
         return Math.sqrt(Math.pow(X - otherPoint.X, 2) + Math.pow(Y - otherPoint.Y, 2));
+    }
+    
+    public Point subtract(Point other){
+        return new Point(X - other.X, Y - other.Y);
     }
 }

@@ -10,14 +10,20 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Units;
-import frc.controllers.ControllerEnums;
-import frc.controllers.ControllerEnums.*;
+import frc.controllers.ControllerEnums.ButtonStatus;
+import frc.controllers.ControllerEnums.XBoxButtons;
+import frc.controllers.ControllerEnums.XboxAxes;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
@@ -46,9 +52,6 @@ public class DriveManager implements ISubsystem {
     public double currentOmega;
     public int autoStage = 0;
     //public Pose2d robotPose;
-    /*SpeedControllerGroup talonLeft = new SpeedControllerGroup(leaderLTalon, followerLTalon1);
-    SpeedControllerGroup talonRight = new SpeedControllerGroup(leaderRTalon, followerRTalon1);
-    DifferentialDrive differentialDrive = new DifferentialDrive(talonLeft, talonRight);*/
     //public Translation2d robotTranslation;
     //public Rotation2d robotRotation;
     public boolean autoComplete = false;
@@ -60,7 +63,6 @@ public class DriveManager implements ISubsystem {
     //private boolean pointBall;
     private SparkFollowerMotors followerL, followerR;
     private WPI_TalonFX leaderLTalon, leaderRTalon;
-
 
     //private WPI_TalonFX followerLTalon1, followerLTalon2, followerRTalon1, followerRTalon2;
     private TalonFollowerMotors followerLTalon, followerRTalon;
@@ -84,47 +86,15 @@ public class DriveManager implements ISubsystem {
     // Pigeon IMU
     private double startYaw;
 
+    public Pose2d robotPose;
+    public Translation2d robotTranslation;
+    public Rotation2d robotRotation;
+    public DifferentialDriveOdometry odometer;
+
+    public PIDController headingPID;
+
     public DriveManager() throws RuntimeException {
         init();
-    }
-
-    /**
-     * Configures motors
-     *
-     * @param motor - motor
-     * @param idx   - PID loop, by default 0
-     * @param kF    - Feed forward
-     * @param kP    - Proportional constant
-     * @param kI    - Integral constant
-     * @param kD    - Derivative constant
-     */
-    private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
-        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
-
-        motor.config_kF(idx, kF, timeout);
-        motor.config_kF(idx, kP, timeout);
-        motor.config_kI(idx, kI, timeout);
-        motor.config_kD(idx, kD, timeout);
-    }
-
-    /**
-     * @param input -1 to 1 drive amount
-     * @return product of input and max speed of the robot
-     */
-    private static double adjustedDrive(double input) {
-        return input * RobotNumbers.MAX_SPEED;
-    }
-
-    private static double adjustedRotation(double input) {
-        return input * RobotNumbers.MAX_ROTATION;
-    }
-
-    private static double convertFPStoRPM(double FPS) {
-        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
-    }
-
-    private static double getTargetVelocity(double FPS) {
-        return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
     }
 
     /**
@@ -139,6 +109,7 @@ public class DriveManager implements ISubsystem {
         initIMU();
         initPID();
         initMisc();
+        headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
     }
 
     /**
@@ -245,22 +216,6 @@ public class DriveManager implements ISubsystem {
         followerR.setCurrentLimit(limit);
     }
 
-    /**
-     * Resets the Pigeon IMU
-     */
-    public void resetPigeon() {
-        updatePigeon();
-        startypr = ypr;
-        startYaw = yawAbs();
-    }
-
-    /**
-     * Updates the Pigeon IMU
-     */
-    public void updatePigeon() {
-        pigeon.getYawPitchRoll(ypr);
-    }
-
     private void setPID(double P, double I, double D, double F) {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             leftPID.setP(P);
@@ -279,9 +234,37 @@ public class DriveManager implements ISubsystem {
         }
     }
 
-    public double yawAbs() { // return absolute yaw of pigeon
-        updatePigeon();
-        return ypr[0];
+    /**
+     * Configures motors
+     *
+     * @param motor - motor
+     * @param idx   - PID loop, by default 0
+     * @param kF    - Feed forward
+     * @param kP    - Proportional constant
+     * @param kI    - Integral constant
+     * @param kD    - Derivative constant
+     */
+    private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
+        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
+
+        motor.config_kF(idx, kF, timeout);
+        motor.config_kF(idx, kP, timeout);
+        motor.config_kI(idx, kI, timeout);
+        motor.config_kD(idx, kD, timeout);
+    }
+
+    @Override
+    public void updateTest() {
+        if (RobotToggles.DEBUG) {
+            if (!RobotToggles.DRIVE_USE_SPARKS) {
+                System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
+            }
+        }
+        leaderLTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) + controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
+        leaderRTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) - controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
+
+        //leaderLTalon.set(ControlMode.PercentOutput, 0.1);
+        //leaderRTalon.set(ControlMode.PercentOutput, 0.1);
     }
 
     @Override
@@ -300,12 +283,7 @@ public class DriveManager implements ISubsystem {
         }
     }
 
-
-    public void driveOne() {
-        leaderLTalon.set(ControlMode.Velocity, 10000);
-    }
-
-    private void drive(double forward, double rotation) {
+    public void drive(double forward, double rotation) {
         drivePure(adjustedDrive(forward), adjustedRotation(rotation));
     }
 
@@ -343,33 +321,206 @@ public class DriveManager implements ISubsystem {
         }
     }
 
-    @Override
-    public void updateTest() {
-        if (RobotToggles.DEBUG) {
-            if (!RobotToggles.DRIVE_USE_SPARKS) {
-                System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
-            }
-        }
-        leaderLTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) + controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
-        leaderRTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) - controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
+    /**
+     * @param input -1 to 1 drive amount
+     * @return product of input and max speed of the robot
+     */
+    private static double adjustedDrive(double input) {
+        return input * RobotNumbers.MAX_SPEED;
+    }
 
-        //leaderLTalon.set(ControlMode.PercentOutput, 0.1);
-        //leaderRTalon.set(ControlMode.PercentOutput, 0.1);
+    private static double adjustedRotation(double input) {
+        return input * RobotNumbers.MAX_ROTATION;
+    }
+
+    private static double convertFPStoRPM(double FPS) {
+        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
+    }
+
+    @Override
+    public void updateAuton() {
+
     }
 
     @Override
     public void updateGeneric() {
-
+        robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(yawAbs())), getMetersLeft(), getMetersRight());
+        robotTranslation = robotPose.getTranslation();
+        robotRotation = robotPose.getRotation();
     }
+
+    private static double getTargetVelocity(double FPS) {
+        return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
+    }
+
+    public void driveOne() {
+        leaderLTalon.set(ControlMode.Velocity, 10000);
+    }
+
+
 
     public void drivePIDSparks(double left, double right) {
         leftPID.setReference(left * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
         rightPID.setReference(right * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
     }
 
-    @Override
-    public void updateAuton() {
+    public double yawWraparoundAhead(){
+        double yaw = yawRel();
+        while(180<yaw || yaw<-180){
+            if(yaw>180){
+                yaw -= 360;
+            }
+            else if(yaw<-180){
+                yaw += 360;
+            }
+        }
+        return yaw;
+    }
 
+    private double fieldHeading(){
+        return -yawWraparoundAhead();
+    }
+
+    private double angleToPos(double wayX, double wayY){
+        return Math.toDegrees(Math.atan2(wayX-fieldX(), wayY-fieldY()));
+    }
+
+    /**
+     * @return the robot's X position in relation to its starting position(right positive)
+     * typically facing away from opposing alliance station
+     */
+    public double fieldX() {
+        return -robotTranslation.getY();
+    }
+
+    /**
+     * @return the robot's Y position in relation to its starting position(away positive)
+     * typically facing away from opposing alliance station
+     */
+    public double fieldY() {
+        return robotTranslation.getX();
+    }
+
+    private double headingError(double wayX, double wayY){
+        return angleToPos(wayX, wayY)-fieldHeading();
+    }
+
+    //pls no
+    @Deprecated
+    public double headingErrorWraparound(double x, double y) {
+        double error = headingError(x, y);
+        if(error>180){
+            return error-360;
+        }
+        else if(error<-180){
+            return error+360;
+        }
+        return error;
+    }
+
+    public double yawRel(){ //return relative(to start) yaw of pigeon
+        updatePigeon();
+        return (ypr[0]-startYaw);
+    }
+
+    public double yawAbs() { // return absolute yaw of pigeon
+        updatePigeon();
+        return ypr[0];
+    }
+
+    /**
+     * Updates the Pigeon IMU
+     */
+    public void updatePigeon() {
+        pigeon.getYawPitchRoll(ypr);
+    }
+
+    /**
+     * Resets the Pigeon IMU
+     */
+    public void resetPigeon() {
+        updatePigeon();
+        startypr = ypr;
+        startYaw = yawAbs();
+    }
+
+    //position conversion -------------------------------------------------------------------------------------------------------
+    private double wheelCircumference(){
+        return RobotNumbers.WHEEL_DIAMETER*Math.PI;
+    }
+
+    //getRotations - get wheel rotations on encoder
+    public double getRotationsLeft(){
+        return (leaderL.getEncoder().getPosition())/9;
+    }
+    public double getRotationsRight(){
+        return (leaderR.getEncoder().getPosition())/9;
+    }
+
+    //getRPM - get wheel RPM from encoder
+    public double getRPMLeft(){
+        return (leaderL.getEncoder().getVelocity())/9;
+    }
+    public double getRPMRight(){
+        return (leaderR.getEncoder().getVelocity())/9;
+    }
+
+    //getIPS - get wheel IPS from encoder
+    public double getIPSLeft(){
+        return (getRPMLeft()*wheelCircumference())/60;
+    }
+    public double getIPSRight(){
+        return (getRPMRight()*wheelCircumference())/60;
+    }
+
+    //getFPS - get wheel FPS from encoder
+    public double getFPSLeft(){
+        return getIPSLeft()/12;
+    }
+    public double getFPSRight(){
+        return getIPSRight()/12;
+    }
+
+    //getInches - get wheel inches traveled
+    public double getInchesLeft(){
+        return (getRotationsLeft()*wheelCircumference());
+    }
+    public double getInchesRight(){
+        return (getRotationsRight()*wheelCircumference());
+    }
+
+    //getFeet - get wheel feet traveled
+    public double getFeetLeft(){
+        return (getRotationsLeft()*wheelCircumference()/12);
+    }
+    public double getFeetRight(){
+        return (getRotationsRight()*wheelCircumference()/12);
+    }
+
+    //getMeters - get wheel meters traveled
+    public double getMetersLeft(){
+        return Units.feetToMeters(getFeetLeft());
+    }
+    public double getMetersRight(){
+        return Units.feetToMeters(getFeetRight());
+    }
+
+    public double getLeftVelocity(){
+        if (RobotToggles.DRIVE_USE_SPARKS){
+            return leaderL.getEncoder().getVelocity();
+        }else{
+            
+        }
+        return 0;
+    }
+
+    public double getRightVelocity(){
+        if (RobotToggles.DRIVE_USE_SPARKS){
+            return leaderR.getEncoder().getVelocity();
+        }else{
+
+        }
+        return 0;
     }
 
     /**

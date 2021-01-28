@@ -6,6 +6,8 @@ import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
+import frc.drive.auton.AutonManager;
+import frc.drive.auton.AutonRoutines;
 import frc.vision.GoalPhoton;
 
 public class Robot extends TimedRobot {
@@ -15,6 +17,7 @@ public class Robot extends TimedRobot {
     public static Shooter shooter;
     public static Turret turret;
     public static GoalPhoton goalPhoton;
+    public static AutonManager autonManager;
 
     /**
      * Init everything
@@ -48,6 +51,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        autonManager = new AutonManager(AutonRoutines.GO_FORWARD_GO_BACK, driver);
     }
 
     @Override
@@ -64,6 +68,7 @@ public class Robot extends TimedRobot {
         if (RobotToggles.ENABLE_VISION) {
             goalPhoton.updateAuton();
         }
+        autonManager.updateAuton();
     }
 
     @Override
