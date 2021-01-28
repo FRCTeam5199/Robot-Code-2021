@@ -6,6 +6,7 @@ import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
+import frc.vision.GoalPhoton;
 
 public class Robot extends TimedRobot {
     public static DriveManager driver;
