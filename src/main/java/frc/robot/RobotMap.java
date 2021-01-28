@@ -3,8 +3,8 @@ package frc.robot;
 public class RobotMap {
     //public static final int [NAME] = [ID];
     //public static final int wristMotor = 5; <-- EXAMPLE
-    public static final String GOAL_CAM_NAME = "GoalCam";
-    public static final String BALL_CAM_NAME = "BallCam";
+    public static final String GOAL_CAM_NAME = "GoalCamera";
+    public static final String BALL_CAM_NAME = "BallCamera";
 
     //Drive Motors
     public static final int DRIVE_LEADER_L = 1; //talon

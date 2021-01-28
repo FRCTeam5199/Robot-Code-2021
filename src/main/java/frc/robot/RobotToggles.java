@@ -12,7 +12,7 @@ public class RobotToggles {
     public static final boolean ENABLE_CLIMBER = false;
     public static final boolean ENABLE_SHOOTER = true;
     public static final boolean ENABLE_HOPPER = true;
-    public static final boolean ENABLE_VISION = true;
+    public static final boolean ENABLE_VISION = false;
 
     //Drivetrain
     public static final boolean DRIVE_USE_SPARKS = true;

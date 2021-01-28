@@ -9,7 +9,7 @@ import frc.robot.RobotMap;
 public class GoalPhoton {
     public NetworkTableEntry yaw;
     public NetworkTableEntry size;
-    public NetworkTableEntry isValid;
+    public NetworkTableEntry hasTarget;
     public NetworkTableEntry pitch;
     public NetworkTableEntry pose;
     NetworkTableInstance table;
@@ -21,8 +21,8 @@ public class GoalPhoton {
         table = NetworkTableInstance.getDefault();
         cameraTable = table.getTable("photonvision").getSubTable(RobotMap.GOAL_CAM_NAME);
         yaw = cameraTable.getEntry("targetYaw");
-        size = cameraTable.getEntry("targetFittedWidth");
-        isValid = cameraTable.getEntry("isValid");
+        size = cameraTable.getEntry("targetArea");
+        hasTarget = cameraTable.getEntry("hasTarget");
         pitch = cameraTable.getEntry("targetPitch");
         pose = cameraTable.getEntry("targetPose");
     }
@@ -36,7 +36,7 @@ public class GoalPhoton {
      * @return whether or not there is a valid target in view.
      */
     public boolean validTarget(){
-        return isValid.getBoolean(false);
+        return hasTarget.getBoolean(false);
     }
 
     /**
@@ -45,7 +45,7 @@ public class GoalPhoton {
      */
     public double getGoalAngleSmoothed(){ 
         double angle = yaw.getDouble(0);
-        if(isValid.getBoolean(false)){
+        if(hasTarget.getBoolean(false)){
             return filter.calculate(angle);
         }
         return 0;
@@ -57,7 +57,7 @@ public class GoalPhoton {
      */
     public double getGoalAngle(){ 
         double angle = yaw.getDouble(0);
-        if(isValid.getBoolean(false)){
+        if(hasTarget.getBoolean(false)){
             return angle;
         }
         return 0;
@@ -69,7 +69,7 @@ public class GoalPhoton {
      */
     public double getGoalPitch(){ 
         double angle = pitch.getDouble(0);
-        if(isValid.getBoolean(false)){
+        if(hasTarget.getBoolean(false)){
             return angle;
         }
         return 0;
@@ -81,7 +81,7 @@ public class GoalPhoton {
      */
     public double getGoalSize(){
         double goalSize = size.getDouble(0);
-        if(isValid.getBoolean(false)){
+        if(hasTarget.getBoolean(false)){
             return goalSize;
         }
         return 0;
