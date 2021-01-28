@@ -58,7 +58,7 @@ public class Turret implements ISubsystem {
     // private NetworkTableEntry spinButton = tab.add("rotate", false).getEntry();
     private NetworkTableEntry angleOffset = tab.add("angle offset", -2.9).getEntry();
     private NetworkTableEntry rotSpeed = tab.add("rotationSpeed", 0).getEntry();
-    private GoalPhoton chameleon;
+    private GoalPhoton goalPhoton;
     private double rpmOut;
     private int scanDirection = -1;
     private double targetAngle;
@@ -79,8 +79,8 @@ public class Turret implements ISubsystem {
             pigeon = new PigeonIMU(RobotMap.PIGEON);
         }
         if (RobotToggles.ENABLE_VISION) {
-            chameleon = new GoalPhoton();
-            chameleon.init();
+            goalPhoton = new GoalPhoton();
+            goalPhoton.init();
         }
         motor = new CANSparkMax(RobotMap.TURRET_YAW, MotorType.kBrushless);
         encoder = motor.getEncoder();
@@ -171,9 +171,9 @@ public class Turret implements ISubsystem {
         double omegaSetpoint = 0;
         if (RobotToggles.ENABLE_VISION) {
             if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) { //Check if the Target button is held down
-                if (chameleon.validTarget()) { //If the vision system detects a ball
+                if (goalPhoton.validTarget()) { //If the vision system detects a ball
                     //omegaSetpoint = positionControl.calculate(turretDegrees(), targetAngle);
-                    omegaSetpoint = positionControl.calculate(turretDegrees(), turretDegrees() + chameleon.getGoalAngle());
+                    omegaSetpoint = positionControl.calculate(turretDegrees(), turretDegrees() + goalPhoton.getGoalAngle());
                 } else {
                     scan();
                 }
@@ -192,7 +192,7 @@ public class Turret implements ISubsystem {
             omegaSetpoint = 0;
         }
 
-        if (!chameleon.validTarget()) {//no target
+        if (!goalPhoton.validTarget()) {//no target
             //face north
             SmartDashboard.putString("mode", "Target Lost");
             // if(turretDegrees()>250){
@@ -211,7 +211,7 @@ public class Turret implements ISubsystem {
             //omegaSetpoint += positionControl.calculate(turretDegrees(), limitAngle(235+yawWrap()-360));
         } else {//target good
             SmartDashboard.putString("mode", "Facing Target");
-            omegaSetpoint += positionControl.calculate(-chameleon.getGoalAngle(), angleOffset.getDouble(-2.9));
+            omegaSetpoint += positionControl.calculate(-goalPhoton.getGoalAngle(), angleOffset.getDouble(-2.9));
         }
         */
 

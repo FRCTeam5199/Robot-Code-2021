@@ -64,7 +64,7 @@ public class Shooter implements ISubsystem {
     private TalonFX falconLeader, falconFollower;
     private CANPIDController speedo;
     private CANEncoder encoder;
-    private GoalPhoton chameleon;
+    private GoalPhoton goalPhoton;
     // private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
     // private NetworkTableEntry shooterSpeed = tab.add("Shooter Speed", 0).getEntry();
     // private NetworkTableEntry shooterToggle = tab.add("Shooter Toggle", false).getEntry();
@@ -96,7 +96,7 @@ public class Shooter implements ISubsystem {
 
         //SmartDashboard.putString("ZONE", "none");
         if (RobotToggles.ENABLE_VISION) {
-            chameleon = new GoalPhoton();
+            goalPhoton = new GoalPhoton();
         }
 
         createTimers();
@@ -177,7 +177,7 @@ public class Shooter implements ISubsystem {
         boolean solidSpeed = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN;
         speed = (!interpolationEnabled) ? (4200) : ((solidSpeed) ? (4200 * joystickController.getPositive(JoystickAxis.SLIDER) * 0.25 + 1) : 0);
         if (RobotToggles.ENABLE_VISION) {
-            trackingTarget = chameleon.validTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
+            trackingTarget = goalPhoton.validTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
         }
         //setPID(P,I,D);
 
@@ -312,12 +312,12 @@ public class Shooter implements ISubsystem {
     }
 
     /**
-     * adjusts speed based on distance based on {@link GoalPhoton#getGoalSize() chameleon.getGoalSize()}
+     * adjusts speed based on distance based on {@link GoalPhoton#getGoalSize() goalPhoton.getGoalSize()}
      *
      * @return the adjusted speed in RPM based on vision determined distance
      */
     public double interpolateSpeed() {
-        double size = chameleon.getGoalSize();
+        double size = goalPhoton.getGoalSize();
         double finalMult = (joystickController.get(JoystickAxis.SLIDER) * 0.25) + 1;
         if (size > sizeSpeedsArray[sizeSpeedsArray.length - 1][0]) {
             SmartDashboard.putNumber("Interpolating Shooter Speed", sizeSpeedsArray[sizeSpeedsArray.length - 1][1] * finalMult * speedMult);
@@ -390,7 +390,7 @@ public class Shooter implements ISubsystem {
 
     public boolean validTarget() {
         if (RobotToggles.ENABLE_VISION) {
-            return chameleon.validTarget();
+            return goalPhoton.validTarget();
         } else {
             return false;
         }

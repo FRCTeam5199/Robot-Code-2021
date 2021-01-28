@@ -25,6 +25,9 @@ public class RobotNumbers {
     public static final double SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
     public static final double motorPulleySize = 0;//?;
     public static final double driverPulleySize = 0;//?;
+    public static final double CAMERA_HEIGHT = 0; //Inches
+    public static final double CAMERA_PITCH = 0; //Radians
+    public static final double TARGET_HEIGHT = 2.44; //Meters
 
     public static final double XBOX_CONTROLLER_DEADZONE = 0.07;
     public static final double MOTOR_SPROCKET_SIZE = 1;
