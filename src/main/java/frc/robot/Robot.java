@@ -14,6 +14,7 @@ public class Robot extends TimedRobot {
     public static Hopper hopper;
     public static Shooter shooter;
     public static Turret turret;
+    public static GoalPhoton goalPhoton;
 
     /**
      * Init everything
@@ -36,6 +37,9 @@ public class Robot extends TimedRobot {
             shooter = new Shooter();
             turret = new Turret();
         }
+        if (RobotToggles.ENABLE_VISION) {
+            goalPhoton = new GoalPhoton();
+        }
     }
 
     @Override
@@ -55,7 +59,10 @@ public class Robot extends TimedRobot {
             intake.updateAuton();
         }
         if (RobotToggles.ENABLE_SHOOTER) {
-            //shooter.updateAutonomous();
+            shooter.updateAuton();
+        }
+        if (RobotToggles.ENABLE_VISION) {
+            goalPhoton.updateAuton();
         }
     }
 
@@ -81,6 +88,9 @@ public class Robot extends TimedRobot {
             shooter.updateTeleop();
             turret.updateTeleop();
         }
+        if (RobotToggles.ENABLE_VISION) {
+            goalPhoton.updateTeleop();
+        }
     }
 
     @Override
@@ -101,6 +111,9 @@ public class Robot extends TimedRobot {
         }
         if (RobotToggles.ENABLE_HOPPER) {
             hopper.updateTest();
+        }
+        if (RobotToggles.ENABLE_VISION) {
+            goalPhoton.updateTest();
         }
     }
 

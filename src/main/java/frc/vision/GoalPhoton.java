@@ -1,20 +1,17 @@
 package frc.vision;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.util.Units;
+import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPipelineResult;
 import org.photonvision.PhotonUtils;
 
-public class GoalPhoton {
+public class GoalPhoton implements ISubsystem {
 
-    LinearFilter filter;
     /*
     public NetworkTableEntry yaw;
     public NetworkTableEntry size;
@@ -24,13 +21,17 @@ public class GoalPhoton {
     NetworkTableInstance table;
     NetworkTable cameraTable;
     */
-
+    LinearFilter filter;
     PhotonCamera camera;
     private double yaw;
     private double size;
     private double pitch;
     private boolean hasTarget;
     private Transform2d pose;
+
+    public GoalPhoton() {
+        init();
+    }
 
     public void init() {
         PhotonCamera camera = new PhotonCamera(RobotMap.GOAL_CAM_NAME);
@@ -46,7 +47,23 @@ public class GoalPhoton {
         */
     }
 
-    public void update() {
+    @Override
+    public void updateTest() {
+        updateGeneric();
+    }
+
+    @Override
+    public void updateTeleop() {
+        updateGeneric();
+    }
+
+    @Override
+    public void updateAuton() {
+
+    }
+
+    @Override
+    public void updateGeneric() {
         //getGoalAngleSmoothed();
         PhotonPipelineResult latest = getLatestResult();
         yaw = latest.getBestTarget().getYaw();
