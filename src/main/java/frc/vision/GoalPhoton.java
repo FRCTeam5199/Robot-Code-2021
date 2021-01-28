@@ -6,7 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
 import frc.robot.RobotMap;
 
-public class GoalChameleon{
+public class GoalPhoton {
     public NetworkTableEntry yaw;
     public NetworkTableEntry size;
     public NetworkTableEntry isValid;
@@ -19,7 +19,7 @@ public class GoalChameleon{
     public void init(){
         filter = LinearFilter.movingAverage(5);
         table = NetworkTableInstance.getDefault();
-        cameraTable = table.getTable("chameleon-vision").getSubTable(RobotMap.GOAL_CAM_NAME);
+        cameraTable = table.getTable("photonvision").getSubTable(RobotMap.GOAL_CAM_NAME);
         yaw = cameraTable.getEntry("targetYaw");
         size = cameraTable.getEntry("targetFittedWidth");
         isValid = cameraTable.getEntry("isValid");

@@ -19,7 +19,12 @@ public class XBoxController {
         stick = new Joystick(n);
     }
 
-    public void setTriggerSensitivity(double sens) { //sets sensitivity
+    /**
+    * Sets sensitivity equal to triggerSensitivity
+    *
+    * @param sens the trigger Sensitivity
+    */
+    public void setTriggerSensitivity(double sens) {
         RobotNumbers.triggerSensitivity = sens;
     }
 

@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.RobotMap;
 
-public class BallChameleon{
+public class BallPhoton {
     public NetworkTableEntry yaw;
     public NetworkTableEntry size;
     public NetworkTableEntry isValid;

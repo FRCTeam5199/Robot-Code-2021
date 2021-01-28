@@ -20,7 +20,7 @@ import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
-import frc.vision.GoalChameleon;
+import frc.vision.GoalPhoton;
 
 public class Turret implements ISubsystem {
     public boolean track;
@@ -58,7 +58,7 @@ public class Turret implements ISubsystem {
     // private NetworkTableEntry spinButton = tab.add("rotate", false).getEntry();
     private NetworkTableEntry angleOffset = tab.add("angle offset", -2.9).getEntry();
     private NetworkTableEntry rotSpeed = tab.add("rotationSpeed", 0).getEntry();
-    private GoalChameleon chameleon;
+    private GoalPhoton chameleon;
     private double rpmOut;
     private int scanDirection = -1;
     private double targetAngle;
@@ -79,7 +79,7 @@ public class Turret implements ISubsystem {
             pigeon = new PigeonIMU(RobotMap.PIGEON);
         }
         if (RobotToggles.ENABLE_VISION) {
-            chameleon = new GoalChameleon();
+            chameleon = new GoalPhoton();
             chameleon.init();
         }
         motor = new CANSparkMax(RobotMap.TURRET_YAW, MotorType.kBrushless);

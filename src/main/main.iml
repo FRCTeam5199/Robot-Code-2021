@@ -22,5 +22,6 @@
     <orderEntry type="library" name="Gradle: edu.wpi.first.ntcore:ntcore-java:2021.1.2" level="project" />
     <orderEntry type="library" name="Gradle: com.ctre.phoenix:api-java:5.19.4" level="project" />
     <orderEntry type="library" name="Gradle: com.ctre.phoenix:wpiapi-java:5.19.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.revrobotics.frc:DistanceSensor-java:0.3.0" level="project" />
   </component>
 </module>

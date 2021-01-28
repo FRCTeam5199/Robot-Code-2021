@@ -23,7 +23,7 @@ import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
-import frc.vision.GoalChameleon;
+import frc.vision.GoalPhoton;
 
 import static frc.ballstuff.shooting.ShootingStyles.fireIndexerDependent;
 import static frc.misc.UtilFunctions.weightedAverage;
@@ -64,7 +64,7 @@ public class Shooter implements ISubsystem {
     private TalonFX falconLeader, falconFollower;
     private CANPIDController speedo;
     private CANEncoder encoder;
-    private GoalChameleon chameleon;
+    private GoalPhoton chameleon;
     // private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
     // private NetworkTableEntry shooterSpeed = tab.add("Shooter Speed", 0).getEntry();
     // private NetworkTableEntry shooterToggle = tab.add("Shooter Toggle", false).getEntry();
@@ -96,7 +96,7 @@ public class Shooter implements ISubsystem {
 
         //SmartDashboard.putString("ZONE", "none");
         if (RobotToggles.ENABLE_VISION) {
-            chameleon = new GoalChameleon();
+            chameleon = new GoalPhoton();
         }
 
         createTimers();
@@ -312,7 +312,7 @@ public class Shooter implements ISubsystem {
     }
 
     /**
-     * adjusts speed based on distance based on {@link GoalChameleon#getGoalSize() chameleon.getGoalSize()}
+     * adjusts speed based on distance based on {@link GoalPhoton#getGoalSize() chameleon.getGoalSize()}
      *
      * @return the adjusted speed in RPM based on vision determined distance
      */
