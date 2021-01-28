@@ -12,7 +12,7 @@ public class BallPhoton {
 
     public void init(){
         NetworkTableInstance table = NetworkTableInstance.getDefault();
-        NetworkTable cameraTable = table.getTable("chameleon-vision").getSubTable(RobotMap.BALL_CAM_NAME);
+        NetworkTable cameraTable = table.getTable("photonvision").getSubTable(RobotMap.BALL_CAM_NAME);
         yaw = cameraTable.getEntry("targetYaw");
         size = cameraTable.getEntry("targetFittedWidth");
         isValid = cameraTable.getEntry("isValid");
