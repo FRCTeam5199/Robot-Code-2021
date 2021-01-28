@@ -72,7 +72,7 @@ public class Shooter implements ISubsystem {
     // private NetworkTableEntry rampRate = tab.add("Ramp Rate", 40).getEntry();
     //public final XBoxController xBoxController;
     private boolean enabled = true;
-    private ButtonPanel panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
+    private final ButtonPanel panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
     private double targetRPM;
     private boolean spunUp = false;
     private boolean recoveryPID = false;

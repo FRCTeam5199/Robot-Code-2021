@@ -3,10 +3,26 @@ package frc.controllers;
 import frc.robot.RobotNumbers;
 
 public class ControllerEnums {
+
+    /**
+     * Contains the tidy enumarations for determining the status of a toggle on/off button
+     */
     public enum ButtonStatus {
+        /**
+         * Button is not pressed
+         */
         UP,
+        /**
+         * Button is pressed
+         */
         DOWN;
 
+        /**
+         * Gets the enumeration matching the boolean
+         *
+         * @param pressed whether the button is pressed or not
+         * @return the corresponding enumeration for the input passed in
+         */
         public static ButtonStatus get(boolean pressed) {
             if (pressed) {
                 return DOWN;
@@ -14,7 +30,9 @@ public class ControllerEnums {
             return UP;
         }
     }
-
+    /**
+     * Contains the enumerations for the joysticks and triggers of the Xbox controller
+    */
     public enum XboxAxes {
         LEFT_JOY_X(0, RobotNumbers.XBOX_CONTROLLER_DEADZONE),
         LEFT_JOY_Y(1, RobotNumbers.XBOX_CONTROLLER_DEADZONE),
@@ -92,7 +110,7 @@ public class ControllerEnums {
             throw new NoSuchFieldException("There is no Controller axis with an ID of " + id);
         }
     }
-
+    //sets the values for up, down, right, and left
     public enum JoystickHatDirection {
         UP(315, 0, 45),
         DOWN(135, 180, 225),
