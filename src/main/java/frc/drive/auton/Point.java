@@ -10,6 +10,10 @@ public class Point {
     }
 
     public boolean isWithin(double distance, Point otherPoint){
-        return distance > Math.sqrt(Math.pow(X - otherPoint.X, 2) + Math.pow(Y - otherPoint.Y, 2));
+        return distance > getDistanceFromPoint(otherPoint);
+    }
+
+    public double getDistanceFromPoint(Point otherPoint){
+        return Math.sqrt(Math.pow(X - otherPoint.X, 2) + Math.pow(Y - otherPoint.Y, 2));
     }
 }
