@@ -23,7 +23,6 @@ public class GoalPhoton {
     public NetworkTableEntry pose;
     NetworkTableInstance table;
     NetworkTable cameraTable;
-
     */
 
     PhotonCamera camera;
@@ -57,6 +56,11 @@ public class GoalPhoton {
         pose = latest.getBestTarget().getCameraToTarget();
     }
 
+    /**
+     * Fetches the latest pipeline result from the pi
+     *
+     * @return Latest vision pipeline result
+     */
     public PhotonPipelineResult getLatestResult() {
         return camera.getLatestResult();
     }
@@ -123,7 +127,7 @@ public class GoalPhoton {
     }
 
     /**
-     * Get the distance between the robot and the goal
+     * Get the distance between the robot and the goal, assuming camera and goal height are static
      *
      * @return distance to goal in meters
      */
