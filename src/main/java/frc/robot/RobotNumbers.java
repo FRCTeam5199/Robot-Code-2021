@@ -27,7 +27,7 @@ public class RobotNumbers {
     public static final double driverPulleySize = 0;//?;
     public static final double CAMERA_HEIGHT = 0; //Inches
     public static final double CAMERA_PITCH = 0; //Radians
-    public static final double TARGET_HEIGHT = 2.44; //Meters
+    public static final double TARGET_HEIGHT = 0;//2.44; //Meters
 
     public static final double XBOX_CONTROLLER_DEADZONE = 0.07;
     public static final double MOTOR_SPROCKET_SIZE = 1;
@@ -35,6 +35,10 @@ public class RobotNumbers {
     public static final double TURRET_GEAR_RATIO = 7;
     public static final double TURRET_MAX_POS = 270;
     public static final double TURRET_MIN_POS = 0;
+    public static final double TURRET_P = 0.006;
+    public static final double TURRET_I = 0.00001;
+    public static final double TURRET_D = 0.001;
+    //public static final double TURRET_F = 0.001;
     public static final int SHOOTER_TIMEOUT_MS = 20;
     public static final double AUTON_TOLERANCE = 1;
     public static final double HEADING_P = 0;

@@ -156,7 +156,8 @@ public class Turret implements ISubsystem {
         fMultiplier = fMult.getDouble(0);
         targetPosition = pos.getDouble(0);
         //setPosPID(p.getDouble(0.09), i.getDouble(0), d.getDouble(0));
-        setPosPID(0.06, 0.00001, 0.001);
+        //setPosPID(RobotNumbers.TURRET_P,RobotNumbers.TURRET_I,RobotNumbers.TURRET_D);
+        //setPosPID(0.006, 0.00001, 0.001);
         //setMotorPID(mP.getDouble(0), mI.getDouble(0), mD.getDouble(0));
         //turretOmega = -driveOmega*RobotNumbers.turretRotationSpeedMultiplier;
         //double motorOmega = turretOmega*sprocketRatio;
@@ -171,10 +172,18 @@ public class Turret implements ISubsystem {
         double omegaSetpoint = 0;
         if (RobotToggles.ENABLE_VISION) {
             if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) { //Check if the Target button is held down
+                //System.out.println("I'm looking. Target is valid? " + goalPhoton.validTarget());
                 if (goalPhoton.validTarget()) { //If the vision system detects a ball
                     //omegaSetpoint = positionControl.calculate(turretDegrees(), targetAngle);
-                    omegaSetpoint = positionControl.calculate(turretDegrees(), turretDegrees() + goalPhoton.getGoalAngle());
+                    //omegaSetpoint = positionControl.calculate(turretDegrees(), turretDegrees() - goalPhoton.getGoalAngle());
+                    omegaSetpoint = -goalPhoton.getGoalAngle()/30;
+                    //System.out.println(omegaSetpoint);
+                    //omegaSetpoint=0;
+                    //double skew = goalPhoton.getGoalAngle();
+                    //omegaSetpoint = skew > 0 ? 1 : -1;
+                    //System.out.println("Skew: " + skew + " Omega: " + omegaSetpoint);
                 } else {
+                    //System.out.println("Target not found.");
                     scan();
                 }
             }
@@ -387,8 +396,8 @@ public class Turret implements ISubsystem {
      * Scan the turret back and forth to find a target.
      */
     private void scan() {
-        scanDirection = (turretDegrees() > 250) ? 1 : ((turretDegrees() < 20) ? -1 : scanDirection);
-        rotateTurret(scanDirection * 2);
+        scanDirection = (turretDegrees() > 270) ? 1 : ((turretDegrees() < 100) ? -1 : scanDirection);
+        rotateTurret(scanDirection);
     }
 
     //pigeon ------------------------------------------------------------------------------------------------------------------------
