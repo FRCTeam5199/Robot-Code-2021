@@ -14,8 +14,7 @@ public enum ShootingEnums {
         // boolean spinOverride = hopper.spinupOverride.getBoolean(false);
         boolean runDisable = false;//hopper.disableOverride.getBoolean(false);
         shooter.toggle(true);
-        if (RobotToggles.ENABLE_HOPPER)
-            hopper.setAll(shooter.atSpeed());
+        if (RobotToggles.ENABLE_HOPPER) hopper.setAll(shooter.atSpeed());
     }),
 
     FIRE_HIGH_SPEED(shooter -> {
@@ -27,14 +26,14 @@ public enum ShootingEnums {
             shooter.setSpeed(4200 * (shooter.joystickController.get(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
         }
         shooter.checkState();
-        if (RobotToggles.ENABLE_HOPPER)
+        if (RobotToggles.ENABLE_HOPPER) {
             hopper.setAll((shooter.spunUp() || shooter.recovering()) && (shooter.validTarget()));
+        }
     }),
 
     FIRE_INDEXER_INDEPENDENT(shooter -> {
         if (shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN) {
-            if (RobotToggles.ENABLE_HOPPER)
-                hopper.setIndexer(shooter.atSpeed() && hopper.indexed);
+            if (RobotToggles.ENABLE_HOPPER) hopper.setIndexer(shooter.atSpeed() && hopper.indexed);
         }
     }),
 
@@ -44,19 +43,16 @@ public enum ShootingEnums {
             if (shooter.atSpeed()) {
                 shooter.ensureTimerStarted();
                 if (shooter.getShootTimer().hasPeriodPassed(0.5)) {
-                    if (RobotToggles.ENABLE_HOPPER)
-                        hopper.setIndexer(true);
+                    if (RobotToggles.ENABLE_HOPPER) hopper.setIndexer(true);
                     //hopper.setAgitator(true);
                 }
             } else {
-                if (RobotToggles.ENABLE_HOPPER)
-                    hopper.setAll(false);
+                if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
                 shooter.resetShootTimer();
             }
         } else {
             shooter.shooting = false;
-            if (RobotToggles.ENABLE_HOPPER)
-                hopper.setAll(false);
+            if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
             shooter.resetShootTimer();
         }
     }),
@@ -71,13 +67,11 @@ public enum ShootingEnums {
                     //hopper.setAgitator(true);
                 }
             } else {
-                if (RobotToggles.ENABLE_HOPPER)
-                    hopper.setAll(false);
+                if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
                 shooter.resetShootTimer();
             }
         } else {
-            if (RobotToggles.ENABLE_HOPPER)
-                hopper.setAll(false);
+            if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
             shooter.resetShootTimer();
         }
     });

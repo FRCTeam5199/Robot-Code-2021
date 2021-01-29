@@ -67,11 +67,6 @@ public class Turret implements ISubsystem {
         init();
     }
 
-    public void teleopInit() {
-        encoder = motor.getEncoder();
-        encoder.setPosition(0);
-    }
-
     @Override
     public void init() {
         joy = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
@@ -106,6 +101,11 @@ public class Turret implements ISubsystem {
         setBrake(true);
     }
 
+    @Override
+    public void updateTest() {
+        updateGeneric();
+    }
+
     // public void updateSimple(){
     //     if(panel.getButton(5)){
     //         motor.set(rotSpeed.getDouble(0));
@@ -118,21 +118,6 @@ public class Turret implements ISubsystem {
     //     }
     // }
 
-    public void updateSimple() {
-        if (panel.get(ButtonPanelButtons.BUDDY_CLIMB) == ButtonStatus.DOWN) {
-            motor.set(rotSpeed.getDouble(0));
-        } else if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN) {
-            motor.set(-rotSpeed.getDouble(210));
-        } else {
-            motor.set(0);
-        }
-    }
-
-    @Override
-    public void updateTest() {
-        updateGeneric();
-    }
-
     @Override
     public void updateTeleop() {
         updateGeneric();
@@ -141,10 +126,6 @@ public class Turret implements ISubsystem {
     @Override
     public void updateAuton() {
 
-    }
-
-    public void disabledInit() {
-        motor.setIdleMode(IdleMode.kCoast);
     }
 
     @Override
@@ -176,7 +157,7 @@ public class Turret implements ISubsystem {
                 if (goalPhoton.validTarget()) { //If the vision system detects a ball
                     //omegaSetpoint = positionControl.calculate(turretDegrees(), targetAngle);
                     //omegaSetpoint = positionControl.calculate(turretDegrees(), turretDegrees() - goalPhoton.getGoalAngle());
-                    omegaSetpoint = -goalPhoton.getGoalAngle()/30;
+                    omegaSetpoint = -goalPhoton.getGoalAngle() / 30;
                     //System.out.println(omegaSetpoint);
                     //omegaSetpoint=0;
                     //double skew = goalPhoton.getGoalAngle();
@@ -184,11 +165,10 @@ public class Turret implements ISubsystem {
                     //System.out.println("Skew: " + skew + " Omega: " + omegaSetpoint);
                 } else {
                     //System.out.println("Target not found.");
-                    scan();
+                    omegaSetpoint = scan();
                 }
             }
         }
-
 
         /*
         if (271 > turretDegrees() && turretDegrees() > -1) {
@@ -255,6 +235,7 @@ public class Turret implements ISubsystem {
             //rotateTurret(0);
             //}
         } else {
+            //TODO remove nested ternary
             double safeTurretRotation = (turretDegrees() > 270) ? (0.25) : ((turretDegrees() < 100) ? (-0.25) : (0));
             rotateTurret(safeTurretRotation);
         }
@@ -281,15 +262,16 @@ public class Turret implements ISubsystem {
         }
     }
 
-    private boolean isSafe(){
-        double turretDeg = turretDegrees();
-        return turretDeg <= 270 && turretDeg >= 100;
+    private void setMotorPID(double P, double I, double D) {
+        controller.setP(P);
+        controller.setI(I);
+        controller.setD(D);
     }
 
-    public boolean setTargetAngle(double target) {
-        targetAngle = target;
-        chasingTarget = true;
-        return atTarget;
+    private void setPosPID(double P, double I, double D) {
+        positionControl.setP(P);
+        positionControl.setI(I);
+        positionControl.setD(D);
     }
 
     public void setBrake(boolean brake) {
@@ -298,6 +280,36 @@ public class Turret implements ISubsystem {
         } else {
             motor.setIdleMode(IdleMode.kCoast);
         }
+    }
+
+    public void teleopInit() {
+        encoder = motor.getEncoder();
+        encoder.setPosition(0);
+    }
+
+    public void updateSimple() {
+        if (panel.get(ButtonPanelButtons.BUDDY_CLIMB) == ButtonStatus.DOWN) {
+            motor.set(rotSpeed.getDouble(0));
+        } else if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN) {
+            motor.set(-rotSpeed.getDouble(210));
+        } else {
+            motor.set(0);
+        }
+    }
+
+    public void disabledInit() {
+        motor.setIdleMode(IdleMode.kCoast);
+    }
+
+    private boolean isSafe() {
+        double turretDeg = turretDegrees();
+        return turretDeg <= 270 && turretDeg >= 100;
+    }
+
+    public boolean setTargetAngle(double target) {
+        targetAngle = target;
+        chasingTarget = true;
+        return atTarget;
     }
 
     /**
@@ -320,40 +332,6 @@ public class Turret implements ISubsystem {
     private void setTurretTarget(double degrees) {
         rotateTurret(-positionControl.calculate(turretDegrees(), limitAngle(degrees)));
     }
-
-    private double turretDegrees() {
-        return 270 - encoder.getPosition();//return encoder.getPosition();
-    }
-
-    public void setDriveOmega(double omega) {
-        driveOmega = omega;
-    }
-
-    private void setMotorPID(double P, double I, double D) {
-        controller.setP(P);
-        controller.setI(I);
-        controller.setD(D);
-    }
-
-    private void setPosPID(double P, double I, double D) {
-        positionControl.setP(P);
-        positionControl.setI(I);
-        positionControl.setD(D);
-    }
-
-    private double limitAngle(double angle) {
-        if (angle > RobotNumbers.TURRET_MAX_POS) {
-            angle = RobotNumbers.TURRET_MAX_POS;
-        }
-        if (angle < RobotNumbers.TURRET_MIN_POS) {
-            angle = RobotNumbers.TURRET_MIN_POS;
-        }
-        return angle;
-    }
-
-    // private void setF(double F){
-    //     controller.setFF(F*fMultiplier);
-    // }
 
     /**
      * Rotate the turret at a certain rad/sec
@@ -388,6 +366,28 @@ public class Turret implements ISubsystem {
         SmartDashboard.putNumber("Turret out", motorRPM / 5700 - deadbandComp);
     }
 
+    private double turretDegrees() {
+        return 270 - encoder.getPosition();//return encoder.getPosition();
+    }
+
+    private double limitAngle(double angle) {
+        if (angle > RobotNumbers.TURRET_MAX_POS) {
+            angle = RobotNumbers.TURRET_MAX_POS;
+        }
+        if (angle < RobotNumbers.TURRET_MIN_POS) {
+            angle = RobotNumbers.TURRET_MIN_POS;
+        }
+        return angle;
+    }
+
+    // private void setF(double F){
+    //     controller.setFF(F*fMultiplier);
+    // }
+
+    public void setDriveOmega(double omega) {
+        driveOmega = omega;
+    }
+
     private void pointNorth() {
         //set position of turret to whatever angle is "north"(generally towards goal)
     }
@@ -395,20 +395,31 @@ public class Turret implements ISubsystem {
     /**
      * Scan the turret back and forth to find a target.
      */
-    private void scan() {
-        scanDirection = (turretDegrees() > 270) ? 1 : ((turretDegrees() < 100) ? -1 : scanDirection);
-        rotateTurret(scanDirection);
-    }
+    private double scan() {
+        //TODO remove nested ternary
+        //scanDirection = (turretDegrees() > 270) ? 1 : ((turretDegrees() < 100) ? -1 : scanDirection);
 
-    //pigeon ------------------------------------------------------------------------------------------------------------------------
-    public void updatePigeon() {
-        pigeon.getYawPitchRoll(ypr);
+        if (turretDegrees() >= 260) {
+            scanDirection = 1;
+        } else if (turretDegrees() <= 100) {
+            scanDirection = -1;
+        } /*else if (scanDirection == 0){
+            scanDirection = RobotNumbers.TURRET_MAX_POS < 2 * turretDegrees() ? 1 : -1;
+        }*/
+
+        return scanDirection;
+        //rotateTurret(scanDirection);
     }
 
     public void resetPigeon() {
         updatePigeon();
         startypr = ypr;
         startYaw = yawAbs() - 90;
+    }
+
+    //pigeon ------------------------------------------------------------------------------------------------------------------------
+    public void updatePigeon() {
+        pigeon.getYawPitchRoll(ypr);
     }
 
     //absolute ypr -----------------------------------------------------------------------------------------------------------------

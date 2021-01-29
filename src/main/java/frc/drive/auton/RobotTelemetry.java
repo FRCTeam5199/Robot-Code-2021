@@ -12,7 +12,7 @@ import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 
-public class RobotTelem {
+public class RobotTelemetry {
     public Pose2d robotPose;
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
@@ -24,21 +24,14 @@ public class RobotTelem {
     public double[] startypr = new double[3];
     private double startYaw;
 
-    public RobotTelem(DriveManager driver){
+    public RobotTelemetry(DriveManager driver){
         this.driver = driver;
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
     }
 
-    //pls no
-    @Deprecated
+    //pls yes
     public double headingErrorWraparound(double x, double y) {
-        double error = headingError(x, y);
-        if (error > 180) {
-            return error - 360;
-        } else if (error < -180) {
-            return error + 360;
-        }
-        return error;
+        return UtilFunctions.mathematicalMod(headingError(x, y) + 180, 360) - 180;
     }
 
     private double headingError(double wayX, double wayY) {

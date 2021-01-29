@@ -53,6 +53,48 @@ public class Hopper implements ISubsystem {
         joy = new Joystick(RobotNumbers.FLIGHT_STICK_SLOT);
     }
 
+    @Override
+    public void updateTest() {
+        updateGeneric();
+    }
+
+    public double indexerSensorRange() {
+        if (autoIndex) {
+            return indexSensor.getRange();
+        }
+        return -2;
+    }
+
+    @Override
+    public void updateTeleop() {
+        updateGeneric();
+    }
+
+    @Override
+    public void updateAuton() {
+
+    }
+
+    /**
+     * Runs every tick. Runs the indexer and agitator motors.
+     */
+    @Override
+    public void updateGeneric() {
+        if (RobotToggles.DEBUG) {
+            SmartDashboard.putBoolean("indexer enable", indexerActive);
+            SmartDashboard.putBoolean("agitator enable", agitatorActive);
+            SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
+        }
+        if (!indexerActive && !agitatorActive) {
+            indexer.set(ControlMode.PercentOutput, indexerSensorRange() > 9 ? 0.3 : 0);
+            agitator.set(ControlMode.PercentOutput, indexerSensorRange() > 9 ? 0.3 : 0);
+            indexed = indexerSensorRange() > 9;
+        } else {
+            indexer.set(ControlMode.PercentOutput, indexerActive ? 0.8 : 0);
+            agitator.set(ControlMode.PercentOutput, agitatorActive ? 0.6 : 0);
+        }
+    }
+
     public void setAll(boolean set) {
         setAgitator(set);
         setIndexer(set);
@@ -72,42 +114,5 @@ public class Hopper implements ISubsystem {
 
     public void setForced(boolean forced) {
         isForced = forced;
-    }
-
-    /**
-     * Runs every tick. Runs the indexer and agitator motors.
-     */
-    @Override
-    public void updateGeneric() {
-        if (RobotToggles.DEBUG) {
-            SmartDashboard.putBoolean("indexer enable", indexerActive);
-            SmartDashboard.putBoolean("agitator enable", agitatorActive);
-            SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
-        }
-        indexer.set(ControlMode.PercentOutput, (!indexerActive && !agitatorActive) ? (indexerSensorRange() > 9 ? 0.3 : 0) : (indexerActive ? 0.8 : 0));
-        agitator.set(ControlMode.PercentOutput, (!indexerActive && !agitatorActive) ? (indexerSensorRange() > 9 ? 0.3 : 0) : (agitatorActive ? 0.6 : 0));
-        indexed = (!indexerActive && !agitatorActive) ? indexerSensorRange() > 9 : indexed;
-    }
-
-    public double indexerSensorRange() {
-        if (autoIndex) {
-            return indexSensor.getRange();
-        }
-        return -2;
-    }
-
-    @Override
-    public void updateTest() {
-        updateGeneric();
-    }
-
-    @Override
-    public void updateTeleop() {
-        updateGeneric();
-    }
-
-    @Override
-    public void updateAuton() {
-
     }
 }

@@ -175,6 +175,7 @@ public class Shooter implements ISubsystem {
         checkState();
         //put code here to set speed based on distance to goal
         boolean solidSpeed = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN;
+        //TODO remove doube ternary
         speed = (!interpolationEnabled) ? (4200) : ((solidSpeed) ? (4200 * joystickController.getPositive(JoystickAxis.SLIDER) * 0.25 + 1) : 0);
         if (RobotToggles.ENABLE_VISION) {
             trackingTarget = goalPhoton.validTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;

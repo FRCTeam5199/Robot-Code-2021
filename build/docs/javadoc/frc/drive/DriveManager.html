@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -173,11 +173,26 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="auton/RobotTelem.html" title="class in frc.drive.auton">RobotTelem</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#guidance">guidance</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.revrobotics.CANSparkMax</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#leaderL">leaderL</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>com.revrobotics.CANSparkMax</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#leaderR">leaderR</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>double[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startypr">startypr</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>double[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ypr">ypr</a></span></code></th>
 <td class="colLast">&nbsp;</td>
@@ -232,14 +247,17 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <tbody>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#driveOne()">driveOne</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#drive(double,double)">drive</a></span>&#8203;(double&nbsp;forward,
+double&nbsp;rotation)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#drivePIDSparks(double,double)">drivePIDSparks</a></span>&#8203;(double&nbsp;left,
-double&nbsp;right)</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#drivePure(double,double)">drivePure</a></span>&#8203;(double&nbsp;FPS,
+double&nbsp;omega)</code></th>
+<td class="colLast">
+<div class="block">This takes a speed in feet per second, a requested turn speed in radians/sec</div>
+</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
@@ -250,57 +268,38 @@ double&nbsp;right)</code></th>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetPigeon()">resetPigeon</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Resets the Pigeon IMU</div>
-</td>
-</tr>
-<tr class="altColor" id="i4">
-<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setAllMotorCurrentLimits(int)">setAllMotorCurrentLimits</a></span>&#8203;(int&nbsp;limit)</code></th>
 <td class="colLast">
 <div class="block">Set all motor current limits</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr class="altColor" id="i4">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
 </td>
 </tr>
-<tr class="rowColor" id="i7">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updatePigeon()">updatePigeon</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Updates the Pigeon IMU</div>
-</td>
-</tr>
-<tr class="altColor" id="i8">
+<tr class="altColor" id="i6">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put all of the code for tele operation to run every tick in here</div>
 </td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
 <div class="block">When testing, put the code to execute every tick in here</div>
 </td>
-</tr>
-<tr class="altColor" id="i10">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawAbs()">yawAbs</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -352,6 +351,24 @@ double&nbsp;right)</code></th>
 <section class="detail">
 <h3><a id="autoComplete">autoComplete</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">autoComplete</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="leaderL">leaderL</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">com.revrobotics.CANSparkMax</span>&nbsp;<span class="memberName">leaderL</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="leaderR">leaderR</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">com.revrobotics.CANSparkMax</span>&nbsp;<span class="memberName">leaderR</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="guidance">guidance</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="auton/RobotTelem.html" title="class in frc.drive.auton">RobotTelem</a></span>&nbsp;<span class="memberName">guidance</span></div>
 </section>
 </li>
 </ul>
@@ -414,22 +431,14 @@ double&nbsp;right)</code></th>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="resetPigeon()">resetPigeon</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetPigeon</span>()</div>
-<div class="block">Resets the Pigeon IMU</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="updatePigeon()">updatePigeon</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updatePigeon</span>()</div>
-<div class="block">Updates the Pigeon IMU</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="yawAbs()">yawAbs</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">yawAbs</span>()</div>
+<h3><a id="updateTest()">updateTest</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTest</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateTest()">ISubsystem</a></code></span></div>
+<div class="block">When testing, put the code to execute every tick in here</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -446,19 +455,33 @@ double&nbsp;right)</code></th>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="driveOne()">driveOne</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">driveOne</span>()</div>
+<h3><a id="drive(double,double)">drive</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">drive</span>&#8203;(<span class="arguments">double&nbsp;forward,
+double&nbsp;rotation)</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="updateTest()">updateTest</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTest</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateTest()">ISubsystem</a></code></span></div>
-<div class="block">When testing, put the code to execute every tick in here</div>
+<h3><a id="drivePure(double,double)">drivePure</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">drivePure</span>&#8203;(<span class="arguments">double&nbsp;FPS,
+double&nbsp;omega)</span></div>
+<div class="block">This takes a speed in feet per second, a requested turn speed in radians/sec</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>FPS</code> - Speed in Feet per Second</dd>
+<dd><code>omega</code> - Rotation in Radians per Second</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="updateAuton()">updateAuton</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateAuton</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateAuton()">ISubsystem</a></code></span></div>
+<div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dd><code><a href="../misc/ISubsystem.html#updateAuton()">updateAuton</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
 </dl>
 </section>
 </li>
@@ -471,25 +494,6 @@ double&nbsp;right)</code></th>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="drivePIDSparks(double,double)">drivePIDSparks</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">drivePIDSparks</span>&#8203;(<span class="arguments">double&nbsp;left,
-double&nbsp;right)</span></div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="updateAuton()">updateAuton</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateAuton</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateAuton()">ISubsystem</a></code></span></div>
-<div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../misc/ISubsystem.html#updateAuton()">updateAuton</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
 </dl>
 </section>
 </li>

@@ -23,6 +23,7 @@ public class RobotToggles {
 
     //Misc
     public static final boolean ENABLE_IMU = false;
+    public static final boolean USE_PIGEON = true;
 
     //SHOOTER
     public static final boolean SHOOTER_USE_SPARKS = false;

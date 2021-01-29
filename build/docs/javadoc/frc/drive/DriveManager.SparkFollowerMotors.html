@@ -156,10 +156,10 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="DriveManager.SparkFollowerMotors.html" title="class in frc.drive">DriveManager.SparkFollowerMotors</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createFollowers(com.revrobotics.CANSparkMaxLowLevel.MotorType,@org.jetbrains.annotations.NotNullint...)">createFollowers</a></span>&#8203;(com.revrobotics.CANSparkMaxLowLevel.MotorType&nbsp;motorType,
-@org.jetbrains.annotations.NotNull int...&nbsp;ids)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createFollowers(com.revrobotics.CANSparkMaxLowLevel.MotorType,int...)">createFollowers</a></span>&#8203;(com.revrobotics.CANSparkMaxLowLevel.MotorType&nbsp;motorType,
+int...&nbsp;ids)</code></th>
 <td class="colLast">
-<div class="block">Creates Spark Motor followers based on</div>
+<div class="block">Creates Spark Motor followers.</div>
 </td>
 </tr>
 <tr class="altColor" id="i2">
@@ -169,7 +169,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setCurrentLimit(int)">setCurrentLimit</a></span>&#8203;(int&nbsp;limit)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setSmartCurrentLimit(int)">setSmartCurrentLimit</a></span>&#8203;(int&nbsp;limit)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -212,16 +212,15 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <section class="detail">
-<h3><a id="createFollowers(com.revrobotics.CANSparkMaxLowLevel.MotorType,@org.jetbrains.annotations.NotNullint...)">createFollowers</a></h3>
+<h3><a id="createFollowers(com.revrobotics.CANSparkMaxLowLevel.MotorType,int...)">createFollowers</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="DriveManager.SparkFollowerMotors.html" title="class in frc.drive">DriveManager.SparkFollowerMotors</a></span>&nbsp;<span class="memberName">createFollowers</span>&#8203;(<span class="arguments">com.revrobotics.CANSparkMaxLowLevel.MotorType&nbsp;motorType,
-@NotNull
-@org.jetbrains.annotations.NotNull int...&nbsp;ids)</span>
+int...&nbsp;ids)</span>
                                                  throws <span class="exceptions">java.lang.IllegalArgumentException</span></div>
-<div class="block">Creates Spark Motor followers based on</div>
+<div class="block">Creates Spark Motor followers.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>motorType</code> - Brushless or brushed motor</dd>
-<dd><code>ids</code> - The id's of the motors to be used. Must match RobotToggles.DRIVE_USE_6_MOTORS</dd>
+<dd><code>ids</code> - The id's of the motors to be used. Length must match RobotToggles.DRIVE_USE_6_MOTORS</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this object (factory style construction)</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -244,8 +243,8 @@ extends java.lang.Object</pre>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="setCurrentLimit(int)">setCurrentLimit</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setCurrentLimit</span>&#8203;(<span class="arguments">int&nbsp;limit)</span></div>
+<h3><a id="setSmartCurrentLimit(int)">setSmartCurrentLimit</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setSmartCurrentLimit</span>&#8203;(<span class="arguments">int&nbsp;limit)</span></div>
 </section>
 </li>
 </ul>

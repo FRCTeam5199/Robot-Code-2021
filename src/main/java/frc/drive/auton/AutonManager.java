@@ -3,9 +3,7 @@ package frc.drive.auton;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.misc.ISubsystem;
@@ -19,7 +17,7 @@ import frc.robot.RobotNumbers;
 public class AutonManager implements ISubsystem {
     private final AutonRoutines routine;
     private final DriveManager DRIVING_CHILD;
-    private final RobotTelem telem;
+    private final RobotTelemetry telem;
 
     private double feetDriven = 0;
 
@@ -30,6 +28,7 @@ public class AutonManager implements ISubsystem {
         this.routine = routine;
         DRIVING_CHILD = driveObject;
         telem = DRIVING_CHILD.guidance;
+        init();
     }
 
     @Override
@@ -75,7 +74,9 @@ public class AutonManager implements ISubsystem {
     /**
      * "Attack"(drive towards) a point on the field. Units are in meters and its scary.
      *
-     * @return Boolean representing whether the robot is within tolerance of the waypoint or not.
+     * @param point the {@link Point point on the field} to attack
+     * @param speed the speed at which to do it
+     * @return true if point has been attacked
      */
     public boolean attackPoint(Point point, double speed) {
         double rotationOffset = telem.headingPID.calculate(telem.headingErrorWraparound(point.X, point.Y));

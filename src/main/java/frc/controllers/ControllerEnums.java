@@ -110,6 +110,7 @@ public class ControllerEnums {
             throw new NoSuchFieldException("There is no Controller axis with an ID of " + id);
         }
     }
+    
     //sets the values for up, down, right, and left
     public enum JoystickHatDirection {
         UP(315, 0, 45),

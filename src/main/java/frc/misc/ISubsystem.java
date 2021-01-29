@@ -9,8 +9,6 @@ package frc.misc;
 public interface ISubsystem {
     /**
      * Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem
-     * 
-     * @author jojo2357
      */
     void init();
 
