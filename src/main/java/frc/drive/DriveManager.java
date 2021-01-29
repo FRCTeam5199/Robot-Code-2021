@@ -25,6 +25,7 @@ import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
 import frc.controllers.XBoxController;
+import frc.drive.auton.RobotTelem;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.misc.UtilFunctions;
@@ -33,12 +34,13 @@ import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Base64;
+
 
 public class DriveManager implements ISubsystem {
     private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry();
     private final NetworkTableEntry driveScaleMult = tab2.add("Speed Factor", RobotNumbers.DRIVE_SCALE).getEntry();
-    private final PigeonIMU pigeon = new PigeonIMU(RobotMap.PIGEON);
     // private Logger logger = new Logger("drive");
     // private Logger posLogger = new Logger("positions");
     // private Permalogger odo = new Permalogger("distance");
@@ -58,7 +60,7 @@ public class DriveManager implements ISubsystem {
     // private double targetHeading;
     //DifferentialDriveOdometry odometer;
     private XBoxController controller;
-    private CANSparkMax leaderL, leaderR;
+    public CANSparkMax leaderL, leaderR;
     // private boolean chaseBall;
     //private boolean pointBall;
     private SparkFollowerMotors followerL, followerR;
@@ -84,14 +86,9 @@ public class DriveManager implements ISubsystem {
     // private NetworkTableEntry driveRotMult = tab2.add("Rotation Factor",
     // RobotNumbers.turnScale).getEntry();
     // Pigeon IMU
-    private double startYaw;
+    //public DifferentialDriveOdometry odometer;
 
-    public Pose2d robotPose;
-    public Translation2d robotTranslation;
-    public Rotation2d robotRotation;
-    public DifferentialDriveOdometry odometer;
-
-    public PIDController headingPID;
+    public RobotTelem guidance;
 
     public DriveManager() throws RuntimeException {
         init();
@@ -109,7 +106,8 @@ public class DriveManager implements ISubsystem {
         initIMU();
         initPID();
         initMisc();
-        headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
+        //odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(yawAbs()), new Pose2d(0, 0, new Rotation2d()));
+
     }
 
     /**
@@ -138,6 +136,8 @@ public class DriveManager implements ISubsystem {
             } catch (Exception e) {
                 throw new InitializationFailureException("An error has occured inverting leader drivetrain motors", "Start debugging");
             }
+
+            leaderL.getEncoder().setPosition(0);
 
             setAllMotorCurrentLimits(50);
         } else {
@@ -171,10 +171,11 @@ public class DriveManager implements ISubsystem {
      * @throws InitializationFailureException When the Pigeon IMU fails to init
      */
     private void initIMU() throws InitializationFailureException {
+        guidance = new RobotTelem(this);
         try {
             if (RobotToggles.ENABLE_IMU) {
-                resetPigeon();
-                updatePigeon();
+                guidance.resetPigeon();
+                guidance.updatePigeon();
             }
         } catch (Exception e) {
             throw new InitializationFailureException("Pigeon IMU Failed to init", "Ensure the pigeon is plugged in and other hardware is operating nomially. Can also disable RobotToggles.ENABLE_IMU");
@@ -293,7 +294,7 @@ public class DriveManager implements ISubsystem {
      * @param FPS   Speed in Feet per Second
      * @param omega Rotation in Radians per Second
      */
-    private void drivePure(double FPS, double omega) {
+    public void drivePure(double FPS, double omega) {
         omega *= driveRotMult.getDouble(RobotNumbers.TURN_SCALE);
         FPS *= driveScaleMult.getDouble(RobotNumbers.DRIVE_SCALE);
         currentOmega = omega;
@@ -344,9 +345,8 @@ public class DriveManager implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(yawAbs())), getMetersLeft(), getMetersRight());
-        robotTranslation = robotPose.getTranslation();
-        robotRotation = robotPose.getRotation();
+        //robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(yawAbs())), getMetersLeft(), getMetersRight());
+        guidance.updateGeneric();
     }
 
     private static double getTargetVelocity(double FPS) {
@@ -357,171 +357,10 @@ public class DriveManager implements ISubsystem {
         leaderLTalon.set(ControlMode.Velocity, 10000);
     }
 
-
-
-    public void drivePIDSparks(double left, double right) {
+    /*public void drivePIDSparks(double left, double right) {
         leftPID.setReference(left * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
         rightPID.setReference(right * RobotNumbers.MAX_MOTOR_SPEED, ControlType.kVelocity);
-    }
-
-    public double yawWraparoundAhead(){
-        double yaw = yawRel();
-        while(180<yaw || yaw<-180){
-            if(yaw>180){
-                yaw -= 360;
-            }
-            else if(yaw<-180){
-                yaw += 360;
-            }
-        }
-        return yaw;
-    }
-
-    private double fieldHeading(){
-        return -yawWraparoundAhead();
-    }
-
-    private double angleToPos(double wayX, double wayY){
-        return Math.toDegrees(Math.atan2(wayX-fieldX(), wayY-fieldY()));
-    }
-
-    /**
-     * @return the robot's X position in relation to its starting position(right positive)
-     * typically facing away from opposing alliance station
-     */
-    public double fieldX() {
-        return -robotTranslation.getY();
-    }
-
-    /**
-     * @return the robot's Y position in relation to its starting position(away positive)
-     * typically facing away from opposing alliance station
-     */
-    public double fieldY() {
-        return robotTranslation.getX();
-    }
-
-    private double headingError(double wayX, double wayY){
-        return angleToPos(wayX, wayY)-fieldHeading();
-    }
-
-    //pls no
-    @Deprecated
-    public double headingErrorWraparound(double x, double y) {
-        double error = headingError(x, y);
-        if(error>180){
-            return error-360;
-        }
-        else if(error<-180){
-            return error+360;
-        }
-        return error;
-    }
-
-    public double yawRel(){ //return relative(to start) yaw of pigeon
-        updatePigeon();
-        return (ypr[0]-startYaw);
-    }
-
-    public double yawAbs() { // return absolute yaw of pigeon
-        updatePigeon();
-        return ypr[0];
-    }
-
-    /**
-     * Updates the Pigeon IMU
-     */
-    public void updatePigeon() {
-        pigeon.getYawPitchRoll(ypr);
-    }
-
-    /**
-     * Resets the Pigeon IMU
-     */
-    public void resetPigeon() {
-        updatePigeon();
-        startypr = ypr;
-        startYaw = yawAbs();
-    }
-
-    //position conversion -------------------------------------------------------------------------------------------------------
-    private double wheelCircumference(){
-        return RobotNumbers.WHEEL_DIAMETER*Math.PI;
-    }
-
-    //getRotations - get wheel rotations on encoder
-    public double getRotationsLeft(){
-        return (leaderL.getEncoder().getPosition())/9;
-    }
-    public double getRotationsRight(){
-        return (leaderR.getEncoder().getPosition())/9;
-    }
-
-    //getRPM - get wheel RPM from encoder
-    public double getRPMLeft(){
-        return (leaderL.getEncoder().getVelocity())/9;
-    }
-    public double getRPMRight(){
-        return (leaderR.getEncoder().getVelocity())/9;
-    }
-
-    //getIPS - get wheel IPS from encoder
-    public double getIPSLeft(){
-        return (getRPMLeft()*wheelCircumference())/60;
-    }
-    public double getIPSRight(){
-        return (getRPMRight()*wheelCircumference())/60;
-    }
-
-    //getFPS - get wheel FPS from encoder
-    public double getFPSLeft(){
-        return getIPSLeft()/12;
-    }
-    public double getFPSRight(){
-        return getIPSRight()/12;
-    }
-
-    //getInches - get wheel inches traveled
-    public double getInchesLeft(){
-        return (getRotationsLeft()*wheelCircumference());
-    }
-    public double getInchesRight(){
-        return (getRotationsRight()*wheelCircumference());
-    }
-
-    //getFeet - get wheel feet traveled
-    public double getFeetLeft(){
-        return (getRotationsLeft()*wheelCircumference()/12);
-    }
-    public double getFeetRight(){
-        return (getRotationsRight()*wheelCircumference()/12);
-    }
-
-    //getMeters - get wheel meters traveled
-    public double getMetersLeft(){
-        return Units.feetToMeters(getFeetLeft());
-    }
-    public double getMetersRight(){
-        return Units.feetToMeters(getFeetRight());
-    }
-
-    public double getLeftVelocity(){
-        if (RobotToggles.DRIVE_USE_SPARKS){
-            return leaderL.getEncoder().getVelocity();
-        }else{
-            
-        }
-        return 0;
-    }
-
-    public double getRightVelocity(){
-        if (RobotToggles.DRIVE_USE_SPARKS){
-            return leaderR.getEncoder().getVelocity();
-        }else{
-
-        }
-        return 0;
-    }
+    }*/
 
     /**
      * Any Operation that you do on one follower motor, implement in here so that a seamless transition can occur
@@ -548,7 +387,7 @@ public class DriveManager implements ISubsystem {
          * @return this object (factory style construction)
          * @throws IllegalArgumentException if RobotToggles.DRIVE_USE_6_MOTORS motor count != #of id's passed in
          */
-        public SparkFollowerMotors createFollowers(MotorType motorType, @NotNull int... ids) throws IllegalArgumentException {
+        public SparkFollowerMotors createFollowers(MotorType motorType, int... ids) throws IllegalArgumentException {
             if ((this.USE_TWO_MOTORS) != (ids.length == 2)) {
                 throw new IllegalArgumentException("I need to have an equal number of motor IDs as motors in use");
             }

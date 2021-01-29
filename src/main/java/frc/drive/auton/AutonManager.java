@@ -19,10 +19,8 @@ import frc.robot.RobotNumbers;
 public class AutonManager implements ISubsystem {
     private final AutonRoutines routine;
     private final DriveManager DRIVING_CHILD;
+    private final RobotTelem telem;
 
-    public double[] ypr = new double[3];
-    public double[] startypr = new double[3];
-    private double startYaw;
     private double feetDriven = 0;
 
     private PIDController headingPID;
@@ -31,13 +29,14 @@ public class AutonManager implements ISubsystem {
     public AutonManager(AutonRoutines routine, DriveManager driveObject){
         this.routine = routine;
         DRIVING_CHILD = driveObject;
+        telem = DRIVING_CHILD.guidance;
     }
 
     @Override
     public void init() {
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
-        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(DRIVING_CHILD.yawAbs()), new Pose2d(0, 0, new Rotation2d()));
-        DRIVING_CHILD.resetPigeon();
+        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(telem.yawAbs()), new Pose2d(0, 0, new Rotation2d()));
+        telem.resetPigeon();
         //leaderL.getEncoder().setPosition(0);
         //leaderR.getEncoder().setPosition(0);
     }
@@ -64,11 +63,10 @@ public class AutonManager implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        DRIVING_CHILD.robotPose = DRIVING_CHILD.odometer.update(new Rotation2d(Units.degreesToRadians(DRIVING_CHILD.yawAbs())), DRIVING_CHILD.getMetersLeft(), DRIVING_CHILD.getMetersRight());
-        DRIVING_CHILD.robotTranslation = DRIVING_CHILD.robotPose.getTranslation();
-        DRIVING_CHILD.robotRotation = DRIVING_CHILD.robotPose.getRotation();
-        double[] dataElements = {DRIVING_CHILD.robotTranslation.getX(), DRIVING_CHILD.robotTranslation.getY()};
-        feetDriven = (DRIVING_CHILD.getFeetLeft()+DRIVING_CHILD.getFeetRight())/2;
+        telem.robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(telem.yawAbs())), telem.getMetersLeft(), telem.getMetersRight());
+        telem.robotTranslation = telem.robotPose.getTranslation();
+        telem.robotRotation = telem.robotPose.getRotation();
+        feetDriven = (telem.getFeetLeft()+telem.getFeetRight())/2;
         //setPID(driveP.getDouble(RobotNumbers.drivebaseP), driveI.getDouble(RobotNumbers.drivebaseI), driveD.getDouble(RobotNumbers.drivebaseD), driveF.getDouble(RobotNumbers.drivebaseF));
         //setPID(0,0,0.000005,0.000001);
         //SmartDashboard.putNumber("Left Speed", DRIVING_CHILD.leaderL.getEncoder().getVelocity());
@@ -80,19 +78,13 @@ public class AutonManager implements ISubsystem {
      * @return Boolean representing whether the robot is within tolerance of the waypoint or not.
      */
     public boolean attackPoint(Point point, double speed) {
-        //logic: use PID to drive in such a way that the robot's heading is adjusted towards the target as it moves forward
-        //wait is this just pure pursuit made by an idiot?
-        double rotationOffset = DRIVING_CHILD.headingPID.calculate(DRIVING_CHILD.headingErrorWraparound(point.X, point.Y), 0);
-        Point here = new Point(DRIVING_CHILD.fieldX(), DRIVING_CHILD.fieldY());
+        double rotationOffset = telem.headingPID.calculate(telem.headingErrorWraparound(point.X, point.Y));
+        Point here = new Point(telem.fieldX(), telem.fieldY());
         boolean inTolerance = here.isWithin(RobotNumbers.AUTON_TOLERANCE, point);
         if (!inTolerance) {
-            DRIVING_CHILD.drive(RobotNumbers.AUTO_SPEED * speed, rotationOffset * RobotNumbers.AUTO_ROTATION_SPEED);
-            // leaderL.set(0);
-            // leaderR.set(0);
+            DRIVING_CHILD.drivePure(RobotNumbers.AUTO_SPEED * speed, rotationOffset * RobotNumbers.AUTO_ROTATION_SPEED);
         } else {
             DRIVING_CHILD.drive(0, 0);
-            // leaderL.set(0);
-            // leaderR.set(0);
         }
         // put("x", fieldX());
         // put("y", fieldY());
@@ -115,6 +107,4 @@ public class AutonManager implements ISubsystem {
         // SmartDashboard.putNumber("right", getMetersRight());
         return inTolerance;
     }
-
-
 }
