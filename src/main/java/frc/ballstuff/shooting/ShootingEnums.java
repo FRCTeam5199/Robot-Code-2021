@@ -21,10 +21,12 @@ public enum ShootingEnums {
     FIRE_HIGH_SPEED(shooter -> {
         //shooter.setSpeed(0);
         if (RobotToggles.ENABLE_VISION) {
-            shooter.setSpeed(shooter.interpolateSpeed());
+            //shooter.setSpeed(shooter.interpolateSpeed());
+            shooter.setSpeed(4200 * (shooter.joystickController.get(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
         } else {
             shooter.setSpeed(4200 * (shooter.joystickController.get(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
         }
+        shooter.checkState();
         if (RobotToggles.ENABLE_HOPPER)
             hopper.setAll((shooter.spunUp() || shooter.recovering()) && (shooter.validTarget()));
     }),

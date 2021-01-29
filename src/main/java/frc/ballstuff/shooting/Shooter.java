@@ -203,7 +203,7 @@ public class Shooter implements ISubsystem {
         }
     }
 
-    private void checkState() {
+    public void checkState() {
         if (actualRPM >= speed - 50) {
             atSpeed = true;
             spunUp = true;
