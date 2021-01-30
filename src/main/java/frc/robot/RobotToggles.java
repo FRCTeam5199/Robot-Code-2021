@@ -1,23 +1,37 @@
 package frc.robot;
 
-//should probably do in RobotMap, but I personally prefer dumping all the toggles in here. Could also maybe integrate Shuffleboard later.
-public class RobotToggles{
-    //public static final boolean [NAME] = [STATE];
-    //public static final boolean happiness = false; <-- EXAMPLE
+public class RobotToggles {
+    public static final boolean DEBUG = false;
+    //Subsystems
 
-    public static boolean postAnything = true; //master info posting toggle, nothing unimportant will be posted with this disabled
+    /**
+     * Enables the drive
+     */
+    public static final boolean ENABLE_DRIVE = true;
+    public static final boolean ENABLE_INTAKE = false;
+    public static final boolean ENABLE_CLIMBER = false;
+    public static final boolean ENABLE_SHOOTER = false;
+    public static final boolean ENABLE_HOPPER = false;
 
-    public static boolean postPositionInfo = true;
-    public static boolean postPositionInfoInches = false;
-    public static boolean postPigeonPitch = true;
-    public static boolean postPigeonYaw = true;
-    public static boolean postPigeonRoll = true;
-    public static boolean postMotorDebug = true;
 
-    public static boolean logData = false;
+    //Drivetrain
+    public static final boolean DRIVE_USE_SPARKS = false;
+    public static final boolean DRIVE_USE_6_MOTORS = false;
+    public static final boolean DRIVE_INVERT_LEFT = true;
+    public static final boolean DRIVE_INVERT_RIGHT = false;
+    public static final boolean EXPERIMENTAL_DRIVE = false;
+    public static final boolean CALIBRATE_DRIVE_PID = false;
 
-    public static boolean shooterPID = true;
+    //Misc
+    public static final boolean ENABLE_VISION = false;
+    public static final boolean USE_PHOTONVISION = true;
+    public static final boolean ENABLE_IMU = false;
+    public static final boolean USE_PIGEON = false;
+    public static final boolean USE_NAVX2 = false;
 
-    public static boolean drive = true;
-    public static boolean useDrivePID = false; //use PID based drive controller
+
+    //SHOOTER
+    public static final boolean SHOOTER_USE_SPARKS = false;
+    public static final boolean SHOOTER_USE_TWO_MOTORS = true;
+    public static final boolean SHOOTER_INVERTED = true;
 }

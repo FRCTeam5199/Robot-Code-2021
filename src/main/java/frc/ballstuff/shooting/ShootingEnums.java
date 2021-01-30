@@ -1,0 +1,88 @@
+package frc.ballstuff.shooting;
+
+import frc.controllers.ControllerEnums;
+import frc.robot.RobotToggles;
+
+import java.util.function.Consumer;
+
+import static frc.robot.Robot.hopper;
+
+public enum ShootingEnums {
+
+    FIRE_HIGH_ACCURACY(shooter -> {
+        // boolean visOverride = hopper.visionOverride.getBoolean(false);
+        // boolean spinOverride = hopper.spinupOverride.getBoolean(false);
+        boolean runDisable = false;//hopper.disableOverride.getBoolean(false);
+        shooter.toggle(true);
+        if (RobotToggles.ENABLE_HOPPER) hopper.setAll(shooter.atSpeed());
+    }),
+
+    FIRE_HIGH_SPEED(shooter -> {
+        //shooter.setSpeed(0);
+        if (RobotToggles.ENABLE_VISION) {
+            //shooter.setSpeed(shooter.interpolateSpeed());
+            shooter.setSpeed(4200 * (shooter.joystickController.get(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
+        } else {
+            shooter.setSpeed(4200 * (shooter.joystickController.get(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
+        }
+
+        if (RobotToggles.ENABLE_HOPPER) {
+            hopper.setAll((shooter.spunUp() || shooter.recovering()) && (shooter.validTarget()));
+        }
+    }),
+
+    FIRE_INDEXER_INDEPENDENT(shooter -> {
+        if (shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN) {
+            if (RobotToggles.ENABLE_HOPPER) hopper.setIndexer(shooter.atSpeed() && hopper.indexed);
+        }
+    }),
+
+    FIRE_TIMED(shooter -> {
+        if (shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN) {
+            shooter.shooting = true;
+            if (shooter.atSpeed()) {
+                shooter.ensureTimerStarted();
+                if (shooter.getShootTimer().hasPeriodPassed(0.5)) {
+                    if (RobotToggles.ENABLE_HOPPER) hopper.setIndexer(true);
+                    //hopper.setAgitator(true);
+                }
+            } else {
+                if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
+                shooter.resetShootTimer();
+            }
+        } else {
+            shooter.shooting = false;
+            if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
+            shooter.resetShootTimer();
+        }
+    }),
+
+    FIRE_MIXED(shooter -> {
+        shooter.shooting = shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN;
+        if (shooter.shooting) {
+            if (shooter.atSpeed() && (!RobotToggles.ENABLE_HOPPER || hopper.indexed)) {
+                shooter.ensureTimerStarted();
+                if (shooter.getShootTimer().hasPeriodPassed(0.1)) {
+                    hopper.setIndexer(true);
+                    //hopper.setAgitator(true);
+                }
+            } else {
+                if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
+                shooter.resetShootTimer();
+            }
+        } else {
+            if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
+            shooter.resetShootTimer();
+        }
+    });
+
+    public final Consumer<Shooter> function;
+
+    ShootingEnums(Consumer<Shooter> f) {
+        function = f;
+    }
+
+    public void shoot(Shooter shooter) {
+        this.function.accept(shooter);
+    }
+}

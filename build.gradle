@@ -44,10 +44,10 @@ def includeDesktopSupport = true
 // Also defines JUnit 4.
 dependencies {
     implementation wpi.deps.wpilib()
+    implementation 'org.jetbrains:annotations:19.0.0'
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
-
-
+    implementation 'org.photonvision.lib:PhotonLib-java:2021.1.2'
     implementation wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)

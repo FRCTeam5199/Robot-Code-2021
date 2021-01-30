@@ -1,0 +1,14 @@
+TODO:
+frc.ballstuff.intaking.hopper
+frc.ballstuff.intaking.intake
+frc.ballstuff.shooting.Shooter
+frc.ballstuff.shooting.Turret
+frc.controllers.* (less XBox Controller)
+frc.drive.*
+frc.drive.auton.*
+frc.robot.* (maybe im not sure yet)
+
+DONE:
+frc.controllers.XBoxController
+frc.misc.*
+frc.vision.*

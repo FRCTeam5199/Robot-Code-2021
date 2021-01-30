@@ -1,124 +1,89 @@
 package frc.controllers;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import frc.controllers.ControllerEnums.ButtonStatus;
+import frc.controllers.ControllerEnums.XBoxButtons;
+import frc.controllers.ControllerEnums.XboxAxes;
 import frc.robot.RobotNumbers;
 
 public class XBoxController {
-	private Joystick stick;
-	private double deadzone = 0.07;
-	private boolean triggerFlag = false;
+    private final Joystick stick;
+    private boolean triggerFlag = false;
 
-	public XBoxController(int n) {
-		stick = new Joystick(n);
-	}
+    /**
+     * Creates a new Xbox Controller object on a specified usb port
+     *
+     * @param n the usb port that the controller is on
+     */
+    public XBoxController(int n) {
+        stick = new Joystick(n);
+    }
 
-	
+    /**
+    * Sets sensitivity equal to triggerSensitivity
+    *
+    * @param sens the trigger Sensitivity
+    */
+    public void setTriggerSensitivity(double sens) {
+        RobotNumbers.triggerSensitivity = sens;
+    }
 
-	public double getStickLX() {
-		if (Math.abs(stick.getRawAxis(0)) > deadzone){
-			return stick.getRawAxis(0);
-		}
-		else{
-			return 0;
-		}
-	}
+    /**
+    * Gets the momentary status of a trigger
+    *
+    * @param trigger the trigger to query
+    * @return true if the trigger has changed its state being pressed down
+    */
+    public boolean isTriggerPressedMomentary(XboxAxes trigger) throws IllegalArgumentException {
+        if (trigger != XboxAxes.LEFT_TRIGGER && trigger != XboxAxes.RIGHT_TRIGGER) {
+            throw new IllegalArgumentException("trigger must be an xbox trigger");
+        }
+        boolean out = isTriggerPressed(trigger) != triggerFlag && isTriggerPressed(trigger);
+        triggerFlag = isTriggerPressed(trigger);
+        return out;
+    }
 
-	public double getStickLY() {
-		if (Math.abs(stick.getRawAxis(1)) > deadzone){
-			return -stick.getRawAxis(1);
-		}
-		else{
-			return 0;
-		}
-	}
+    /**
+     * get joystick axis value regardless of deadzone
+     *
+     * @param trigger trigger position to query
+     * @return returns true when trigger is past its "deadzone"
+     */
+    public boolean isTriggerPressed(XboxAxes trigger) {
+        return get(trigger) > RobotNumbers.triggerSensitivity;
+    }
 
-	public double getStickRX() {
-		if (Math.abs(stick.getRawAxis(4)) > deadzone){
-			return stick.getRawAxis(4);
-		}
-		else{
-			return 0;
-		}
-	}
+    /**
+     * get the state of an xbox axis
+     *
+     * @see #get(XBoxButtons)
+     * @param axis xbox controller axis to query
+     * @return the state of inputted axis on a scale of [-1,1]
+     */
+    public double get(XboxAxes axis) {
+        if (Math.abs(stick.getRawAxis(axis.AXIS_VALUE)) > axis.DEADZONE) //makes sure axis is outside of the deadzone
+            return stick.getRawAxis(axis.AXIS_VALUE);
+        return 0;
+    }
 
-	public double getStickRY() {
-		if (Math.abs(stick.getRawAxis(5)) > deadzone){
-			return -stick.getRawAxis(5);
-		}
-		else{
-			return 0;
-		}
-	}
+    /**
+     * Gets the status of a button on the xbox controller
+     *
+     * @see #get(XboxAxes)
+     * @param button the button to query
+     * @return the status of queried button
+     */
+    public ButtonStatus get(XBoxButtons button) {
+        return ButtonStatus.get(stick.getRawButton(button.AXIS_VALUE));
+    }
 
-	public double getLTrigger() {
-		return stick.getRawAxis(2);
-	}
-
-	public double getRTrigger() {
-		return stick.getRawAxis(3);
-	}
-
-	public boolean getButton(int n) {
-		return stick.getRawButton(n);
-	}
-
-	public boolean getButtonDown(int n){
-		return stick.getRawButtonPressed(n);
-	}
-
-	public boolean getButtonUp(int n){
-		return stick.getRawButtonReleased(n);
-	}
-
-	public void setLRumble(double n) {
-		stick.setRumble(RumbleType.kLeftRumble, n);
-	}
-
-	public void setRRumble(double n) {
-		stick.setRumble(RumbleType.kRightRumble, n);
-	}
-
-	//conor junk
-	double sensitivity = RobotNumbers.triggerSensitivity;
-
-	public void setTriggerSensitivity(double sens){
-		sensitivity = sens;
-	}
-
-	public boolean getRTriggerPressed(){
-		return getRTrigger()>sensitivity;
-	}
-	public boolean getRTriggerMomentary(){
-		boolean returnBool = false;
-		if(getRTriggerPressed()&&!triggerFlag){
-			triggerFlag = true;
-			returnBool = true;
-		}
-		else if(!getRTriggerPressed()&&triggerFlag){
-			triggerFlag = false;
-		}
-		else{
-			returnBool = false;
-		}
-		return returnBool;
-	}
-
-	public boolean getLTriggerPressed(){
-		return getRTrigger()>sensitivity;
-	}
-	public boolean getLTriggerMomentary(){
-		boolean returnBool = false;
-		if(getLTriggerPressed()&&!triggerFlag){
-			triggerFlag = true;
-			returnBool = true;
-		}
-		else if(!getLTriggerPressed()&&triggerFlag){
-			triggerFlag = false;
-		}
-		else{
-			returnBool = false;
-		}
-		return returnBool;
-	}
+    /**
+     * get joystick axis value regardless of deadzone
+     *
+     * @param axis xbox controller axis to query
+     * @return returns stick axis value regardless of deadzone
+     */
+    public double getIgnoreSensitivity(XboxAxes axis) {
+        return stick.getRawAxis(axis.AXIS_VALUE);
+    }
 }

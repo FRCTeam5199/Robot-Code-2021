@@ -136,7 +136,11 @@ $RECYCLE.BIN/
 
 ### Gradle ###
 .gradle
-/build/
+/build/classes/
+/build/debug/
+/build/generated/
+/build/libs/
+/build/tmp/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -149,6 +153,9 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+
+# # IDEA Specific Java Settings
+.idea/
 
 # # VS Code Specific Java Settings
 .classpath

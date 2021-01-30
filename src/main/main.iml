@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/java" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.wpimath:wpimath-java:2021.1.2" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/19.0.0/annotations-19.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:wpilibj-java:2021.1.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.revrobotics.frc:SparkMax-java:1.5.4" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.ntcore:ntcore-java:2021.1.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.ctre.phoenix:api-java:5.19.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.ctre.phoenix:wpiapi-java:5.19.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.revrobotics.frc:DistanceSensor-java:0.3.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.photonvision.lib:PhotonLib-java:2021.1.2" level="project" />
+  </component>
+</module>

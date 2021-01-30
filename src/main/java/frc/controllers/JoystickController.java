@@ -1,64 +1,56 @@
 package frc.controllers;
 
 import edu.wpi.first.wpilibj.Joystick;
+import frc.controllers.ControllerEnums.ButtonStatus;
+import frc.controllers.ControllerEnums.JoystickAxis;
+import frc.controllers.ControllerEnums.JoystickButtons;
+import frc.controllers.ControllerEnums.JoystickHatDirection;
 
 public class JoystickController {
 
-	private final Joystick joy;
+    private final Joystick joy;
 
-	public JoystickController(int n) {
-		joy = new Joystick(n);
-	}
+    public JoystickController(int n) {
+        joy = new Joystick(n);
+    }
 
-	public int getHat() {
-		return joy.getPOV();
-	}
+    /**
+     *
+     * @return The status of the hat on the joystick
+     * @throws IllegalStateException if the current direction doesnt have a matching enum
+     */
+    public JoystickHatDirection getHat() throws IllegalStateException {
+        for (JoystickHatDirection dir : JoystickHatDirection.values())
+            for (int acceptedValue : dir.ACCEPTED_VALUES)
+                if (acceptedValue == joy.getPOV())
+                    return dir;
+        throw new IllegalStateException("I could not wrap " + joy.getPOV() + " inside the JoystickHatDirection enumeration.");
+    }
 
-	public double getXAxis() {
-		return joy.getRawAxis(0);
-	}
+    public double get(JoystickAxis axis) {
+        return joy.getRawAxis(axis.AXIS_VALUE);//return ((1 - joy.getRawAxis(axis.AXIS_VALUE)) / 2);
+    }
 
-	public double getYAxis() {
-		return joy.getRawAxis(1);
-	}
+    public double getPositive(JoystickAxis axis) {
+        return ((1 - joy.getRawAxis(axis.AXIS_VALUE)) / 2);
+    }
 
-	public double getZAxis() {
-		return joy.getRawAxis(2);
-	}
+    public ButtonStatus get(JoystickButtons button) {
+        return ButtonStatus.get(joy.getRawButton(button.AXIS_VALUE));
+    }
 
-	public double getSlider() {
-		return ((1 - joy.getRawAxis(3)) / 2);
-		// return -(meme.getRawAxis(3));
-	}
-
-	public boolean getButton(int n) {
-		return joy.getRawButton(n);
-	}
-
-	public boolean getButtonDown(int n) {
-		return joy.getRawButtonPressed(n);
-	}
-
-	public boolean getButtonUp(int n){
-		return joy.getRawButtonReleased(n);
-	}
-
-	public boolean hatUp() {
-		int output = joy.getPOV();
-		return output == 315 || output == 0 || output == 45;
-	}
-
-	public boolean hatDown() {
-		int output = joy.getPOV();
-		return output == 135 || output == 180 || output == 225;
-	}
-	
-	public boolean hatLeft() {
-		return joy.getPOV() == 270;
-	}
-
-	public boolean hatRight() {
-		return joy.getPOV() == 90;
-	}
-
+    /**
+     * Return true if joystick direction is an accepted value, false if not
+     *
+     * @param direction - the direction of the joystick hat
+     * @return true if and only if the direction of the hat is included in the enum passed in
+     */
+    public boolean hatIs(JoystickHatDirection direction) {
+        int output = joy.getPOV();
+        for (int angle : direction.ACCEPTED_VALUES)
+            if (angle == output) {
+                return true;
+            }
+        return false;
+    }
 }

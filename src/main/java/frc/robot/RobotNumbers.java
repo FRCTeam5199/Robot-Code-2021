@@ -1,60 +1,53 @@
 package frc.robot;
-import com.revrobotics.CANSparkMax.FaultID;
 
-//like RobotToggles but for numbers that I would prefer to keep all in one place(may add shuffleboard stuff later)
-public class RobotNumbers{
-    //public static final double [NAME] = [VALUE];
-    //public static final double maxHeight = 40; <-- EXAMPLE
+public class RobotNumbers {
+    public static final double DRIVEBASE_P = 0.0075;
+    public static final double DRIVEBASE_I = 0;
+    public static final double DRIVEBASE_D = 0.002;//
+    public static final double DRIVEBASE_F = 0;//
+    public static final int DRIVE_TIMEOUT_MS = 30;
+    public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
+    public static final double MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
+    public static final double MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
+    public static final double WHEEL_DIAMETER = 6; //update: now it's used once
+    public static final double MAX_MOTOR_SPEED = 5000; //theoretical max motor speed in rpm
+    public static final double TURN_SCALE = 0.7;
+    public static final double DRIVE_SCALE = 1;
 
-    public static final double shooterSpinUpP = 0.0001;
-    public static final double shooterSpinUpI = 0.0000000;
-    public static final double shooterSpinUpD = 0.00;
-    public static final double shooterRecoveryP = 0;
-    public static final double shooterRecoveryI = 0;
-    public static final double shooterRecoveryD = 0;
+    public static final double SHOOTER_P = 0.001;
+    public static final double SHOOTER_I = 0.00003;
+    public static final double SHOOTER_D = 0.0001;
+    public static final double SHOOTER_F = 0.001;
+    public static final double SHOOTER_RECOVERY_P = SHOOTER_P;//= 0.00037;
+    public static final double SHOOTER_RECOVERY_I = SHOOTER_I;//= 0;
+    public static final double SHOOTER_RECOVERY_D = SHOOTER_D;//= 0;
+    public static final double SHOOTER_RECOVERY_F = SHOOTER_F;//= 0.00019;
+    public static final double SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
+    public static final double motorPulleySize = 0;//?;
+    public static final double driverPulleySize = 0;//?;
+    public static final double CAMERA_HEIGHT = 0; //Inches
+    public static final double CAMERA_PITCH = 0; //Radians
+    public static final double TARGET_HEIGHT = 0;//2.44; //Meters
 
-    public static final double maxSpeed = 10; //max speed in fps - REAL IS 10(for 4in wheels)
-    public static final double maxRotation = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
-    public static final double llTolerance = 3;
-    public static final double driveScale = 1;
-    public static final double turnScale = 0.7;
-
-    public static final double drivebaseP = 0;
-    public static final double drivebaseI = 0;
-    public static final double drivebaseD = 0.000005;
-    public static final double drivebaseF = 0.000001;
-
-    public static final double headingP = 0.05;
-    public static final double headingI = 0;
-    public static final double headingD = 0;
-    public static final double autoSpeedMultiplier = 3;
-    public static final double autoSpeed = 1;
-    public static final double autoRotationMultiplier = 0.2;
-    /**
-     * error tolerance between actual X and Y positions and waypoint X and Y positions
-     */
-    public static final double autoTolerance = 0.2;
-
-    public static final double wheelDiameter = 6; //update: now it's used once
-    public static final double maxMotorSpeed = 5000; //theoretical max motor speed
-
-    public static final double motorPulleySize = 24;
-    public static final double driverPulleySize = 18;
-    public static final double driverWheelDiameter = 4;
-
-    public static final double turretRotationSpeedMultiplier = 1; //multiplied to drive omega to calibrate the compensating rotation speed offset of the turret
-    public static final double turretP = 0.00000000001;
-    public static final double turretI = 0;
-    public static final double turretD = 0;
-    public static final double turretSprocketSize = 11.1;
-    public static final double motorSprocketSize = 1;
-    public static final double turretGearRatio = 7;
-    public static final double turretMinPos = 0;
-    public static final double turretMaxPos = 270;
-
-    public static final double triggerSensitivity = 0.25;
-
-    //junk for motor debug code, change names if needed
-    public static final String[] sparkErrors = {"Brownout", "Overcurrent", "IWDTReset", "MotorFault", "SensorFault", "Stall", "EEPROMCRC", "CANTX", "CANRX", "HasReset", "DRVFault", "OtherFault"};
-    public static final FaultID[] sparkErrorIDs = {FaultID.kBrownout, FaultID.kOvercurrent, FaultID.kIWDTReset, FaultID.kMotorFault, FaultID.kSensorFault, FaultID.kStall, FaultID.kEEPROMCRC, FaultID.kCANTX, FaultID.kCANRX, FaultID.kHasReset, FaultID.kDRVFault, FaultID.kOtherFault};
+    public static final double XBOX_CONTROLLER_DEADZONE = 0.07;
+    public static final double MOTOR_SPROCKET_SIZE = 1;
+    public static final double TURRET_SPROCKET_SIZE = 11.1;
+    public static final double TURRET_GEAR_RATIO = 7;
+    public static final double TURRET_MAX_POS = 270;
+    public static final double TURRET_MIN_POS = 0;
+    public static final double TURRET_P = 0.006;
+    public static final double TURRET_I = 0.00001;
+    public static final double TURRET_D = 0.001;
+    //public static final double TURRET_F = 0.001;
+    public static final int SHOOTER_TIMEOUT_MS = 20;
+    public static final double AUTON_TOLERANCE = 1;
+    public static final double HEADING_P = 0;
+    public static final double HEADING_I = 0;
+    public static final double HEADING_D = 0;
+    public static final double AUTO_SPEED = 1;
+    public static final double AUTO_ROTATION_SPEED = 1;
+    public static double triggerSensitivity = 0.25;
+    public static int XBOX_CONTROLLER_SLOT = 0;
+    public static int FLIGHT_STICK_SLOT = 1;
+    public static int BUTTON_PANEL_SLOT = 2;
 }
