@@ -1,10 +1,10 @@
 package frc.robot;
 
 public class RobotNumbers {
-    public static final double DRIVEBASE_P = 0;
+    public static final double DRIVEBASE_P = 0.0075;
     public static final double DRIVEBASE_I = 0;
-    public static final double DRIVEBASE_D = 0.000005;
-    public static final double DRIVEBASE_F = 0.00002;
+    public static final double DRIVEBASE_D = 0.002;//
+    public static final double DRIVEBASE_F = 0;//
     public static final int DRIVE_TIMEOUT_MS = 30;
     public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
     public static final double MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)

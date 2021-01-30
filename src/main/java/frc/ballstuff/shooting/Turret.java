@@ -252,11 +252,13 @@ public class Turret implements ISubsystem {
             SmartDashboard.putNumber("Turret Speed", encoder.getVelocity());
             SmartDashboard.putNumber("Turret FF", controller.getFF());
             SmartDashboard.putBoolean("Turret Safe", isSafe());
-            SmartDashboard.putNumber("Turret North", limitAngle(235 + yawWrap() - 360));
-            SmartDashboard.putNumber("YawWrap", yawWrap() - 360);
+            if (RobotToggles.ENABLE_IMU) {
+                SmartDashboard.putNumber("YawWrap", yawWrap() - 360);
+                SmartDashboard.putNumber("Turret Heading from North", fieldHeading());
+                SmartDashboard.putNumber("Turret North", limitAngle(235 + yawWrap() - 360));
+            }
             SmartDashboard.putBoolean("Turret At Target", atTarget);
             //chasingTarget = false;
-            SmartDashboard.putNumber("Turret Heading from North", fieldHeading());
             SmartDashboard.putBoolean("Turret Track", track);
             SmartDashboard.putBoolean("Turret at Target", atTarget);
         }

@@ -25,7 +25,7 @@ public enum ShootingEnums {
         } else {
             shooter.setSpeed(4200 * (shooter.joystickController.get(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
         }
-        shooter.checkState();
+
         if (RobotToggles.ENABLE_HOPPER) {
             hopper.setAll((shooter.spunUp() || shooter.recovering()) && (shooter.validTarget()));
         }

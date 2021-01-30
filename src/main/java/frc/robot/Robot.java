@@ -66,7 +66,9 @@ public class Robot extends TimedRobot {
             shooter.updateAuton();
         }
         if (RobotToggles.ENABLE_VISION) {
-            goalPhoton.updateAuton();
+            if (RobotToggles.USE_PHOTONVISION) {
+                goalPhoton.updateAuton();
+            }
         }
         autonManager.updateAuton();
     }
@@ -94,7 +96,9 @@ public class Robot extends TimedRobot {
             turret.updateTeleop();
         }
         if (RobotToggles.ENABLE_VISION) {
-            goalPhoton.updateTeleop();
+            if (RobotToggles.USE_PHOTONVISION) {
+                goalPhoton.updateTeleop();
+            }
         }
     }
 
@@ -118,7 +122,9 @@ public class Robot extends TimedRobot {
             hopper.updateTest();
         }
         if (RobotToggles.ENABLE_VISION) {
-            goalPhoton.updateTest();
+            if (RobotToggles.USE_PHOTONVISION) {
+                goalPhoton.updateTest();
+            }
         }
     }
 
