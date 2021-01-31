@@ -13,6 +13,7 @@ import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.controllers.BaseController;
 import frc.controllers.ButtonPanel;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
@@ -39,7 +40,7 @@ public class Shooter implements ISubsystem {
     public final String[] units = {
             "seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"
     };
-    public final JoystickController joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
+    public final BaseController joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
     private final double pulleyRatio = RobotNumbers.motorPulleySize / RobotNumbers.driverPulleySize;
     private final Timer timer = new Timer();
     private final int ballsShot = 0;

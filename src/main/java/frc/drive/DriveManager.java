@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Units;
+import frc.controllers.BaseController;
+import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
@@ -47,7 +49,7 @@ public class DriveManager implements ISubsystem {
     //private boolean pointBall;
     public CANSparkMax leaderL, leaderR;
     public RobotTelemetry guidance;
-    private XBoxController controller;
+    private BaseController controller;
     private SparkFollowerMotors followerL, followerR;
     private WPI_TalonFX leaderLTalon, leaderRTalon;
     private TalonFollowerMotors followerLTalon, followerRTalon;
@@ -257,8 +259,8 @@ public class DriveManager implements ISubsystem {
                 System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
             }
         }
-        leaderLTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) + controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
-        leaderRTalon.set(ControlMode.Velocity, (controller.get(XboxAxes.LEFT_JOY_Y) - controller.get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
+        leaderLTalon.set(ControlMode.Velocity, (((XBoxController)controller).get(XboxAxes.LEFT_JOY_Y) + ((XBoxController)controller).get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
+        leaderRTalon.set(ControlMode.Velocity, (((XBoxController)controller).get(XboxAxes.LEFT_JOY_Y) - ((XBoxController)controller).get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
         //leaderLTalon.set(ControlMode.PercentOutput, 0.1);
         //leaderRTalon.set(ControlMode.PercentOutput, 0.1);
     }
@@ -266,13 +268,26 @@ public class DriveManager implements ISubsystem {
     @Override
     public void updateTeleop() {
         updateGeneric();
-        double invertedDrive = invert ? -1 : 1;
-        double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-        double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-        if (RobotToggles.EXPERIMENTAL_DRIVE) {
-            drive(invertedDrive / dynamic_gear_L * dynamic_gear_R * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
-        } else {
-            drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
+        switch (RobotToggles.EXPERIMENTAL_DRIVE){
+            case EXPERIMENTAL: {
+                double invertedDrive = invert ? -1 : 1;
+                double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+                double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+                drive(invertedDrive / dynamic_gear_L * dynamic_gear_R * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
+                break;
+            }
+            case STANDARD: {
+                double invertedDrive = invert ? -1 : 1;
+                double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+                double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+                drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
+                break;
+            }
+            case MARIO_KART:{
+                double gogoTime = controller.get(ControllerEnums.JoystickButtons.TWO) == ButtonStatus.DOWN ? 1 : controller.get(ControllerEnums.JoystickButtons.ONE) == ButtonStatus.DOWN? -1 : 0;
+                drive(0.1 * gogoTime, controller.get(ControllerEnums.WiiAxis.ROTATIONAL_TILT) * gogoTime);
+                break;
+            }
         }
     }
 

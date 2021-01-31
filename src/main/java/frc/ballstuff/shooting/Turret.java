@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.controllers.BaseController;
 import frc.controllers.ButtonPanel;
 import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
@@ -28,7 +29,7 @@ public class Turret implements ISubsystem {
     public boolean chasingTarget = false;
     private double sprocketRatio = 1; //replace 1 with ratio between motor and turret sprocket(turret/motor)
     private double gearingRatio = 1; //replace with whatever number
-    private JoystickController joy;
+    private BaseController joy;
     private ButtonPanel panel;
     private CANSparkMax motor;
     private CANEncoder encoder;

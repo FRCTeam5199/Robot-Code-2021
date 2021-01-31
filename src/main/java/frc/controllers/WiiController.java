@@ -1,19 +1,15 @@
 package frc.controllers;
 
-import edu.wpi.first.wpilibj.Joystick;
-
-public class WiiController {
-    private final Joystick itsaWII_REMOTE;
-
+public class WiiController extends BaseController{
     public WiiController(int n){
-        itsaWII_REMOTE = new Joystick(n);
+        super(n);
     }
 
     public double get(ControllerEnums.WiiAxis axis){
-        return itsaWII_REMOTE.getRawAxis(axis.AXIS_VALUE);
+        return stick.getRawAxis(axis.AXIS_VALUE);
     }
 
     public double get(ControllerEnums.WiiButton button){
-        return itsaWII_REMOTE.getRawAxis(button.AXIS_VALUE);
+        return stick.getRawAxis(button.AXIS_VALUE);
     }
 }

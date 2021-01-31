@@ -8,6 +8,7 @@ import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.controllers.BaseController;
 import frc.controllers.ButtonPanel;
 import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
@@ -30,7 +31,7 @@ public class Hopper implements ISubsystem {
     // public NetworkTableEntry visionOverride = tab.add("VISION OVERRIDE", false).getEntry();
     // public NetworkTableEntry spinupOverride = tab.add("SPINUP OVERRIDE", false).getEntry();
     // public NetworkTableEntry disableOverride = tab.add("LOADING DISABLE", false).getEntry();
-    private ButtonPanel panel;
+    private BaseController panel;
     private Joystick joy;
     private boolean isReversed = false;
     private boolean isForced = false;

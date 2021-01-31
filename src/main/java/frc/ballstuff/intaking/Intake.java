@@ -3,6 +3,7 @@ package frc.ballstuff.intaking;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.controllers.BaseController;
 import frc.controllers.ButtonPanel;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
 import frc.controllers.JoystickController;
@@ -14,9 +15,8 @@ import frc.robot.RobotToggles;
 
 public class Intake implements ISubsystem {
     private VictorSPX victor;
-    private JoystickController joystick;
     private int intakeMult;
-    private ButtonPanel buttonPanel;
+    private BaseController joystick;
 
     public Intake() throws InitializationFailureException {
         init();
@@ -25,7 +25,6 @@ public class Intake implements ISubsystem {
     @Override
     public void init() throws InitializationFailureException {
         joystick = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
-        buttonPanel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
         try {
             victor = new VictorSPX(RobotMap.INTAKE_MOTOR);
         } catch (Exception e) {
