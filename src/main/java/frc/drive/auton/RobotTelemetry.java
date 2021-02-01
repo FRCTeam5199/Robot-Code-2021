@@ -43,7 +43,7 @@ public class RobotTelemetry {
     }
 
     private double fieldHeading() {
-        return -yawWraparoundAhead();
+        return yawWraparoundAhead();
     }
 
     /**
@@ -63,7 +63,7 @@ public class RobotTelemetry {
     }
 
     public double yawWraparoundAhead() {
-        return UtilFunctions.mathematicalMod(yawRel(), 360);
+        return UtilFunctions.mathematicalMod(yawRel() + 180, 360) - 180;
     }
 
     public double yawRel() { //return relative(to start) yaw of pigeon

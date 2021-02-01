@@ -1,5 +1,7 @@
 package frc.drive.auton;
 
+import edu.wpi.first.wpilibj.util.Units;
+
 public class Point {
     public final double X;
     public final double Y;
@@ -19,5 +21,10 @@ public class Point {
     
     public Point subtract(Point other){
         return new Point(X - other.X, Y - other.Y);
+    }
+
+    @Override
+    public String toString(){
+        return "(" + X + ", " + Y + ") ";
     }
 }

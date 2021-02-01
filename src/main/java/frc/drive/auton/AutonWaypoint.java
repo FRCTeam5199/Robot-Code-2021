@@ -1,5 +1,7 @@
 package frc.drive.auton;
 
+
+
 public class AutonWaypoint {
     public final Point LOCATION;
     public final double SPEED;

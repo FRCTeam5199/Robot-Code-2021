@@ -26,6 +26,7 @@ public class AutonManager implements ISubsystem {
 
     public AutonManager(AutonRoutines routine, DriveManager driveObject){
         this.routine = routine;
+        this.routine.currentWaypoint = 0;
         DRIVING_CHILD = driveObject;
         telem = DRIVING_CHILD.guidance;
         init();
@@ -52,10 +53,14 @@ public class AutonManager implements ISubsystem {
 
     @Override
     public void updateAuton() {
+        if (routine.currentWaypoint >= routine.WAYPOINTS.size())
+            return;
         updateGeneric();
+        System.out.println("Home is: " + routine.WAYPOINTS.get(0).LOCATION + " and im going to " + routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION));
         if (attackPoint(routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION), 1)){
-            if (++routine.currentWaypoint >= routine.WAYPOINTS.size())
-                throw new RuntimeException("Holy crap theres no way it worked.");
+            System.out.println("IN TOLERANCE");
+            if (++routine.currentWaypoint < routine.WAYPOINTS.size())
+                //throw new IllegalStateException("Holy crap theres no way it worked. This is illegal");
             attackPoint(routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION), 1);
         }
     }
@@ -63,8 +68,7 @@ public class AutonManager implements ISubsystem {
     @Override
     public void updateGeneric() {
         telem.robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(telem.yawAbs())), telem.getMetersLeft(), telem.getMetersRight());
-        telem.robotTranslation = telem.robotPose.getTranslation();
-        telem.robotRotation = telem.robotPose.getRotation();
+        telem.updateGeneric();
         feetDriven = (telem.getFeetLeft()+telem.getFeetRight())/2;
         //setPID(driveP.getDouble(RobotNumbers.drivebaseP), driveI.getDouble(RobotNumbers.drivebaseI), driveD.getDouble(RobotNumbers.drivebaseD), driveF.getDouble(RobotNumbers.drivebaseF));
         //setPID(0,0,0.000005,0.000001);
@@ -81,9 +85,10 @@ public class AutonManager implements ISubsystem {
     public boolean attackPoint(Point point, double speed) {
         double rotationOffset = telem.headingPID.calculate(telem.headingErrorWraparound(point.X, point.Y));
         Point here = new Point(telem.fieldX(), telem.fieldY());
+        System.out.println("I am at " + here + " and trying to turn " + rotationOffset);
         boolean inTolerance = here.isWithin(RobotNumbers.AUTON_TOLERANCE, point);
         if (!inTolerance) {
-            DRIVING_CHILD.drivePure(RobotNumbers.AUTO_SPEED * speed, rotationOffset * RobotNumbers.AUTO_ROTATION_SPEED);
+            DRIVING_CHILD.drivePure(RobotNumbers.AUTO_SPEED * speed, -rotationOffset * RobotNumbers.AUTO_ROTATION_SPEED);
         } else {
             DRIVING_CHILD.drive(0, 0);
         }

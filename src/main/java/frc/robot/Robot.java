@@ -51,7 +51,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        autonManager = new AutonManager(AutonRoutines.GO_FORWARD_GO_BACK, driver);
+        driver.initAuton();
+        //autonManager = new AutonManager(AutonRoutines.GO_FORWARD_GO_BACK, driver);
+        autonManager = new AutonManager(AutonRoutines.CARPET_TEST_SLALOM, driver);
     }
 
     @Override
@@ -79,6 +81,7 @@ public class Robot extends TimedRobot {
             turret.teleopInit();
         }
     }
+
 
     @Override
     public void teleopPeriodic() {

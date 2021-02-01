@@ -4,6 +4,35 @@ import frc.robot.RobotNumbers;
 
 public class ControllerEnums {
 
+    public enum WiiAxis{
+        LEFT_RIGHT_NUMBERPAD(0),
+        UP_DOWN_NUMBERPAD(1),
+        ROTATIONAL_TILT(3),
+        FORWARD_TILT(4);
+
+        public final int AXIS_VALUE;
+
+        WiiAxis(int val){
+            AXIS_VALUE = val;
+        }
+    }
+
+    public enum WiiButton{
+        ONE(1),
+        TWO(2),
+        A(3),
+        B(4),
+        PLUS(5),
+        MINUS(6),
+        HOME(7);
+
+        public final int AXIS_VALUE;
+
+        WiiButton(int val){
+            AXIS_VALUE = val;
+        }
+    }
+
     /**
      * Contains the tidy enumarations for determining the status of a toggle on/off button
      */

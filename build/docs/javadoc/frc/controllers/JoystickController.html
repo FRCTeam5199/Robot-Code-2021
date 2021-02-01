@@ -56,7 +56,7 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
@@ -92,15 +92,30 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 <div class="contentContainer">
 <div class="inheritance" title="Inheritance Tree">java.lang.Object
+<div class="inheritance"><a href="BaseController.html" title="class in frc.controllers">frc.controllers.BaseController</a>
 <div class="inheritance">frc.controllers.JoystickController</div>
+</div>
 </div>
 <section class="description">
 <hr>
 <pre>public class <span class="typeNameLabel">JoystickController</span>
-extends java.lang.Object</pre>
+extends <a href="BaseController.html" title="class in frc.controllers">BaseController</a></pre>
 </section>
 <section class="summary">
 <ul class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<li class="blockList">
+<section class="fieldSummary"><a id="field.summary">
+<!--   -->
+</a>
+<h2>Field Summary</h2>
+<div class="inheritedList">
+<h3>Fields inherited from class&nbsp;frc.controllers.<a href="BaseController.html" title="class in frc.controllers">BaseController</a></h3>
+<a id="fields.inherited.from.class.frc.controllers.BaseController">
+<!--   -->
+</a><code><a href="BaseController.html#stick">stick</a></code></div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li class="blockList">
 <section class="constructorSummary"><a id="constructor.summary">
@@ -176,6 +191,11 @@ extends java.lang.Object</pre>
 </div>
 </div>
 <div class="inheritedList">
+<h3>Methods inherited from class&nbsp;frc.controllers.<a href="BaseController.html" title="class in frc.controllers">BaseController</a></h3>
+<a id="methods.inherited.from.class.frc.controllers.BaseController">
+<!--   -->
+</a><code><a href="BaseController.html#get(int)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.ButtonPanelButtons)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.WiiAxis)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.WiiButton)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.XboxAxes)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.XBoxButtons)">get</a>, <a href="BaseController.html#getIgnoreSensitivity(frc.controllers.ControllerEnums.XboxAxes)">getIgnoreSensitivity</a>, <a href="BaseController.html#isTriggerPressed(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressed</a>, <a href="BaseController.html#isTriggerPressedMomentary(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressedMomentary</a></code></div>
+<div class="inheritedList">
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
 <a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -215,6 +235,8 @@ extends java.lang.Object</pre>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ControllerEnums.JoystickHatDirection.html" title="enum in frc.controllers">ControllerEnums.JoystickHatDirection</a></span>&nbsp;<span class="memberName">getHat</span>()
                                             throws <span class="exceptions">java.lang.IllegalStateException</span></div>
 <dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="BaseController.html#getHat()">getHat</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>The status of the hat on the joystick</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
@@ -226,18 +248,30 @@ extends java.lang.Object</pre>
 <section class="detail">
 <h3><a id="get(frc.controllers.ControllerEnums.JoystickAxis)">get</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">get</span>&#8203;(<span class="arguments"><a href="ControllerEnums.JoystickAxis.html" title="enum in frc.controllers">ControllerEnums.JoystickAxis</a>&nbsp;axis)</span></div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="BaseController.html#get(frc.controllers.ControllerEnums.JoystickAxis)">get</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="getPositive(frc.controllers.ControllerEnums.JoystickAxis)">getPositive</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getPositive</span>&#8203;(<span class="arguments"><a href="ControllerEnums.JoystickAxis.html" title="enum in frc.controllers">ControllerEnums.JoystickAxis</a>&nbsp;axis)</span></div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="BaseController.html#getPositive(frc.controllers.ControllerEnums.JoystickAxis)">getPositive</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="get(frc.controllers.ControllerEnums.JoystickButtons)">get</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ControllerEnums.ButtonStatus.html" title="enum in frc.controllers">ControllerEnums.ButtonStatus</a></span>&nbsp;<span class="memberName">get</span>&#8203;(<span class="arguments"><a href="ControllerEnums.JoystickButtons.html" title="enum in frc.controllers">ControllerEnums.JoystickButtons</a>&nbsp;button)</span></div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="BaseController.html#get(frc.controllers.ControllerEnums.JoystickButtons)">get</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -246,6 +280,8 @@ extends java.lang.Object</pre>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">hatIs</span>&#8203;(<span class="arguments"><a href="ControllerEnums.JoystickHatDirection.html" title="enum in frc.controllers">ControllerEnums.JoystickHatDirection</a>&nbsp;direction)</span></div>
 <div class="block">Return true if joystick direction is an accepted value, false if not</div>
 <dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="BaseController.html#hatIs(frc.controllers.ControllerEnums.JoystickHatDirection)">hatIs</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>direction</code> - - the direction of the joystick hat</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -286,7 +322,7 @@ extends java.lang.Object</pre>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>

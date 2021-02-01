@@ -1,13 +1,11 @@
 package frc.controllers;
 
-import edu.wpi.first.wpilibj.Joystick;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
 import frc.robot.RobotNumbers;
 
-public class XBoxController {
-    private final Joystick stick;
+public class XBoxController extends BaseController{
     private boolean triggerFlag = false;
 
     /**
@@ -16,7 +14,7 @@ public class XBoxController {
      * @param n the usb port that the controller is on
      */
     public XBoxController(int n) {
-        stick = new Joystick(n);
+        super(n);
     }
 
     /**
@@ -34,6 +32,7 @@ public class XBoxController {
     * @param trigger the trigger to query
     * @return true if the trigger has changed its state being pressed down
     */
+    @Override
     public boolean isTriggerPressedMomentary(XboxAxes trigger) throws IllegalArgumentException {
         if (trigger != XboxAxes.LEFT_TRIGGER && trigger != XboxAxes.RIGHT_TRIGGER) {
             throw new IllegalArgumentException("trigger must be an xbox trigger");
@@ -49,6 +48,7 @@ public class XBoxController {
      * @param trigger trigger position to query
      * @return returns true when trigger is past its "deadzone"
      */
+    @Override
     public boolean isTriggerPressed(XboxAxes trigger) {
         return get(trigger) > RobotNumbers.triggerSensitivity;
     }
@@ -60,6 +60,7 @@ public class XBoxController {
      * @param axis xbox controller axis to query
      * @return the state of inputted axis on a scale of [-1,1]
      */
+    @Override
     public double get(XboxAxes axis) {
         if (Math.abs(stick.getRawAxis(axis.AXIS_VALUE)) > axis.DEADZONE) //makes sure axis is outside of the deadzone
             return stick.getRawAxis(axis.AXIS_VALUE);
@@ -73,6 +74,7 @@ public class XBoxController {
      * @param button the button to query
      * @return the status of queried button
      */
+    @Override
     public ButtonStatus get(XBoxButtons button) {
         return ButtonStatus.get(stick.getRawButton(button.AXIS_VALUE));
     }
@@ -83,6 +85,7 @@ public class XBoxController {
      * @param axis xbox controller axis to query
      * @return returns stick axis value regardless of deadzone
      */
+    @Override
     public double getIgnoreSensitivity(XboxAxes axis) {
         return stick.getRawAxis(axis.AXIS_VALUE);
     }

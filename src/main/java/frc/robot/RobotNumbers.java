@@ -1,10 +1,23 @@
 package frc.robot;
 
+import frc.misc.InitializationFailureException;
+
 public class RobotNumbers {
-    public static final double DRIVEBASE_P = 0.0075;
-    public static final double DRIVEBASE_I = 0;
-    public static final double DRIVEBASE_D = 0.002;//
-    public static final double DRIVEBASE_F = 0;//
+    /*public static final RobotNumbers getNumbersFrom = new RobotNumbers();
+    public static final double gotNumbers;
+
+    static {
+        try {
+            gotNumbers = getNumbersFrom.getClass().getField("DRIVEBASE_P").getDouble(getNumbersFrom);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new InitializationFailureException(e.toString(), "");
+        }
+    }*/
+
+    public static final double DRIVEBASE_P = 0;//0.0075;
+    public static final double DRIVEBASE_I = 0;//0
+    public static final double DRIVEBASE_D = 0.000005;//0.002;
+    public static final double DRIVEBASE_F = 0.00002;//0;
     public static final int DRIVE_TIMEOUT_MS = 30;
     public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
     public static final double MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
@@ -40,11 +53,11 @@ public class RobotNumbers {
     public static final double TURRET_D = 0.001;
     //public static final double TURRET_F = 0.001;
     public static final int SHOOTER_TIMEOUT_MS = 20;
-    public static final double AUTON_TOLERANCE = 1;
-    public static final double HEADING_P = 0;
-    public static final double HEADING_I = 0;
-    public static final double HEADING_D = 0;
-    public static final double AUTO_SPEED = 1;
+    public static final double AUTON_TOLERANCE = 0.1;
+    public static final double HEADING_P = 0.08;
+    public static final double HEADING_I = 0.000005;
+    public static final double HEADING_D = 0.0003;
+    public static final double AUTO_SPEED = 3;
     public static final double AUTO_ROTATION_SPEED = 1;
     public static double triggerSensitivity = 0.25;
     public static int XBOX_CONTROLLER_SLOT = 0;

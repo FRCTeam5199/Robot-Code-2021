@@ -13,6 +13,7 @@ import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.controllers.BaseController;
 import frc.controllers.ButtonPanel;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
@@ -39,7 +40,7 @@ public class Shooter implements ISubsystem {
     public final String[] units = {
             "seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"
     };
-    public final JoystickController joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
+    public final BaseController joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
     private final double pulleyRatio = RobotNumbers.motorPulleySize / RobotNumbers.driverPulleySize;
     private final Timer timer = new Timer();
     private final int ballsShot = 0;
@@ -184,9 +185,11 @@ public class Shooter implements ISubsystem {
 
         if (solidSpeed) {
             setSpeed(speed);
+            ShootingEnums.FIRE_INDEXER_INDEPENDENT.shoot(this);
         } else if (trackingTarget && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
             ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
         } else {
+            hopper.setAll(false);
             if (RobotToggles.SHOOTER_USE_SPARKS) {
                 leader.set(0);
             } else {
@@ -376,7 +379,7 @@ public class Shooter implements ISubsystem {
     public void updateGeneric() {
         update();
         updateControls();
-        fireIndexerDependent();
+        //fireIndexerDependent();
         //indexing = joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN;
     }
 
