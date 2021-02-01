@@ -35,7 +35,8 @@ public class Hopper implements ISubsystem {
     private Joystick joy;
     private boolean isReversed = false;
     private boolean isForced = false;
-    private boolean agitatorActive, indexerActive;
+    private boolean agitatorActive = false;
+    private boolean indexerActive = false;
 
     public Hopper() {
         init();
@@ -93,6 +94,7 @@ public class Hopper implements ISubsystem {
         } else {
             indexer.set(ControlMode.PercentOutput, indexerActive ? 0.8 : 0);
             agitator.set(ControlMode.PercentOutput, agitatorActive ? 0.6 : 0);
+            indexed = indexerSensorRange() > 9;
         }
     }
 
@@ -103,9 +105,15 @@ public class Hopper implements ISubsystem {
 
     public void setAgitator(boolean set) {
         agitatorActive = set;
+        if(RobotToggles.DEBUG){
+            System.out.println("Agitator set to " + set);
+        }
     }
 
     public void setIndexer(boolean set) {
+        if (RobotToggles.DEBUG){
+            System.out.println("Indexer set to " + set);
+        }
         indexerActive = set;
     }
 

@@ -3,7 +3,7 @@ package frc.robot;
 import frc.drive.DriveTypes;
 
 public class RobotToggles {
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     //Subsystems
 
     /**
@@ -17,8 +17,8 @@ public class RobotToggles {
 
 
     //Drivetrain
-    public static final boolean DRIVE_USE_SPARKS = false;
-    public static final boolean DRIVE_USE_6_MOTORS = false;
+    public static final boolean DRIVE_USE_SPARKS = true;
+    public static final boolean DRIVE_USE_6_MOTORS = true;
     public static final boolean DRIVE_INVERT_LEFT = true;
     public static final boolean DRIVE_INVERT_RIGHT = false;
     public static final DriveTypes EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;

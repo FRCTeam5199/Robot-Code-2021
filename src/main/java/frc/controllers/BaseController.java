@@ -68,7 +68,7 @@ public abstract class BaseController {
         throw new UnsupportedOperationException("This controller does not support getting an wii remote tilt status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
-    public double get(ControllerEnums.WiiButton button){
+    public ControllerEnums.ButtonStatus get(ControllerEnums.WiiButton button){
         throw new UnsupportedOperationException("This controller does not support getting an wii remote button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 }

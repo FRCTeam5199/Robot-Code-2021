@@ -20,6 +20,7 @@ import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
+import frc.controllers.WiiController;
 import frc.controllers.XBoxController;
 import frc.drive.auton.RobotTelemetry;
 import frc.misc.ISubsystem;
@@ -182,6 +183,11 @@ public class DriveManager implements ISubsystem {
         }
     }
 
+    public void initAuton() {
+        leaderL.getEncoder().setPosition(0);
+        leaderR.getEncoder().setPosition(0);
+    }
+
     /**
      * Initialize the IMU
      *
@@ -219,7 +225,14 @@ public class DriveManager implements ISubsystem {
      * Creates xbox controller n stuff
      */
     private void initMisc() {
-        controller = new XBoxController(RobotNumbers.XBOX_CONTROLLER_SLOT);
+        switch (RobotToggles.EXPERIMENTAL_DRIVE) {
+            case STANDARD:
+            case EXPERIMENTAL:
+                controller = new XBoxController(RobotNumbers.XBOX_CONTROLLER_SLOT);
+                break;
+            case MARIO_KART:
+                controller = new WiiController(0);
+        }
     }
 
     /**
@@ -259,8 +272,8 @@ public class DriveManager implements ISubsystem {
                 System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
             }
         }
-        leaderLTalon.set(ControlMode.Velocity, (((XBoxController)controller).get(XboxAxes.LEFT_JOY_Y) + ((XBoxController)controller).get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
-        leaderRTalon.set(ControlMode.Velocity, (((XBoxController)controller).get(XboxAxes.LEFT_JOY_Y) - ((XBoxController)controller).get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
+        //leaderLTalon.set(ControlMode.Velocity, (((XBoxController)controller).get(XboxAxes.LEFT_JOY_Y) + ((XBoxController)controller).get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
+        //leaderRTalon.set(ControlMode.Velocity, (((XBoxController)controller).get(XboxAxes.LEFT_JOY_Y) - ((XBoxController)controller).get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
         //leaderLTalon.set(ControlMode.PercentOutput, 0.1);
         //leaderRTalon.set(ControlMode.PercentOutput, 0.1);
     }
@@ -268,26 +281,29 @@ public class DriveManager implements ISubsystem {
     @Override
     public void updateTeleop() {
         updateGeneric();
-        switch (RobotToggles.EXPERIMENTAL_DRIVE){
+        switch (RobotToggles.EXPERIMENTAL_DRIVE) {
             case EXPERIMENTAL: {
                 double invertedDrive = invert ? -1 : 1;
                 double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 drive(invertedDrive / dynamic_gear_L * dynamic_gear_R * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
-                break;
             }
+            break;
             case STANDARD: {
                 double invertedDrive = invert ? -1 : 1;
                 double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+                //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                 drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
-                break;
             }
-            case MARIO_KART:{
-                double gogoTime = controller.get(ControllerEnums.JoystickButtons.TWO) == ButtonStatus.DOWN ? 1 : controller.get(ControllerEnums.JoystickButtons.ONE) == ButtonStatus.DOWN? -1 : 0;
-                drive(0.1 * gogoTime, controller.get(ControllerEnums.WiiAxis.ROTATIONAL_TILT) * gogoTime);
-                break;
+            break;
+            case MARIO_KART: {
+                double gogoTime = controller.get(ControllerEnums.WiiButton.ONE) == ButtonStatus.DOWN ? -1 : controller.get(ControllerEnums.WiiButton.TWO) == ButtonStatus.DOWN ? 1 : 0;
+                drive(0.75*gogoTime, -0.5*controller.get(ControllerEnums.WiiAxis.ROTATIONAL_TILT) * gogoTime);
             }
+            break;
+            default:
+                throw new IllegalArgumentException("Invalid drive type");
         }
     }
 

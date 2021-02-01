@@ -154,7 +154,9 @@ public class Turret implements ISubsystem {
         double omegaSetpoint = 0;
         if (RobotToggles.ENABLE_VISION) {
             if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) { //Check if the Target button is held down
-                //System.out.println("I'm looking. Target is valid? " + goalPhoton.validTarget());
+                if (RobotToggles.DEBUG) {
+                    System.out.println("I'm looking. Target is valid? " + goalPhoton.validTarget());
+                }
                 if (goalPhoton.validTarget()) { //If the vision system detects a ball
                     //omegaSetpoint = positionControl.calculate(turretDegrees(), targetAngle);
                     //omegaSetpoint = positionControl.calculate(turretDegrees(), turretDegrees() - goalPhoton.getGoalAngle());

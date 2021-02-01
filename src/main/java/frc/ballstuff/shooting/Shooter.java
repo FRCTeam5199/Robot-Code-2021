@@ -185,9 +185,11 @@ public class Shooter implements ISubsystem {
 
         if (solidSpeed) {
             setSpeed(speed);
+            ShootingEnums.FIRE_INDEXER_INDEPENDENT.shoot(this);
         } else if (trackingTarget && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
             ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
         } else {
+            hopper.setAll(false);
             if (RobotToggles.SHOOTER_USE_SPARKS) {
                 leader.set(0);
             } else {
@@ -377,7 +379,7 @@ public class Shooter implements ISubsystem {
     public void updateGeneric() {
         update();
         updateControls();
-        fireIndexerDependent();
+        //fireIndexerDependent();
         //indexing = joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN;
     }
 

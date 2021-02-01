@@ -9,7 +9,7 @@ public class WiiController extends BaseController{
         return stick.getRawAxis(axis.AXIS_VALUE);
     }
 
-    public double get(ControllerEnums.WiiButton button){
-        return stick.getRawAxis(button.AXIS_VALUE);
+    public ControllerEnums.ButtonStatus get(ControllerEnums.WiiButton button){
+        return ControllerEnums.ButtonStatus.get(stick.getRawButton(button.AXIS_VALUE));
     }
 }
