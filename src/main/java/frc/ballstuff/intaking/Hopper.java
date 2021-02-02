@@ -97,7 +97,11 @@ public class Hopper implements ISubsystem {
             indexed = indexerSensorRange() > 9;
         }
     }
-
+    /**
+     * for all lines from 105 to 120, applies settings
+     * 
+     * @param set
+     */
     public void setAll(boolean set) {
         setAgitator(set);
         setIndexer(set);
@@ -116,7 +120,7 @@ public class Hopper implements ISubsystem {
         }
         indexerActive = set;
     }
-
+    
     public void setReverse(boolean reverse) {
         isReversed = reverse;
     }
