@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.ballstuff.intaking.IntakeControlStyles;
+import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 import frc.misc.InitializationFailureException;
 import frc.robot.robotconfigs.AbstractConfig;
@@ -29,7 +31,7 @@ public class RobotToggles {
     public static final boolean DRIVE_USE_6_MOTORS;
     public static final boolean DRIVE_INVERT_LEFT;
     public static final boolean DRIVE_INVERT_RIGHT;
-    public static final DriveTypes EXPERIMENTAL_DRIVE;
+
     public static final boolean CALIBRATE_DRIVE_PID;
 
     //Misc
@@ -43,6 +45,11 @@ public class RobotToggles {
     public static final boolean SHOOTER_USE_SPARKS;
     public static final boolean SHOOTER_USE_TWO_MOTORS;
     public static final boolean SHOOTER_INVERTED;
+
+    //UI Style
+    public static final DriveTypes EXPERIMENTAL_DRIVE;
+    public static final ShootingControlStyles SHOOTER_CONTROL_STYLE;
+    public static final IntakeControlStyles INTAKE_CONTROL_STYLE;
 
     //@author jojo2357
     static {
@@ -59,7 +66,6 @@ public class RobotToggles {
             DRIVE_USE_6_MOTORS = getNumbersFrom.getClass().getField("DRIVE_USE_6_MOTORS").getBoolean(getNumbersFrom);
             DRIVE_INVERT_LEFT = getNumbersFrom.getClass().getField("DRIVE_INVERT_LEFT").getBoolean(getNumbersFrom);
             DRIVE_INVERT_RIGHT = getNumbersFrom.getClass().getField("DRIVE_INVERT_RIGHT").getBoolean(getNumbersFrom);
-            EXPERIMENTAL_DRIVE = (DriveTypes) getNumbersFrom.getClass().getField("DRIVE_INVERT_RIGHT").get(getNumbersFrom);
             CALIBRATE_DRIVE_PID = getNumbersFrom.getClass().getField("CALIBRATE_DRIVE_PID").getBoolean(getNumbersFrom);
 
             ENABLE_VISION = getNumbersFrom.getClass().getField("ENABLE_VISION").getBoolean(getNumbersFrom);
@@ -71,6 +77,10 @@ public class RobotToggles {
             SHOOTER_USE_SPARKS = getNumbersFrom.getClass().getField("SHOOTER_USE_SPARKS").getBoolean(getNumbersFrom);
             SHOOTER_USE_TWO_MOTORS = getNumbersFrom.getClass().getField("SHOOTER_USE_TWO_MOTORS").getBoolean(getNumbersFrom);
             SHOOTER_INVERTED = getNumbersFrom.getClass().getField("SHOOTER_INVERTED").getBoolean(getNumbersFrom);
+
+            EXPERIMENTAL_DRIVE = (DriveTypes) getNumbersFrom.getClass().getField("DRIVE_INVERT_RIGHT").get(getNumbersFrom);
+            SHOOTER_CONTROL_STYLE = (ShootingControlStyles) getNumbersFrom.getClass().getField("SHOOTER_CONTROL_STYLE").get(getNumbersFrom);
+            INTAKE_CONTROL_STYLE = (IntakeControlStyles) getNumbersFrom.getClass().getField("INTAKE_CONTROL_STYLE").get(getNumbersFrom);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new InitializationFailureException(e.toString(), "");
         }

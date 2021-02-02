@@ -26,7 +26,6 @@ import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 import frc.vision.GoalPhoton;
 
-import static frc.ballstuff.shooting.ShootingStyles.fireIndexerDependent;
 import static frc.misc.UtilFunctions.weightedAverage;
 import static frc.robot.Robot.hopper;
 import static frc.robot.Robot.shooter;
@@ -40,7 +39,6 @@ public class Shooter implements ISubsystem {
     public final String[] units = {
             "seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"
     };
-    public final BaseController joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
     private final double pulleyRatio = RobotNumbers.motorPulleySize / RobotNumbers.driverPulleySize;
     private final Timer timer = new Timer();
     private final int ballsShot = 0;
@@ -54,6 +52,7 @@ public class Shooter implements ISubsystem {
      * Array of voltages and _. {Voltage, _}
      */
     private final double[][] voltageFFArray = {{0, 0}, {11, 190}, {13, 185}};
+    public BaseController panel, joystickController;
     public double speed;
     public boolean atSpeed = false;
     public double actualRPM;
@@ -73,15 +72,12 @@ public class Shooter implements ISubsystem {
     // private NetworkTableEntry rampRate = tab.add("Ramp Rate", 40).getEntry();
     //public final XBoxController xBoxController;
     private boolean enabled = true;
-    private final ButtonPanel panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
     private double targetRPM;
     private boolean spunUp = false;
     private boolean recoveryPID = false;
     private double lastSpeed;
-    private Timer shootTimer;
-    private Timer indexTimer;
+    private Timer shootTimer, indexTimer, shooterTimer;
     private boolean timerStarted = false;
-    private Timer shooterTimer;
     private boolean timerFlag = false;
 
     public Shooter() {
@@ -92,7 +88,15 @@ public class Shooter implements ISubsystem {
      * Initialize the Shooter object.
      */
     @Override
-    public void init() {
+    public void init() throws IllegalStateException{
+        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
+            case STANDARD:
+                joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
+                panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
+                break;
+            default:
+                throw new IllegalStateException("There is no UI configuration for " + RobotToggles.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
+        }
         createAndInitMotors();
 
         //SmartDashboard.putString("ZONE", "none");
@@ -175,26 +179,35 @@ public class Shooter implements ISubsystem {
         actualRPM = RobotToggles.SHOOTER_USE_SPARKS ? leader.getEncoder().getVelocity() : falconLeader.getSelectedSensorVelocity() * 600 / RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION;
         checkState();
         //put code here to set speed based on distance to goal
-        boolean solidSpeed = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN;
-        //TODO remove doube ternary
-        speed = (!interpolationEnabled) ? (4200) : ((solidSpeed) ? (4200 * joystickController.getPositive(JoystickAxis.SLIDER) * 0.25 + 1) : 0);
-        if (RobotToggles.ENABLE_VISION) {
-            trackingTarget = goalPhoton.validTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
-        }
-        //setPID(P,I,D);
+        boolean lockOntoTarget = false;
+        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
+            case STANDARD: {
+                boolean solidSpeed = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN;
+                double adjustmentFactor = joystickController.getPositive(JoystickAxis.SLIDER);
+                if (RobotToggles.ENABLE_VISION) {
+                    lockOntoTarget = panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
+                }
+                trackingTarget = goalPhoton.validTarget() && lockOntoTarget;
+                //TODO remove doube ternary
+                speed = (!interpolationEnabled) ? (4200) : ((solidSpeed) ? (4200 * (adjustmentFactor * 0.25 + 1)) : 0);
 
-        if (solidSpeed) {
-            setSpeed(speed);
-            ShootingEnums.FIRE_INDEXER_INDEPENDENT.shoot(this);
-        } else if (trackingTarget && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
-            ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
-        } else {
-            hopper.setAll(false);
-            if (RobotToggles.SHOOTER_USE_SPARKS) {
-                leader.set(0);
-            } else {
-                falconLeader.set(ControlMode.PercentOutput, 0);
+                if (solidSpeed) {
+                    setSpeed(speed);
+                    ShootingEnums.FIRE_INDEXER_INDEPENDENT.shoot(this);
+                } else if (trackingTarget && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                } else {
+                    hopper.setAll(false);
+                    if (RobotToggles.SHOOTER_USE_SPARKS) {
+                        leader.set(0);
+                    } else {
+                        falconLeader.set(ControlMode.PercentOutput, 0);
+                    }
+                }
+                break;
             }
+            default:
+                //throw new IllegalStateException("");
         }
 
         if (RobotToggles.DEBUG) {

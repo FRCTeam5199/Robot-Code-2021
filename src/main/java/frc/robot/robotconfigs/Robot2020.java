@@ -1,5 +1,7 @@
 package frc.robot.robotconfigs;
 
+import frc.ballstuff.intaking.IntakeControlStyles;
+import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 
 public class Robot2020 extends AbstractConfig{
@@ -17,7 +19,7 @@ public class Robot2020 extends AbstractConfig{
     public static final boolean DRIVE_USE_6_MOTORS = true;
     public static final boolean DRIVE_INVERT_LEFT = true;
     public static final boolean DRIVE_INVERT_RIGHT = false;
-    public static final DriveTypes EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
+
     public static final boolean CALIBRATE_DRIVE_PID = false;
 
     //Misc
@@ -31,6 +33,11 @@ public class Robot2020 extends AbstractConfig{
     public static final boolean SHOOTER_USE_SPARKS = false;
     public static final boolean SHOOTER_USE_TWO_MOTORS = true;
     public static final boolean SHOOTER_INVERTED = true;
+    
+    //UI Style
+    public static final DriveTypes EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
+    public static final ShootingControlStyles SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
+    public static final IntakeControlStyles INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
 
     public static final double DRIVEBASE_P = 0;//0.0075;
     public static final double DRIVEBASE_I = 0;//0

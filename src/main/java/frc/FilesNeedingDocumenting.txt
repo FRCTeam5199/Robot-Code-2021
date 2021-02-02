@@ -5,7 +5,7 @@ frc.ballstuff.shooting.Shooter
 frc.ballstuff.shooting.Turret
 frc.controllers.* (less XBox Controller)
 frc.drive.*
-frc.drive.auton.*
+frc.drive.auton.pointtopoint.*
 frc.robot.* (maybe im not sure yet)
 
 DONE:

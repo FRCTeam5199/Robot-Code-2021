@@ -1,7 +1,5 @@
 package frc.drive.auton;
 
-import edu.wpi.first.wpilibj.util.Units;
-
 public class Point {
     public final double X;
     public final double Y;

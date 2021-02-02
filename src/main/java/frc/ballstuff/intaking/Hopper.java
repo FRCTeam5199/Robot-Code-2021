@@ -31,8 +31,6 @@ public class Hopper implements ISubsystem {
     // public NetworkTableEntry visionOverride = tab.add("VISION OVERRIDE", false).getEntry();
     // public NetworkTableEntry spinupOverride = tab.add("SPINUP OVERRIDE", false).getEntry();
     // public NetworkTableEntry disableOverride = tab.add("LOADING DISABLE", false).getEntry();
-    private BaseController panel;
-    private Joystick joy;
     private boolean isReversed = false;
     private boolean isForced = false;
     private boolean agitatorActive = false;
@@ -51,8 +49,6 @@ public class Hopper implements ISubsystem {
         }
         agitator = new VictorSPX(RobotMap.AGITATOR_MOTOR);
         indexer = new VictorSPX(RobotMap.INDEXER_MOTOR);
-        panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
-        joy = new Joystick(RobotNumbers.FLIGHT_STICK_SLOT);
     }
 
     @Override

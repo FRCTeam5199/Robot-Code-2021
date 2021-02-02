@@ -17,7 +17,7 @@ public class RobotTelemetry {
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
     private DriveManager driver;
-    private final PigeonIMU pigeon = new PigeonIMU(RobotMap.PIGEON);
+    private final PigeonIMU pigeon;
     public PIDController headingPID;
 
     public double[] ypr = new double[3];
@@ -25,6 +25,7 @@ public class RobotTelemetry {
     private double startYaw;
 
     public RobotTelemetry(DriveManager driver){
+        pigeon = new PigeonIMU(RobotMap.PIGEON);
         this.driver = driver;
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
     }
@@ -85,6 +86,9 @@ public class RobotTelemetry {
         updatePigeon();
         startypr = ypr;
         startYaw = yawAbs();
+    }
+
+    public void resetPigeon(Pose2d pose){
     }
 
     public double yawAbs() { // return absolute yaw of pigeon

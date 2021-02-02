@@ -1,21 +1,28 @@
-package frc.drive.auton;
+package frc.drive.auton.butbetternow;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
+import frc.drive.auton.Point;
+import frc.drive.auton.RobotTelemetry;
 import frc.misc.ISubsystem;
 import frc.robot.RobotNumbers;
+
+import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Check back later for some fun and fresh auton routines!
  *
- * @author jojo2357
+ *
  */
 public class AutonManager implements ISubsystem {
-    private final AutonRoutines routine;
     private final DriveManager DRIVING_CHILD;
     private final RobotTelemetry telem;
 
@@ -23,10 +30,13 @@ public class AutonManager implements ISubsystem {
 
     private PIDController headingPID;
     DifferentialDriveOdometry odometer;
+    private Trajectory Trajectory = new Trajectory();
+    private Path routinePath;
 
-    public AutonManager(AutonRoutines routine, DriveManager driveObject){
-        this.routine = routine;
-        this.routine.currentWaypoint = 0;
+
+    public AutonManager(String routine, DriveManager driveObject){
+        //this.Trajectory = new Trajectory();
+        this.routinePath = Filesystem.getDeployDirectory().toPath().resolve(routine);
         DRIVING_CHILD = driveObject;
         telem = DRIVING_CHILD.guidance;
         init();
@@ -36,7 +46,14 @@ public class AutonManager implements ISubsystem {
     public void init() {
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(telem.yawAbs()), new Pose2d(0, 0, new Rotation2d()));
-        telem.resetPigeon();
+
+        try {
+            //TODO fetch Trajectory from routinePath
+            throw new IOException();
+        } catch (IOException e){
+             DriverStation.reportError("Unable to open trajectory: " + routinePath, e.getStackTrace());
+        }
+        telem.resetPigeon(Trajectory.getInitialPose());
         //leaderL.getEncoder().setPosition(0);
         //leaderR.getEncoder().setPosition(0);
     }
@@ -53,16 +70,7 @@ public class AutonManager implements ISubsystem {
 
     @Override
     public void updateAuton() {
-        if (routine.currentWaypoint >= routine.WAYPOINTS.size())
-            return;
         updateGeneric();
-        System.out.println("Home is: " + routine.WAYPOINTS.get(0).LOCATION + " and im going to " + routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION));
-        if (attackPoint(routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION), 1)){
-            System.out.println("IN TOLERANCE");
-            if (++routine.currentWaypoint < routine.WAYPOINTS.size())
-                //throw new IllegalStateException("Holy crap theres no way it worked. This is illegal");
-            attackPoint(routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION), 1);
-        }
     }
 
     @Override

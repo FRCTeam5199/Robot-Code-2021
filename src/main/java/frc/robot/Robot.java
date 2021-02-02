@@ -6,8 +6,8 @@ import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
-import frc.drive.auton.AutonManager;
-import frc.drive.auton.AutonRoutines;
+import frc.drive.auton.pointtopoint.AutonManager;
+import frc.drive.auton.pointtopoint.AutonRoutines;
 import frc.vision.GoalPhoton;
 
 public class Robot extends TimedRobot {

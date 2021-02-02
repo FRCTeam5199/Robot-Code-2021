@@ -54,25 +54,7 @@ public class DriveManager implements ISubsystem {
     private SparkFollowerMotors followerL, followerR;
     private WPI_TalonFX leaderLTalon, leaderRTalon;
     private TalonFollowerMotors followerLTalon, followerRTalon;
-    //private double relLeft;
-    //private double relRight;
-    private CANPIDController leftPID;
-
-    //private double feetDriven = 0;
-    // private ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
-    // private NetworkTableEntry driveP = tab2.add("P",
-    // RobotNumbers.drivebaseP).getEntry();
-    // private NetworkTableEntry driveI = tab2.add("I",
-    // RobotNumbers.drivebaseI).getEntry();
-    // private NetworkTableEntry driveD = tab2.add("D",
-    // RobotNumbers.drivebaseD).getEntry();
-    // private NetworkTableEntry driveF = tab2.add("F",
-    // RobotNumbers.drivebaseF).getEntry();
-    // private NetworkTableEntry driveRotMult = tab2.add("Rotation Factor",
-    // RobotNumbers.turnScale).getEntry();
-    // Pigeon IMU
-    //public DifferentialDriveOdometry odometer;
-    private CANPIDController rightPID;
+    private CANPIDController leftPID, rightPID;
 
     private NetworkTableEntry P = tab2.add("P", 0).getEntry();
     private NetworkTableEntry I = tab2.add("I", 0).getEntry();
@@ -135,11 +117,9 @@ public class DriveManager implements ISubsystem {
     @Override
     public void init() throws IllegalArgumentException, InitializationFailureException {
         createDriveMotors();
-        initIMU();
+        initGuidance();
         initPID();
         initMisc();
-        //odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(yawAbs()), new Pose2d(0, 0, new Rotation2d()));
-
     }
 
     /**
@@ -189,11 +169,11 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     * Initialize the IMU
+     * Initialize the IMU and telemetry
      *
      * @throws InitializationFailureException When the Pigeon IMU fails to init
      */
-    private void initIMU() throws InitializationFailureException {
+    private void initGuidance() throws InitializationFailureException {
         guidance = new RobotTelemetry(this);
         try {
             if (RobotToggles.ENABLE_IMU) {
@@ -216,15 +196,13 @@ public class DriveManager implements ISubsystem {
         } else {
             configureTalon(leaderLTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
             configureTalon(leaderRTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            //followerLTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            //followerRTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
         }
     }
 
     /**
      * Creates xbox controller n stuff
      */
-    private void initMisc() {
+    private void initMisc() throws IllegalStateException{
         switch (RobotToggles.EXPERIMENTAL_DRIVE) {
             case STANDARD:
             case EXPERIMENTAL:
@@ -232,6 +210,8 @@ public class DriveManager implements ISubsystem {
                 break;
             case MARIO_KART:
                 controller = new WiiController(0);
+            default:
+                throw new IllegalStateException("There is no UI configuration for " + RobotToggles.EXPERIMENTAL_DRIVE.name() + " to control the drivetrain. Please implement me");
         }
     }
 
@@ -279,7 +259,7 @@ public class DriveManager implements ISubsystem {
     }
 
     @Override
-    public void updateTeleop() {
+    public void updateTeleop() throws IllegalArgumentException{
         updateGeneric();
         switch (RobotToggles.EXPERIMENTAL_DRIVE) {
             case EXPERIMENTAL: {
@@ -341,6 +321,17 @@ public class DriveManager implements ISubsystem {
         } else {
             leaderLTalon.set(ControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
             leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
+        }
+    }
+
+    public void driveVoltage(double leftVolts, double rightVolts) {
+        double invertLeft = RobotToggles.DRIVE_INVERT_LEFT ? -1 : 1;
+        double invertRight = RobotToggles.DRIVE_INVERT_RIGHT ? -1 : 1;
+        if (RobotToggles.DRIVE_USE_SPARKS){
+
+        } else {
+            leaderLTalon.setVoltage(leftVolts * invertLeft);
+            leaderRTalon.setVoltage(rightVolts * invertRight);
         }
     }
 
