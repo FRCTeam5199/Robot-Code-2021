@@ -97,6 +97,7 @@ public class Hopper implements ISubsystem {
             indexed = indexerSensorRange() > 9;
         }
     }
+
     /**
      * applies settings/toggles Agitator and Indexer on/off
      * 
@@ -106,6 +107,7 @@ public class Hopper implements ISubsystem {
         setAgitator(set);
         setIndexer(set);
     }
+
     /**
      * applies settings/toggles Agitator on/off
      * 
@@ -117,6 +119,7 @@ public class Hopper implements ISubsystem {
             System.out.println("Agitator set to " + set);
         }
     }
+
     /**
      * applies settings/toggles Indexer on/off
      * 
@@ -128,10 +131,11 @@ public class Hopper implements ISubsystem {
         }
         indexerActive = set;
     }
+
     /**
      * Sets the hopper wheels into reverse
      * 
-     * @param reverse a boolean to toggle between reverse and 
+     * @param reverse a boolean to toggle between reverse and regular spin
      */
     public void setReverse(boolean reverse) {
         isReversed = reverse;
