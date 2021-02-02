@@ -98,29 +98,41 @@ public class Hopper implements ISubsystem {
         }
     }
     /**
-     * for all lines from 105 to 120, applies settings
+     * applies settings/toggles Agitator and Indexer on/off
      * 
-     * @param set
+     * @param set a boolean to determine wether or not Agitator and Indexer is turned on/off
      */
     public void setAll(boolean set) {
         setAgitator(set);
         setIndexer(set);
     }
-
+    /**
+     * applies settings/toggles Agitator on/off
+     * 
+     * @param set a boolean to determine wether or not Agitator is turned on/off
+     */
     public void setAgitator(boolean set) {
         agitatorActive = set;
         if(RobotToggles.DEBUG){
             System.out.println("Agitator set to " + set);
         }
     }
-
+    /**
+     * applies settings/toggles Indexer on/off
+     * 
+     * @param set a boolean to determine wether or not Indexer is turned on/off
+     */
     public void setIndexer(boolean set) {
         if (RobotToggles.DEBUG){
             System.out.println("Indexer set to " + set);
         }
         indexerActive = set;
     }
-    
+    /**
+     * Sets the hopper wheels into reverse
+     * 
+     * @param reverse a boolean to toggle between reverse and 
+     */
     public void setReverse(boolean reverse) {
         isReversed = reverse;
     }
