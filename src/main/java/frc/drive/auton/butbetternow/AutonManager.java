@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.Point;
@@ -31,12 +32,11 @@ public class AutonManager implements ISubsystem {
     private PIDController headingPID;
     DifferentialDriveOdometry odometer;
     private Trajectory Trajectory = new Trajectory();
-    private Path routinePath;
+    private final Path routinePath;
 
 
     public AutonManager(String routine, DriveManager driveObject){
-        //this.Trajectory = new Trajectory();
-        this.routinePath = Filesystem.getDeployDirectory().toPath().resolve(routine);
+        routinePath = Filesystem.getDeployDirectory().toPath().resolve(routine);
         DRIVING_CHILD = driveObject;
         telem = DRIVING_CHILD.guidance;
         init();
@@ -46,16 +46,12 @@ public class AutonManager implements ISubsystem {
     public void init() {
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(telem.yawAbs()), new Pose2d(0, 0, new Rotation2d()));
-
         try {
-            //TODO fetch Trajectory from routinePath
-            throw new IOException();
+            Trajectory = TrajectoryUtil.fromPathweaverJson(routinePath);
         } catch (IOException e){
              DriverStation.reportError("Unable to open trajectory: " + routinePath, e.getStackTrace());
         }
         telem.resetPigeon(Trajectory.getInitialPose());
-        //leaderL.getEncoder().setPosition(0);
-        //leaderR.getEncoder().setPosition(0);
     }
 
     @Override
