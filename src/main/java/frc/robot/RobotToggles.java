@@ -78,7 +78,7 @@ public class RobotToggles {
             SHOOTER_USE_TWO_MOTORS = getNumbersFrom.getClass().getField("SHOOTER_USE_TWO_MOTORS").getBoolean(getNumbersFrom);
             SHOOTER_INVERTED = getNumbersFrom.getClass().getField("SHOOTER_INVERTED").getBoolean(getNumbersFrom);
 
-            EXPERIMENTAL_DRIVE = (DriveTypes) getNumbersFrom.getClass().getField("DRIVE_INVERT_RIGHT").get(getNumbersFrom);
+            EXPERIMENTAL_DRIVE = (DriveTypes) getNumbersFrom.getClass().getField("EXPERIMENTAL_DRIVE").get(getNumbersFrom);
             SHOOTER_CONTROL_STYLE = (ShootingControlStyles) getNumbersFrom.getClass().getField("SHOOTER_CONTROL_STYLE").get(getNumbersFrom);
             INTAKE_CONTROL_STYLE = (IntakeControlStyles) getNumbersFrom.getClass().getField("INTAKE_CONTROL_STYLE").get(getNumbersFrom);
         } catch (NoSuchFieldException | IllegalAccessException e) {
