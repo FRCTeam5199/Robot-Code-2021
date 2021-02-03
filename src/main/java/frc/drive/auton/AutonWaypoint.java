@@ -3,11 +3,11 @@ package frc.drive.auton;
 
 
 public class AutonWaypoint {
-    public final Point LOCATION;
-    public final double SPEED;
-    public final AutonSpecialActions SPECIAL_ACTION;
+    public final Point LOCATION; /** where its next point is */
+    public final double SPEED; /** speed of the robot */
+    public final AutonSpecialActions SPECIAL_ACTION; /** special action we want it to do if any */
 
-    public AutonWaypoint(double x, double y, double speed, AutonSpecialActions action) {
+    public AutonWaypoint(double x, double y, double speed, AutonSpecialActions action) /**taking it to a point with special action*/ {
         this(new Point(x, y), speed, action);
     }
 
@@ -17,7 +17,7 @@ public class AutonWaypoint {
         SPECIAL_ACTION = specialAction;
     }
 
-    public AutonWaypoint(double x, double y, double speed) {
+    public AutonWaypoint(double x, double y, double speed) /**taking it to a point with no special action*/ {
         this(new Point(x, y), speed);
     }
 
