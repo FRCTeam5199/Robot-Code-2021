@@ -139,7 +139,7 @@ public class DriveManager implements ISubsystem {
                 followerL.follow(leaderL);
                 followerR.follow(leaderR);
             } catch (Exception e) {
-                throw new InitializationFailureException("An error has occured linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
+                throw new InitializationFailureException("An error has occurred linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
             }
             leaderL.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
             leaderR.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
@@ -202,7 +202,8 @@ public class DriveManager implements ISubsystem {
     /**
      * Creates xbox controller n stuff
      */
-    private void initMisc() throws IllegalStateException{
+    private void initMisc() throws IllegalStateException {
+        System.out.println("THE XBOX CONTROLLER IS ON " + RobotNumbers.XBOX_CONTROLLER_SLOT);
         switch (RobotToggles.EXPERIMENTAL_DRIVE) {
             case STANDARD:
             case EXPERIMENTAL:
@@ -210,6 +211,8 @@ public class DriveManager implements ISubsystem {
                 break;
             case MARIO_KART:
                 controller = new WiiController(0);
+                //throw new RuntimeException();
+                break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotToggles.EXPERIMENTAL_DRIVE.name() + " to control the drivetrain. Please implement me");
         }
@@ -259,7 +262,7 @@ public class DriveManager implements ISubsystem {
     }
 
     @Override
-    public void updateTeleop() throws IllegalArgumentException{
+    public void updateTeleop() throws IllegalArgumentException {
         updateGeneric();
         switch (RobotToggles.EXPERIMENTAL_DRIVE) {
             case EXPERIMENTAL: {
@@ -273,13 +276,17 @@ public class DriveManager implements ISubsystem {
                 double invertedDrive = invert ? -1 : 1;
                 double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-                //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
+                System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
+                if (RobotToggles.DEBUG) {
+                    //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
+                }
                 drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
             }
             break;
             case MARIO_KART: {
                 double gogoTime = controller.get(ControllerEnums.WiiButton.ONE) == ButtonStatus.DOWN ? -1 : controller.get(ControllerEnums.WiiButton.TWO) == ButtonStatus.DOWN ? 1 : 0;
-                drive(0.75*gogoTime, -0.5*controller.get(ControllerEnums.WiiAxis.ROTATIONAL_TILT) * gogoTime);
+                drive(0.75 * gogoTime, -0.5 * controller.get(ControllerEnums.WiiAxis.ROTATIONAL_TILT) * gogoTime);
+                //throw new RuntimeException();
             }
             break;
             default:
@@ -327,7 +334,7 @@ public class DriveManager implements ISubsystem {
     public void driveVoltage(double leftVolts, double rightVolts) {
         double invertLeft = RobotToggles.DRIVE_INVERT_LEFT ? -1 : 1;
         double invertRight = RobotToggles.DRIVE_INVERT_RIGHT ? -1 : 1;
-        if (RobotToggles.DRIVE_USE_SPARKS){
+        if (RobotToggles.DRIVE_USE_SPARKS) {
 
         } else {
             leaderLTalon.setVoltage(leftVolts * invertLeft);

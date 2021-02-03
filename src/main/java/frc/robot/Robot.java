@@ -137,4 +137,9 @@ public class Robot extends TimedRobot {
             turret.disabledInit();
         }
     }
+
+    @Override
+    public void disabledPeriodic() {
+        //Do nothing
+    }
 }

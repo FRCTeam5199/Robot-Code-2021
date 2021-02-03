@@ -5,11 +5,11 @@ import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 
 public class Robot2020 extends AbstractConfig{
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     //Subsystems
     public static final boolean ENABLE_DRIVE = true;
-    public static final boolean ENABLE_INTAKE = false;
+    public static final boolean ENABLE_INTAKE = true;
     public static final boolean ENABLE_CLIMBER = false;
     public static final boolean ENABLE_SHOOTER = false;
     public static final boolean ENABLE_HOPPER = false;
@@ -25,8 +25,8 @@ public class Robot2020 extends AbstractConfig{
     //Misc
     public static final boolean ENABLE_VISION = false;
     public static final boolean USE_PHOTONVISION = true;
-    public static final boolean ENABLE_IMU = false;
-    public static final boolean USE_PIGEON = false;
+    public static final boolean ENABLE_IMU = true;
+    public static final boolean USE_PIGEON = true;
     public static final boolean USE_NAVX2 = false;
 
     //SHOOTER
