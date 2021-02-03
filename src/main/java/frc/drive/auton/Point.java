@@ -11,11 +11,11 @@ public class Point {
         Y = y;
     }
 
-    public boolean isWithin(double distance, Point otherPoint) {
+    public boolean isWithin(double distance, Point otherPoint) /** how far away from the next point */ {
         return distance > getDistanceFromPoint(otherPoint);
     }
 
-    public double getDistanceFromPoint(Point otherPoint) {
+    public double getDistanceFromPoint(Point otherPoint) /** how far 1 point is from the other*/ {
         return Math.sqrt(Math.pow(X - otherPoint.X, 2) + Math.pow(Y - otherPoint.Y, 2));
     }
     
