@@ -3,13 +3,13 @@ package frc.misc;
 import frc.robot.RobotNumbers;
 
 public class UtilFunctions {
-    
-    public static double convertDriveFPStoRPM(double FPS) {
-        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
-    }
 
     public static double getTargetVelocity(double FPS) {
         return convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
+    }
+
+    public static double convertDriveFPStoRPM(double FPS) {
+        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
     }
 
     /**
@@ -25,7 +25,11 @@ public class UtilFunctions {
         return lowers[1] + (uppers[1] - lowers[1]) * (voltage - lowers[0]) * (uppers[0] - lowers[0]);
     }
 
-    public static double mathematicalMod(double value, double modulo){
+    public static double mathematicalMod(double value, double modulo) {
         return (value - Math.floor(value / modulo) * modulo);
+    }
+
+    public static double wheelCircumference() {
+        return RobotNumbers.WHEEL_DIAMETER * Math.PI;
     }
 }

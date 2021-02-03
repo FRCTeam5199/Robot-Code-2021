@@ -39,6 +39,8 @@ public class Robot extends TimedRobot {
         if (RobotToggles.ENABLE_SHOOTER) {
             shooter = new Shooter();
             turret = new Turret();
+            if (RobotToggles.ENABLE_DRIVE)
+                turret.setTelemetry(driver.guidance);
         }
         if (RobotToggles.ENABLE_VISION) {
             goalPhoton = new GoalPhoton();
@@ -51,7 +53,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        driver.initAuton();
+        driver.resetEncoders();
         //autonManager = new AutonManager(AutonRoutines.GO_FORWARD_GO_BACK, driver);
         autonManager = new AutonManager(AutonRoutines.CARPET_TEST_SLALOM, driver);
     }

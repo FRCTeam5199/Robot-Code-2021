@@ -36,18 +36,11 @@ public class DriveManager implements ISubsystem {
     private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry();
     private final NetworkTableEntry driveScaleMult = tab2.add("Speed Factor", RobotNumbers.DRIVE_SCALE).getEntry();
-    // private Logger logger = new Logger("drive");
-    // private Logger posLogger = new Logger("positions");
-    // private Permalogger odo = new Permalogger("distance");
-    // wheelbase 27"
 
     private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
     private final boolean invert = true;
-    // private BallChameleon chameleon = new BallChameleon();
     public double currentOmega;
     public boolean autoComplete = false;
-    // private boolean chaseBall;
-    //private boolean pointBall;
     public CANSparkMax leaderL, leaderR;
     public RobotTelemetry guidance;
     private BaseController controller;
@@ -163,9 +156,14 @@ public class DriveManager implements ISubsystem {
         }
     }
 
-    public void initAuton() {
-        leaderL.getEncoder().setPosition(0);
-        leaderR.getEncoder().setPosition(0);
+    public void resetEncoders() {
+        if (RobotToggles.DRIVE_USE_SPARKS) {
+            leaderL.getEncoder().setPosition(0);
+            leaderR.getEncoder().setPosition(0);
+        }else{
+            leaderLTalon.setSelectedSensorPosition(0);
+            leaderRTalon.setSelectedSensorPosition(0);
+        }
     }
 
     /**
@@ -211,7 +209,6 @@ public class DriveManager implements ISubsystem {
                 break;
             case MARIO_KART:
                 controller = new WiiController(0);
-                //throw new RuntimeException();
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotToggles.EXPERIMENTAL_DRIVE.name() + " to control the drivetrain. Please implement me");
@@ -255,10 +252,6 @@ public class DriveManager implements ISubsystem {
                 System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
             }
         }
-        //leaderLTalon.set(ControlMode.Velocity, (((XBoxController)controller).get(XboxAxes.LEFT_JOY_Y) + ((XBoxController)controller).get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
-        //leaderRTalon.set(ControlMode.Velocity, (((XBoxController)controller).get(XboxAxes.LEFT_JOY_Y) - ((XBoxController)controller).get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
-        //leaderLTalon.set(ControlMode.PercentOutput, 0.1);
-        //leaderRTalon.set(ControlMode.PercentOutput, 0.1);
     }
 
     @Override
@@ -286,7 +279,6 @@ public class DriveManager implements ISubsystem {
             case MARIO_KART: {
                 double gogoTime = controller.get(ControllerEnums.WiiButton.ONE) == ButtonStatus.DOWN ? -1 : controller.get(ControllerEnums.WiiButton.TWO) == ButtonStatus.DOWN ? 1 : 0;
                 drive(0.75 * gogoTime, -0.5 * controller.get(ControllerEnums.WiiAxis.ROTATIONAL_TILT) * gogoTime);
-                //throw new RuntimeException();
             }
             break;
             default:
@@ -320,11 +312,20 @@ public class DriveManager implements ISubsystem {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             leftPID.setReference(convertFPStoRPM(leftFPS) * mult, ControlType.kVelocity);
             rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
-            /*
-            if (RobotToggles.DEBUG) {
-                System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
-            }
-            */
+        } else {
+            leaderLTalon.set(ControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
+            leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
+        }
+    }
+
+    public void drivePure(ChassisSpeeds speeds){
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+        double leftFPS = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
+        double rightFPS = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
+        double mult = 3.8 * 2.16 * RobotNumbers.DRIVE_SCALE;
+        if (RobotToggles.DRIVE_USE_SPARKS) {
+            leftPID.setReference(convertFPStoRPM(leftFPS) * mult, ControlType.kVelocity);
+            rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
         } else {
             leaderLTalon.set(ControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
             leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
@@ -349,7 +350,7 @@ public class DriveManager implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        //guidance.updateGeneric();
+        guidance.updateGeneric();
         if (RobotToggles.CALIBRATE_DRIVE_PID) {
             System.out.println("P: " + P.getDouble(0) + " from " + lastP);
             if (lastP != P.getDouble(0) || lastI != I.getDouble(0) || lastD != D.getDouble(0) || lastF != F.getDouble(0)) {

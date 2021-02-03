@@ -33,6 +33,9 @@ public class Robot2020 extends AbstractConfig{
     public static final boolean SHOOTER_USE_SPARKS = false;
     public static final boolean SHOOTER_USE_TWO_MOTORS = true;
     public static final boolean SHOOTER_INVERTED = true;
+
+    //INTAKE
+    public static final boolean INDEXER_AUTO_INDEX = true;
     
     //UI Style
     public static final DriveTypes EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;

@@ -20,9 +20,6 @@ public class AutonManager implements ISubsystem {
     private final AutonRoutines routine;
     private final DriveManager DRIVING_CHILD;
     private final RobotTelemetry telem;
-
-    private double feetDriven = 0;
-
     private PIDController headingPID;
     DifferentialDriveOdometry odometer;
 
@@ -39,8 +36,6 @@ public class AutonManager implements ISubsystem {
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(telem.yawAbs()), new Pose2d(0, 0, new Rotation2d()));
         telem.resetPigeon();
-        //leaderL.getEncoder().setPosition(0);
-        //leaderR.getEncoder().setPosition(0);
     }
 
     @Override
@@ -71,10 +66,6 @@ public class AutonManager implements ISubsystem {
     public void updateGeneric() {
         telem.robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(telem.yawAbs())), telem.getMetersLeft(), telem.getMetersRight());
         telem.updateGeneric();
-        feetDriven = (telem.getFeetLeft()+telem.getFeetRight())/2;
-        //setPID(driveP.getDouble(RobotNumbers.drivebaseP), driveI.getDouble(RobotNumbers.drivebaseI), driveD.getDouble(RobotNumbers.drivebaseD), driveF.getDouble(RobotNumbers.drivebaseF));
-        //setPID(0,0,0.000005,0.000001);
-        //SmartDashboard.putNumber("Left Speed", DRIVING_CHILD.leaderL.getEncoder().getVelocity());
     }
 
     /**
@@ -85,7 +76,7 @@ public class AutonManager implements ISubsystem {
      * @return true if point has been attacked
      */
     public boolean attackPoint(Point point, double speed) {
-        double rotationOffset = telem.headingPID.calculate(telem.headingErrorWraparound(point.X, point.Y));
+        double rotationOffset = telem.headingPID.calculate(telem.realHeadingError(point.X, point.Y));
         Point here = new Point(telem.fieldX(), telem.fieldY());
         System.out.println("I am at " + here + " and trying to turn " + rotationOffset);
         boolean inTolerance = here.isWithin(RobotNumbers.AUTON_TOLERANCE, point);

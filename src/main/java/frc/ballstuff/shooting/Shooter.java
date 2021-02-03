@@ -58,24 +58,15 @@ public class Shooter implements ISubsystem {
     public double actualRPM;
     public boolean interpolationEnabled = false;
     public boolean shooting;
-    public boolean allBallsFired = false;
     boolean trackingTarget = false;
     private CANSparkMax leader, follower;
     private TalonFX falconLeader, falconFollower;
     private CANPIDController speedo;
     private CANEncoder encoder;
     private GoalPhoton goalPhoton;
-    // private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-    // private NetworkTableEntry shooterSpeed = tab.add("Shooter Speed", 0).getEntry();
-    // private NetworkTableEntry shooterToggle = tab.add("Shooter Toggle", false).getEntry();
-    // private NetworkTableEntry manualSpeedOverride = tab.add("SPEED OVERRIDE", false).getEntry();
-    // private NetworkTableEntry rampRate = tab.add("Ramp Rate", 40).getEntry();
-    //public final XBoxController xBoxController;
     private boolean enabled = true;
-    private double targetRPM;
     private boolean spunUp = false;
     private boolean recoveryPID = false;
-    private double lastSpeed;
     private Timer shootTimer, indexTimer, shooterTimer;
     private boolean timerStarted = false;
     private boolean timerFlag = false;
@@ -152,8 +143,7 @@ public class Shooter implements ISubsystem {
             leader.getEncoder().setPosition(0);
             leader.setOpenLoopRampRate(40);
             encoder = leader.getEncoder();
-
-            //setPID(4e-5, 0, 0);
+            
             speedo = leader.getPIDController();
             speedo.setOutputRange(-1, 1);
         } else {
@@ -188,8 +178,11 @@ public class Shooter implements ISubsystem {
                     lockOntoTarget = panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
                 }
                 trackingTarget = goalPhoton.validTarget() && lockOntoTarget;
-                //TODO remove doube ternary
-                speed = (!interpolationEnabled) ? (4200) : ((solidSpeed) ? (4200 * (adjustmentFactor * 0.25 + 1)) : 0);
+                if (interpolationEnabled){
+                    speed = (solidSpeed) ? (4200 * (adjustmentFactor * 0.25 + 1)) : 0;
+                }else{
+                    speed = 4200;
+                }
 
                 if (solidSpeed) {
                     setSpeed(speed);
@@ -225,14 +218,8 @@ public class Shooter implements ISubsystem {
             atSpeed = true;
             spunUp = true;
         }
-        /*if (actualRPM < speed - 30){
-            atSpeed = false;
-        }*/
         atSpeed = !(actualRPM < speed - 30) && atSpeed;
 
-        /*if (spunUp && actualRPM < speed - 55) {
-            recoveryPID = true;
-        }*/
         recoveryPID = spunUp && actualRPM < speed - 55 || recoveryPID;
 
         if (actualRPM < speed - 1200) {
@@ -241,7 +228,6 @@ public class Shooter implements ISubsystem {
         }
         if (recoveryPID) {
             setPID(RobotNumbers.SHOOTER_RECOVERY_P, RobotNumbers.SHOOTER_RECOVERY_I, RobotNumbers.SHOOTER_RECOVERY_D, RobotNumbers.SHOOTER_F);
-            //setPID(P,I,D, F);
         } else {
             setPID(RobotNumbers.SHOOTER_P, RobotNumbers.SHOOTER_I, RobotNumbers.SHOOTER_D, RobotNumbers.SHOOTER_F);
         }
@@ -286,21 +272,6 @@ public class Shooter implements ISubsystem {
             falconLeader.config_kI(0, RobotNumbers.SHOOTER_I, RobotNumbers.SHOOTER_TIMEOUT_MS);
             falconLeader.config_kD(0, RobotNumbers.SHOOTER_D, RobotNumbers.SHOOTER_TIMEOUT_MS);
         }
-
-    }
-
-    public void spinUp() {
-        setSpeed(speed);
-    }
-
-    /**
-     * Get motor speed based
-     *
-     * @param distance ignored
-     * @return 0
-     */
-    private double getSpeedBasedOnDistance(double distance) {
-        return 0;
     }
 
     public boolean atSpeed() {
@@ -392,8 +363,6 @@ public class Shooter implements ISubsystem {
     public void updateGeneric() {
         update();
         updateControls();
-        //fireIndexerDependent();
-        //indexing = joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN;
     }
 
     public void updateControls() {
@@ -411,10 +380,6 @@ public class Shooter implements ISubsystem {
         } else {
             return false;
         }
-    }
-
-    public void feedIn() {
-
     }
 
     public void stopFiring() {

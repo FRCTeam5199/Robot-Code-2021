@@ -78,7 +78,6 @@ public class Intake implements ISubsystem {
     }
 
     @Override
-    public void updateAuton() {
-    }
+    public void updateAuton() { }
 
 }
