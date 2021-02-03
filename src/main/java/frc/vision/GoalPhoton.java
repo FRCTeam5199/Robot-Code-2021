@@ -17,10 +17,16 @@ public class GoalPhoton implements ISubsystem {
     NetworkTable cameraTable;
     LinearFilter filter;
 
+    /**
+     * inits GoalPhoton
+     */
     public GoalPhoton() {
         init();
     }
 
+    /**
+     * stores values in simpler variable names
+     */
     public void init() {
         filter = LinearFilter.movingAverage(5);
         table = NetworkTableInstance.getDefault();
@@ -33,21 +39,35 @@ public class GoalPhoton implements ISubsystem {
 
     }
 
+    /**
+     * calls updateGeneric 
+     * see GoalPhoton.updateGeneric
+     */
     @Override
     public void updateTest() {
         updateGeneric();
     }
 
+    /**
+     * calls updateGeneric 
+     * see GoalPhoton.updateGeneric
+     */
     @Override
     public void updateTeleop() {
         updateGeneric();
     }
 
+    /**
+     * 
+     */
     @Override
     public void updateAuton() {
 
     }
 
+    /**
+     * updates generic things for GoalPhoton
+     */
     @Override
     public void updateGeneric() {
     }

@@ -64,10 +64,16 @@ public class Turret implements ISubsystem {
     private int scanDirection = -1;
     private double targetAngle;
 
+    /**
+     * Constructor of Turret class
+     */
     public Turret() {
         init();
     }
 
+    /**
+     * Init the turret for usage. Enables JoystickController and other things needed to set up turret
+     */
     @Override
     public void init() {
         joy = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
@@ -102,6 +108,10 @@ public class Turret implements ISubsystem {
         setBrake(true);
     }
 
+    /**
+     * calls updateGeneric 
+     * see Turret.updateGeneric
+     */
     @Override
     public void updateTest() {
         updateGeneric();
@@ -119,16 +129,26 @@ public class Turret implements ISubsystem {
     //     }
     // }
 
+    /**
+     * calls updateGeneric 
+     * see Turret.updateGeneric
+     */
     @Override
     public void updateTeleop() {
         updateGeneric();
     }
 
+    /**
+     * 
+     */
     @Override
     public void updateAuton() {
 
     }
 
+    /**
+     * update turret to correct position, angle, speed... etc, according to environment
+     */
     @Override
     public void updateGeneric() {
         if (RobotToggles.DEBUG) {
@@ -146,7 +166,8 @@ public class Turret implements ISubsystem {
 
         //!!!!! THE TURRET ZERO IS THE PHYSICAL STOP CLOSEST TO THE GOAL
 
-        /*things to do:
+        /* 
+        todo: 
         check if there is a valid target, if not, face north based on gyro
         if there is a valid target, point at it
         if 270>position>0 then offset WHATEVER speed it is turning at by -driveOmega to counterrotate
@@ -267,18 +288,37 @@ public class Turret implements ISubsystem {
         }
     }
 
+    /**
+     * sets PID for controller
+     * 
+     * @param P the proportional function
+     * @param I integral function
+     * @param D derivative function
+     */
     private void setMotorPID(double P, double I, double D) {
         controller.setP(P);
         controller.setI(I);
         controller.setD(D);
     }
 
+    /**
+     * sets PID for motor position
+     * 
+     * @param P the proportional function
+     * @param I integral function
+     * @param D derivative function
+     */
     private void setPosPID(double P, double I, double D) {
         positionControl.setP(P);
         positionControl.setI(I);
         positionControl.setD(D);
     }
 
+    /**
+     * sets brake, coasts if not braking
+     * 
+     * @param brake 
+     */
     public void setBrake(boolean brake) {
         if (brake) {
             motor.setIdleMode(IdleMode.kBrake);
@@ -287,11 +327,18 @@ public class Turret implements ISubsystem {
         }
     }
 
+    /**
+     * sets encoder position to zero
+     * inits teleop
+     */
     public void teleopInit() {
         encoder = motor.getEncoder();
         encoder.setPosition(0);
     }
 
+    /**
+     * sets motor speed according to controller button statuses
+     */
     public void updateSimple() {
         if (panel.get(ButtonPanelButtons.BUDDY_CLIMB) == ButtonStatus.DOWN) {
             motor.set(rotSpeed.getDouble(0));
@@ -302,15 +349,26 @@ public class Turret implements ISubsystem {
         }
     }
 
+    /**
+     * sets motor to coast if disabled
+     */
     public void disabledInit() {
         motor.setIdleMode(IdleMode.kCoast);
     }
 
+    /**
+     * if safe, update turret degrees
+     */
     private boolean isSafe() {
         double turretDeg = turretDegrees();
         return turretDeg <= 270 && turretDeg >= 100;
     }
 
+    /**
+     * sets target angle when the robot is chasing the target
+     * 
+     * @param target the target's direction in relation to the robot (angle)
+     */
     public boolean setTargetAngle(double target) {
         targetAngle = target;
         chasingTarget = true;
@@ -324,6 +382,9 @@ public class Turret implements ISubsystem {
         return yawWrap() - turretDegrees();
     }
 
+    /**
+     * sets encoder position to 0, resets
+     */
     public void resetEncoderAndGyro() {
         encoder.setPosition(0);
         //resetPigeon();
@@ -371,10 +432,18 @@ public class Turret implements ISubsystem {
         SmartDashboard.putNumber("Turret out", motorRPM / 5700 - deadbandComp);
     }
 
+    /**
+     * @return encoder.getPosition - returns the position of the encoder
+     */
     private double turretDegrees() {
         return 270 - encoder.getPosition();//return encoder.getPosition();
     }
 
+    /**
+     * ensures angle does not go over max or min position
+     * 
+     * @param angle - direction of the turret
+     */
     private double limitAngle(double angle) {
         if (angle > RobotNumbers.TURRET_MAX_POS) {
             angle = RobotNumbers.TURRET_MAX_POS;
@@ -389,6 +458,11 @@ public class Turret implements ISubsystem {
     //     controller.setFF(F*fMultiplier);
     // }
 
+    /**
+     * sets driveOmega
+     * 
+     * @param omega - angular velocity (degrees/sec)?
+     */
     public void setDriveOmega(double omega) {
         driveOmega = omega;
     }
@@ -416,6 +490,9 @@ public class Turret implements ISubsystem {
         //rotateTurret(scanDirection);
     }
 
+    /**
+     * resets pigeon by updating
+     */
     public void resetPigeon() {
         updatePigeon();
         startypr = ypr;
@@ -439,6 +516,7 @@ public class Turret implements ISubsystem {
         return (ypr[0] - startYaw);
     }
 
+    //
     public double yawWrap() {
         return yawRel() - Math.floor(yawRel() / 360D) * 360D;
     }

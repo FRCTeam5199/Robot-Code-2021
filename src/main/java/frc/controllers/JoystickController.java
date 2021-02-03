@@ -8,13 +8,19 @@ import frc.controllers.ControllerEnums.JoystickHatDirection;
 
 public class JoystickController extends BaseController{
 
+    /**
+     * joystick controller
+     * 
+     * @param n - an integer
+     */
     public JoystickController(int n) {
         super(n);
     }
 
     /**
-     *
-     * @return The status of the hat on the joystick
+     * ensures that the joystick hat direction is an accepted value
+     * 
+     * @return The direction of the hat on the joystick
      * @throws IllegalStateException if the current direction doesnt have a matching enum
      */
     public JoystickHatDirection getHat() throws IllegalStateException {
@@ -25,14 +31,32 @@ public class JoystickController extends BaseController{
         throw new IllegalStateException("I could not wrap " + stick.getPOV() + " inside the JoystickHatDirection enumeration.");
     }
 
+    /**
+     * returns joystick's axis value
+     * 
+     * @param axis
+     * @return axis.AXIS_VALUE
+     */
     public double get(JoystickAxis axis) {
         return stick.getRawAxis(axis.AXIS_VALUE);//return ((1 - joy.getRawAxis(axis.AXIS_VALUE)) / 2);
     }
 
+    /**
+     * returns positive joystick axis value
+     * 
+     * @param axis
+     * @return positive axis value
+     */
     public double getPositive(JoystickAxis axis) {
         return ((1 - stick.getRawAxis(axis.AXIS_VALUE)) / 2);
     }
 
+    /**
+     * gets joystick button status
+     * 
+     * @param button
+     * @return button status
+     */
     public ButtonStatus get(JoystickButtons button) {
         return ButtonStatus.get(stick.getRawButton(button.AXIS_VALUE));
     }
