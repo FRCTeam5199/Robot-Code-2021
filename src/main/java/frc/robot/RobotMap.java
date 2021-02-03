@@ -52,7 +52,7 @@ public class RobotMap {
             DRIVE_LEADER_L = getNumbersFrom.getClass().getField("DRIVE_LEADER_L").getInt(getNumbersFrom);
             DRIVE_FOLLOWERS_L = (int[]) getNumbersFrom.getClass().getField("DRIVE_FOLLOWERS_L").get(getNumbersFrom);
 
-            DRIVE_LEADER_R = getNumbersFrom.getClass().getField("DRIVE_LEADER_L").getInt(getNumbersFrom);
+            DRIVE_LEADER_R = getNumbersFrom.getClass().getField("DRIVE_LEADER_R").getInt(getNumbersFrom);
             DRIVE_FOLLOWERS_R = (int[]) getNumbersFrom.getClass().getField("DRIVE_FOLLOWERS_R").get(getNumbersFrom);
 
             //Shooter Motors
