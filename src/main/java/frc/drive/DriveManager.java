@@ -118,10 +118,17 @@ public class DriveManager implements ISubsystem {
         return input * RobotNumbers.MAX_ROTATION;
     }
 
+    /**
+     * @param FPS speed in feet/second
+     */
     private static double convertFPStoRPM(double FPS) {
         return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
     }
 
+    /**
+     * @param FPS speed in feet/second
+     * @return speed in rotations/minute
+     */
     private static double getTargetVelocity(double FPS) {
         return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
     }
@@ -246,6 +253,12 @@ public class DriveManager implements ISubsystem {
         followerL.setSmartCurrentLimit(limit);
         followerR.setSmartCurrentLimit(limit);
     }
+    /**
+     * @param P proportional gain
+     * @param I integral gain
+     * @param D derivative gain
+     * @param F feed-forward gain
+     */
 
     private void setPID(double P, double I, double D, double F) {
         if (RobotToggles.DRIVE_USE_SPARKS) {
@@ -306,6 +319,11 @@ public class DriveManager implements ISubsystem {
                 throw new IllegalArgumentException("Invalid drive type");
         }
     }
+
+    /**
+     * @param forward
+     * @param rotation
+     */
 
     public void drive(double forward, double rotation) {
         drivePure(adjustedDrive(forward), adjustedRotation(rotation));
@@ -400,11 +418,19 @@ public class DriveManager implements ISubsystem {
             return this;
         }
 
+        /**
+         * @param leader main motor
+         */
+
         public void follow(@NotNull CANSparkMax leader) {
             for (CANSparkMax follower : this.motors) {
                 follower.follow(leader);
             }
         }
+
+        /**
+         * @param brake brake is activated (true/false)
+         */
 
         public void brake(boolean brake) {
             for (CANSparkMax follower : this.motors) {
@@ -415,7 +441,9 @@ public class DriveManager implements ISubsystem {
                 }
             }
         }
-
+    /**
+    * @param limit current limit in amps
+    */
         public void setSmartCurrentLimit(int limit) {
             for (CANSparkMax follower : this.motors) {
                 follower.setSmartCurrentLimit(limit);
@@ -446,18 +474,30 @@ public class DriveManager implements ISubsystem {
             return this;
         }
 
+        /**
+         * @param leader main motor
+         */
         public void follow(@NotNull WPI_TalonFX leader) {
             for (WPI_TalonFX follower : this.motors) {
                 follower.follow(leader);
             }
         }
 
+        /**
+         * @param followMaster 
+         */
         public void setInverted(InvertType followMaster) {
             for (WPI_TalonFX follower : this.motors) {
                 follower.setInverted(followMaster);
             }
         }
-
+     /**
+     * @param idx   PID loop, by default 0
+     * @param kF    Feed forward
+     * @param kP    Proportional constant
+     * @param kI    Integral constant
+     * @param kD    Derivative constant
+     */
         public void configureMotors(int idx, double kF, double kP, double kI, double kD) {
             for (WPI_TalonFX follower : this.motors) {
                 configureTalon(follower, idx, kF, kP, kI, kD);

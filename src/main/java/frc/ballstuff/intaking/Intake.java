@@ -18,10 +18,16 @@ public class Intake implements ISubsystem {
     private int intakeMult;
     private BaseController joystick;
 
+    /**
+     * @throws InitializationFailureException Intake fails to initialize
+     */
     public Intake() throws InitializationFailureException {
         init();
     }
     
+    /**
+     *@throws InitializationFailureException intake motor failed to be created
+     */
     @Override
     public void init() throws InitializationFailureException {
         joystick = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
