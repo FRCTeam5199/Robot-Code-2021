@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
-import frc.controllers.ButtonPanel;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
@@ -13,6 +12,9 @@ import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 
+/**
+ * The "Intake" is referring to the part that picks up power cells from the floor
+ */
 public class Intake implements ISubsystem {
     private VictorSPX victor;
     private int intakeMult;
@@ -21,9 +23,12 @@ public class Intake implements ISubsystem {
     public Intake() throws InitializationFailureException, IllegalStateException {
         init();
     }
-    
+
     /**
-     *@throws InitializationFailureException intake motor failed to be created
+     * create controller and motor
+     *
+     * @throws InitializationFailureException intake motor failed to be created
+     * @throws IllegalStateException if the selected control is not implemented
      */
     @Override
     public void init() throws InitializationFailureException, IllegalStateException {
@@ -42,13 +47,32 @@ public class Intake implements ISubsystem {
     }
 
     /**
+     * @see #updateGeneric()
+     */
+    @Override
+    public void updateTest() {
+        updateGeneric();
+    }
+
+    /**
+     * @see #updateGeneric()
+     */
+    @Override
+    public void updateTeleop() {
+        updateGeneric();
+    }
+
+    /**
      * Set intake direction
      *
-     * @param input -1 for out, 1 for in, 0 for none
+     * @param input -1 for out, 1 for in, 0 for off
      */
     public void setIntake(int input) {
         intakeMult = input;
     }
+
+    @Override
+    public void updateAuton() { }
 
     public void updateGeneric() {
         victor.set(ControlMode.PercentOutput, 0.8 * intakeMult);
@@ -69,18 +93,5 @@ public class Intake implements ISubsystem {
             SmartDashboard.putNumber("Intake Speed", intakeMult);
         }
     }
-
-    @Override
-    public void updateTeleop() {
-        updateGeneric();
-    }
-
-    @Override
-    public void updateTest() {
-        updateGeneric();
-    }
-
-    @Override
-    public void updateAuton() { }
 
 }

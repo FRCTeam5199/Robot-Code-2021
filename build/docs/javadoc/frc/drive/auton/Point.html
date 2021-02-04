@@ -98,6 +98,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">Point</span>
 extends java.lang.Object</pre>
+<div class="block">A utility class that helps keep the x and the y from being lost</div>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -180,23 +181,32 @@ double&nbsp;y)</code></th>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDistanceFromPoint(frc.drive.auton.Point)">getDistanceFromPoint</a></span>&#8203;(<a href="Point.html" title="class in frc.drive.auton">Point</a>&nbsp;otherPoint)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Find the distance between this and another point</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isWithin(double,frc.drive.auton.Point)">isWithin</a></span>&#8203;(double&nbsp;distance,
 <a href="Point.html" title="class in frc.drive.auton">Point</a>&nbsp;otherPoint)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Use this to determine if two points are within a tolerance while keeping code clean</div>
+</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code><a href="Point.html" title="class in frc.drive.auton">Point</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#subtract(frc.drive.auton.Point)">subtract</a></span>&#8203;(<a href="Point.html" title="class in frc.drive.auton">Point</a>&nbsp;other)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">its just like subtracting numbers but all wrapped for maximum onelining capabilities</div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">This method means you can just System.out.println(point) without having to format it 
+ Result format "(x, y) "</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -264,27 +274,53 @@ double&nbsp;y)</span></div>
 <h3><a id="isWithin(double,frc.drive.auton.Point)">isWithin</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">isWithin</span>&#8203;(<span class="arguments">double&nbsp;distance,
 <a href="Point.html" title="class in frc.drive.auton">Point</a>&nbsp;otherPoint)</span></div>
+<div class="block">Use this to determine if two points are within a tolerance while keeping code clean</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>distance</code> - max tolerance between this and another point</dd>
+<dd><code>otherPoint</code> - the other point to compare distance to</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>whether the distance between this and the other point is less than the provided tolerance</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="getDistanceFromPoint(frc.drive.auton.Point)">getDistanceFromPoint</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getDistanceFromPoint</span>&#8203;(<span class="arguments"><a href="Point.html" title="class in frc.drive.auton">Point</a>&nbsp;otherPoint)</span></div>
+<div class="block">Find the distance between this and another point</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>otherPoint</code> - the other point to measure from</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the distance between this point and the passed point</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="subtract(frc.drive.auton.Point)">subtract</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="Point.html" title="class in frc.drive.auton">Point</a></span>&nbsp;<span class="memberName">subtract</span>&#8203;(<span class="arguments"><a href="Point.html" title="class in frc.drive.auton">Point</a>&nbsp;other)</span></div>
+<div class="block">its just like subtracting numbers but all wrapped for maximum onelining capabilities</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>other</code> - the point to subtract from this point</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>these coordinates minus the provided coordinates wrapped in a new point</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="toString()">toString</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">java.lang.String</span>&nbsp;<span class="memberName">toString</span>()</div>
+<div class="block">This method means you can just System.out.println(point) without having to format it 
+ Result format "(x, y) "</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code>toString</code>&nbsp;in class&nbsp;<code>java.lang.Object</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>these coordinates formatted in a readable string</dd>
 </dl>
 </section>
 </li>

@@ -103,6 +103,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>public class <span class="typeNameLabel">DriveManager</span>
 extends java.lang.Object
 implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></pre>
+<div class="block">Everything that has to do with driving is in here.
+ There are a lot of auxilairy helpers and <a href="../robot/RobotToggles.html" title="class in frc.robot"><code>RobotToggles</code></a> that feed in here.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="auton/RobotTelemetry.html" title="class in frc.drive.auton"><code>RobotTelemetry</code></a>, 
+<a href="DriveManager.SparkFollowerMotors.html" title="class in frc.drive"><code>DriveManager.SparkFollowerMotors</code></a>, 
+<a href="DriveManager.TalonFollowerMotors.html" title="class in frc.drive"><code>DriveManager.TalonFollowerMotors</code></a></dd>
+</dl>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -127,13 +135,17 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="DriveManager.SparkFollowerMotors.html" title="class in frc.drive">DriveManager.SparkFollowerMotors</a></span></code></th>
 <td class="colLast">
-<div class="block">Any Operation that you do on one follower motor, implement in here so that a seamless transition can occur</div>
+<div class="block">Any Operation that you do on one follower motor, implement in here so that a seamless transition can occur
+ This is a wrapped class that makes an easy interface to access the follower motors</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="DriveManager.TalonFollowerMotors.html" title="class in frc.drive">DriveManager.TalonFollowerMotors</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Any Operation that you do on one follower motor, implement in here so that a seamless transition can occur
+ This is a wrapped class that makes an easy interface to access the follower motors</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -163,13 +175,23 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#currentOmega">currentOmega</a></span></code></th>
+<td class="colFirst"><code><a href="DriveManager.TalonFollowerMotors.html" title="class in frc.drive">DriveManager.TalonFollowerMotors</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#followerLTalon">followerLTalon</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="DriveManager.TalonFollowerMotors.html" title="class in frc.drive">DriveManager.TalonFollowerMotors</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#followerRTalon">followerRTalon</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="auton/RobotTelemetry.html" title="class in frc.drive.auton">RobotTelemetry</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#guidance">guidance</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#kinematics">kinematics</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -178,8 +200,18 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>com.ctre.phoenix.motorcontrol.can.WPI_TalonFX</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#leaderLTalon">leaderLTalon</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>com.revrobotics.CANSparkMax</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#leaderR">leaderR</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>com.ctre.phoenix.motorcontrol.can.WPI_TalonFX</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#leaderRTalon">leaderRTalon</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -240,34 +272,42 @@ double&nbsp;rotation)</code></th>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#driveFPS(double,double)">driveFPS</a></span>&#8203;(double&nbsp;leftFPS,
+double&nbsp;rightFPS)</code></th>
+<td class="colLast">
+<div class="block">Drives the bot based on the requested left and right speed</div>
+</td>
+</tr>
+<tr class="altColor" id="i2">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#driveMPS(double,double)">driveMPS</a></span>&#8203;(double&nbsp;leftMPS,
+double&nbsp;rightMPS)</code></th>
+<td class="colLast">
+<div class="block">Drives the bot based on the requested left and right speed</div>
+</td>
+</tr>
+<tr class="rowColor" id="i3">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#drivePure(double,double)">drivePure</a></span>&#8203;(double&nbsp;FPS,
 double&nbsp;omega)</code></th>
 <td class="colLast">
 <div class="block">This takes a speed in feet per second, a requested turn speed in radians/sec</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#drivePure(edu.wpi.first.wpilibj.kinematics.ChassisSpeeds)">drivePure</a></span>&#8203;(edu.wpi.first.wpilibj.kinematics.ChassisSpeeds&nbsp;speeds)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i3">
+<tr class="altColor" id="i4">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#driveVoltage(double,double)">driveVoltage</a></span>&#8203;(double&nbsp;leftVolts,
 double&nbsp;rightVolts)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Drives the bot based on the requested left and right drivetrain voltages</div>
+</td>
 </tr>
-<tr class="altColor" id="i4">
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Initialize the driver</div>
 </td>
-</tr>
-<tr class="rowColor" id="i5">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetEncoders()">resetEncoders</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i6">
 <td class="colFirst"><code>void</code></td>
@@ -287,21 +327,21 @@ double&nbsp;rightVolts)</code></th>
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<div class="block">updates telemetry and if calibrating pid, does that</div>
 </td>
 </tr>
 <tr class="rowColor" id="i9">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Put all of the code for tele operation to run every tick in here</div>
+<div class="block">This is where driving happens.</div>
 </td>
 </tr>
 <tr class="altColor" id="i10">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
-<div class="block">When testing, put the code to execute every tick in here</div>
+<div class="block">Put any experimental stuff to do with the drivetrain here</div>
 </td>
 </tr>
 </tbody>
@@ -328,8 +368,8 @@ double&nbsp;rightVolts)</code></th>
 <ul class="blockList">
 <li class="blockList">
 <section class="detail">
-<h3><a id="currentOmega">currentOmega</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">currentOmega</span></div>
+<h3><a id="kinematics">kinematics</a></h3>
+<div class="memberSignature"><span class="modifiers">public final</span>&nbsp;<span class="returnType">edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics</span>&nbsp;<span class="memberName">kinematics</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -354,6 +394,30 @@ double&nbsp;rightVolts)</code></th>
 <section class="detail">
 <h3><a id="guidance">guidance</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="auton/RobotTelemetry.html" title="class in frc.drive.auton">RobotTelemetry</a></span>&nbsp;<span class="memberName">guidance</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="leaderLTalon">leaderLTalon</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">com.ctre.phoenix.motorcontrol.can.WPI_TalonFX</span>&nbsp;<span class="memberName">leaderLTalon</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="leaderRTalon">leaderRTalon</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">com.ctre.phoenix.motorcontrol.can.WPI_TalonFX</span>&nbsp;<span class="memberName">leaderRTalon</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="followerLTalon">followerLTalon</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="DriveManager.TalonFollowerMotors.html" title="class in frc.drive">DriveManager.TalonFollowerMotors</a></span>&nbsp;<span class="memberName">followerLTalon</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="followerRTalon">followerRTalon</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="DriveManager.TalonFollowerMotors.html" title="class in frc.drive">DriveManager.TalonFollowerMotors</a></span>&nbsp;<span class="memberName">followerRTalon</span></div>
 </section>
 </li>
 </ul>
@@ -418,8 +482,7 @@ double&nbsp;rightVolts)</code></th>
 <section class="detail">
 <h3><a id="updateTest()">updateTest</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTest</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateTest()">ISubsystem</a></code></span></div>
-<div class="block">When testing, put the code to execute every tick in here</div>
+<div class="block">Put any experimental stuff to do with the drivetrain here</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -431,13 +494,12 @@ double&nbsp;rightVolts)</code></th>
 <h3><a id="updateTeleop()">updateTeleop</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTeleop</span>()
                   throws <span class="exceptions">java.lang.IllegalArgumentException</span></div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateTeleop()">ISubsystem</a></code></span></div>
-<div class="block">Put all of the code for tele operation to run every tick in here</div>
+<div class="block">This is where driving happens. Call this every tick to drive and set <a href="../robot/RobotToggles.html#EXPERIMENTAL_DRIVE"><code>RobotToggles.EXPERIMENTAL_DRIVE</code></a> to change the drive stype</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateTeleop()">updateTeleop</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.IllegalArgumentException</code></dd>
+<dd><code>java.lang.IllegalArgumentException</code> - if <a href="../robot/RobotToggles.html#EXPERIMENTAL_DRIVE"><code>RobotToggles.EXPERIMENTAL_DRIVE</code></a> is not implemented here or if you missed a break statement</dd>
 </dl>
 </section>
 </li>
@@ -469,6 +531,19 @@ double&nbsp;omega)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="driveFPS(double,double)">driveFPS</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">driveFPS</span>&#8203;(<span class="arguments">double&nbsp;leftFPS,
+double&nbsp;rightFPS)</span></div>
+<div class="block">Drives the bot based on the requested left and right speed</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>leftFPS</code> - Left drivetrain speed in feet per second</dd>
+<dd><code>rightFPS</code> - Right drivetrain speed in feet per second</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="updateAuton()">updateAuton</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateAuton</span>()</div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateAuton()">ISubsystem</a></code></span></div>
@@ -483,8 +558,7 @@ double&nbsp;omega)</span></div>
 <section class="detail">
 <h3><a id="updateGeneric()">updateGeneric</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateGeneric</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateGeneric()">ISubsystem</a></code></span></div>
-<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<div class="block">updates telemetry and if calibrating pid, does that</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -493,14 +567,15 @@ double&nbsp;omega)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="resetEncoders()">resetEncoders</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetEncoders</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="drivePure(edu.wpi.first.wpilibj.kinematics.ChassisSpeeds)">drivePure</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">drivePure</span>&#8203;(<span class="arguments">edu.wpi.first.wpilibj.kinematics.ChassisSpeeds&nbsp;speeds)</span></div>
+<h3><a id="driveMPS(double,double)">driveMPS</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">driveMPS</span>&#8203;(<span class="arguments">double&nbsp;leftMPS,
+double&nbsp;rightMPS)</span></div>
+<div class="block">Drives the bot based on the requested left and right speed</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>leftMPS</code> - Left drivetrain speed in meters per second</dd>
+<dd><code>rightMPS</code> - Right drivetrain speed in meters per second</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -508,6 +583,12 @@ double&nbsp;omega)</span></div>
 <h3><a id="driveVoltage(double,double)">driveVoltage</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">driveVoltage</span>&#8203;(<span class="arguments">double&nbsp;leftVolts,
 double&nbsp;rightVolts)</span></div>
+<div class="block">Drives the bot based on the requested left and right drivetrain voltages</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>leftVolts</code> - Left drivetrain volts in ... uh ... volts ig</dd>
+<dd><code>rightVolts</code> - Right drivetrain volts in ... uh ... volts ig</dd>
+</dl>
 </section>
 </li>
 </ul>

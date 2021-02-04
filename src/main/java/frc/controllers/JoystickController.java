@@ -42,7 +42,8 @@ public class JoystickController extends BaseController{
 
     /**
      * returns positive joystick axis value
-     * 
+     *
+     * @see #get(JoystickAxis)
      * @param axis the joystick axis to query
      * @return positive axis value
      */

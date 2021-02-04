@@ -23,6 +23,9 @@ import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 import frc.vision.GoalPhoton;
 
+/**
+ * Turret refers to the shooty thing that spinny spinny in the yaw direction
+ */
 public class Turret implements ISubsystem {
     public boolean track;
     public boolean atTarget = false;
@@ -34,12 +37,12 @@ public class Turret implements ISubsystem {
     private CANPIDController controller;
     private PIDController positionControl;
     private RobotTelemetry guidance;
-    private ShuffleboardTab tab = Shuffleboard.getTab("Turret");
-    private NetworkTableEntry fMult = tab.add("F Multiplier", 0).getEntry();
-    private NetworkTableEntry pos = tab.add("Position", 0).getEntry();
-    private NetworkTableEntry arbDriveMult = tab.add("drive omega mult", -0.25).getEntry();
-    private NetworkTableEntry angleOffset = tab.add("angle offset", -2.9).getEntry();
-    private NetworkTableEntry rotSpeed = tab.add("rotationSpeed", 0).getEntry();
+    private final ShuffleboardTab tab = Shuffleboard.getTab("Turret");
+    private final NetworkTableEntry fMult = tab.add("F Multiplier", 0).getEntry();
+    private final NetworkTableEntry pos = tab.add("Position", 0).getEntry();
+    private final NetworkTableEntry arbDriveMult = tab.add("drive omega mult", -0.25).getEntry();
+    private final NetworkTableEntry angleOffset = tab.add("angle offset", -2.9).getEntry();
+    private final NetworkTableEntry rotSpeed = tab.add("rotationSpeed", 0).getEntry();
     private GoalPhoton goalPhoton;
     private int scanDirection = -1;
 
@@ -47,6 +50,9 @@ public class Turret implements ISubsystem {
         init();
     }
 
+    /**
+     * Creates a plethora of new objects
+     */
     @Override
     public void init() {
         joy = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
@@ -69,11 +75,17 @@ public class Turret implements ISubsystem {
         setBrake(true);
     }
 
+    /**
+     * @see #updateGeneric()
+     */
     @Override
     public void updateTest() {
         updateGeneric();
     }
 
+    /**
+     * @see #updateGeneric()
+     */
     @Override
     public void updateTeleop() {
         updateGeneric();
@@ -82,6 +94,9 @@ public class Turret implements ISubsystem {
     @Override
     public void updateAuton() { }
 
+    /**
+     * prevents the turret from rotating too far, does debug
+     */
     @Override
     public void updateGeneric() {
         if (RobotToggles.DEBUG) {
@@ -143,6 +158,11 @@ public class Turret implements ISubsystem {
         }
     }
 
+    /**
+     * Is the shooter overrotated?
+     *
+     * @return yes the shooter is overrotated or no the shooter is not overrotated
+     */
     private boolean isSafe() {
         double turretDeg = turretDegrees();
         return turretDeg <= 270 && turretDeg >= 100;
@@ -151,7 +171,7 @@ public class Turret implements ISubsystem {
     /**
      * Rotate the turret at a certain rad/sec
      *
-     * @param speed - rad/sec to rotate the turret at ()
+     * @param speed - rad/sec to rotate the turret at
      */
     private void rotateTurret(double speed) {
         //1 Radians Per Second to Revolutions Per Minute = 9.5493 RPM
@@ -189,19 +209,13 @@ public class Turret implements ISubsystem {
     }
 
     /**
-     * creates a min and a max for the angle to be
+     * If the angle is greater than the acceptable max, or less than the acceptable min, returns the nearest bound, else bounces input
      * 
-     * @param angle
+     * @param angle the current angle of the turret
      * @return angle at the minimum or maximum angle  
      */
     private double limitAngle(double angle) {
-        if (angle > RobotNumbers.TURRET_MAX_POS) {
-            angle = RobotNumbers.TURRET_MAX_POS;
-        }
-        if (angle < RobotNumbers.TURRET_MIN_POS) {
-            angle = RobotNumbers.TURRET_MIN_POS;
-        }
-        return angle;
+        return Math.max(Math.min(angle, RobotNumbers.TURRET_MAX_POS), RobotNumbers.TURRET_MIN_POS);
     }
 
     private void setMotorPID(double P, double I, double D) {
@@ -216,6 +230,11 @@ public class Turret implements ISubsystem {
         positionControl.setD(D);
     }
 
+    /**
+     * Tells the motor if it should coast or slam da brakes
+     *
+     * @param brake should i brake when off? (Y/N)
+     */
     public void setBrake(boolean brake) {
         if (brake) {
             motor.setIdleMode(IdleMode.kBrake);
@@ -238,25 +257,27 @@ public class Turret implements ISubsystem {
         return scanDirection;
     }
 
+    /**
+     * If there is a telem object, set it here
+     *
+     * @param telem the RobotTelemtry object in use by the drivetrian
+     */
     public void setTelemetry(RobotTelemetry telem) {
         guidance = telem;
     }
 
+    /**
+     * every time we enter teleop, reset encoder
+     */
     public void teleopInit() {
         encoder = motor.getEncoder();
         encoder.setPosition(0);
     }
 
+    /**
+     * When we enter disabled, unlock the turret to be moved freely
+     */
     public void disabledInit() {
         motor.setIdleMode(IdleMode.kCoast);
-    }
-
-    public boolean setTargetAngle(double target) {
-        chasingTarget = true;
-        return atTarget;
-    }
-
-    public void resetTurretRotation() {
-        encoder.setPosition(0);
     }
 }

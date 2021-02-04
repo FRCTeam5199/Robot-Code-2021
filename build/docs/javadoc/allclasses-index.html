@@ -111,7 +111,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><a href="frc/drive/auton/pointtopoint/AutonSpecialActions.html" title="enum in frc.drive.auton.pointtopoint">AutonSpecialActions</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">used only by point to point auton routines (legacy)</div>
+</th>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><a href="frc/drive/auton/pointtopoint/AutonWaypoint.html" title="class in frc.drive.auton.pointtopoint">AutonWaypoint</a></td>
@@ -168,9 +170,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor" id="i17">
 <td class="colFirst"><a href="frc/controllers/ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a></td>
-<th class="colLast" scope="row">
-<div class="block">Contains the enumerations for the joysticks and triggers of the Xbox controller</div>
-</th>
+<th class="colLast" scope="row">&nbsp;</th>
 </tr>
 <tr class="altColor" id="i18">
 <td class="colFirst"><a href="frc/controllers/ControllerEnums.XBoxButtons.html" title="enum in frc.controllers">ControllerEnums.XBoxButtons</a></td>
@@ -178,17 +178,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor" id="i19">
 <td class="colFirst"><a href="frc/drive/DriveManager.html" title="class in frc.drive">DriveManager</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Everything that has to do with driving is in here.</div>
+</th>
 </tr>
 <tr class="altColor" id="i20">
 <td class="colFirst"><a href="frc/drive/DriveManager.SparkFollowerMotors.html" title="class in frc.drive">DriveManager.SparkFollowerMotors</a></td>
 <th class="colLast" scope="row">
-<div class="block">Any Operation that you do on one follower motor, implement in here so that a seamless transition can occur</div>
+<div class="block">Any Operation that you do on one follower motor, implement in here so that a seamless transition can occur
+ This is a wrapped class that makes an easy interface to access the follower motors</div>
 </th>
 </tr>
 <tr class="rowColor" id="i21">
 <td class="colFirst"><a href="frc/drive/DriveManager.TalonFollowerMotors.html" title="class in frc.drive">DriveManager.TalonFollowerMotors</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Any Operation that you do on one follower motor, implement in here so that a seamless transition can occur
+ This is a wrapped class that makes an easy interface to access the follower motors</div>
+</th>
 </tr>
 <tr class="altColor" id="i22">
 <td class="colFirst"><a href="frc/drive/DriveTypes.html" title="enum in frc.drive">DriveTypes</a></td>
@@ -213,11 +219,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor" id="i26">
 <td class="colFirst"><a href="frc/ballstuff/intaking/Intake.html" title="class in frc.ballstuff.intaking">Intake</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">The "Intake" is referring to the part that picks up power cells from the floor</div>
+</th>
 </tr>
 <tr class="rowColor" id="i27">
 <td class="colFirst"><a href="frc/ballstuff/intaking/IntakeControlStyles.html" title="enum in frc.ballstuff.intaking">IntakeControlStyles</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Determines how the <a href="frc/ballstuff/intaking/Intake.html" title="class in frc.ballstuff.intaking"><code>Intake</code></a> uses user input and what controllers to use</div>
+</th>
 </tr>
 <tr class="altColor" id="i28">
 <td class="colFirst"><a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></td>
@@ -237,7 +247,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor" id="i31">
 <td class="colFirst"><a href="frc/drive/auton/Point.html" title="class in frc.drive.auton">Point</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">A utility class that helps keep the x and the y from being lost</div>
+</th>
 </tr>
 <tr class="altColor" id="i32">
 <td class="colFirst"><a href="frc/robot/Robot.html" title="class in frc.robot">Robot</a></td>
@@ -269,11 +281,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor" id="i39">
 <td class="colFirst"><a href="frc/ballstuff/shooting/Shooter.html" title="class in frc.ballstuff.shooting">Shooter</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Shooter pertains to spinning the flywheel that actually makes the balls go really fast</div>
+</th>
 </tr>
 <tr class="altColor" id="i40">
 <td class="colFirst"><a href="frc/ballstuff/shooting/ShootingControlStyles.html" title="enum in frc.ballstuff.shooting">ShootingControlStyles</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Used to change how the input is handled by the <a href="frc/ballstuff/shooting/Shooter.html" title="class in frc.ballstuff.shooting"><code>Shooter</code></a> and what kind of controller to use</div>
+</th>
 </tr>
 <tr class="rowColor" id="i41">
 <td class="colFirst"><a href="frc/ballstuff/shooting/ShootingEnums.html" title="enum in frc.ballstuff.shooting">ShootingEnums</a></td>
@@ -283,7 +299,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor" id="i42">
 <td class="colFirst"><a href="frc/ballstuff/shooting/Turret.html" title="class in frc.ballstuff.shooting">Turret</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">Turret refers to the shooty thing that spinny spinny in the yaw direction</div>
+</th>
 </tr>
 <tr class="rowColor" id="i43">
 <td class="colFirst"><a href="frc/misc/UtilFunctions.html" title="class in frc.misc">UtilFunctions</a></td>
@@ -291,7 +309,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor" id="i44">
 <td class="colFirst"><a href="frc/controllers/WiiController.html" title="class in frc.controllers">WiiController</a></td>
-<th class="colLast" scope="row">&nbsp;</th>
+<th class="colLast" scope="row">
+<div class="block">For mario kart drive.</div>
+</th>
 </tr>
 <tr class="rowColor" id="i45">
 <td class="colFirst"><a href="frc/controllers/XBoxController.html" title="class in frc.controllers">XBoxController</a></td>

@@ -3,9 +3,12 @@ package frc.drive.auton.butbetternow;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.drive.DriveManager;
 import frc.drive.auton.RobotTelemetry;
 import frc.misc.ISubsystem;
@@ -13,6 +16,8 @@ import edu.wpi.first.wpilibj.Timer;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 /**
  * Check back later for some fun and fresh auton routines!
@@ -24,7 +29,7 @@ public class AutonManager implements ISubsystem {
     private ChassisSpeeds chassisSpeeds;
     private RamseteController controller = new RamseteController();
     private Trajectory Trajectory = new Trajectory();
-    private Timer timer = new Timer();
+    //private Timer timer = new Timer();
 
     public AutonManager(String routine, DriveManager driveObject) { //Routine should be in the form of "YourPath" (paths/YourPath.wpilib.json)
         routinePath = Filesystem.getDeployDirectory().toPath().resolve("paths/" + (routine).trim() + ".wpilib.json");
@@ -42,9 +47,9 @@ public class AutonManager implements ISubsystem {
         } catch (IOException e) {
             DriverStation.reportError("Unable to open trajectory: " + routinePath, e.getStackTrace());
         }
-        timer.reset();
-        timer.start();
-        System.out.println("Starting timer.");
+        //timer.reset();
+        //timer.start();
+        //System.out.println("Starting timer.");
     }
 
     @Override
@@ -56,14 +61,25 @@ public class AutonManager implements ISubsystem {
     @Override
     public void updateAuton() {
         telem.updateAuton();
-        //RamseteCommand ramseteCommand = new RamseteCommand()
-        Trajectory.State goal = Trajectory.sample(timer.get());
-        chassisSpeeds = controller.calculate(telem.robotPose, goal);
-        DRIVING_CHILD.drivePure(chassisSpeeds);
-        //System.out.println("Timer is at " + timer.get() + ", At " + telem.robotPose + ", goal " + goal);
+        //RamseteCommand ramseteCommand = new RamseteCommand(Trajectory, () -> telem.robotPose, controller, DRIVING_CHILD.kinematics, DRIVING_CHILD::driveFPS);
+        /*
+            Trajectory.State goal = Trajectory.sample(timer.get());
+            chassisSpeeds = controller.calculate(telem.robotPose, goal);
+            DRIVING_CHILD.drivePure(chassisSpeeds);
+        */
     }
 
-
+    public Command getAutonomousCommand() {
+       RamseteCommand ramseteCommand = new RamseteCommand(
+                Trajectory, 
+                () -> telem.robotPose,  
+                controller, 
+                DRIVING_CHILD.kinematics, 
+                DRIVING_CHILD::driveMPS
+        );
+        return ramseteCommand.andThen(() -> DRIVING_CHILD.driveVoltage(0, 0));
+    }  
+    
     @Override
     public void updateGeneric() { }
 }

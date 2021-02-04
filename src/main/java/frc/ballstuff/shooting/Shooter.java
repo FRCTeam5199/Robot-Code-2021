@@ -33,6 +33,9 @@ import static frc.misc.UtilFunctions.weightedAverage;
 import static frc.robot.Robot.hopper;
 import static frc.robot.Robot.shooter;
 
+/**
+ * Shooter pertains to spinning the flywheel that actually makes the balls go really fast
+ */
 public class Shooter implements ISubsystem {
 
     public final String[] data = {"match time", "init time", "speed", "target speed", "motor temperature", "motor current", "powered", "P", "I", "D", "rP", "rI", "rD", "distance"};
@@ -75,7 +78,7 @@ public class Shooter implements ISubsystem {
     }
 
     /**
-     * Initialize the Shooter object.
+     * Initialize the Shooter object including the controller and the cameras and timers
      */
     @Override
     public void init() throws IllegalStateException {
@@ -143,6 +146,9 @@ public class Shooter implements ISubsystem {
         }
     }
 
+    /**
+     * makes timers for the shooting and indexing of balls
+     */
     private void createTimers() {
         shootTimer = new Timer();
         indexTimer = new Timer();
@@ -152,6 +158,11 @@ public class Shooter implements ISubsystem {
         shootTimer.reset();
     }
 
+    /**
+     * Makes sure that the interplation arrays are sorted correctly
+     *
+     * @return whether {@link #sizeSpeedsArray} and {@link #voltageFFArray} are sorted correctly
+     */
     private boolean makeSurePreconditionsMet() {
         for (int i = 0; i < sizeSpeedsArray.length - 1; i++) {
             if (sizeSpeedsArray[i][0] > sizeSpeedsArray[i + 1][0]) return false;
@@ -162,56 +173,12 @@ public class Shooter implements ISubsystem {
         return true;
     }
 
+    /**
+     * @see #updateGeneric()
+     */
     @Override
     public void updateTest() {
         updateGeneric();
-    }
-
-    /**
-     * Update the Shooter object.
-     */
-    public void update() {
-        actualRPM = RobotToggles.SHOOTER_USE_SPARKS ? leader.getEncoder().getVelocity() : falconLeader.getSelectedSensorVelocity() * 600 / RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION;
-        checkState();
-        //put code here to set speed based on distance to goal
-        boolean lockOntoTarget = false;
-        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
-            case STANDARD: {
-                boolean solidSpeed = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN;
-                double adjustmentFactor = joystickController.getPositive(JoystickAxis.SLIDER);
-                if (RobotToggles.ENABLE_VISION) {
-                    lockOntoTarget = panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
-                }
-                trackingTarget = goalPhoton.validTarget() && lockOntoTarget;
-                if (interpolationEnabled) {
-                    speed = (solidSpeed) ? (4200 * (adjustmentFactor * 0.25 + 1)) : 0;
-                } else {
-                    speed = 4200;
-                }
-
-                if (solidSpeed) {
-                    setSpeed(speed);
-                    ShootingEnums.FIRE_INDEXER_INDEPENDENT.shoot(this);
-                } else if (trackingTarget && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
-                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
-                } else {
-                    hopper.setAll(false);
-                    setSpeed(constSpeed.getDouble(0));
-                }
-                break;
-            }
-            default:
-                //throw new IllegalStateException("");
-        }
-
-        if (RobotToggles.DEBUG) {
-            SmartDashboard.putNumber("RPM", actualRPM);
-            SmartDashboard.putNumber("Target RPM", speed);
-
-            SmartDashboard.putBoolean("atSpeed", atSpeed);
-            SmartDashboard.putNumber("ballsShot", ballsShot);
-            SmartDashboard.putBoolean("shooter enable", enabled);
-        }
     }
 
     public void updateControls() {
@@ -303,12 +270,59 @@ public class Shooter implements ISubsystem {
 
     }
 
+    /**
+     * Input is parsed and shooter object maintained appropriately
+     */
     @Override
     public void updateGeneric() {
-        update();
+        actualRPM = RobotToggles.SHOOTER_USE_SPARKS ? leader.getEncoder().getVelocity() : falconLeader.getSelectedSensorVelocity() * 600 / RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION;
+        checkState();
+        boolean lockOntoTarget = false;
+        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
+            case STANDARD: {
+                boolean solidSpeed = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN;
+                double adjustmentFactor = joystickController.getPositive(JoystickAxis.SLIDER);
+                if (RobotToggles.ENABLE_VISION) {
+                    lockOntoTarget = panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
+                }
+                trackingTarget = goalPhoton.validTarget() && lockOntoTarget;
+                if (interpolationEnabled) {
+                    speed = (solidSpeed) ? (4200 * (adjustmentFactor * 0.25 + 1)) : 0;
+                } else {
+                    speed = 4200;
+                }
+
+                if (solidSpeed) {
+                    setSpeed(speed);
+                    ShootingEnums.FIRE_INDEXER_INDEPENDENT.shoot(this);
+                } else if (trackingTarget && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                } else {
+                    hopper.setAll(false);
+                    setSpeed(constSpeed.getDouble(0));
+                }
+                break;
+            }
+            default:
+                throw new IllegalStateException("This UI not implemented for this controller");
+        }
+
+        if (RobotToggles.DEBUG) {
+            SmartDashboard.putNumber("RPM", actualRPM);
+            SmartDashboard.putNumber("Target RPM", speed);
+
+            SmartDashboard.putBoolean("atSpeed", atSpeed);
+            SmartDashboard.putNumber("ballsShot", ballsShot);
+            SmartDashboard.putBoolean("shooter enable", enabled);
+        }
         updateControls();
     }
 
+    /**
+     * if the shooter is actually at the requested speed
+     *
+     * @return if the shooter is actually at the requested speed
+     */
     public boolean atSpeed() {
         if (RobotToggles.SHOOTER_USE_SPARKS) {
             return leader.getEncoder().getVelocity() > speed - 80;
@@ -317,10 +331,20 @@ public class Shooter implements ISubsystem {
         }
     }
 
+    /**
+     * getter for spunUp
+     *
+     * @return {@link #spunUp}
+     */
     public boolean spunUp() {
         return spunUp;
     }
 
+    /**
+     * getter for recovering
+     *
+     * @return {@link #recoveryPID}
+     */
     public boolean recovering() {
         return recoveryPID;
     }
@@ -368,6 +392,11 @@ public class Shooter implements ISubsystem {
         throw new IllegalStateException("Battery voltage " + voltage + " could not be interpolated");
     }
 
+    /**
+     * if the goal photon is in use and has a valid target in its sights
+     *
+     * @return if the goal photon is in use and has a valid target in its sights
+     */
     public boolean validTarget() {
         if (RobotToggles.ENABLE_VISION) {
             return goalPhoton.validTarget();
@@ -376,20 +405,9 @@ public class Shooter implements ISubsystem {
         }
     }
 
-    public void setupShooterTimer() {
-        shooterTimer = new Timer();
-        timerFlag = false;
-        shooterTimer.stop();
-        shooterTimer.reset();
-        stopFiring();
-    }
-
-    public void stopFiring() {
-        toggle(false);
-        if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
-        shooting = false;
-    }
-
+    /**
+     * Does as the name suggests
+     */
     public void ensureTimerStarted() {
         if (!shooter.timerStarted) {
             shooter.shootTimer.start();
@@ -397,12 +415,20 @@ public class Shooter implements ISubsystem {
         }
     }
 
+    /**
+     * Does as the name suggests
+     */
     public void resetShootTimer() {
         shootTimer.stop();
         shootTimer.reset();
         timerStarted = false;
     }
 
+    /**
+     * getter for the shoot timer
+     *
+     * @return {@link #shootTimer}
+     */
     public Timer getShootTimer() {
         return shootTimer;
     }
