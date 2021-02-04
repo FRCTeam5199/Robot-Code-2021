@@ -6,13 +6,9 @@ import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.controllers.BaseController;
-import frc.controllers.ButtonPanel;
 import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
-import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 
 /**
@@ -22,19 +18,7 @@ import frc.robot.RobotToggles;
 public class Hopper implements ISubsystem {
     public VictorSPX agitator, indexer;
     public Rev2mDistanceSensor indexSensor;
-    public boolean autoIndex = true;
     public boolean indexed = false;
-    private double fireOffset = 0;
-    // private ShuffleboardTab tab = Shuffleboard.getTab("balls");
-    // private NetworkTableEntry aSpeed = tab.add("Agitator Speed", 0.6).getEntry();
-    // private NetworkTableEntry iSpeed = tab.add("Indexer Speed", 0.7).getEntry();
-    // public NetworkTableEntry visionOverride = tab.add("VISION OVERRIDE", false).getEntry();
-    // public NetworkTableEntry spinupOverride = tab.add("SPINUP OVERRIDE", false).getEntry();
-    // public NetworkTableEntry disableOverride = tab.add("LOADING DISABLE", false).getEntry();
-    private BaseController panel;
-    private Joystick joy;
-    private boolean isReversed = false;
-    private boolean isForced = false;
     private boolean agitatorActive = false;
     private boolean indexerActive = false;
 
@@ -44,15 +28,13 @@ public class Hopper implements ISubsystem {
 
     @Override
     public void init() {
-        if (autoIndex) {
+        if (RobotToggles.INDEXER_AUTO_INDEX) {
             indexSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighAccuracy);
             indexSensor.setEnabled(true);
             indexSensor.setAutomaticMode(true);
         }
         agitator = new VictorSPX(RobotMap.AGITATOR_MOTOR);
         indexer = new VictorSPX(RobotMap.INDEXER_MOTOR);
-        panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
-        joy = new Joystick(RobotNumbers.FLIGHT_STICK_SLOT);
     }
 
     @Override
@@ -61,7 +43,7 @@ public class Hopper implements ISubsystem {
     }
 
     public double indexerSensorRange() {
-        if (autoIndex) {
+        if (RobotToggles.INDEXER_AUTO_INDEX) {
             return indexSensor.getRange();
         }
         return -2;
@@ -73,9 +55,7 @@ public class Hopper implements ISubsystem {
     }
 
     @Override
-    public void updateAuton() {
-
-    }
+    public void updateAuton() { }
 
     /**
      * Runs every tick. Runs the indexer and agitator motors.
@@ -98,30 +78,37 @@ public class Hopper implements ISubsystem {
         }
     }
 
+    /**
+     * applies settings/toggles Agitator and Indexer on/off
+     * 
+     * @param set a boolean to determine wether or not Agitator and Indexer is turned on/off
+     */
     public void setAll(boolean set) {
         setAgitator(set);
         setIndexer(set);
     }
 
+    /**
+     * applies settings/toggles Agitator on/off
+     * 
+     * @param set a boolean to determine wether or not Agitator is turned on/off
+     */
     public void setAgitator(boolean set) {
         agitatorActive = set;
-        if(RobotToggles.DEBUG){
+        if (RobotToggles.DEBUG) {
             System.out.println("Agitator set to " + set);
         }
     }
 
+    /**
+     * applies settings/toggles Indexer on/off
+     * 
+     * @param set a boolean to determine wether or not Indexer is turned on/off
+     */
     public void setIndexer(boolean set) {
-        if (RobotToggles.DEBUG){
+        if (RobotToggles.DEBUG) {
             System.out.println("Indexer set to " + set);
         }
         indexerActive = set;
-    }
-
-    public void setReverse(boolean reverse) {
-        isReversed = reverse;
-    }
-
-    public void setForced(boolean forced) {
-        isForced = forced;
     }
 }

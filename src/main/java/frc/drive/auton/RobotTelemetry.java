@@ -5,20 +5,23 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
+import frc.misc.ISubsystem;
 import frc.misc.UtilFunctions;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 
-public class RobotTelemetry {
+public class RobotTelemetry implements ISubsystem {
     public Pose2d robotPose;
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
-    private DriveManager driver;
-    private final PigeonIMU pigeon = new PigeonIMU(RobotMap.PIGEON);
+    private final DriveManager driver;
+    private PigeonIMU pigeon;
     public PIDController headingPID;
+    public DifferentialDriveOdometry odometer;
 
     public double[] ypr = new double[3];
     public double[] startypr = new double[3];
@@ -26,23 +29,23 @@ public class RobotTelemetry {
 
     public RobotTelemetry(DriveManager driver){
         this.driver = driver;
-        headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
+        init();
     }
 
     //pls yes
-    public double headingErrorWraparound(double x, double y) {
+    public double realHeadingError(double x, double y) {
         return UtilFunctions.mathematicalMod(headingError(x, y) + 180, 360) - 180;
     }
 
     private double headingError(double wayX, double wayY) {
-        return angleToPos(wayX, wayY) - fieldHeading();
+        return angleFromHere(wayX, wayY) - fieldHeading();
     }
 
-    private double angleToPos(double wayX, double wayY) {
+    private double angleFromHere(double wayX, double wayY) {
         return Math.toDegrees(Math.atan2(wayY - fieldY(), wayX - fieldX()));
     }
 
-    private double fieldHeading() {
+    public double fieldHeading() {
         return yawWraparoundAhead();
     }
 
@@ -66,6 +69,10 @@ public class RobotTelemetry {
         return UtilFunctions.mathematicalMod(yawRel() + 180, 360) - 180;
     }
 
+
+    /**
+     * @return relative to start yaw of pigeon
+     */
     public double yawRel() { //return relative(to start) yaw of pigeon
         updatePigeon();
         return (ypr[0] - startYaw);
@@ -86,56 +93,40 @@ public class RobotTelemetry {
         startypr = ypr;
         startYaw = yawAbs();
     }
+    
+    public void resetEncoders() {
+        driver.resetEncoders();
+    }
 
-    public double yawAbs() { // return absolute yaw of pigeon
+    public void resetOdometry(Pose2d pose, Rotation2d rotation){
+        //odometer.resetPosition(pose, rotation);
+        resetPigeon();
+        resetEncoders();
+    }
+
+    /**
+     * @return absolute yaw of pigeon
+     */
+    public double yawAbs() {  //get absolute yaw of pigeon
         updatePigeon();
         return ypr[0];
     }
-
-    //getFPS - get wheel FPS from encoder
-    public double getFPSLeft() {
-        return getIPSLeft() / 12;
-    }
-
-    //getIPS - get wheel IPS from encoder
-    public double getIPSLeft() {
-        return (getRPMLeft() * wheelCircumference()) / 60;
-    }
+    //position conversion -------------------------------------------------------------------------------------------------------
 
     //getRPM - get wheel RPM from encoder
+    //TODO implement for falcos
     public double getRPMLeft() {
         return (driver.leaderL.getEncoder().getVelocity()) / 9;
-    }
-
-    //position conversion -------------------------------------------------------------------------------------------------------
-    private double wheelCircumference() {
-        return RobotNumbers.WHEEL_DIAMETER * Math.PI;
-    }
-
-    public double getFPSRight() {
-        return getIPSRight() / 12;
-    }
-
-    public double getIPSRight() {
-        return (getRPMRight() * wheelCircumference()) / 60;
     }
 
     public double getRPMRight() {
         return (driver.leaderR.getEncoder().getVelocity()) / 9;
     }
 
-    //getInches - get wheel inches traveled
-    public double getInchesLeft() {
-        return (getRotationsLeft() * wheelCircumference());
-    }
-
     //getRotations - get wheel rotations on encoder
+    //TODO implement for falcos
     public double getRotationsLeft() {
         return (driver.leaderL.getEncoder().getPosition()) / 9;
-    }
-
-    public double getInchesRight() {
-        return (getRotationsRight() * wheelCircumference());
     }
 
     public double getRotationsRight() {
@@ -143,43 +134,48 @@ public class RobotTelemetry {
     }
 
     //getMeters - get wheel meters traveled
+    /**
+     * @return wheel meters traveled
+     */
     public double getMetersLeft() {
-        return Units.feetToMeters(getFeetLeft());
+        return Units.feetToMeters(getRotationsLeft() * UtilFunctions.wheelCircumference() / 12);
     }
 
-    //getFeet - get wheel feet traveled
-    public double getFeetLeft() {
-        return (getRotationsLeft() * wheelCircumference() / 12);
-    }
-
+    /**
+     * @return wheel meters traveled
+     */
     public double getMetersRight() {
-        return Units.feetToMeters(getFeetRight());
+        return Units.feetToMeters(getRotationsRight() * UtilFunctions.wheelCircumference() / 12);
     }
 
-    public double getFeetRight() {
-        return (getRotationsRight() * wheelCircumference() / 12);
+    @Override
+    public void init() {
+        pigeon = new PigeonIMU(RobotMap.PIGEON);
+        headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
+        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(yawAbs()), new Pose2d(0, 0, new Rotation2d()));
     }
 
-    public double getLeftVelocity() {
-        if (RobotToggles.DRIVE_USE_SPARKS) {
-            return driver.leaderL.getEncoder().getVelocity();
-        } else {
-
-        }
-        return 0;
+    @Override
+    public void updateTest() {
+        //updateGeneric();
     }
 
-    public double getRightVelocity() {
-        if (RobotToggles.DRIVE_USE_SPARKS) {
-            return driver.leaderR.getEncoder().getVelocity();
-        } else {
-
-        }
-        return 0;
+    @Override
+    public void updateTeleop() {
+        //updateGeneric();
     }
 
+    @Override
+    public void updateAuton() {
+        updateGeneric();
+    }
+
+    @Override
     public void updateGeneric() {
-        robotTranslation = robotPose.getTranslation();
-        robotRotation = robotPose.getRotation();
+        if (RobotToggles.ENABLE_IMU) {
+            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(yawAbs())), getMetersLeft(), getMetersRight());
+            robotTranslation = robotPose.getTranslation();
+            robotRotation = robotPose.getRotation();
+        }
     }
 }

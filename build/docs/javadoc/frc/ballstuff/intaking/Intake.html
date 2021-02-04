@@ -217,10 +217,12 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <section class="detail">
 <h3><a id="&lt;init&gt;()">Intake</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">Intake</span>()
-       throws <span class="exceptions"><a href="../../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a></span></div>
+       throws <span class="exceptions"><a href="../../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a>,
+java.lang.IllegalStateException</span></div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a></code></dd>
+<dd><code>java.lang.IllegalStateException</code></dd>
 </dl>
 </section>
 </li>
@@ -238,14 +240,16 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <section class="detail">
 <h3><a id="init()">init</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()
-          throws <span class="exceptions"><a href="../../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a></span></div>
+          throws <span class="exceptions"><a href="../../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a>,
+java.lang.IllegalStateException</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#init()">ISubsystem</a></code></span></div>
 <div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a></code></dd>
+<dd><code><a href="../../misc/InitializationFailureException.html" title="class in frc.misc">InitializationFailureException</a></code> - intake motor failed to be created</dd>
+<dd><code>java.lang.IllegalStateException</code></dd>
 </dl>
 </section>
 </li>

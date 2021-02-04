@@ -10,8 +10,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
 import frc.controllers.ButtonPanel;
@@ -26,22 +29,14 @@ import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 import frc.vision.GoalPhoton;
 
-import static frc.ballstuff.shooting.ShootingStyles.fireIndexerDependent;
 import static frc.misc.UtilFunctions.weightedAverage;
 import static frc.robot.Robot.hopper;
 import static frc.robot.Robot.shooter;
 
 public class Shooter implements ISubsystem {
 
-    public final String[] data = {
-            "match time", "init time", "speed", "target speed", "motor temperature", "motor current", "powered", "P",
-            "I", "D", "rP", "rI", "rD", "distance"
-    };
-    public final String[] units = {
-            "seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"
-    };
-    public final BaseController joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
-    private final double pulleyRatio = RobotNumbers.motorPulleySize / RobotNumbers.driverPulleySize;
+    public final String[] data = {"match time", "init time", "speed", "target speed", "motor temperature", "motor current", "powered", "P", "I", "D", "rP", "rI", "rD", "distance"};
+    public final String[] units = {"seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"};
     private final Timer timer = new Timer();
     private final int ballsShot = 0;
     private final boolean poweredState = false;
@@ -54,34 +49,25 @@ public class Shooter implements ISubsystem {
      * Array of voltages and _. {Voltage, _}
      */
     private final double[][] voltageFFArray = {{0, 0}, {11, 190}, {13, 185}};
+    public BaseController panel, joystickController;
     public double speed;
     public boolean atSpeed = false;
     public double actualRPM;
     public boolean interpolationEnabled = false;
     public boolean shooting;
-    public boolean allBallsFired = false;
     boolean trackingTarget = false;
+    private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+    private NetworkTableEntry constSpeed = tab.add("Constant Speed", 0).getEntry();
     private CANSparkMax leader, follower;
     private TalonFX falconLeader, falconFollower;
     private CANPIDController speedo;
     private CANEncoder encoder;
     private GoalPhoton goalPhoton;
-    // private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-    // private NetworkTableEntry shooterSpeed = tab.add("Shooter Speed", 0).getEntry();
-    // private NetworkTableEntry shooterToggle = tab.add("Shooter Toggle", false).getEntry();
-    // private NetworkTableEntry manualSpeedOverride = tab.add("SPEED OVERRIDE", false).getEntry();
-    // private NetworkTableEntry rampRate = tab.add("Ramp Rate", 40).getEntry();
-    //public final XBoxController xBoxController;
     private boolean enabled = true;
-    private final ButtonPanel panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
-    private double targetRPM;
     private boolean spunUp = false;
     private boolean recoveryPID = false;
-    private double lastSpeed;
-    private Timer shootTimer;
-    private Timer indexTimer;
+    private Timer shootTimer, indexTimer, shooterTimer;
     private boolean timerStarted = false;
-    private Timer shooterTimer;
     private boolean timerFlag = false;
 
     public Shooter() {
@@ -92,7 +78,15 @@ public class Shooter implements ISubsystem {
      * Initialize the Shooter object.
      */
     @Override
-    public void init() {
+    public void init() throws IllegalStateException {
+        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
+            case STANDARD:
+                joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
+                panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
+                break;
+            default:
+                throw new IllegalStateException("There is no UI configuration for " + RobotToggles.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
+        }
         createAndInitMotors();
 
         //SmartDashboard.putString("ZONE", "none");
@@ -101,27 +95,9 @@ public class Shooter implements ISubsystem {
         }
 
         createTimers();
-        if (!makeSurePreconditionsMet())
+        if (!makeSurePreconditionsMet()) {
             System.err.println("sizeSpeedsArray or voltageFFArray is not sorted right. please do this");
-    }
-
-    private boolean makeSurePreconditionsMet() {
-        for (int i = 0; i < sizeSpeedsArray.length - 1; i++)
-            if (sizeSpeedsArray[i][0] > sizeSpeedsArray[i + 1][0])
-                return false;
-        for (int i = 0; i < voltageFFArray.length - 1; i++)
-            if (voltageFFArray[i][0] > voltageFFArray[i + 1][0])
-                return false;
-        return true;
-    }
-
-    private void createTimers() {
-        shootTimer = new Timer();
-        indexTimer = new Timer();
-        indexTimer.stop();
-        indexTimer.reset();
-        shootTimer.stop();
-        shootTimer.reset();
+        }
     }
 
     /**
@@ -149,7 +125,6 @@ public class Shooter implements ISubsystem {
             leader.setOpenLoopRampRate(40);
             encoder = leader.getEncoder();
 
-            //setPID(4e-5, 0, 0);
             speedo = leader.getPIDController();
             speedo.setOutputRange(-1, 1);
         } else {
@@ -168,6 +143,30 @@ public class Shooter implements ISubsystem {
         }
     }
 
+    private void createTimers() {
+        shootTimer = new Timer();
+        indexTimer = new Timer();
+        indexTimer.stop();
+        indexTimer.reset();
+        shootTimer.stop();
+        shootTimer.reset();
+    }
+
+    private boolean makeSurePreconditionsMet() {
+        for (int i = 0; i < sizeSpeedsArray.length - 1; i++) {
+            if (sizeSpeedsArray[i][0] > sizeSpeedsArray[i + 1][0]) return false;
+        }
+        for (int i = 0; i < voltageFFArray.length - 1; i++) {
+            if (voltageFFArray[i][0] > voltageFFArray[i + 1][0]) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void updateTest() {
+        updateGeneric();
+    }
+
     /**
      * Update the Shooter object.
      */
@@ -175,26 +174,34 @@ public class Shooter implements ISubsystem {
         actualRPM = RobotToggles.SHOOTER_USE_SPARKS ? leader.getEncoder().getVelocity() : falconLeader.getSelectedSensorVelocity() * 600 / RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION;
         checkState();
         //put code here to set speed based on distance to goal
-        boolean solidSpeed = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN;
-        //TODO remove doube ternary
-        speed = (!interpolationEnabled) ? (4200) : ((solidSpeed) ? (4200 * joystickController.getPositive(JoystickAxis.SLIDER) * 0.25 + 1) : 0);
-        if (RobotToggles.ENABLE_VISION) {
-            trackingTarget = goalPhoton.validTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
-        }
-        //setPID(P,I,D);
+        boolean lockOntoTarget = false;
+        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
+            case STANDARD: {
+                boolean solidSpeed = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN;
+                double adjustmentFactor = joystickController.getPositive(JoystickAxis.SLIDER);
+                if (RobotToggles.ENABLE_VISION) {
+                    lockOntoTarget = panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
+                }
+                trackingTarget = goalPhoton.validTarget() && lockOntoTarget;
+                if (interpolationEnabled) {
+                    speed = (solidSpeed) ? (4200 * (adjustmentFactor * 0.25 + 1)) : 0;
+                } else {
+                    speed = 4200;
+                }
 
-        if (solidSpeed) {
-            setSpeed(speed);
-            ShootingEnums.FIRE_INDEXER_INDEPENDENT.shoot(this);
-        } else if (trackingTarget && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
-            ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
-        } else {
-            hopper.setAll(false);
-            if (RobotToggles.SHOOTER_USE_SPARKS) {
-                leader.set(0);
-            } else {
-                falconLeader.set(ControlMode.PercentOutput, 0);
+                if (solidSpeed) {
+                    setSpeed(speed);
+                    ShootingEnums.FIRE_INDEXER_INDEPENDENT.shoot(this);
+                } else if (trackingTarget && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                } else {
+                    hopper.setAll(false);
+                    setSpeed(constSpeed.getDouble(0));
+                }
+                break;
             }
+            default:
+                //throw new IllegalStateException("");
         }
 
         if (RobotToggles.DEBUG) {
@@ -207,19 +214,22 @@ public class Shooter implements ISubsystem {
         }
     }
 
+    public void updateControls() {
+        if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
+            toggle(true);
+        }
+        if (joystickController.get(JoystickButtons.ELEVEN) == ButtonStatus.DOWN) {
+            toggle(joystickController.get(JoystickButtons.EIGHT) == ButtonStatus.DOWN);
+        }
+    }
+
     public void checkState() {
         if (actualRPM >= speed - 50) {
             atSpeed = true;
             spunUp = true;
         }
-        /*if (actualRPM < speed - 30){
-            atSpeed = false;
-        }*/
         atSpeed = !(actualRPM < speed - 30) && atSpeed;
 
-        /*if (spunUp && actualRPM < speed - 55) {
-            recoveryPID = true;
-        }*/
         recoveryPID = spunUp && actualRPM < speed - 55 || recoveryPID;
 
         if (actualRPM < speed - 1200) {
@@ -228,7 +238,6 @@ public class Shooter implements ISubsystem {
         }
         if (recoveryPID) {
             setPID(RobotNumbers.SHOOTER_RECOVERY_P, RobotNumbers.SHOOTER_RECOVERY_I, RobotNumbers.SHOOTER_RECOVERY_D, RobotNumbers.SHOOTER_F);
-            //setPID(P,I,D, F);
         } else {
             setPID(RobotNumbers.SHOOTER_P, RobotNumbers.SHOOTER_I, RobotNumbers.SHOOTER_D, RobotNumbers.SHOOTER_F);
         }
@@ -254,6 +263,15 @@ public class Shooter implements ISubsystem {
     }
 
     /**
+     * Enable or disable the shooter being spun up.
+     *
+     * @param toggle - spun up true or false
+     */
+    public void toggle(boolean toggle) {
+        enabled = toggle;
+    }
+
+    /**
      * Set the P, I, and D values for the shooter.
      *
      * @param P - P value
@@ -273,21 +291,22 @@ public class Shooter implements ISubsystem {
             falconLeader.config_kI(0, RobotNumbers.SHOOTER_I, RobotNumbers.SHOOTER_TIMEOUT_MS);
             falconLeader.config_kD(0, RobotNumbers.SHOOTER_D, RobotNumbers.SHOOTER_TIMEOUT_MS);
         }
+    }
+
+    @Override
+    public void updateTeleop() {
+        updateGeneric();
+    }
+
+    @Override
+    public void updateAuton() {
 
     }
 
-    public void spinUp() {
-        setSpeed(speed);
-    }
-
-    /**
-     * Get motor speed based
-     *
-     * @param distance ignored
-     * @return 0
-     */
-    private double getSpeedBasedOnDistance(double distance) {
-        return 0;
+    @Override
+    public void updateGeneric() {
+        update();
+        updateControls();
     }
 
     public boolean atSpeed() {
@@ -304,15 +323,6 @@ public class Shooter implements ISubsystem {
 
     public boolean recovering() {
         return recoveryPID;
-    }
-
-    /**
-     * Enable or disable the shooter being spun up.
-     *
-     * @param toggle - spun up true or false
-     */
-    public void toggle(boolean toggle) {
-        enabled = toggle;
     }
 
     /**
@@ -348,48 +358,14 @@ public class Shooter implements ISubsystem {
      */
     private double interpolateFF() {
         double voltage = RobotController.getBatteryVoltage();
-        if (voltage > voltageFFArray[voltageFFArray.length - 1][0])
-            return voltageFFArray[voltageFFArray.length - 1][1];
-        if (voltage < voltageFFArray[0][0])
-            return voltageFFArray[0][0];
+        if (voltage > voltageFFArray[voltageFFArray.length - 1][0]) return voltageFFArray[voltageFFArray.length - 1][1];
+        if (voltage < voltageFFArray[0][0]) return voltageFFArray[0][0];
         for (int i = voltageFFArray.length - 2; i >= 0; i--) {
             if (voltage > voltageFFArray[i][0]) {
                 return weightedAverage(voltage, voltageFFArray[i + 1], voltageFFArray[i]);
             }
         }
         throw new IllegalStateException("Battery voltage " + voltage + " could not be interpolated");
-    }
-
-    @Override
-    public void updateTest() {
-        updateGeneric();
-    }
-
-    @Override
-    public void updateTeleop() {
-        updateGeneric();
-    }
-
-    @Override
-    public void updateAuton() {
-
-    }
-
-    @Override
-    public void updateGeneric() {
-        update();
-        updateControls();
-        //fireIndexerDependent();
-        //indexing = joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN;
-    }
-
-    public void updateControls() {
-        if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
-            toggle(true);
-        }
-        if (joystickController.get(JoystickButtons.ELEVEN) == ButtonStatus.DOWN) {
-            toggle(joystickController.get(JoystickButtons.EIGHT) == ButtonStatus.DOWN);
-        }
     }
 
     public boolean validTarget() {
@@ -400,23 +376,18 @@ public class Shooter implements ISubsystem {
         }
     }
 
-    public void feedIn() {
-
-    }
-
-    public void stopFiring() {
-        toggle(false);
-        if (RobotToggles.ENABLE_HOPPER)
-            hopper.setAll(false);
-        shooting = false;
-    }
-
     public void setupShooterTimer() {
         shooterTimer = new Timer();
         timerFlag = false;
         shooterTimer.stop();
         shooterTimer.reset();
         stopFiring();
+    }
+
+    public void stopFiring() {
+        toggle(false);
+        if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
+        shooting = false;
     }
 
     public void ensureTimerStarted() {

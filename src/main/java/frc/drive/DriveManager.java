@@ -1,7 +1,6 @@
 package frc.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -36,43 +35,18 @@ public class DriveManager implements ISubsystem {
     private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry();
     private final NetworkTableEntry driveScaleMult = tab2.add("Speed Factor", RobotNumbers.DRIVE_SCALE).getEntry();
-    // private Logger logger = new Logger("drive");
-    // private Logger posLogger = new Logger("positions");
-    // private Permalogger odo = new Permalogger("distance");
-    // wheelbase 27"
 
-    private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
+    public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
     private final boolean invert = true;
-    // private BallChameleon chameleon = new BallChameleon();
     public double currentOmega;
     public boolean autoComplete = false;
-    // private boolean chaseBall;
-    //private boolean pointBall;
     public CANSparkMax leaderL, leaderR;
     public RobotTelemetry guidance;
     private BaseController controller;
     private SparkFollowerMotors followerL, followerR;
     private WPI_TalonFX leaderLTalon, leaderRTalon;
     private TalonFollowerMotors followerLTalon, followerRTalon;
-    //private double relLeft;
-    //private double relRight;
-    private CANPIDController leftPID;
-
-    //private double feetDriven = 0;
-    // private ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
-    // private NetworkTableEntry driveP = tab2.add("P",
-    // RobotNumbers.drivebaseP).getEntry();
-    // private NetworkTableEntry driveI = tab2.add("I",
-    // RobotNumbers.drivebaseI).getEntry();
-    // private NetworkTableEntry driveD = tab2.add("D",
-    // RobotNumbers.drivebaseD).getEntry();
-    // private NetworkTableEntry driveF = tab2.add("F",
-    // RobotNumbers.drivebaseF).getEntry();
-    // private NetworkTableEntry driveRotMult = tab2.add("Rotation Factor",
-    // RobotNumbers.turnScale).getEntry();
-    // Pigeon IMU
-    //public DifferentialDriveOdometry odometer;
-    private CANPIDController rightPID;
+    private CANPIDController leftPID, rightPID;
 
     private NetworkTableEntry P = tab2.add("P", 0).getEntry();
     private NetworkTableEntry I = tab2.add("I", 0).getEntry();
@@ -89,44 +63,6 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     * Configures motors
-     *
-     * @param motor - motor
-     * @param idx   - PID loop, by default 0
-     * @param kF    - Feed forward
-     * @param kP    - Proportional constant
-     * @param kI    - Integral constant
-     * @param kD    - Derivative constant
-     */
-    private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
-        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
-        motor.config_kF(idx, kF, timeout);
-        motor.config_kP(idx, kP, timeout);
-        motor.config_kI(idx, kI, timeout);
-        motor.config_kD(idx, kD, timeout);
-    }
-
-    /**
-     * @param input -1 to 1 drive amount
-     * @return product of input and max speed of the robot
-     */
-    private static double adjustedDrive(double input) {
-        return input * RobotNumbers.MAX_SPEED;
-    }
-
-    private static double adjustedRotation(double input) {
-        return input * RobotNumbers.MAX_ROTATION;
-    }
-
-    private static double convertFPStoRPM(double FPS) {
-        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
-    }
-
-    private static double getTargetVelocity(double FPS) {
-        return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
-    }
-
-    /**
      * Initialize the driver
      *
      * @throws IllegalArgumentException       When IDs for follower motors are too few or too many
@@ -135,11 +71,9 @@ public class DriveManager implements ISubsystem {
     @Override
     public void init() throws IllegalArgumentException, InitializationFailureException {
         createDriveMotors();
-        initIMU();
+        initGuidance();
         initPID();
         initMisc();
-        //odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(yawAbs()), new Pose2d(0, 0, new Rotation2d()));
-
     }
 
     /**
@@ -159,7 +93,7 @@ public class DriveManager implements ISubsystem {
                 followerL.follow(leaderL);
                 followerR.follow(leaderR);
             } catch (Exception e) {
-                throw new InitializationFailureException("An error has occured linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
+                throw new InitializationFailureException("An error has occurred linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
             }
             leaderL.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
             leaderR.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
@@ -183,17 +117,12 @@ public class DriveManager implements ISubsystem {
         }
     }
 
-    public void initAuton() {
-        leaderL.getEncoder().setPosition(0);
-        leaderR.getEncoder().setPosition(0);
-    }
-
     /**
-     * Initialize the IMU
+     * Initialize the IMU and telemetry
      *
      * @throws InitializationFailureException When the Pigeon IMU fails to init
      */
-    private void initIMU() throws InitializationFailureException {
+    private void initGuidance() throws InitializationFailureException {
         guidance = new RobotTelemetry(this);
         try {
             if (RobotToggles.ENABLE_IMU) {
@@ -216,15 +145,14 @@ public class DriveManager implements ISubsystem {
         } else {
             configureTalon(leaderLTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
             configureTalon(leaderRTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            //followerLTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            //followerRTalon.configureMotors(0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
         }
     }
 
     /**
      * Creates xbox controller n stuff
      */
-    private void initMisc() {
+    private void initMisc() throws IllegalStateException {
+        System.out.println("THE XBOX CONTROLLER IS ON " + RobotNumbers.XBOX_CONTROLLER_SLOT);
         switch (RobotToggles.EXPERIMENTAL_DRIVE) {
             case STANDARD:
             case EXPERIMENTAL:
@@ -232,6 +160,9 @@ public class DriveManager implements ISubsystem {
                 break;
             case MARIO_KART:
                 controller = new WiiController(0);
+                break;
+            default:
+                throw new IllegalStateException("There is no UI configuration for " + RobotToggles.EXPERIMENTAL_DRIVE.name() + " to control the drivetrain. Please implement me");
         }
     }
 
@@ -247,6 +178,12 @@ public class DriveManager implements ISubsystem {
         followerR.setSmartCurrentLimit(limit);
     }
 
+    /**
+     * @param P proportional gain
+     * @param I integral gain
+     * @param D derivative gain
+     * @param F feed-forward gain
+     */
     private void setPID(double P, double I, double D, double F) {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             leftPID.setP(P);
@@ -265,6 +202,24 @@ public class DriveManager implements ISubsystem {
         }
     }
 
+    /**
+     * Configures motors
+     *
+     * @param motor - motor
+     * @param idx   - PID loop, by default 0
+     * @param kF    - Feed forward
+     * @param kP    - Proportional constant
+     * @param kI    - Integral constant
+     * @param kD    - Derivative constant
+     */
+    private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
+        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
+        motor.config_kF(idx, kF, timeout);
+        motor.config_kP(idx, kP, timeout);
+        motor.config_kI(idx, kI, timeout);
+        motor.config_kD(idx, kD, timeout);
+    }
+
     @Override
     public void updateTest() {
         if (RobotToggles.DEBUG) {
@@ -272,14 +227,10 @@ public class DriveManager implements ISubsystem {
                 System.out.println(leaderLTalon.getSelectedSensorVelocity() + " | " + leaderRTalon.getSelectedSensorVelocity());
             }
         }
-        //leaderLTalon.set(ControlMode.Velocity, (((XBoxController)controller).get(XboxAxes.LEFT_JOY_Y) + ((XBoxController)controller).get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
-        //leaderRTalon.set(ControlMode.Velocity, (((XBoxController)controller).get(XboxAxes.LEFT_JOY_Y) - ((XBoxController)controller).get(XboxAxes.RIGHT_JOY_X) * 0.5) * 12000);
-        //leaderLTalon.set(ControlMode.PercentOutput, 0.1);
-        //leaderRTalon.set(ControlMode.PercentOutput, 0.1);
     }
 
     @Override
-    public void updateTeleop() {
+    public void updateTeleop() throws IllegalArgumentException {
         updateGeneric();
         switch (RobotToggles.EXPERIMENTAL_DRIVE) {
             case EXPERIMENTAL: {
@@ -293,19 +244,29 @@ public class DriveManager implements ISubsystem {
                 double invertedDrive = invert ? -1 : 1;
                 double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-                //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
+                System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
+                if (RobotToggles.DEBUG) {
+                    //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
+                }
                 drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
             }
             break;
             case MARIO_KART: {
                 double gogoTime = controller.get(ControllerEnums.WiiButton.ONE) == ButtonStatus.DOWN ? -1 : controller.get(ControllerEnums.WiiButton.TWO) == ButtonStatus.DOWN ? 1 : 0;
-                drive(0.75*gogoTime, -0.5*controller.get(ControllerEnums.WiiAxis.ROTATIONAL_TILT) * gogoTime);
+                drive(0.75 * gogoTime, -0.5 * controller.get(ControllerEnums.WiiAxis.ROTATIONAL_TILT) * gogoTime);
             }
             break;
             default:
                 throw new IllegalArgumentException("Invalid drive type");
         }
     }
+
+    /**
+     * drives the robot based on -1 / 1 inputs (ie 100% forward and 100% turning)
+     *
+     * @param forward  the percentage of max forward to do
+     * @param rotation the percentage of max turn speed to do
+     */
 
     public void drive(double forward, double rotation) {
         drivePure(adjustedDrive(forward), adjustedRotation(rotation));
@@ -333,25 +294,45 @@ public class DriveManager implements ISubsystem {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             leftPID.setReference(convertFPStoRPM(leftFPS) * mult, ControlType.kVelocity);
             rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
-            /*
-            if (RobotToggles.DEBUG) {
-                System.out.println(leaderL.getEncoder().getVelocity()+" "+leaderR.getEncoder().getVelocity());
-            }
-            */
         } else {
             leaderLTalon.set(ControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
             leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
         }
     }
 
-    @Override
-    public void updateAuton() {
+    /**
+     * @param input -1 to 1 drive amount
+     * @return product of input and max speed of the robot
+     */
+    private static double adjustedDrive(double input) {
+        return input * RobotNumbers.MAX_SPEED;
+    }
 
+    private static double adjustedRotation(double input) {
+        return input * RobotNumbers.MAX_ROTATION;
+    }
+
+    /**
+     * @param FPS speed in feet/second
+     */
+    private static double convertFPStoRPM(double FPS) {
+        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
+    }
+
+    /**
+     * @param FPS speed in feet/second
+     * @return speed in rotations/minute
+     */
+    private static double getTargetVelocity(double FPS) {
+        return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
     }
 
     @Override
+    public void updateAuton() { }
+
+    @Override
     public void updateGeneric() {
-        //guidance.updateGeneric();
+        guidance.updateGeneric();
         if (RobotToggles.CALIBRATE_DRIVE_PID) {
             System.out.println("P: " + P.getDouble(0) + " from " + lastP);
             if (lastP != P.getDouble(0) || lastI != I.getDouble(0) || lastD != D.getDouble(0) || lastF != F.getDouble(0)) {
@@ -362,6 +343,45 @@ public class DriveManager implements ISubsystem {
                 configureTalon(leaderLTalon, 0, lastF, lastP, lastI, lastD);
                 configureTalon(leaderRTalon, 0, lastF, lastP, lastI, lastD);
             }
+        }
+    }
+
+    public void resetEncoders() {
+        if (RobotToggles.DRIVE_USE_SPARKS) {
+            leaderL.getEncoder().setPosition(0);
+            leaderR.getEncoder().setPosition(0);
+        } else {
+            leaderLTalon.setSelectedSensorPosition(0);
+            leaderRTalon.setSelectedSensorPosition(0);
+        }
+    }
+
+    public void drivePure(ChassisSpeeds speeds) {
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+        double leftFPS = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
+        double rightFPS = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
+        double mult = 3.8 * 2.16 * RobotNumbers.DRIVE_SCALE;
+        if (RobotToggles.DEBUG) {
+            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + convertFPStoRPM(leftFPS) + " " + convertFPStoRPM(rightFPS));
+            System.out.println("Req left: " + (getTargetVelocity(leftFPS) * mult) + " Req Right: " + (getTargetVelocity(rightFPS) * mult));
+        }
+        if (RobotToggles.DRIVE_USE_SPARKS) {
+            leftPID.setReference(convertFPStoRPM(leftFPS) * mult, ControlType.kVelocity);
+            rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
+        } else {
+            leaderLTalon.set(ControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
+            leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
+        }
+    }
+
+    public void driveVoltage(double leftVolts, double rightVolts) {
+        double invertLeft = RobotToggles.DRIVE_INVERT_LEFT ? -1 : 1;
+        double invertRight = RobotToggles.DRIVE_INVERT_RIGHT ? -1 : 1;
+        if (RobotToggles.DRIVE_USE_SPARKS) {
+
+        } else {
+            leaderLTalon.setVoltage(leftVolts * invertLeft);
+            leaderRTalon.setVoltage(rightVolts * invertRight);
         }
     }
 
@@ -400,12 +420,18 @@ public class DriveManager implements ISubsystem {
             return this;
         }
 
+        /**
+         * @param leader main motor
+         */
         public void follow(@NotNull CANSparkMax leader) {
             for (CANSparkMax follower : this.motors) {
                 follower.follow(leader);
             }
         }
 
+        /**
+         * @param brake brake is activated (true/false)
+         */
         public void brake(boolean brake) {
             for (CANSparkMax follower : this.motors) {
                 if (!brake) {
@@ -416,6 +442,11 @@ public class DriveManager implements ISubsystem {
             }
         }
 
+        /**
+         * limit the current draw for each follower
+         *
+         * @param limit current limit in amps
+         */
         public void setSmartCurrentLimit(int limit) {
             for (CANSparkMax follower : this.motors) {
                 follower.setSmartCurrentLimit(limit);
@@ -446,18 +477,26 @@ public class DriveManager implements ISubsystem {
             return this;
         }
 
+        /**
+         * tell the followers which leader to follow
+         *
+         * @param leader main motor
+         */
         public void follow(@NotNull WPI_TalonFX leader) {
             for (WPI_TalonFX follower : this.motors) {
                 follower.follow(leader);
             }
         }
 
-        public void setInverted(InvertType followMaster) {
-            for (WPI_TalonFX follower : this.motors) {
-                follower.setInverted(followMaster);
-            }
-        }
-
+        /**
+         * configures the PID of all the follower motors
+         *
+         * @param idx PID loop, by default 0
+         * @param kF  Feed forward
+         * @param kP  Proportional constant
+         * @param kI  Integral constant
+         * @param kD  Derivative constant
+         */
         public void configureMotors(int idx, double kF, double kP, double kI, double kD) {
             for (WPI_TalonFX follower : this.motors) {
                 configureTalon(follower, idx, kF, kP, kI, kD);

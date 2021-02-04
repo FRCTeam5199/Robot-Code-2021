@@ -1,8 +1,8 @@
 {
-  "lengthUnit": "Foot",
+  "lengthUnit": "Meter",
   "exportUnit": "Always Meters",
-  "maxVelocity": 8.0,
-  "maxAcceleration": 6.56,
+  "maxVelocity": 4.0,
+  "maxAcceleration": 3.56,
   "wheelBase": 1.866666666,
-  "gameName": "Barrel Racing Path"
+  "gameName": "Carpet Field 1-31-2021"
 }

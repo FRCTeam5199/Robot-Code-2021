@@ -18,13 +18,22 @@ public class Intake implements ISubsystem {
     private int intakeMult;
     private BaseController joystick;
 
-    public Intake() throws InitializationFailureException {
+    public Intake() throws InitializationFailureException, IllegalStateException {
         init();
     }
     
+    /**
+     *@throws InitializationFailureException intake motor failed to be created
+     */
     @Override
-    public void init() throws InitializationFailureException {
-        joystick = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
+    public void init() throws InitializationFailureException, IllegalStateException {
+        switch (RobotToggles.INTAKE_CONTROL_STYLE) {
+            case STANDARD:
+                joystick = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
+                break;
+            default:
+                throw new IllegalStateException("There is no UI configuration for " + RobotToggles.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
+        }
         try {
             victor = new VictorSPX(RobotMap.INTAKE_MOTOR);
         } catch (Exception e) {
@@ -43,12 +52,18 @@ public class Intake implements ISubsystem {
 
     public void updateGeneric() {
         victor.set(ControlMode.PercentOutput, 0.8 * intakeMult);
-        if (joystick.hatIs(JoystickHatDirection.DOWN) ){//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
-            setIntake(1);
-        } else if (joystick.hatIs(JoystickHatDirection.UP)) {
-            setIntake(-1);
-        } else {
-            setIntake(0);
+        switch (RobotToggles.INTAKE_CONTROL_STYLE) {
+            case STANDARD:
+                if (joystick.hatIs(JoystickHatDirection.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
+                    setIntake(1);
+                } else if (joystick.hatIs(JoystickHatDirection.UP)) {
+                    setIntake(-1);
+                } else {
+                    setIntake(0);
+                }
+                break;
+            default:
+                throw new IllegalStateException("There is no UI configuration for " + RobotToggles.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         if (RobotToggles.DEBUG) {
             SmartDashboard.putNumber("Intake Speed", intakeMult);
@@ -66,7 +81,6 @@ public class Intake implements ISubsystem {
     }
 
     @Override
-    public void updateAuton() {
-    }
+    public void updateAuton() { }
 
 }

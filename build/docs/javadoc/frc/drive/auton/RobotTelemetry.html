@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -95,9 +95,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="inheritance">frc.drive.auton.RobotTelemetry</div>
 </div>
 <section class="description">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 <hr>
 <pre>public class <span class="typeNameLabel">RobotTelemetry</span>
-extends java.lang.Object</pre>
+extends java.lang.Object
+implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></pre>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -124,26 +129,31 @@ extends java.lang.Object</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#odometer">odometer</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>edu.wpi.first.wpilibj.geometry.Pose2d</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#robotPose">robotPose</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>edu.wpi.first.wpilibj.geometry.Rotation2d</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#robotRotation">robotRotation</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>edu.wpi.first.wpilibj.geometry.Translation2d</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#robotTranslation">robotTranslation</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>double[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startypr">startypr</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>double[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ypr">ypr</a></span></code></th>
 <td class="colLast">&nbsp;</td>
@@ -198,130 +208,126 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fieldX()">fieldX</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fieldHeading()">fieldHeading</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fieldY()">fieldY</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fieldX()">fieldX</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFeetLeft()">getFeetLeft</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fieldY()">fieldY</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFeetRight()">getFeetRight</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMetersLeft()">getMetersLeft</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFPSLeft()">getFPSLeft</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMetersRight()">getMetersRight</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFPSRight()">getFPSRight</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRotationsLeft()">getRotationsLeft</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i6">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInchesLeft()">getInchesLeft</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRotationsRight()">getRotationsRight</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i7">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInchesRight()">getInchesRight</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRPMLeft()">getRPMLeft</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i8">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getIPSLeft()">getIPSLeft</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i9">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getIPSRight()">getIPSRight</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i10">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLeftVelocity()">getLeftVelocity</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i11">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMetersLeft()">getMetersLeft</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i12">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMetersRight()">getMetersRight</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i13">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRightVelocity()">getRightVelocity</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i14">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRotationsLeft()">getRotationsLeft</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i15">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRotationsRight()">getRotationsRight</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i16">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRPMLeft()">getRPMLeft</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i17">
-<td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRPMRight()">getRPMRight</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i18">
+<tr class="rowColor" id="i9">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
+</td>
+</tr>
+<tr class="altColor" id="i10">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#headingErrorWraparound(double,double)">headingErrorWraparound</a></span>&#8203;(double&nbsp;x,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#realHeadingError(double,double)">realHeadingError</a></span>&#8203;(double&nbsp;x,
 double&nbsp;y)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i19">
+<tr class="rowColor" id="i11">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetEncoders()">resetEncoders</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i12">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetOdometry(edu.wpi.first.wpilibj.geometry.Pose2d,edu.wpi.first.wpilibj.geometry.Rotation2d)">resetOdometry</a></span>&#8203;(edu.wpi.first.wpilibj.geometry.Pose2d&nbsp;pose,
+edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i13">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetPigeon()">resetPigeon</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Resets the Pigeon IMU</div>
 </td>
 </tr>
-<tr class="altColor" id="i20">
+<tr class="altColor" id="i14">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
+</td>
+</tr>
+<tr class="rowColor" id="i15">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+</td>
 </tr>
-<tr class="rowColor" id="i21">
+<tr class="altColor" id="i16">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updatePigeon()">updatePigeon</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Updates the Pigeon IMU</div>
 </td>
 </tr>
-<tr class="altColor" id="i22">
+<tr class="rowColor" id="i17">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Put all of the code for tele operation to run every tick in here</div>
+</td>
+</tr>
+<tr class="altColor" id="i18">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
+<td class="colLast">
+<div class="block">When testing, put the code to execute every tick in here</div>
+</td>
+</tr>
+<tr class="rowColor" id="i19">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawAbs()">yawAbs</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i23">
+<tr class="altColor" id="i20">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawRel()">yawRel</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i24">
+<tr class="rowColor" id="i21">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawWraparoundAhead()">yawWraparoundAhead</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -374,6 +380,12 @@ double&nbsp;y)</code></th>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="odometer">odometer</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry</span>&nbsp;<span class="memberName">odometer</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="ypr">ypr</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double[]</span>&nbsp;<span class="memberName">ypr</span></div>
 </section>
@@ -412,9 +424,15 @@ double&nbsp;y)</code></th>
 <ul class="blockList">
 <li class="blockList">
 <section class="detail">
-<h3><a id="headingErrorWraparound(double,double)">headingErrorWraparound</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">headingErrorWraparound</span>&#8203;(<span class="arguments">double&nbsp;x,
+<h3><a id="realHeadingError(double,double)">realHeadingError</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">realHeadingError</span>&#8203;(<span class="arguments">double&nbsp;x,
 double&nbsp;y)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="fieldHeading()">fieldHeading</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">fieldHeading</span>()</div>
 </section>
 </li>
 <li class="blockList">
@@ -449,6 +467,10 @@ double&nbsp;y)</span></div>
 <section class="detail">
 <h3><a id="yawRel()">yawRel</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">yawRel</span>()</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>relative to start yaw of pigeon</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -467,20 +489,25 @@ double&nbsp;y)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="resetEncoders()">resetEncoders</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetEncoders</span>()</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="resetOdometry(edu.wpi.first.wpilibj.geometry.Pose2d,edu.wpi.first.wpilibj.geometry.Rotation2d)">resetOdometry</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetOdometry</span>&#8203;(<span class="arguments">edu.wpi.first.wpilibj.geometry.Pose2d&nbsp;pose,
+edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="yawAbs()">yawAbs</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">yawAbs</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getFPSLeft()">getFPSLeft</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getFPSLeft</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getIPSLeft()">getIPSLeft</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getIPSLeft</span>()</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>absolute yaw of pigeon</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -491,38 +518,14 @@ double&nbsp;y)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getFPSRight()">getFPSRight</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getFPSRight</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getIPSRight()">getIPSRight</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getIPSRight</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
 <h3><a id="getRPMRight()">getRPMRight</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getRPMRight</span>()</div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getInchesLeft()">getInchesLeft</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getInchesLeft</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
 <h3><a id="getRotationsLeft()">getRotationsLeft</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getRotationsLeft</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getInchesRight()">getInchesRight</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getInchesRight</span>()</div>
 </section>
 </li>
 <li class="blockList">
@@ -535,42 +538,80 @@ double&nbsp;y)</span></div>
 <section class="detail">
 <h3><a id="getMetersLeft()">getMetersLeft</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getMetersLeft</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getFeetLeft()">getFeetLeft</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getFeetLeft</span>()</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>wheel meters traveled</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="getMetersRight()">getMetersRight</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getMetersRight</span>()</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>wheel meters traveled</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getFeetRight()">getFeetRight</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getFeetRight</span>()</div>
+<h3><a id="init()">init</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#init()">ISubsystem</a></code></span></div>
+<div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../misc/ISubsystem.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getLeftVelocity()">getLeftVelocity</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getLeftVelocity</span>()</div>
+<h3><a id="updateTest()">updateTest</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTest</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#updateTest()">ISubsystem</a></code></span></div>
+<div class="block">When testing, put the code to execute every tick in here</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getRightVelocity()">getRightVelocity</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getRightVelocity</span>()</div>
+<h3><a id="updateTeleop()">updateTeleop</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTeleop</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#updateTeleop()">ISubsystem</a></code></span></div>
+<div class="block">Put all of the code for tele operation to run every tick in here</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../misc/ISubsystem.html#updateTeleop()">updateTeleop</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="updateAuton()">updateAuton</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateAuton</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#updateAuton()">ISubsystem</a></code></span></div>
+<div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../misc/ISubsystem.html#updateAuton()">updateAuton</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="updateGeneric()">updateGeneric</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateGeneric</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#updateGeneric()">ISubsystem</a></code></span></div>
+<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+</dl>
 </section>
 </li>
 </ul>

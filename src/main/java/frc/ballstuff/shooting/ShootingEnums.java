@@ -6,7 +6,9 @@ import frc.robot.RobotToggles;
 import java.util.function.Consumer;
 
 import static frc.robot.Robot.hopper;
-
+/**
+ * Contains Multiple different firing modes for the shooter
+ */
 public enum ShootingEnums {
 
     FIRE_HIGH_ACCURACY(shooter -> {
