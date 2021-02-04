@@ -134,29 +134,13 @@ public class Turret implements ISubsystem {
             if (RobotToggles.ENABLE_IMU && guidance != null) {
                 //no warranties
                 SmartDashboard.putNumber("YawWrap", guidance.yawWraparoundAhead() - 360);
-                SmartDashboard.putNumber("Turret Heading from North", fieldHeading());
+                SmartDashboard.putNumber("Turret Heading from North", guidance.fieldHeading());
                 SmartDashboard.putNumber("Turret North", limitAngle(235 + guidance.yawWraparoundAhead() - 360));
             }
             SmartDashboard.putBoolean("Turret At Target", atTarget);
             SmartDashboard.putBoolean("Turret Track", track);
             SmartDashboard.putBoolean("Turret at Target", atTarget);
         }
-    }
-
-    private double turretDegrees() {
-        return 270 - encoder.getPosition();//return encoder.getPosition();
-    }
-
-    /**
-     * Scan the turret back and forth to find a target.
-     */
-    private double scan() {
-        if (turretDegrees() >= 260) {
-            scanDirection = 1;
-        } else if (turretDegrees() <= 100) {
-            scanDirection = -1;
-        }
-        return scanDirection;
     }
 
     private boolean isSafe() {
@@ -250,6 +234,7 @@ public class Turret implements ISubsystem {
             scanDirection = 1;
         } else if (turretDegrees() <= 100) {
             scanDirection = -1;
+        }
         return scanDirection;
     }
 

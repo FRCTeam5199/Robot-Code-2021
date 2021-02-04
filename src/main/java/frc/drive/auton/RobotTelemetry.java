@@ -45,7 +45,7 @@ public class RobotTelemetry implements ISubsystem {
         return Math.toDegrees(Math.atan2(wayY - fieldY(), wayX - fieldX()));
     }
 
-    private double fieldHeading() {
+    public double fieldHeading() {
         return yawWraparoundAhead();
     }
 
