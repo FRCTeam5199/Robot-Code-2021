@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -103,6 +103,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>public class <span class="typeNameLabel">Turret</span>
 extends java.lang.Object
 implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></pre>
+<div class="block">Turret refers to the shooty thing that spinny spinny in the yaw direction</div>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -189,62 +190,60 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#disabledInit()">disabledInit</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">When we enter disabled, unlock the turret to be moved freely</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
+<div class="block">Creates a plethora of new objects</div>
 </td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetTurretRotation()">resetTurretRotation</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setBrake(boolean)">setBrake</a></span>&#8203;(boolean&nbsp;brake)</code></th>
+<td class="colLast">
+<div class="block">Tells the motor if it should coast or slam da brakes</div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setBrake(boolean)">setBrake</a></span>&#8203;(boolean&nbsp;brake)</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setTelemetry(frc.drive.auton.RobotTelemetry)">setTelemetry</a></span>&#8203;(<a href="../../drive/auton/RobotTelemetry.html" title="class in frc.drive.auton">RobotTelemetry</a>&nbsp;telem)</code></th>
+<td class="colLast">
+<div class="block">If there is a telem object, set it here</div>
+</td>
 </tr>
 <tr class="altColor" id="i4">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setTargetAngle(double)">setTargetAngle</a></span>&#8203;(double&nbsp;target)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i5">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setTelemetry(frc.drive.auton.RobotTelemetry)">setTelemetry</a></span>&#8203;(<a href="../../drive/auton/RobotTelemetry.html" title="class in frc.drive.auton">RobotTelemetry</a>&nbsp;telem)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i6">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#teleopInit()">teleopInit</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">every time we enter teleop, reset encoder</div>
+</td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
 </td>
 </tr>
-<tr class="altColor" id="i8">
+<tr class="altColor" id="i6">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<div class="block">prevents the turret from rotating too far, does debug</div>
 </td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put all of the code for tele operation to run every tick in here</div>
 </td>
 </tr>
-<tr class="altColor" id="i10">
+<tr class="altColor" id="i8">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
@@ -321,8 +320,7 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <section class="detail">
 <h3><a id="init()">init</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#init()">ISubsystem</a></code></span></div>
-<div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
+<div class="block">Creates a plethora of new objects</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -338,6 +336,8 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#updateGeneric()"><code>updateGeneric()</code></a></dd>
 </dl>
 </section>
 </li>
@@ -350,6 +350,8 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#updateTeleop()">updateTeleop</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#updateGeneric()"><code>updateGeneric()</code></a></dd>
 </dl>
 </section>
 </li>
@@ -369,8 +371,7 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <section class="detail">
 <h3><a id="updateGeneric()">updateGeneric</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateGeneric</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#updateGeneric()">ISubsystem</a></code></span></div>
-<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<div class="block">prevents the turret from rotating too far, does debug</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -381,36 +382,36 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <section class="detail">
 <h3><a id="setBrake(boolean)">setBrake</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setBrake</span>&#8203;(<span class="arguments">boolean&nbsp;brake)</span></div>
+<div class="block">Tells the motor if it should coast or slam da brakes</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>brake</code> - should i brake when off? (Y/N)</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="setTelemetry(frc.drive.auton.RobotTelemetry)">setTelemetry</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setTelemetry</span>&#8203;(<span class="arguments"><a href="../../drive/auton/RobotTelemetry.html" title="class in frc.drive.auton">RobotTelemetry</a>&nbsp;telem)</span></div>
+<div class="block">If there is a telem object, set it here</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>telem</code> - the RobotTelemtry object in use by the drivetrian</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="teleopInit()">teleopInit</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">teleopInit</span>()</div>
+<div class="block">every time we enter teleop, reset encoder</div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="disabledInit()">disabledInit</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">disabledInit</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="setTargetAngle(double)">setTargetAngle</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">setTargetAngle</span>&#8203;(<span class="arguments">double&nbsp;target)</span></div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="resetTurretRotation()">resetTurretRotation</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetTurretRotation</span>()</div>
+<div class="block">When we enter disabled, unlock the turret to be moved freely</div>
 </section>
 </li>
 </ul>

@@ -224,12 +224,16 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMetersLeft()">getMetersLeft</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Gets the meters traveled by the left encoder</div>
+</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMetersRight()">getMetersRight</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Gets the meters traveled by the right encoder</div>
+</td>
 </tr>
 <tr class="rowColor" id="i5">
 <td class="colFirst"><code>double</code></td>
@@ -255,25 +259,31 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
+<div class="block">creates pigeon, heading pid, and odometer</div>
 </td>
 </tr>
 <tr class="altColor" id="i10">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#realHeadingError(double,double)">realHeadingError</a></span>&#8203;(double&nbsp;x,
 double&nbsp;y)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Wraps the angle between prograde (straight forward) and the location of the given point on a range of -180 to 180</div>
+</td>
 </tr>
 <tr class="rowColor" id="i11">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetEncoders()">resetEncoders</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Zeroes the encoders at their current position</div>
+</td>
 </tr>
 <tr class="altColor" id="i12">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetOdometry(edu.wpi.first.wpilibj.geometry.Pose2d,edu.wpi.first.wpilibj.geometry.Rotation2d)">resetOdometry</a></span>&#8203;(edu.wpi.first.wpilibj.geometry.Pose2d&nbsp;pose,
 edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Resets all orienting to zeroes.</div>
+</td>
 </tr>
 <tr class="rowColor" id="i13">
 <td class="colFirst"><code>void</code></td>
@@ -286,21 +296,21 @@ edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</code></th>
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
+<div class="block">does <a href="#updateGeneric()"><code>updateGeneric()</code></a></div>
 </td>
 </tr>
 <tr class="rowColor" id="i15">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<div class="block">updates the robot orientation based on the IMU and distance traveled</div>
 </td>
 </tr>
 <tr class="altColor" id="i16">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updatePigeon()">updatePigeon</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Updates the Pigeon IMU</div>
+<div class="block">Updates the Pigeon IMU data</div>
 </td>
 </tr>
 <tr class="rowColor" id="i17">
@@ -320,17 +330,23 @@ edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</code></th>
 <tr class="rowColor" id="i19">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawAbs()">yawAbs</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">gets the absolute yaw of the pigeon since last zeroing event (startup and <a href="#resetPigeon()"><code>reset</code></a>)</div>
+</td>
 </tr>
 <tr class="altColor" id="i20">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawRel()">yawRel</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Yaw since last restart</div>
+</td>
 </tr>
 <tr class="rowColor" id="i21">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawWraparoundAhead()">yawWraparoundAhead</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Gets the yaw of the bot and wraps it on the bound -180 to 180</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -427,6 +443,16 @@ edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</code></th>
 <h3><a id="realHeadingError(double,double)">realHeadingError</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">realHeadingError</span>&#8203;(<span class="arguments">double&nbsp;x,
 double&nbsp;y)</span></div>
+<div class="block">Wraps the angle between prograde (straight forward) and the location of the given point on a range of -180 to 180</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>x</code> - x coord of other point</dd>
+<dd><code>y</code> - y coord of other point</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>apparent angle between heading and passed coords</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><code>headingError(double, double)</code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -461,15 +487,21 @@ double&nbsp;y)</span></div>
 <section class="detail">
 <h3><a id="yawWraparoundAhead()">yawWraparoundAhead</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">yawWraparoundAhead</span>()</div>
+<div class="block">Gets the yaw of the bot and wraps it on the bound -180 to 180</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>wrapped yaw val</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="yawRel()">yawRel</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">yawRel</span>()</div>
+<div class="block">Yaw since last restart</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>relative to start yaw of pigeon</dd>
+<dd>yaw since last restart</dd>
 </dl>
 </section>
 </li>
@@ -477,7 +509,7 @@ double&nbsp;y)</span></div>
 <section class="detail">
 <h3><a id="updatePigeon()">updatePigeon</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updatePigeon</span>()</div>
-<div class="block">Updates the Pigeon IMU</div>
+<div class="block">Updates the Pigeon IMU data</div>
 </section>
 </li>
 <li class="blockList">
@@ -491,6 +523,7 @@ double&nbsp;y)</span></div>
 <section class="detail">
 <h3><a id="resetEncoders()">resetEncoders</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetEncoders</span>()</div>
+<div class="block">Zeroes the encoders at their current position</div>
 </section>
 </li>
 <li class="blockList">
@@ -498,12 +531,19 @@ double&nbsp;y)</span></div>
 <h3><a id="resetOdometry(edu.wpi.first.wpilibj.geometry.Pose2d,edu.wpi.first.wpilibj.geometry.Rotation2d)">resetOdometry</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetOdometry</span>&#8203;(<span class="arguments">edu.wpi.first.wpilibj.geometry.Pose2d&nbsp;pose,
 edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</span></div>
+<div class="block">Resets all orienting to zeroes.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>pose</code> - ignored</dd>
+<dd><code>rotation</code> - ignored</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="yawAbs()">yawAbs</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">yawAbs</span>()</div>
+<div class="block">gets the absolute yaw of the pigeon since last zeroing event (startup and <a href="#resetPigeon()"><code>reset</code></a>)</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>absolute yaw of pigeon</dd>
@@ -538,6 +578,7 @@ edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</span></div>
 <section class="detail">
 <h3><a id="getMetersLeft()">getMetersLeft</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getMetersLeft</span>()</div>
+<div class="block">Gets the meters traveled by the left encoder</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>wheel meters traveled</dd>
@@ -548,6 +589,7 @@ edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</span></div>
 <section class="detail">
 <h3><a id="getMetersRight()">getMetersRight</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getMetersRight</span>()</div>
+<div class="block">Gets the meters traveled by the right encoder</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>wheel meters traveled</dd>
@@ -558,8 +600,7 @@ edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</span></div>
 <section class="detail">
 <h3><a id="init()">init</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#init()">ISubsystem</a></code></span></div>
-<div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
+<div class="block">creates pigeon, heading pid, and odometer</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -575,6 +616,8 @@ edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</span></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#updateGeneric()"><code>updateGeneric()</code></a></dd>
 </dl>
 </section>
 </li>
@@ -587,6 +630,8 @@ edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</span></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#updateTeleop()">updateTeleop</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#updateGeneric()"><code>updateGeneric()</code></a></dd>
 </dl>
 </section>
 </li>
@@ -594,8 +639,7 @@ edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</span></div>
 <section class="detail">
 <h3><a id="updateAuton()">updateAuton</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateAuton</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#updateAuton()">ISubsystem</a></code></span></div>
-<div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
+<div class="block">does <a href="#updateGeneric()"><code>updateGeneric()</code></a></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#updateAuton()">updateAuton</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -606,8 +650,7 @@ edu.wpi.first.wpilibj.geometry.Rotation2d&nbsp;rotation)</span></div>
 <section class="detail">
 <h3><a id="updateGeneric()">updateGeneric</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateGeneric</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#updateGeneric()">ISubsystem</a></code></span></div>
-<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<div class="block">updates the robot orientation based on the IMU and distance traveled</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>

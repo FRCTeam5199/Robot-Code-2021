@@ -32,15 +32,36 @@ public class RobotTelemetry implements ISubsystem {
         init();
     }
 
-    //pls yes
+    /**
+     * Wraps the angle between prograde (straight forward) and the location of the given point on a range of -180 to 180
+     *
+     * @see #headingError(double, double)
+     * @param x x coord of other point
+     * @param y y coord of other point
+     * @return apparent angle between heading and passed coords
+     */
     public double realHeadingError(double x, double y) {
         return UtilFunctions.mathematicalMod(headingError(x, y) + 180, 360) - 180;
     }
 
+    /**
+     * Gives the angle between the way the bot is facing and another point (bounds unknown, see {@link #realHeadingError(double, double)})
+     *
+     * @param wayX x coord of query point
+     * @param wayY y coord of query point
+     * @return angle between heading and given point
+     */
     private double headingError(double wayX, double wayY) {
         return angleFromHere(wayX, wayY) - fieldHeading();
     }
 
+    /**
+     * Calculates the angle in coordinate space between here and a given coordinates
+     *
+     * @param wayX x coord of query point
+     * @param wayY y coord of query point
+     * @return the angle between the heading and the point passed in
+     */
     private double angleFromHere(double wayX, double wayY) {
         return Math.toDegrees(Math.atan2(wayY - fieldY(), wayX - fieldX()));
     }
@@ -65,13 +86,20 @@ public class RobotTelemetry implements ISubsystem {
         return robotTranslation.getY();
     }
 
+    /**
+     * Gets the yaw of the bot and wraps it on the bound -180 to 180
+     *
+     * @return wrapped yaw val
+     */
     public double yawWraparoundAhead() {
         return UtilFunctions.mathematicalMod(yawRel() + 180, 360) - 180;
     }
 
 
     /**
-     * @return relative to start yaw of pigeon
+     * Yaw since last restart
+     * 
+     * @return yaw since last restart
      */
     public double yawRel() { //return relative(to start) yaw of pigeon
         updatePigeon();
@@ -79,7 +107,7 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     /**
-     * Updates the Pigeon IMU
+     * Updates the Pigeon IMU data
      */
     public void updatePigeon() {
         pigeon.getYawPitchRoll(ypr);
@@ -93,11 +121,26 @@ public class RobotTelemetry implements ISubsystem {
         startypr = ypr;
         startYaw = yawAbs();
     }
-    
+
+    /**
+    * Zeroes the encoders at their current position
+    */
     public void resetEncoders() {
-        driver.resetEncoders();
+        if (RobotToggles.DRIVE_USE_SPARKS) {
+            driver.leaderL.getEncoder().setPosition(0);
+            driver.leaderR.getEncoder().setPosition(0);
+        } else {
+            driver.leaderLTalon.setSelectedSensorPosition(0);
+            driver.leaderRTalon.setSelectedSensorPosition(0);
+        }
     }
 
+    /**
+     * Resets all orienting to zeroes.
+     *
+     * @param pose ignored
+     * @param rotation ignored
+     */
     public void resetOdometry(Pose2d pose, Rotation2d rotation){
         //odometer.resetPosition(pose, rotation);
         resetPigeon();
@@ -105,15 +148,15 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     /**
+     * gets the absolute yaw of the pigeon since last zeroing event (startup and {@link RobotTelemetry#resetPigeon() reset})
+     *
      * @return absolute yaw of pigeon
      */
     public double yawAbs() {  //get absolute yaw of pigeon
         updatePigeon();
         return ypr[0];
     }
-    //position conversion -------------------------------------------------------------------------------------------------------
 
-    //getRPM - get wheel RPM from encoder
     //TODO implement for falcos
     public double getRPMLeft() {
         return (driver.leaderL.getEncoder().getVelocity()) / 9;
@@ -123,7 +166,6 @@ public class RobotTelemetry implements ISubsystem {
         return (driver.leaderR.getEncoder().getVelocity()) / 9;
     }
 
-    //getRotations - get wheel rotations on encoder
     //TODO implement for falcos
     public double getRotationsLeft() {
         return (driver.leaderL.getEncoder().getPosition()) / 9;
@@ -133,8 +175,9 @@ public class RobotTelemetry implements ISubsystem {
         return (driver.leaderR.getEncoder().getPosition()) / 9;
     }
 
-    //getMeters - get wheel meters traveled
     /**
+     * Gets the meters traveled by the left encoder
+     *
      * @return wheel meters traveled
      */
     public double getMetersLeft() {
@@ -142,12 +185,17 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     /**
+     * Gets the meters traveled by the right encoder
+     *
      * @return wheel meters traveled
      */
     public double getMetersRight() {
         return Units.feetToMeters(getRotationsRight() * UtilFunctions.wheelCircumference() / 12);
     }
 
+    /**
+     * creates pigeon, heading pid, and odometer
+     */
     @Override
     public void init() {
         pigeon = new PigeonIMU(RobotMap.PIGEON);
@@ -155,21 +203,33 @@ public class RobotTelemetry implements ISubsystem {
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(yawAbs()), new Pose2d(0, 0, new Rotation2d()));
     }
 
+    /**
+     * @see #updateGeneric()
+     */
     @Override
     public void updateTest() {
         //updateGeneric();
     }
 
+    /**
+     * @see #updateGeneric()
+     */
     @Override
     public void updateTeleop() {
         //updateGeneric();
     }
 
+    /**
+     * does {@link #updateGeneric()}
+     */
     @Override
     public void updateAuton() {
         updateGeneric();
     }
 
+    /**
+     * updates the robot orientation based on the IMU and distance traveled
+     */
     @Override
     public void updateGeneric() {
         if (RobotToggles.ENABLE_IMU) {

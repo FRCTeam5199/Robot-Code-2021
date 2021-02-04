@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -103,6 +103,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>public class <span class="typeNameLabel">Shooter</span>
 extends java.lang.Object
 implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></pre>
+<div class="block">Shooter pertains to spinning the flywheel that actually makes the balls go really fast</div>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -219,7 +220,9 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#atSpeed()">atSpeed</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">if the shooter is actually at the requested speed</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>void</code></td>
@@ -229,18 +232,22 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureTimerStarted()">ensureTimerStarted</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Does as the name suggests</div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>edu.wpi.first.wpilibj.Timer</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getShootTimer()">getShootTimer</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">getter for the shoot timer</div>
+</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Initialize the Shooter object.</div>
+<div class="block">Initialize the Shooter object including the controller and the cameras and timers</div>
 </td>
 </tr>
 <tr class="rowColor" id="i5">
@@ -253,12 +260,16 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <tr class="altColor" id="i6">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#recovering()">recovering</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">getter for recovering</div>
+</td>
 </tr>
 <tr class="rowColor" id="i7">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetShootTimer()">resetShootTimer</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Does as the name suggests</div>
+</td>
 </tr>
 <tr class="altColor" id="i8">
 <td class="colFirst"><code>void</code></td>
@@ -268,71 +279,58 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </td>
 </tr>
 <tr class="rowColor" id="i9">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setupShooterTimer()">setupShooterTimer</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i10">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#spunUp()">spunUp</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">getter for spunUp</div>
+</td>
 </tr>
-<tr class="rowColor" id="i11">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stopFiring()">stopFiring</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i12">
+<tr class="altColor" id="i10">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toggle(boolean)">toggle</a></span>&#8203;(boolean&nbsp;toggle)</code></th>
 <td class="colLast">
 <div class="block">Enable or disable the shooter being spun up.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i13">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update()">update</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Update the Shooter object.</div>
-</td>
-</tr>
-<tr class="altColor" id="i14">
+<tr class="rowColor" id="i11">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
 </td>
 </tr>
-<tr class="rowColor" id="i15">
+<tr class="altColor" id="i12">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateControls()">updateControls</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i16">
+<tr class="rowColor" id="i13">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<div class="block">Input is parsed and shooter object maintained appropriately</div>
 </td>
 </tr>
-<tr class="rowColor" id="i17">
+<tr class="altColor" id="i14">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put all of the code for tele operation to run every tick in here</div>
 </td>
 </tr>
-<tr class="altColor" id="i18">
+<tr class="rowColor" id="i15">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
 <div class="block">When testing, put the code to execute every tick in here</div>
 </td>
 </tr>
-<tr class="rowColor" id="i19">
+<tr class="altColor" id="i16">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#validTarget()">validTarget</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">if the goal photon is in use and has a valid target in its sights</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -441,7 +439,7 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <h3><a id="init()">init</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()
           throws <span class="exceptions">java.lang.IllegalStateException</span></div>
-<div class="block">Initialize the Shooter object.</div>
+<div class="block">Initialize the Shooter object including the controller and the cameras and timers</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -459,14 +457,9 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#updateGeneric()"><code>updateGeneric()</code></a></dd>
 </dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="update()">update</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">update</span>()</div>
-<div class="block">Update the Shooter object.</div>
 </section>
 </li>
 <li class="blockList">
@@ -531,8 +524,7 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <section class="detail">
 <h3><a id="updateGeneric()">updateGeneric</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateGeneric</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#updateGeneric()">ISubsystem</a></code></span></div>
-<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<div class="block">Input is parsed and shooter object maintained appropriately</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -543,18 +535,33 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <section class="detail">
 <h3><a id="atSpeed()">atSpeed</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">atSpeed</span>()</div>
+<div class="block">if the shooter is actually at the requested speed</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>if the shooter is actually at the requested speed</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="spunUp()">spunUp</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">spunUp</span>()</div>
+<div class="block">getter for spunUp</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>spunUp</code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="recovering()">recovering</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">recovering</span>()</div>
+<div class="block">getter for recovering</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>recoveryPID</code></dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -572,36 +579,36 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <section class="detail">
 <h3><a id="validTarget()">validTarget</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">validTarget</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="setupShooterTimer()">setupShooterTimer</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setupShooterTimer</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="stopFiring()">stopFiring</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">stopFiring</span>()</div>
+<div class="block">if the goal photon is in use and has a valid target in its sights</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>if the goal photon is in use and has a valid target in its sights</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="ensureTimerStarted()">ensureTimerStarted</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">ensureTimerStarted</span>()</div>
+<div class="block">Does as the name suggests</div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="resetShootTimer()">resetShootTimer</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetShootTimer</span>()</div>
+<div class="block">Does as the name suggests</div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="getShootTimer()">getShootTimer</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">edu.wpi.first.wpilibj.Timer</span>&nbsp;<span class="memberName">getShootTimer</span>()</div>
+<div class="block">getter for the shoot timer</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>shootTimer</code></dd>
+</dl>
 </section>
 </li>
 </ul>
