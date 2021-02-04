@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -192,99 +192,64 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i1">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fieldHeading()">fieldHeading</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
 </td>
 </tr>
+<tr class="altColor" id="i2">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetTurretRotation()">resetTurretRotation</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 <tr class="rowColor" id="i3">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetEncoderAndGyro()">resetEncoderAndGyro</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i4">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetPigeon()">resetPigeon</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i5">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setBrake(boolean)">setBrake</a></span>&#8203;(boolean&nbsp;brake)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i6">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDriveOmega(double)">setDriveOmega</a></span>&#8203;(double&nbsp;omega)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i7">
+<tr class="altColor" id="i4">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setTargetAngle(double)">setTargetAngle</a></span>&#8203;(double&nbsp;target)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i8">
+<tr class="rowColor" id="i5">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setTelemetry(frc.drive.auton.RobotTelemetry)">setTelemetry</a></span>&#8203;(<a href="../../drive/auton/RobotTelemetry.html" title="class in frc.drive.auton">RobotTelemetry</a>&nbsp;telem)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i6">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#teleopInit()">teleopInit</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
 </td>
 </tr>
-<tr class="altColor" id="i10">
+<tr class="altColor" id="i8">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
 </td>
 </tr>
-<tr class="rowColor" id="i11">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updatePigeon()">updatePigeon</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i12">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateSimple()">updateSimple</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i13">
+<tr class="rowColor" id="i9">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put all of the code for tele operation to run every tick in here</div>
 </td>
 </tr>
-<tr class="altColor" id="i14">
+<tr class="altColor" id="i10">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
 <div class="block">When testing, put the code to execute every tick in here</div>
 </td>
-</tr>
-<tr class="rowColor" id="i15">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawAbs()">yawAbs</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i16">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawRel()">yawRel</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i17">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#yawWrap()">yawWrap</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -420,14 +385,14 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="teleopInit()">teleopInit</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">teleopInit</span>()</div>
+<h3><a id="setTelemetry(frc.drive.auton.RobotTelemetry)">setTelemetry</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setTelemetry</span>&#8203;(<span class="arguments"><a href="../../drive/auton/RobotTelemetry.html" title="class in frc.drive.auton">RobotTelemetry</a>&nbsp;telem)</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="updateSimple()">updateSimple</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateSimple</span>()</div>
+<h3><a id="teleopInit()">teleopInit</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">teleopInit</span>()</div>
 </section>
 </li>
 <li class="blockList">
@@ -444,54 +409,8 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="fieldHeading()">fieldHeading</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">fieldHeading</span>()</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the turret's heading in relation to the field</dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="resetEncoderAndGyro()">resetEncoderAndGyro</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetEncoderAndGyro</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="setDriveOmega(double)">setDriveOmega</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setDriveOmega</span>&#8203;(<span class="arguments">double&nbsp;omega)</span></div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="resetPigeon()">resetPigeon</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetPigeon</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="updatePigeon()">updatePigeon</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updatePigeon</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="yawAbs()">yawAbs</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">yawAbs</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="yawRel()">yawRel</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">yawRel</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="yawWrap()">yawWrap</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">yawWrap</span>()</div>
+<h3><a id="resetTurretRotation()">resetTurretRotation</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetTurretRotation</span>()</div>
 </section>
 </li>
 </ul>

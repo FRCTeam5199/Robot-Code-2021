@@ -102,7 +102,6 @@ public class RobotTelemetry implements ISubsystem {
         //odometer.resetPosition(pose, rotation);
         resetPigeon();
         resetEncoders();
-        
     }
 
     /**
@@ -116,7 +115,6 @@ public class RobotTelemetry implements ISubsystem {
 
     //getRPM - get wheel RPM from encoder
     //TODO implement for falcos
-
     public double getRPMLeft() {
         return (driver.leaderL.getEncoder().getVelocity()) / 9;
     }

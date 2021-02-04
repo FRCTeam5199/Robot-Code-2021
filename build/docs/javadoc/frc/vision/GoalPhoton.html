@@ -171,7 +171,9 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <tbody>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">GoalPhoton</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">inits GoalPhoton</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -228,7 +230,7 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
+<div class="block">stores values in simpler variable names</div>
 </td>
 </tr>
 <tr class="rowColor" id="i5">
@@ -242,21 +244,23 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<div class="block">updates generic things for GoalPhoton</div>
 </td>
 </tr>
 <tr class="rowColor" id="i7">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Put all of the code for tele operation to run every tick in here</div>
+<div class="block">calls updateGeneric 
+ see GoalPhoton.updateGeneric</div>
 </td>
 </tr>
 <tr class="altColor" id="i8">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
-<div class="block">When testing, put the code to execute every tick in here</div>
+<div class="block">calls updateGeneric 
+ see GoalPhoton.updateGeneric</div>
 </td>
 </tr>
 <tr class="rowColor" id="i9">
@@ -332,6 +336,7 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <section class="detail">
 <h3><a id="&lt;init&gt;()">GoalPhoton</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">GoalPhoton</span>()</div>
+<div class="block">inits GoalPhoton</div>
 </section>
 </li>
 </ul>
@@ -348,8 +353,7 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <section class="detail">
 <h3><a id="init()">init</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#init()">ISubsystem</a></code></span></div>
-<div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
+<div class="block">stores values in simpler variable names</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -360,8 +364,8 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <section class="detail">
 <h3><a id="updateTest()">updateTest</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTest</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateTest()">ISubsystem</a></code></span></div>
-<div class="block">When testing, put the code to execute every tick in here</div>
+<div class="block">calls updateGeneric 
+ see GoalPhoton.updateGeneric</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -372,8 +376,8 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <section class="detail">
 <h3><a id="updateTeleop()">updateTeleop</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTeleop</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateTeleop()">ISubsystem</a></code></span></div>
-<div class="block">Put all of the code for tele operation to run every tick in here</div>
+<div class="block">calls updateGeneric 
+ see GoalPhoton.updateGeneric</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateTeleop()">updateTeleop</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
@@ -396,8 +400,7 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <section class="detail">
 <h3><a id="updateGeneric()">updateGeneric</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateGeneric</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateGeneric()">ISubsystem</a></code></span></div>
-<div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
+<div class="block">updates generic things for GoalPhoton</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>

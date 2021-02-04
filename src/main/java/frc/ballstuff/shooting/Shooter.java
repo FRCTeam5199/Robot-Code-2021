@@ -10,10 +10,10 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
@@ -28,7 +28,6 @@ import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 import frc.vision.GoalPhoton;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import static frc.misc.UtilFunctions.weightedAverage;
 import static frc.robot.Robot.hopper;
@@ -36,17 +35,8 @@ import static frc.robot.Robot.shooter;
 
 public class Shooter implements ISubsystem {
 
-    public final String[] data = {
-            "match time", "init time", "speed", "target speed", "motor temperature", "motor current", "powered", "P",
-            "I", "D", "rP", "rI", "rD", "distance"
-    };
-    public final String[] units = {
-            "seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"
-    };
-    private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-    private NetworkTableEntry constSpeed = tab.add("Constant Speed", 0).getEntry();
-
-    private final double pulleyRatio = RobotNumbers.motorPulleySize / RobotNumbers.driverPulleySize;
+    public final String[] data = {"match time", "init time", "speed", "target speed", "motor temperature", "motor current", "powered", "P", "I", "D", "rP", "rI", "rD", "distance"};
+    public final String[] units = {"seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"};
     private final Timer timer = new Timer();
     private final int ballsShot = 0;
     private final boolean poweredState = false;
@@ -66,6 +56,8 @@ public class Shooter implements ISubsystem {
     public boolean interpolationEnabled = false;
     public boolean shooting;
     boolean trackingTarget = false;
+    private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+    private NetworkTableEntry constSpeed = tab.add("Constant Speed", 0).getEntry();
     private CANSparkMax leader, follower;
     private TalonFX falconLeader, falconFollower;
     private CANPIDController speedo;
@@ -86,7 +78,7 @@ public class Shooter implements ISubsystem {
      * Initialize the Shooter object.
      */
     @Override
-    public void init() throws IllegalStateException{
+    public void init() throws IllegalStateException {
         switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
             case STANDARD:
                 joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
@@ -103,27 +95,9 @@ public class Shooter implements ISubsystem {
         }
 
         createTimers();
-        if (!makeSurePreconditionsMet())
+        if (!makeSurePreconditionsMet()) {
             System.err.println("sizeSpeedsArray or voltageFFArray is not sorted right. please do this");
-    }
-
-    private boolean makeSurePreconditionsMet() {
-        for (int i = 0; i < sizeSpeedsArray.length - 1; i++)
-            if (sizeSpeedsArray[i][0] > sizeSpeedsArray[i + 1][0])
-                return false;
-        for (int i = 0; i < voltageFFArray.length - 1; i++)
-            if (voltageFFArray[i][0] > voltageFFArray[i + 1][0])
-                return false;
-        return true;
-    }
-
-    private void createTimers() {
-        shootTimer = new Timer();
-        indexTimer = new Timer();
-        indexTimer.stop();
-        indexTimer.reset();
-        shootTimer.stop();
-        shootTimer.reset();
+        }
     }
 
     /**
@@ -150,7 +124,7 @@ public class Shooter implements ISubsystem {
             leader.getEncoder().setPosition(0);
             leader.setOpenLoopRampRate(40);
             encoder = leader.getEncoder();
-            
+
             speedo = leader.getPIDController();
             speedo.setOutputRange(-1, 1);
         } else {
@@ -169,6 +143,30 @@ public class Shooter implements ISubsystem {
         }
     }
 
+    private void createTimers() {
+        shootTimer = new Timer();
+        indexTimer = new Timer();
+        indexTimer.stop();
+        indexTimer.reset();
+        shootTimer.stop();
+        shootTimer.reset();
+    }
+
+    private boolean makeSurePreconditionsMet() {
+        for (int i = 0; i < sizeSpeedsArray.length - 1; i++) {
+            if (sizeSpeedsArray[i][0] > sizeSpeedsArray[i + 1][0]) return false;
+        }
+        for (int i = 0; i < voltageFFArray.length - 1; i++) {
+            if (voltageFFArray[i][0] > voltageFFArray[i + 1][0]) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void updateTest() {
+        updateGeneric();
+    }
+
     /**
      * Update the Shooter object.
      */
@@ -185,9 +183,9 @@ public class Shooter implements ISubsystem {
                     lockOntoTarget = panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
                 }
                 trackingTarget = goalPhoton.validTarget() && lockOntoTarget;
-                if (interpolationEnabled){
+                if (interpolationEnabled) {
                     speed = (solidSpeed) ? (4200 * (adjustmentFactor * 0.25 + 1)) : 0;
-                }else{
+                } else {
                     speed = 4200;
                 }
 
@@ -213,6 +211,15 @@ public class Shooter implements ISubsystem {
             SmartDashboard.putBoolean("atSpeed", atSpeed);
             SmartDashboard.putNumber("ballsShot", ballsShot);
             SmartDashboard.putBoolean("shooter enable", enabled);
+        }
+    }
+
+    public void updateControls() {
+        if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
+            toggle(true);
+        }
+        if (joystickController.get(JoystickButtons.ELEVEN) == ButtonStatus.DOWN) {
+            toggle(joystickController.get(JoystickButtons.EIGHT) == ButtonStatus.DOWN);
         }
     }
 
@@ -256,6 +263,15 @@ public class Shooter implements ISubsystem {
     }
 
     /**
+     * Enable or disable the shooter being spun up.
+     *
+     * @param toggle - spun up true or false
+     */
+    public void toggle(boolean toggle) {
+        enabled = toggle;
+    }
+
+    /**
      * Set the P, I, and D values for the shooter.
      *
      * @param P - P value
@@ -277,6 +293,22 @@ public class Shooter implements ISubsystem {
         }
     }
 
+    @Override
+    public void updateTeleop() {
+        updateGeneric();
+    }
+
+    @Override
+    public void updateAuton() {
+
+    }
+
+    @Override
+    public void updateGeneric() {
+        update();
+        updateControls();
+    }
+
     public boolean atSpeed() {
         if (RobotToggles.SHOOTER_USE_SPARKS) {
             return leader.getEncoder().getVelocity() > speed - 80;
@@ -291,15 +323,6 @@ public class Shooter implements ISubsystem {
 
     public boolean recovering() {
         return recoveryPID;
-    }
-
-    /**
-     * Enable or disable the shooter being spun up.
-     *
-     * @param toggle - spun up true or false
-     */
-    public void toggle(boolean toggle) {
-        enabled = toggle;
     }
 
     /**
@@ -335,46 +358,14 @@ public class Shooter implements ISubsystem {
      */
     private double interpolateFF() {
         double voltage = RobotController.getBatteryVoltage();
-        if (voltage > voltageFFArray[voltageFFArray.length - 1][0])
-            return voltageFFArray[voltageFFArray.length - 1][1];
-        if (voltage < voltageFFArray[0][0])
-            return voltageFFArray[0][0];
+        if (voltage > voltageFFArray[voltageFFArray.length - 1][0]) return voltageFFArray[voltageFFArray.length - 1][1];
+        if (voltage < voltageFFArray[0][0]) return voltageFFArray[0][0];
         for (int i = voltageFFArray.length - 2; i >= 0; i--) {
             if (voltage > voltageFFArray[i][0]) {
                 return weightedAverage(voltage, voltageFFArray[i + 1], voltageFFArray[i]);
             }
         }
         throw new IllegalStateException("Battery voltage " + voltage + " could not be interpolated");
-    }
-
-    @Override
-    public void updateTest() {
-        updateGeneric();
-    }
-
-    @Override
-    public void updateTeleop() {
-        updateGeneric();
-    }
-
-    @Override
-    public void updateAuton() {
-
-    }
-
-    @Override
-    public void updateGeneric() {
-        update();
-        updateControls();
-    }
-
-    public void updateControls() {
-        if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
-            toggle(true);
-        }
-        if (joystickController.get(JoystickButtons.ELEVEN) == ButtonStatus.DOWN) {
-            toggle(joystickController.get(JoystickButtons.EIGHT) == ButtonStatus.DOWN);
-        }
     }
 
     public boolean validTarget() {
@@ -385,19 +376,18 @@ public class Shooter implements ISubsystem {
         }
     }
 
-    public void stopFiring() {
-        toggle(false);
-        if (RobotToggles.ENABLE_HOPPER)
-            hopper.setAll(false);
-        shooting = false;
-    }
-
     public void setupShooterTimer() {
         shooterTimer = new Timer();
         timerFlag = false;
         shooterTimer.stop();
         shooterTimer.reset();
         stopFiring();
+    }
+
+    public void stopFiring() {
+        toggle(false);
+        if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
+        shooting = false;
     }
 
     public void ensureTimerStarted() {

@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -130,27 +130,27 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#allBallsFired">allBallsFired</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#atSpeed">atSpeed</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>java.lang.String[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#data">data</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#interpolationEnabled">interpolationEnabled</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../controllers/BaseController.html" title="class in frc.controllers">BaseController</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#joystickController">joystickController</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../controllers/BaseController.html" title="class in frc.controllers">BaseController</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#panel">panel</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -232,114 +232,104 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i3">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#feedIn()">feedIn</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i4">
 <td class="colFirst"><code>edu.wpi.first.wpilibj.Timer</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getShootTimer()">getShootTimer</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr class="altColor" id="i4">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Initialize the Shooter object.</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#interpolateSpeed()">interpolateSpeed</a></span>()</code></th>
 <td class="colLast">
 <div class="block">adjusts speed based on distance based on <a href="../../vision/GoalPhoton.html#getGoalSize()"><code>goalPhoton.getGoalSize()</code></a></div>
 </td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr class="altColor" id="i6">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#recovering()">recovering</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i8">
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetShootTimer()">resetShootTimer</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="altColor" id="i8">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setSpeed(double)">setSpeed</a></span>&#8203;(double&nbsp;rpm)</code></th>
 <td class="colLast">
 <div class="block">Set drive wheel RPM</div>
 </td>
 </tr>
-<tr class="altColor" id="i10">
+<tr class="rowColor" id="i9">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setupShooterTimer()">setupShooterTimer</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i11">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#spinUp()">spinUp</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor" id="i12">
+<tr class="altColor" id="i10">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#spunUp()">spunUp</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr class="rowColor" id="i11">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stopFiring()">stopFiring</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i14">
+<tr class="altColor" id="i12">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toggle(boolean)">toggle</a></span>&#8203;(boolean&nbsp;toggle)</code></th>
 <td class="colLast">
 <div class="block">Enable or disable the shooter being spun up.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i15">
+<tr class="rowColor" id="i13">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update()">update</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Update the Shooter object.</div>
 </td>
 </tr>
-<tr class="altColor" id="i16">
+<tr class="altColor" id="i14">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
 </td>
 </tr>
-<tr class="rowColor" id="i17">
+<tr class="rowColor" id="i15">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateControls()">updateControls</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i18">
+<tr class="altColor" id="i16">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
 </td>
 </tr>
-<tr class="rowColor" id="i19">
+<tr class="rowColor" id="i17">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put all of the code for tele operation to run every tick in here</div>
 </td>
 </tr>
-<tr class="altColor" id="i20">
+<tr class="altColor" id="i18">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
 <div class="block">When testing, put the code to execute every tick in here</div>
 </td>
 </tr>
-<tr class="rowColor" id="i21">
+<tr class="rowColor" id="i19">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#validTarget()">validTarget</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -380,8 +370,14 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="panel">panel</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="../../controllers/BaseController.html" title="class in frc.controllers">BaseController</a></span>&nbsp;<span class="memberName">panel</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="joystickController">joystickController</a></h3>
-<div class="memberSignature"><span class="modifiers">public final</span>&nbsp;<span class="returnType"><a href="../../controllers/BaseController.html" title="class in frc.controllers">BaseController</a></span>&nbsp;<span class="memberName">joystickController</span></div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="../../controllers/BaseController.html" title="class in frc.controllers">BaseController</a></span>&nbsp;<span class="memberName">joystickController</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -414,12 +410,6 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">shooting</span></div>
 </section>
 </li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="allBallsFired">allBallsFired</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">allBallsFired</span></div>
-</section>
-</li>
 </ul>
 </section>
 </li>
@@ -449,11 +439,26 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <li class="blockList">
 <section class="detail">
 <h3><a id="init()">init</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()
+          throws <span class="exceptions">java.lang.IllegalStateException</span></div>
 <div class="block">Initialize the Shooter object.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../misc/ISubsystem.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalStateException</code></dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="updateTest()">updateTest</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTest</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#updateTest()">ISubsystem</a></code></span></div>
+<div class="block">When testing, put the code to execute every tick in here</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
 </dl>
 </section>
 </li>
@@ -462,6 +467,12 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <h3><a id="update()">update</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">update</span>()</div>
 <div class="block">Update the Shooter object.</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="updateControls()">updateControls</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateControls</span>()</div>
 </section>
 </li>
 <li class="blockList">
@@ -483,59 +494,12 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="spinUp()">spinUp</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">spinUp</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="atSpeed()">atSpeed</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">atSpeed</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="spunUp()">spunUp</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">spunUp</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="recovering()">recovering</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">recovering</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
 <h3><a id="toggle(boolean)">toggle</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">toggle</span>&#8203;(<span class="arguments">boolean&nbsp;toggle)</span></div>
 <div class="block">Enable or disable the shooter being spun up.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>toggle</code> - - spun up true or false</dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="interpolateSpeed()">interpolateSpeed</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">interpolateSpeed</span>()</div>
-<div class="block">adjusts speed based on distance based on <a href="../../vision/GoalPhoton.html#getGoalSize()"><code>goalPhoton.getGoalSize()</code></a></div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the adjusted speed in RPM based on vision determined distance</dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="updateTest()">updateTest</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTest</span>()</div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../misc/ISubsystem.html#updateTest()">ISubsystem</a></code></span></div>
-<div class="block">When testing, put the code to execute every tick in here</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
 </dl>
 </section>
 </li>
@@ -577,8 +541,31 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="updateControls()">updateControls</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateControls</span>()</div>
+<h3><a id="atSpeed()">atSpeed</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">atSpeed</span>()</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="spunUp()">spunUp</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">spunUp</span>()</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="recovering()">recovering</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">recovering</span>()</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="interpolateSpeed()">interpolateSpeed</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">interpolateSpeed</span>()</div>
+<div class="block">adjusts speed based on distance based on <a href="../../vision/GoalPhoton.html#getGoalSize()"><code>goalPhoton.getGoalSize()</code></a></div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the adjusted speed in RPM based on vision determined distance</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -589,20 +576,14 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="feedIn()">feedIn</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">feedIn</span>()</div>
+<h3><a id="setupShooterTimer()">setupShooterTimer</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setupShooterTimer</span>()</div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="stopFiring()">stopFiring</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">stopFiring</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="setupShooterTimer()">setupShooterTimer</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setupShooterTimer</span>()</div>
 </section>
 </li>
 <li class="blockList">

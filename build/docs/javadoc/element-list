@@ -3,6 +3,8 @@ frc.ballstuff.shooting
 frc.controllers
 frc.drive
 frc.drive.auton
+frc.drive.auton.butbetternow
+frc.drive.auton.pointtopoint
 frc.misc
 frc.robot
 frc.robot.robotconfigs

@@ -1,6 +1,5 @@
 package frc.controllers;
 
-import edu.wpi.first.wpilibj.Joystick;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickAxis;
 import frc.controllers.ControllerEnums.JoystickButtons;
@@ -34,7 +33,7 @@ public class JoystickController extends BaseController{
     /**
      * returns joystick's axis value
      * 
-     * @param axis
+     * @param axis the joystick axis to query
      * @return axis.AXIS_VALUE
      */
     public double get(JoystickAxis axis) {
@@ -44,7 +43,7 @@ public class JoystickController extends BaseController{
     /**
      * returns positive joystick axis value
      * 
-     * @param axis
+     * @param axis the joystick axis to query
      * @return positive axis value
      */
     public double getPositive(JoystickAxis axis) {
@@ -54,7 +53,7 @@ public class JoystickController extends BaseController{
     /**
      * gets joystick button status
      * 
-     * @param button
+     * @param button the joystick button to query
      * @return button status
      */
     public ButtonStatus get(JoystickButtons button) {

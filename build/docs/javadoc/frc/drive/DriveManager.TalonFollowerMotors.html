@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -155,7 +155,9 @@ double&nbsp;kF,
 double&nbsp;kP,
 double&nbsp;kI,
 double&nbsp;kD)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">configures the PID of all the follower motors</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="DriveManager.TalonFollowerMotors.html" title="class in frc.drive">DriveManager.TalonFollowerMotors</a></code></td>
@@ -165,12 +167,9 @@ double&nbsp;kD)</code></th>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#follow(com.ctre.phoenix.motorcontrol.can.WPI_TalonFX)">follow</a></span>&#8203;(@NotNull com.ctre.phoenix.motorcontrol.can.WPI_TalonFX&nbsp;leader)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i3">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setInverted(com.ctre.phoenix.motorcontrol.InvertType)">setInverted</a></span>&#8203;(com.ctre.phoenix.motorcontrol.InvertType&nbsp;followMaster)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">tell the followers which leader to follow</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -226,12 +225,11 @@ double&nbsp;kD)</code></th>
 <h3><a id="follow(com.ctre.phoenix.motorcontrol.can.WPI_TalonFX)">follow</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">follow</span>&#8203;(<span class="arguments">@NotNull
 @NotNull com.ctre.phoenix.motorcontrol.can.WPI_TalonFX&nbsp;leader)</span></div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="setInverted(com.ctre.phoenix.motorcontrol.InvertType)">setInverted</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setInverted</span>&#8203;(<span class="arguments">com.ctre.phoenix.motorcontrol.InvertType&nbsp;followMaster)</span></div>
+<div class="block">tell the followers which leader to follow</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>leader</code> - main motor</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -242,6 +240,15 @@ double&nbsp;kF,
 double&nbsp;kP,
 double&nbsp;kI,
 double&nbsp;kD)</span></div>
+<div class="block">configures the PID of all the follower motors</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>idx</code> - PID loop, by default 0</dd>
+<dd><code>kF</code> - Feed forward</dd>
+<dd><code>kP</code> - Proportional constant</dd>
+<dd><code>kI</code> - Integral constant</dd>
+<dd><code>kD</code> - Derivative constant</dd>
+</dl>
 </section>
 </li>
 </ul>

@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -234,7 +234,9 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#drive(double,double)">drive</a></span>&#8203;(double&nbsp;forward,
 double&nbsp;rotation)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">drives the robot based on -1 / 1 inputs (ie 100% forward and 100% turning)</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>void</code></td>
@@ -246,45 +248,56 @@ double&nbsp;omega)</code></th>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#drivePure(edu.wpi.first.wpilibj.kinematics.ChassisSpeeds)">drivePure</a></span>&#8203;(edu.wpi.first.wpilibj.kinematics.ChassisSpeeds&nbsp;speeds)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i3">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#driveVoltage(double,double)">driveVoltage</a></span>&#8203;(double&nbsp;leftVolts,
+double&nbsp;rightVolts)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor" id="i4">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Initialize the driver</div>
 </td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#initAuton()">initAuton</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetEncoders()">resetEncoders</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i4">
+<tr class="altColor" id="i6">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setAllMotorCurrentLimits(int)">setAllMotorCurrentLimits</a></span>&#8203;(int&nbsp;limit)</code></th>
 <td class="colLast">
 <div class="block">Set all motor current limits</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr class="altColor" id="i8">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
 </td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr class="rowColor" id="i9">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put all of the code for tele operation to run every tick in here</div>
 </td>
 </tr>
-<tr class="altColor" id="i8">
+<tr class="altColor" id="i10">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
@@ -392,12 +405,6 @@ double&nbsp;omega)</code></th>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="initAuton()">initAuton</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">initAuton</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
 <h3><a id="setAllMotorCurrentLimits(int)">setAllMotorCurrentLimits</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setAllMotorCurrentLimits</span>&#8203;(<span class="arguments">int&nbsp;limit)</span></div>
 <div class="block">Set all motor current limits</div>
@@ -422,12 +429,15 @@ double&nbsp;omega)</code></th>
 <li class="blockList">
 <section class="detail">
 <h3><a id="updateTeleop()">updateTeleop</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTeleop</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTeleop</span>()
+                  throws <span class="exceptions">java.lang.IllegalArgumentException</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#updateTeleop()">ISubsystem</a></code></span></div>
 <div class="block">Put all of the code for tele operation to run every tick in here</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateTeleop()">updateTeleop</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.lang.IllegalArgumentException</code></dd>
 </dl>
 </section>
 </li>
@@ -436,6 +446,12 @@ double&nbsp;omega)</code></th>
 <h3><a id="drive(double,double)">drive</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">drive</span>&#8203;(<span class="arguments">double&nbsp;forward,
 double&nbsp;rotation)</span></div>
+<div class="block">drives the robot based on -1 / 1 inputs (ie 100% forward and 100% turning)</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>forward</code> - the percentage of max forward to do</dd>
+<dd><code>rotation</code> - the percentage of max turn speed to do</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
@@ -473,6 +489,25 @@ double&nbsp;omega)</span></div>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
 </dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="resetEncoders()">resetEncoders</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">resetEncoders</span>()</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="drivePure(edu.wpi.first.wpilibj.kinematics.ChassisSpeeds)">drivePure</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">drivePure</span>&#8203;(<span class="arguments">edu.wpi.first.wpilibj.kinematics.ChassisSpeeds&nbsp;speeds)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="driveVoltage(double,double)">driveVoltage</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">driveVoltage</span>&#8203;(<span class="arguments">double&nbsp;leftVolts,
+double&nbsp;rightVolts)</span></div>
 </section>
 </li>
 </ul>

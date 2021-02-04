@@ -170,7 +170,9 @@ int...&nbsp;ids)</code></th>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setSmartCurrentLimit(int)">setSmartCurrentLimit</a></span>&#8203;(int&nbsp;limit)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">limit the current draw for each follower</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -233,18 +235,31 @@ int...&nbsp;ids)</span>
 <h3><a id="follow(com.revrobotics.CANSparkMax)">follow</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">follow</span>&#8203;(<span class="arguments">@NotNull
 @NotNull com.revrobotics.CANSparkMax&nbsp;leader)</span></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>leader</code> - main motor</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="brake(boolean)">brake</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">brake</span>&#8203;(<span class="arguments">boolean&nbsp;brake)</span></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>brake</code> - brake is activated (true/false)</dd>
+</dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="setSmartCurrentLimit(int)">setSmartCurrentLimit</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setSmartCurrentLimit</span>&#8203;(<span class="arguments">int&nbsp;limit)</span></div>
+<div class="block">limit the current draw for each follower</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>limit</code> - current limit in amps</dd>
+</dl>
 </section>
 </li>
 </ul>

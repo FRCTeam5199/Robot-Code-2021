@@ -134,7 +134,9 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <tbody>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(int)">JoystickController</a></span>&#8203;(int&nbsp;n)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">joystick controller</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -162,22 +164,30 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(frc.controllers.ControllerEnums.JoystickAxis)">get</a></span>&#8203;(<a href="ControllerEnums.JoystickAxis.html" title="enum in frc.controllers">ControllerEnums.JoystickAxis</a>&nbsp;axis)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">returns joystick's axis value</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="ControllerEnums.ButtonStatus.html" title="enum in frc.controllers">ControllerEnums.ButtonStatus</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(frc.controllers.ControllerEnums.JoystickButtons)">get</a></span>&#8203;(<a href="ControllerEnums.JoystickButtons.html" title="enum in frc.controllers">ControllerEnums.JoystickButtons</a>&nbsp;button)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">gets joystick button status</div>
+</td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code><a href="ControllerEnums.JoystickHatDirection.html" title="enum in frc.controllers">ControllerEnums.JoystickHatDirection</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getHat()">getHat</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">ensures that the joystick hat direction is an accepted value</div>
+</td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPositive(frc.controllers.ControllerEnums.JoystickAxis)">getPositive</a></span>&#8203;(<a href="ControllerEnums.JoystickAxis.html" title="enum in frc.controllers">ControllerEnums.JoystickAxis</a>&nbsp;axis)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">returns positive joystick axis value</div>
+</td>
 </tr>
 <tr class="altColor" id="i4">
 <td class="colFirst"><code>boolean</code></td>
@@ -217,6 +227,11 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <section class="detail">
 <h3><a id="&lt;init&gt;(int)">JoystickController</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">JoystickController</span>&#8203;(<span class="arguments">int&nbsp;n)</span></div>
+<div class="block">joystick controller</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>n</code> - - an integer</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -234,11 +249,12 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <h3><a id="getHat()">getHat</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ControllerEnums.JoystickHatDirection.html" title="enum in frc.controllers">ControllerEnums.JoystickHatDirection</a></span>&nbsp;<span class="memberName">getHat</span>()
                                             throws <span class="exceptions">java.lang.IllegalStateException</span></div>
+<div class="block">ensures that the joystick hat direction is an accepted value</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="BaseController.html#getHat()">getHat</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>The status of the hat on the joystick</dd>
+<dd>The direction of the hat on the joystick</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalStateException</code> - if the current direction doesnt have a matching enum</dd>
 </dl>
@@ -248,9 +264,14 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <section class="detail">
 <h3><a id="get(frc.controllers.ControllerEnums.JoystickAxis)">get</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">get</span>&#8203;(<span class="arguments"><a href="ControllerEnums.JoystickAxis.html" title="enum in frc.controllers">ControllerEnums.JoystickAxis</a>&nbsp;axis)</span></div>
+<div class="block">returns joystick's axis value</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="BaseController.html#get(frc.controllers.ControllerEnums.JoystickAxis)">get</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>axis</code> - the joystick axis to query</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>axis.AXIS_VALUE</dd>
 </dl>
 </section>
 </li>
@@ -258,9 +279,14 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <section class="detail">
 <h3><a id="getPositive(frc.controllers.ControllerEnums.JoystickAxis)">getPositive</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getPositive</span>&#8203;(<span class="arguments"><a href="ControllerEnums.JoystickAxis.html" title="enum in frc.controllers">ControllerEnums.JoystickAxis</a>&nbsp;axis)</span></div>
+<div class="block">returns positive joystick axis value</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="BaseController.html#getPositive(frc.controllers.ControllerEnums.JoystickAxis)">getPositive</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>axis</code> - the joystick axis to query</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>positive axis value</dd>
 </dl>
 </section>
 </li>
@@ -268,9 +294,14 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <section class="detail">
 <h3><a id="get(frc.controllers.ControllerEnums.JoystickButtons)">get</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="ControllerEnums.ButtonStatus.html" title="enum in frc.controllers">ControllerEnums.ButtonStatus</a></span>&nbsp;<span class="memberName">get</span>&#8203;(<span class="arguments"><a href="ControllerEnums.JoystickButtons.html" title="enum in frc.controllers">ControllerEnums.JoystickButtons</a>&nbsp;button)</span></div>
+<div class="block">gets joystick button status</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="BaseController.html#get(frc.controllers.ControllerEnums.JoystickButtons)">get</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>button</code> - the joystick button to query</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>button status</dd>
 </dl>
 </section>
 </li>

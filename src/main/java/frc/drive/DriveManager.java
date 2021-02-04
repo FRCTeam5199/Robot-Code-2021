@@ -1,7 +1,6 @@
 package frc.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -37,7 +36,7 @@ public class DriveManager implements ISubsystem {
     private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry();
     private final NetworkTableEntry driveScaleMult = tab2.add("Speed Factor", RobotNumbers.DRIVE_SCALE).getEntry();
 
-    private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
+    public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
     private final boolean invert = true;
     public double currentOmega;
     public boolean autoComplete = false;
@@ -61,51 +60,6 @@ public class DriveManager implements ISubsystem {
 
     public DriveManager() throws RuntimeException {
         init();
-    }
-
-    /**
-     * Configures motors
-     *
-     * @param motor - motor
-     * @param idx   - PID loop, by default 0
-     * @param kF    - Feed forward
-     * @param kP    - Proportional constant
-     * @param kI    - Integral constant
-     * @param kD    - Derivative constant
-     */
-    private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
-        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
-        motor.config_kF(idx, kF, timeout);
-        motor.config_kP(idx, kP, timeout);
-        motor.config_kI(idx, kI, timeout);
-        motor.config_kD(idx, kD, timeout);
-    }
-
-    /**
-     * @param input -1 to 1 drive amount
-     * @return product of input and max speed of the robot
-     */
-    private static double adjustedDrive(double input) {
-        return input * RobotNumbers.MAX_SPEED;
-    }
-
-    private static double adjustedRotation(double input) {
-        return input * RobotNumbers.MAX_ROTATION;
-    }
-
-    /**
-     * @param FPS speed in feet/second
-     */
-    private static double convertFPStoRPM(double FPS) {
-        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
-    }
-
-    /**
-     * @param FPS speed in feet/second
-     * @return speed in rotations/minute
-     */
-    private static double getTargetVelocity(double FPS) {
-        return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
     }
 
     /**
@@ -160,16 +114,6 @@ public class DriveManager implements ISubsystem {
             }
             leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
             leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
-        }
-    }
-
-    public void resetEncoders() {
-        if (RobotToggles.DRIVE_USE_SPARKS) {
-            leaderL.getEncoder().setPosition(0);
-            leaderR.getEncoder().setPosition(0);
-        }else{
-            leaderLTalon.setSelectedSensorPosition(0);
-            leaderRTalon.setSelectedSensorPosition(0);
         }
     }
 
@@ -233,13 +177,13 @@ public class DriveManager implements ISubsystem {
         followerL.setSmartCurrentLimit(limit);
         followerR.setSmartCurrentLimit(limit);
     }
+
     /**
      * @param P proportional gain
      * @param I integral gain
      * @param D derivative gain
      * @param F feed-forward gain
      */
-
     private void setPID(double P, double I, double D, double F) {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             leftPID.setP(P);
@@ -256,6 +200,24 @@ public class DriveManager implements ISubsystem {
         } else {
 
         }
+    }
+
+    /**
+     * Configures motors
+     *
+     * @param motor - motor
+     * @param idx   - PID loop, by default 0
+     * @param kF    - Feed forward
+     * @param kP    - Proportional constant
+     * @param kI    - Integral constant
+     * @param kD    - Derivative constant
+     */
+    private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
+        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
+        motor.config_kF(idx, kF, timeout);
+        motor.config_kP(idx, kP, timeout);
+        motor.config_kI(idx, kI, timeout);
+        motor.config_kD(idx, kD, timeout);
     }
 
     @Override
@@ -300,8 +262,10 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     * @param forward
-     * @param rotation
+     * drives the robot based on -1 / 1 inputs (ie 100% forward and 100% turning)
+     *
+     * @param forward  the percentage of max forward to do
+     * @param rotation the percentage of max turn speed to do
      */
 
     public void drive(double forward, double rotation) {
@@ -336,7 +300,63 @@ public class DriveManager implements ISubsystem {
         }
     }
 
-    public void drivePure(ChassisSpeeds speeds){
+    /**
+     * @param input -1 to 1 drive amount
+     * @return product of input and max speed of the robot
+     */
+    private static double adjustedDrive(double input) {
+        return input * RobotNumbers.MAX_SPEED;
+    }
+
+    private static double adjustedRotation(double input) {
+        return input * RobotNumbers.MAX_ROTATION;
+    }
+
+    /**
+     * @param FPS speed in feet/second
+     */
+    private static double convertFPStoRPM(double FPS) {
+        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
+    }
+
+    /**
+     * @param FPS speed in feet/second
+     * @return speed in rotations/minute
+     */
+    private static double getTargetVelocity(double FPS) {
+        return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
+    }
+
+    @Override
+    public void updateAuton() { }
+
+    @Override
+    public void updateGeneric() {
+        guidance.updateGeneric();
+        if (RobotToggles.CALIBRATE_DRIVE_PID) {
+            System.out.println("P: " + P.getDouble(0) + " from " + lastP);
+            if (lastP != P.getDouble(0) || lastI != I.getDouble(0) || lastD != D.getDouble(0) || lastF != F.getDouble(0)) {
+                lastP = P.getDouble(0);
+                lastI = I.getDouble(0);
+                lastD = D.getDouble(0);
+                lastF = F.getDouble(0);
+                configureTalon(leaderLTalon, 0, lastF, lastP, lastI, lastD);
+                configureTalon(leaderRTalon, 0, lastF, lastP, lastI, lastD);
+            }
+        }
+    }
+
+    public void resetEncoders() {
+        if (RobotToggles.DRIVE_USE_SPARKS) {
+            leaderL.getEncoder().setPosition(0);
+            leaderR.getEncoder().setPosition(0);
+        } else {
+            leaderLTalon.setSelectedSensorPosition(0);
+            leaderRTalon.setSelectedSensorPosition(0);
+        }
+    }
+
+    public void drivePure(ChassisSpeeds speeds) {
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
         double leftFPS = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
         double rightFPS = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
@@ -362,27 +382,6 @@ public class DriveManager implements ISubsystem {
         } else {
             leaderLTalon.setVoltage(leftVolts * invertLeft);
             leaderRTalon.setVoltage(rightVolts * invertRight);
-        }
-    }
-
-    @Override
-    public void updateAuton() {
-
-    }
-
-    @Override
-    public void updateGeneric() {
-        guidance.updateGeneric();
-        if (RobotToggles.CALIBRATE_DRIVE_PID) {
-            System.out.println("P: " + P.getDouble(0) + " from " + lastP);
-            if (lastP != P.getDouble(0) || lastI != I.getDouble(0) || lastD != D.getDouble(0) || lastF != F.getDouble(0)) {
-                lastP = P.getDouble(0);
-                lastI = I.getDouble(0);
-                lastD = D.getDouble(0);
-                lastF = F.getDouble(0);
-                configureTalon(leaderLTalon, 0, lastF, lastP, lastI, lastD);
-                configureTalon(leaderRTalon, 0, lastF, lastP, lastI, lastD);
-            }
         }
     }
 
@@ -424,7 +423,6 @@ public class DriveManager implements ISubsystem {
         /**
          * @param leader main motor
          */
-
         public void follow(@NotNull CANSparkMax leader) {
             for (CANSparkMax follower : this.motors) {
                 follower.follow(leader);
@@ -434,7 +432,6 @@ public class DriveManager implements ISubsystem {
         /**
          * @param brake brake is activated (true/false)
          */
-
         public void brake(boolean brake) {
             for (CANSparkMax follower : this.motors) {
                 if (!brake) {
@@ -444,9 +441,12 @@ public class DriveManager implements ISubsystem {
                 }
             }
         }
-    /**
-    * @param limit current limit in amps
-    */
+
+        /**
+         * limit the current draw for each follower
+         *
+         * @param limit current limit in amps
+         */
         public void setSmartCurrentLimit(int limit) {
             for (CANSparkMax follower : this.motors) {
                 follower.setSmartCurrentLimit(limit);
@@ -478,6 +478,8 @@ public class DriveManager implements ISubsystem {
         }
 
         /**
+         * tell the followers which leader to follow
+         *
          * @param leader main motor
          */
         public void follow(@NotNull WPI_TalonFX leader) {
@@ -487,20 +489,14 @@ public class DriveManager implements ISubsystem {
         }
 
         /**
-         * @param followMaster 
+         * configures the PID of all the follower motors
+         *
+         * @param idx PID loop, by default 0
+         * @param kF  Feed forward
+         * @param kP  Proportional constant
+         * @param kI  Integral constant
+         * @param kD  Derivative constant
          */
-        public void setInverted(InvertType followMaster) {
-            for (WPI_TalonFX follower : this.motors) {
-                follower.setInverted(followMaster);
-            }
-        }
-     /**
-     * @param idx   PID loop, by default 0
-     * @param kF    Feed forward
-     * @param kP    Proportional constant
-     * @param kI    Integral constant
-     * @param kD    Derivative constant
-     */
         public void configureMotors(int idx, double kF, double kP, double kI, double kD) {
             for (WPI_TalonFX follower : this.motors) {
                 configureTalon(follower, idx, kF, kP, kI, kD);
