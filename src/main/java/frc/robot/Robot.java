@@ -6,8 +6,9 @@ import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
-import frc.drive.auton.pointtopoint.AutonManager;
-import frc.drive.auton.pointtopoint.AutonRoutines;
+//import frc.drive.auton.pointtopoint.AutonManager;
+//import frc.drive.auton.pointtopoint.AutonRoutines;
+import frc.drive.auton.butbetternow.AutonManager;
 import frc.vision.GoalPhoton;
 
 public class Robot extends TimedRobot {
@@ -55,7 +56,8 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         driver.resetEncoders();
         //autonManager = new AutonManager(AutonRoutines.GO_FORWARD_GO_BACK, driver);
-        autonManager = new AutonManager(AutonRoutines.CARPET_TEST_SLALOM, driver);
+        //autonManager = new AutonManager(AutonRoutines.CARPET_TEST_SLALOM, driver);
+        autonManager = new AutonManager("ForwardAndBack", driver);
     }
 
     @Override

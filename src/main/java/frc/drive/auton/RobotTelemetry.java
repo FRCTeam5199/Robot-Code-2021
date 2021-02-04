@@ -94,12 +94,12 @@ public class RobotTelemetry implements ISubsystem {
         driver.resetEncoders();
     }
 
-    public void resetOdometry(Pose2d pose, Rotation2d rot){
+    public void resetOdometry(Pose2d pose, Rotation2d rotation){
+        //odometer.resetPosition(pose, rotation);
         resetPigeon();
         resetEncoders();
-        odometer.resetPosition(pose, rot);
+        
     }
-
 
     public double yawAbs() { // return absolute yaw of pigeon
         updatePigeon();
@@ -141,6 +141,7 @@ public class RobotTelemetry implements ISubsystem {
     public void init() {
         pigeon = new PigeonIMU(RobotMap.PIGEON);
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
+        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(yawAbs()), new Pose2d(0, 0, new Rotation2d()));
     }
 
     @Override

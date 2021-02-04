@@ -44,6 +44,7 @@ public class AutonManager implements ISubsystem {
         }
         timer.reset();
         timer.start();
+        System.out.println("Starting timer.");
     }
 
     @Override
@@ -55,9 +56,11 @@ public class AutonManager implements ISubsystem {
     @Override
     public void updateAuton() {
         telem.updateAuton();
+        //RamseteCommand ramseteCommand = new RamseteCommand()
         Trajectory.State goal = Trajectory.sample(timer.get());
         chassisSpeeds = controller.calculate(telem.robotPose, goal);
         DRIVING_CHILD.drivePure(chassisSpeeds);
+        //System.out.println("Timer is at " + timer.get() + ", At " + telem.robotPose + ", goal " + goal);
     }
 
 

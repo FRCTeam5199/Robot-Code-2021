@@ -10,8 +10,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
 import frc.controllers.ButtonPanel;
@@ -25,6 +28,7 @@ import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 import frc.vision.GoalPhoton;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import static frc.misc.UtilFunctions.weightedAverage;
 import static frc.robot.Robot.hopper;
@@ -39,6 +43,9 @@ public class Shooter implements ISubsystem {
     public final String[] units = {
             "seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"
     };
+    private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+    private NetworkTableEntry constSpeed = tab.add("Constant Speed", 0).getEntry();
+
     private final double pulleyRatio = RobotNumbers.motorPulleySize / RobotNumbers.driverPulleySize;
     private final Timer timer = new Timer();
     private final int ballsShot = 0;
@@ -191,11 +198,7 @@ public class Shooter implements ISubsystem {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else {
                     hopper.setAll(false);
-                    if (RobotToggles.SHOOTER_USE_SPARKS) {
-                        leader.set(0);
-                    } else {
-                        falconLeader.set(ControlMode.PercentOutput, 0);
-                    }
+                    setSpeed(constSpeed.getDouble(0));
                 }
                 break;
             }
