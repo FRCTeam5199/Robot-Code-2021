@@ -198,12 +198,18 @@ public class Turret implements ISubsystem {
     }
 
     /**
-     * @return the turret's heading in relation to the field
+     * @return position of turret in degrees
      */
-    public double fieldHeading() {
-        return guidance.yawWraparoundAhead() - turretDegrees();
+    private double turretDegrees() {
+        return 270 - encoder.getPosition();
     }
 
+    /**
+     * creates a min and a max for the angle to be
+     * 
+     * @param angle
+     * @return angle at the minimum or maximum angle  
+     */
     private double limitAngle(double angle) {
         if (angle > RobotNumbers.TURRET_MAX_POS) {
             angle = RobotNumbers.TURRET_MAX_POS;
@@ -232,6 +238,19 @@ public class Turret implements ISubsystem {
         } else {
             motor.setIdleMode(IdleMode.kCoast);
         }
+    }
+      
+    /**
+     * Scan the turret back and forth to find a target.
+     * 
+     * @return an integer to determine the direction of turret scan  
+     */
+    private double scan() {
+        if (turretDegrees() >= 260) {
+            scanDirection = 1;
+        } else if (turretDegrees() <= 100) {
+            scanDirection = -1;
+        return scanDirection;
     }
 
     public void setTelemetry(RobotTelemetry telem) {

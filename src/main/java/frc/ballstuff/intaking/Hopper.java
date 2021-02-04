@@ -78,11 +78,21 @@ public class Hopper implements ISubsystem {
         }
     }
 
+    /**
+     * applies settings/toggles Agitator and Indexer on/off
+     * 
+     * @param set a boolean to determine wether or not Agitator and Indexer is turned on/off
+     */
     public void setAll(boolean set) {
         setAgitator(set);
         setIndexer(set);
     }
 
+    /**
+     * applies settings/toggles Agitator on/off
+     * 
+     * @param set a boolean to determine wether or not Agitator is turned on/off
+     */
     public void setAgitator(boolean set) {
         agitatorActive = set;
         if (RobotToggles.DEBUG) {
@@ -90,6 +100,11 @@ public class Hopper implements ISubsystem {
         }
     }
 
+    /**
+     * applies settings/toggles Indexer on/off
+     * 
+     * @param set a boolean to determine wether or not Indexer is turned on/off
+     */
     public void setIndexer(boolean set) {
         if (RobotToggles.DEBUG) {
             System.out.println("Indexer set to " + set);

@@ -69,6 +69,10 @@ public class RobotTelemetry implements ISubsystem {
         return UtilFunctions.mathematicalMod(yawRel() + 180, 360) - 180;
     }
 
+
+    /**
+     * @return relative to start yaw of pigeon
+     */
     public double yawRel() { //return relative(to start) yaw of pigeon
         updatePigeon();
         return (ypr[0] - startYaw);
@@ -101,15 +105,18 @@ public class RobotTelemetry implements ISubsystem {
         
     }
 
-    public double yawAbs() { // return absolute yaw of pigeon
+    /**
+     * @return absolute yaw of pigeon
+     */
+    public double yawAbs() {  //get absolute yaw of pigeon
         updatePigeon();
         return ypr[0];
     }
-
     //position conversion -------------------------------------------------------------------------------------------------------
 
     //getRPM - get wheel RPM from encoder
     //TODO implement for falcos
+
     public double getRPMLeft() {
         return (driver.leaderL.getEncoder().getVelocity()) / 9;
     }
@@ -129,10 +136,16 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     //getMeters - get wheel meters traveled
+    /**
+     * @return wheel meters traveled
+     */
     public double getMetersLeft() {
         return Units.feetToMeters(getRotationsLeft() * UtilFunctions.wheelCircumference() / 12);
     }
 
+    /**
+     * @return wheel meters traveled
+     */
     public double getMetersRight() {
         return Units.feetToMeters(getRotationsRight() * UtilFunctions.wheelCircumference() / 12);
     }

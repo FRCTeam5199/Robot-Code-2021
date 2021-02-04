@@ -22,6 +22,9 @@ public class Intake implements ISubsystem {
         init();
     }
     
+    /**
+     *@throws InitializationFailureException intake motor failed to be created
+     */
     @Override
     public void init() throws InitializationFailureException, IllegalStateException {
         switch (RobotToggles.INTAKE_CONTROL_STYLE) {
