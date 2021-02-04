@@ -371,6 +371,9 @@ public class Turret implements ISubsystem {
         SmartDashboard.putNumber("Turret out", motorRPM / 5700 - deadbandComp);
     }
 
+    /**
+     * @return position of turret in degrees
+     */
     private double turretDegrees() {
         return 270 - encoder.getPosition();//return encoder.getPosition();
     }
