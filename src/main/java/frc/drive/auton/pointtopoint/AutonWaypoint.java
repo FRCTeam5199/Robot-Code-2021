@@ -1,6 +1,7 @@
-package frc.drive.auton;
+package frc.drive.auton.pointtopoint;
 
 
+import frc.drive.auton.Point;
 
 public class AutonWaypoint {
     public final Point LOCATION;

@@ -5,4 +5,5 @@ frc.drive
 frc.drive.auton
 frc.misc
 frc.robot
+frc.robot.robotconfigs
 frc.vision

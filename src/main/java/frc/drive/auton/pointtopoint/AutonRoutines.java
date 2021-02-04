@@ -1,6 +1,7 @@
-package frc.drive.auton;
+package frc.drive.auton.pointtopoint;
 
 import edu.wpi.first.wpilibj.util.Units;
+import frc.drive.auton.Point;
 
 import java.util.ArrayList;
 import java.util.Arrays;

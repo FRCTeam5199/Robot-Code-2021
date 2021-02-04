@@ -7,6 +7,9 @@ public class ButtonPanel extends BaseController{
 		super(n);
 	}
 
+	/**
+	 * Gets the Raw button value and returns true if it is pressed when it is run
+	 */
 	@Override
 	public ControllerEnums.ButtonStatus get(ButtonPanelButtons n) {
 		return ControllerEnums.ButtonStatus.get(stick.getRawButton(n.AXIS_VALUE));
