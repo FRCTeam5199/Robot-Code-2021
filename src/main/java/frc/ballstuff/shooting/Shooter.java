@@ -73,6 +73,16 @@ public class Shooter implements ISubsystem {
     private boolean timerStarted = false;
     private boolean timerFlag = false;
 
+    private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
+    private final NetworkTableEntry P = tab2.add("P", 0).getEntry();
+    private final NetworkTableEntry I = tab2.add("I", 0).getEntry();
+    private final NetworkTableEntry D = tab2.add("D", 0).getEntry();
+    private final NetworkTableEntry F = tab2.add("F", 0).getEntry();
+    private double lastP = 0;
+    private double lastI = 0;
+    private double lastD = 0;
+    private double lastF = 0;
+
     public Shooter() {
         init();
     }
@@ -306,7 +316,17 @@ public class Shooter implements ISubsystem {
             default:
                 throw new IllegalStateException("This UI not implemented for this controller");
         }
-
+        if (RobotToggles.CALIBRATE_SHOOTER_PID) {
+            System.out.println("P: " + P.getDouble(0) + " from " + lastP);
+            if (lastP != P.getDouble(0) || lastI != I.getDouble(0) || lastD != D.getDouble(0) || lastF != F.getDouble(0)) {
+                lastP = P.getDouble(0);
+                lastI = I.getDouble(0);
+                lastD = D.getDouble(0);
+                lastF = F.getDouble(0);
+                setPID(lastF, lastP, lastI, lastD);
+                setPID(lastF, lastP, lastI, lastD);
+            }
+        }
         if (RobotToggles.DEBUG) {
             SmartDashboard.putNumber("RPM", actualRPM);
             SmartDashboard.putNumber("Target RPM", speed);

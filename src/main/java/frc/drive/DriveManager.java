@@ -143,11 +143,8 @@ public class DriveManager implements ISubsystem {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             leftPID = leaderL.getPIDController();
             rightPID = leaderR.getPIDController();
-            setPID(RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D, RobotNumbers.DRIVEBASE_F);
-        } else {
-            configureTalon(leaderLTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
-            configureTalon(leaderRTalon, 0, RobotNumbers.DRIVEBASE_F, RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D);
         }
+        setPID(RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D, RobotNumbers.DRIVEBASE_F);
     }
 
     /**
@@ -204,7 +201,15 @@ public class DriveManager implements ISubsystem {
             leftPID.setOutputRange(-1, 1);
             rightPID.setOutputRange(-1, 1);
         } else {
-
+            int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
+            leaderLTalon.config_kF(0, F, timeout);
+            leaderLTalon.config_kP(0, P, timeout);
+            leaderLTalon.config_kI(0, I, timeout);
+            leaderLTalon.config_kD(0, D, timeout);
+            leaderRTalon.config_kF(0, F, timeout);
+            leaderRTalon.config_kP(0, P, timeout);
+            leaderRTalon.config_kI(0, I, timeout);
+            leaderRTalon.config_kD(0, D, timeout);
         }
     }
 
@@ -217,7 +222,9 @@ public class DriveManager implements ISubsystem {
      * @param kP    - Proportional constant
      * @param kI    - Integral constant
      * @param kD    - Derivative constant
+     * @deprecated {@link #setPID(double, double, double, double)}
      */
+    @Deprecated
     private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
         int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
         motor.config_kF(idx, kF, timeout);
@@ -378,8 +385,12 @@ public class DriveManager implements ISubsystem {
                 lastI = I.getDouble(0);
                 lastD = D.getDouble(0);
                 lastF = F.getDouble(0);
-                configureTalon(leaderLTalon, 0, lastF, lastP, lastI, lastD);
-                configureTalon(leaderRTalon, 0, lastF, lastP, lastI, lastD);
+                if (RobotToggles.DRIVE_USE_SPARKS){
+                    setPID(lastP, lastI, lastD, lastF);
+                }else {
+                    configureTalon(leaderLTalon, 0, lastF, lastP, lastI, lastD);
+                    configureTalon(leaderRTalon, 0, lastF, lastP, lastI, lastD);
+                }
             }
         }
     }

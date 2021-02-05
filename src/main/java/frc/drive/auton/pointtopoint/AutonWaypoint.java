@@ -18,13 +18,13 @@ public class AutonWaypoint {
         SPECIAL_ACTION = specialAction;
     }
 
+//----------------------------------------------------------------------------------------
+//Anything below here has a default of no action.                                         
+//----------------------------------------------------------------------------------------
     public AutonWaypoint(double x, double y, double speed) {
         this(new Point(x, y), speed);
     }
-
-    //----------------------------------------------------------------------------------------
-//Anything below here has a default of no action.
-//----------------------------------------------------------------------------------------
+    
     public AutonWaypoint(Point pos, double speed) {
         this(pos, speed, AutonSpecialActions.NONE);
     }

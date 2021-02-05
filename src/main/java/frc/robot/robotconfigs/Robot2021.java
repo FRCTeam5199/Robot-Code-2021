@@ -5,8 +5,6 @@ import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 
 public class Robot2021 extends AbstractConfig{
-    public static final boolean DEBUG = true;
-
     //Subsystems
     public static final boolean ENABLE_DRIVE = true;
     public static final boolean ENABLE_INTAKE = false;
@@ -19,7 +17,9 @@ public class Robot2021 extends AbstractConfig{
     public static final boolean DRIVE_USE_6_MOTORS = true;
     public static final boolean DRIVE_INVERT_LEFT = true;
     public static final boolean DRIVE_INVERT_RIGHT = false;
+
     public static final boolean CALIBRATE_DRIVE_PID = false;
+    public static final boolean CALIBRATE_SHOOTER_PID = false;
 
     //Misc
     public static final boolean ENABLE_VISION = false;

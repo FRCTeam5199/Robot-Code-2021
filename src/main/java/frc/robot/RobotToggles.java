@@ -14,7 +14,7 @@ public class RobotToggles {
      */
     public static final AbstractConfig getNumbersFrom = new Robot2020();
 
-    public static final boolean DEBUG;
+    public static final boolean DEBUG = true;
     //Subsystems
 
     /**
@@ -33,6 +33,7 @@ public class RobotToggles {
     public static final boolean DRIVE_INVERT_RIGHT;
 
     public static final boolean CALIBRATE_DRIVE_PID;
+    public static final boolean CALIBRATE_SHOOTER_PID;
 
     //Misc
     public static final boolean ENABLE_VISION;
@@ -57,8 +58,6 @@ public class RobotToggles {
     //@author jojo2357
     static {
         try {
-            DEBUG = getNumbersFrom.getClass().getField("DEBUG").getBoolean(getNumbersFrom);
-
             ENABLE_DRIVE = getNumbersFrom.getClass().getField("ENABLE_DRIVE").getBoolean(getNumbersFrom);
             ENABLE_INTAKE = getNumbersFrom.getClass().getField("ENABLE_INTAKE").getBoolean(getNumbersFrom);
             ENABLE_CLIMBER = getNumbersFrom.getClass().getField("ENABLE_CLIMBER").getBoolean(getNumbersFrom);
@@ -69,7 +68,9 @@ public class RobotToggles {
             DRIVE_USE_6_MOTORS = getNumbersFrom.getClass().getField("DRIVE_USE_6_MOTORS").getBoolean(getNumbersFrom);
             DRIVE_INVERT_LEFT = getNumbersFrom.getClass().getField("DRIVE_INVERT_LEFT").getBoolean(getNumbersFrom);
             DRIVE_INVERT_RIGHT = getNumbersFrom.getClass().getField("DRIVE_INVERT_RIGHT").getBoolean(getNumbersFrom);
+            
             CALIBRATE_DRIVE_PID = getNumbersFrom.getClass().getField("CALIBRATE_DRIVE_PID").getBoolean(getNumbersFrom);
+            CALIBRATE_SHOOTER_PID = getNumbersFrom.getClass().getField("CALIBRATE_SHOOTER_PID").getBoolean(getNumbersFrom);
 
             ENABLE_VISION = getNumbersFrom.getClass().getField("ENABLE_VISION").getBoolean(getNumbersFrom);
             USE_PHOTONVISION = getNumbersFrom.getClass().getField("USE_PHOTONVISION").getBoolean(getNumbersFrom);
