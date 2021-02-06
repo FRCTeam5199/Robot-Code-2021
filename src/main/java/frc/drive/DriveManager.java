@@ -44,10 +44,10 @@ public class DriveManager implements ISubsystem {
     private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry();
     private final NetworkTableEntry driveScaleMult = tab2.add("Speed Factor", RobotNumbers.DRIVE_SCALE).getEntry();
     private final boolean invert = true;
-    private final NetworkTableEntry P = tab2.add("P", 0).getEntry();
-    private final NetworkTableEntry I = tab2.add("I", 0).getEntry();
-    private final NetworkTableEntry D = tab2.add("D", 0).getEntry();
-    private final NetworkTableEntry F = tab2.add("F", 0).getEntry();
+    private final NetworkTableEntry P = tab2.add("P", RobotNumbers.DRIVEBASE_P).getEntry();
+    private final NetworkTableEntry I = tab2.add("I", RobotNumbers.DRIVEBASE_I).getEntry();
+    private final NetworkTableEntry D = tab2.add("D", RobotNumbers.DRIVEBASE_D).getEntry();
+    private final NetworkTableEntry F = tab2.add("F", RobotNumbers.DRIVEBASE_F).getEntry();
     public boolean autoComplete = false;
     public CANSparkMax leaderL, leaderR;
     public RobotTelemetry guidance;
@@ -274,6 +274,9 @@ public class DriveManager implements ISubsystem {
         }
     }
 
+    public void initGeneric(){
+    setBrake(false);
+    }
     /**
      * This is where driving happens. Call this every tick to drive and set {@link RobotToggles#EXPERIMENTAL_DRIVE} to change the drive stype
      *
@@ -408,17 +411,14 @@ public class DriveManager implements ISubsystem {
     public void updateGeneric() {
         guidance.updateGeneric();
         if (RobotToggles.CALIBRATE_DRIVE_PID) {
-            System.out.println("P: " + P.getDouble(0) + " from " + lastP);
-            if (lastP != P.getDouble(0) || lastI != I.getDouble(0) || lastD != D.getDouble(0) || lastF != F.getDouble(0)) {
-                lastP = P.getDouble(0);
-                lastI = I.getDouble(0);
-                lastD = D.getDouble(0);
-                lastF = F.getDouble(0);
-                if (RobotToggles.DRIVE_USE_SPARKS){
-                    setPID(lastP, lastI, lastD, lastF);
-                }else {
-                    configureTalon(leaderLTalon, 0, lastF, lastP, lastI, lastD);
-                    configureTalon(leaderRTalon, 0, lastF, lastP, lastI, lastD);
+            if (lastP != P.getDouble(RobotNumbers.DRIVEBASE_P) || lastI != I.getDouble(RobotNumbers.DRIVEBASE_I) || lastD != D.getDouble(RobotNumbers.DRIVEBASE_D) || lastF != F.getDouble(RobotNumbers.DRIVEBASE_P)) {
+                lastP = P.getDouble(RobotNumbers.DRIVEBASE_P);
+                lastI = I.getDouble(RobotNumbers.DRIVEBASE_I);
+                lastD = D.getDouble(RobotNumbers.DRIVEBASE_D);
+                lastF = F.getDouble(RobotNumbers.DRIVEBASE_F);
+                setPID(lastP, lastI, lastD, lastF);
+                if (RobotToggles.DEBUG){
+                    System.out.println("Set drive pid to P: " + lastP + " I: " + lastI + " D: " + lastD + " F: " + lastF);
                 }
             }
         }

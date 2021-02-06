@@ -52,6 +52,12 @@ public class Shooter implements ISubsystem {
      * Array of voltages and _. {Voltage, _}
      */
     private final double[][] voltageFFArray = {{0, 0}, {11, 190}, {13, 185}};
+    private final ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+    private final NetworkTableEntry P = tab.add("P", RobotNumbers.SHOOTER_P).getEntry();
+    private final NetworkTableEntry I = tab.add("I", RobotNumbers.SHOOTER_I).getEntry();
+    private final NetworkTableEntry D = tab.add("D", RobotNumbers.SHOOTER_D).getEntry();
+    private final NetworkTableEntry F = tab.add("F", RobotNumbers.SHOOTER_F).getEntry();
+    private final NetworkTableEntry constSpeed = tab.add("Constant Speed", 0).getEntry();
     public BaseController panel, joystickController;
     public double speed;
     public boolean atSpeed = false;
@@ -59,8 +65,6 @@ public class Shooter implements ISubsystem {
     public boolean interpolationEnabled = false;
     public boolean shooting;
     boolean trackingTarget = false;
-    private ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-    private NetworkTableEntry constSpeed = tab.add("Constant Speed", 0).getEntry();
     private CANSparkMax leader, follower;
     private TalonFX falconLeader, falconFollower;
     private CANPIDController speedo;
@@ -72,12 +76,6 @@ public class Shooter implements ISubsystem {
     private Timer shootTimer, indexTimer, shooterTimer;
     private boolean timerStarted = false;
     private boolean timerFlag = false;
-
-    private final ShuffleboardTab tab2 = tab;//Shuffleboard.getTab("drive");
-    private final NetworkTableEntry P = tab2.add("P", RobotNumbers.SHOOTER_P).getEntry();
-    private final NetworkTableEntry I = tab2.add("I", RobotNumbers.SHOOTER_I).getEntry();
-    private final NetworkTableEntry D = tab2.add("D", RobotNumbers.SHOOTER_D).getEntry();
-    private final NetworkTableEntry F = tab2.add("F", RobotNumbers.SHOOTER_F).getEntry();
     private double lastP = 0;
     private double lastI = 0;
     private double lastD = 0;
@@ -191,15 +189,6 @@ public class Shooter implements ISubsystem {
         updateGeneric();
     }
 
-    public void updateControls() {
-        if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
-            toggle(true);
-        }
-        if (joystickController.get(JoystickButtons.ELEVEN) == ButtonStatus.DOWN) {
-            toggle(joystickController.get(JoystickButtons.EIGHT) == ButtonStatus.DOWN);
-        }
-    }
-
     public void checkState() {
         if (actualRPM >= speed - 50) {
             atSpeed = true;
@@ -222,42 +211,14 @@ public class Shooter implements ISubsystem {
         */
     }
 
-    /**
-     * Set drive wheel RPM
-     *
-     * @param rpm speed to set
-     */
-    public void setSpeed(double rpm) {
-        if (RobotToggles.DEBUG) {
-            System.out.println("setSpeed1");
-        }
-        if (RobotToggles.SHOOTER_USE_SPARKS) {
-            speedo.setReference(rpm, ControlType.kVelocity);
-        } else {
-            falconLeader.set(ControlMode.Velocity, rpm * RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION / 600.0);
-        }
-        if (RobotToggles.DEBUG) {
-            System.out.println("setSpeed2");
-        }
-    }
-
-    public void setPercentSpeed(double percent){
-        if (percent <= 1){
+    public void setPercentSpeed(double percent) {
+        if (percent <= 1) {
             if (RobotToggles.SHOOTER_USE_SPARKS) {
                 leader.set(percent);
             } else {
                 falconLeader.set(ControlMode.PercentOutput, percent);
             }
         }
-    }
-
-    /**
-     * Enable or disable the shooter being spun up.
-     *
-     * @param toggle - spun up true or false
-     */
-    public void toggle(boolean toggle) {
-        enabled = toggle;
     }
 
     /**
@@ -275,11 +236,29 @@ public class Shooter implements ISubsystem {
             speedo.setD(D);
             speedo.setFF(F);
         } else {
-            falconLeader.config_kF(0, F, RobotNumbers.SHOOTER_TIMEOUT_MS);
             falconLeader.config_kP(0, P, RobotNumbers.SHOOTER_TIMEOUT_MS);
             falconLeader.config_kI(0, I, RobotNumbers.SHOOTER_TIMEOUT_MS);
             falconLeader.config_kD(0, D, RobotNumbers.SHOOTER_TIMEOUT_MS);
+            falconLeader.config_kF(0, F, RobotNumbers.SHOOTER_TIMEOUT_MS);
         }
+    }
+
+    public void updateControls() {
+        if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
+            toggle(true);
+        }
+        if (joystickController.get(JoystickButtons.ELEVEN) == ButtonStatus.DOWN) {
+            toggle(joystickController.get(JoystickButtons.EIGHT) == ButtonStatus.DOWN);
+        }
+    }
+
+    /**
+     * Enable or disable the shooter being spun up.
+     *
+     * @param toggle - spun up true or false
+     */
+    public void toggle(boolean toggle) {
+        enabled = toggle;
     }
 
     @Override
@@ -315,8 +294,9 @@ public class Shooter implements ISubsystem {
                 }
 
                 if (solidSpeed) {
-                    setSpeed(speed);
-                    ShootingEnums.FIRE_INDEXER_INDEPENDENT.shoot(this);
+                    //setSpeed(speed);
+                    //ShootingEnums.FIRE_INDEXER_INDEPENDENT.shoot(this);
+                    ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
                 } else if (trackingTarget && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else {
@@ -354,6 +334,25 @@ public class Shooter implements ISubsystem {
     }
 
     /**
+     * Set drive wheel RPM
+     *
+     * @param rpm speed to set
+     */
+    public void setSpeed(double rpm) {
+        if (RobotToggles.DEBUG) {
+            System.out.println("setSpeed1");
+        }
+        if (RobotToggles.SHOOTER_USE_SPARKS) {
+            speedo.setReference(rpm, ControlType.kVelocity);
+        } else {
+            falconLeader.set(ControlMode.Velocity, rpm * RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION / 600.0);
+        }
+        if (RobotToggles.DEBUG) {
+            System.out.println("setSpeed2");
+        }
+    }
+
+    /**
      * if the shooter is actually at the requested speed
      *
      * @return if the shooter is actually at the requested speed
@@ -365,6 +364,7 @@ public class Shooter implements ISubsystem {
             return falconLeader.getSelectedSensorVelocity() > speed - 80;
         }
     }
+
 
     /**
      * getter for spunUp

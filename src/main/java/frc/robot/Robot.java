@@ -40,12 +40,34 @@ public class Robot extends TimedRobot {
         if (RobotToggles.ENABLE_SHOOTER) {
             shooter = new Shooter();
             turret = new Turret();
-            if (RobotToggles.ENABLE_DRIVE)
-                turret.setTelemetry(driver.guidance);
+            if (RobotToggles.ENABLE_DRIVE) turret.setTelemetry(driver.guidance);
         }
         if (RobotToggles.ENABLE_VISION) {
             goalPhoton = new GoalPhoton();
         }
+    }
+    
+    @Override
+    public void autonomousInit() {
+        if (RobotToggles.ENABLE_DRIVE) {
+            driver.initGeneric();
+            driver.guidance.resetEncoders();
+            autonManager = new AutonManager("ForwardAndBack", driver);
+        }
+    }
+
+    @Override
+    public void teleopInit() {
+        if (RobotToggles.ENABLE_SHOOTER) {
+            turret.teleopInit();
+        }
+        if (RobotToggles.ENABLE_DRIVE) {
+            driver.initGeneric();
+        }
+    }
+
+    @Override
+    public void testInit() {
     }
 
     @Override
@@ -53,24 +75,12 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void autonomousInit() {
-        driver.guidance.resetEncoders();
-        //autonManager = new AutonManager(AutonRoutines.GO_FORWARD_GO_BACK, driver);
-        //autonManager = new AutonManager(AutonRoutines.CARPET_TEST_SLALOM, driver);
-        autonManager = new AutonManager("ForwardAndBack", driver);
-        driver.setBrake(false);
-
-        /*autonomousCommand = autonManager.getAutonomousCommand();
-        if (autonomousCommand != null) {
-            autonomousCommand.schedule();
-        }*/
+    public void disabledPeriodic() {
+        //Do nothing
     }
 
     @Override
     public void autonomousPeriodic() {
-        if (RobotToggles.ENABLE_DRIVE) {
-            //driver.updateAutonomous();
-        }
         if (RobotToggles.ENABLE_INTAKE) {
             intake.updateAuton();
         }
@@ -84,17 +94,6 @@ public class Robot extends TimedRobot {
         }
         autonManager.updateAuton();
     }
-
-    @Override
-    public void teleopInit() {
-        if (RobotToggles.ENABLE_SHOOTER) {
-            turret.teleopInit();
-        }
-        if (RobotToggles.ENABLE_DRIVE) {
-            driver.setBrake(false);
-        }
-    }
-
 
     @Override
     public void teleopPeriodic() {
@@ -117,9 +116,14 @@ public class Robot extends TimedRobot {
             }
         }
     }
-
     @Override
-    public void testInit() {
+    public void disabledInit() {
+        if (RobotToggles.ENABLE_SHOOTER) {
+            turret.disabledInit();
+        }
+        if (RobotToggles.ENABLE_DRIVE) {
+            driver.setBrake(true);
+        }
     }
 
     @Override
@@ -142,20 +146,5 @@ public class Robot extends TimedRobot {
                 goalPhoton.updateTest();
             }
         }
-    }
-
-    @Override
-    public void disabledInit() {
-        if (RobotToggles.ENABLE_SHOOTER) {
-            turret.disabledInit();
-        }
-        if (RobotToggles.ENABLE_DRIVE){
-            driver.setBrake(true);
-        }
-    }
-
-    @Override
-    public void disabledPeriodic() {
-        //Do nothing
-    }
+    }    
 }

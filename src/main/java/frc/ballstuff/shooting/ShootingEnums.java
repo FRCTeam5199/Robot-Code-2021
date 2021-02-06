@@ -11,15 +11,19 @@ import static frc.robot.Robot.hopper;
  * Contains Multiple different firing modes for the shooter
  */
 public enum ShootingEnums {
-
-    FIRE_HIGH_ACCURACY(shooter -> {
-        // boolean visOverride = hopper.visionOverride.getBoolean(false);
-        // boolean spinOverride = hopper.spinupOverride.getBoolean(false);
-        boolean runDisable = false;//hopper.disableOverride.getBoolean(false);
-        shooter.toggle(true);
-        if (RobotToggles.ENABLE_HOPPER) hopper.setAll(shooter.atSpeed());
+    //Used when solid speed button is held down
+    FIRE_SOLID_SPEED(shooter -> {
+        if (shooter.actualRPM < 2100) {
+            shooter.setPercentSpeed(0.75);
+        } else {
+            shooter.setSpeed(4200 * (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
+        }
+        if (RobotToggles.ENABLE_HOPPER) {
+            hopper.setAll(shooter.spunUp() && shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN);
+        }
     }),
 
+    //Used by our current vision tracking
     FIRE_HIGH_SPEED(shooter -> {
         //shooter.setSpeed(0);
         if (RobotToggles.ENABLE_VISION) {
@@ -32,6 +36,14 @@ public enum ShootingEnums {
         if (RobotToggles.ENABLE_HOPPER) {
             hopper.setAll((shooter.spunUp() || shooter.recovering()) && (shooter.validTarget()));
         }
+    }),
+
+    FIRE_HIGH_ACCURACY(shooter -> {
+        // boolean visOverride = hopper.visionOverride.getBoolean(false);
+        // boolean spinOverride = hopper.spinupOverride.getBoolean(false);
+        boolean runDisable = false;//hopper.disableOverride.getBoolean(false);
+        shooter.toggle(true);
+        if (RobotToggles.ENABLE_HOPPER) hopper.setAll(shooter.atSpeed());
     }),
 
     FIRE_INDEXER_INDEPENDENT(shooter -> {

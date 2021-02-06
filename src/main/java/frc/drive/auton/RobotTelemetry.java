@@ -198,6 +198,7 @@ public class RobotTelemetry implements ISubsystem {
      */
     @Override
     public void init() {
+        resetEncoders();
         pigeon = new PigeonIMU(RobotMap.PIGEON);
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(yawAbs()), new Pose2d(0, 0, new Rotation2d()));

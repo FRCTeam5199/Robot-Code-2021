@@ -41,7 +41,7 @@ public class AutonManager implements ISubsystem {
         try {
             Trajectory = TrajectoryUtil.fromPathweaverJson(routinePath);
             //telem.resetOdometry(Trajectory.getInitialPose(), Rotation2d.fromDegrees(telem.yawAbs()));//telem.yawAbs());
-            telem.resetOdometry(telem.robotPose, Rotation2d.fromDegrees(telem.yawAbs()));
+            telem.resetOdometry(Trajectory.getInitialPose(), Rotation2d.fromDegrees(telem.yawAbs()));
             Transform2d transform = telem.robotPose.minus(Trajectory.getInitialPose());
             Trajectory.transformBy(transform);
             //Transform2d transform2 = new Pose2d(0, 3.682, Rotation2d.fromDegrees(0)).minus(Trajectory.getInitialPose());
