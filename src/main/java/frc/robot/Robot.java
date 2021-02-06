@@ -18,7 +18,8 @@ public class Robot extends TimedRobot {
     public static Turret turret;
     public static GoalPhoton goalPhoton;
     public static AutonManager autonManager;
-    public static Command autonomousCommand;
+
+    private static long lastDisable = 0;
 
     /**
      * Init everything
@@ -52,7 +53,7 @@ public class Robot extends TimedRobot {
         if (RobotToggles.ENABLE_DRIVE) {
             driver.initGeneric();
             driver.guidance.resetEncoders();
-            autonManager = new AutonManager("ForwardAndBack", driver);
+            autonManager = new AutonManager("RobotTestPath2", driver);
         }
     }
 
@@ -77,6 +78,8 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
         //Do nothing
+        if (RobotToggles.ENABLE_DRIVE && System.currentTimeMillis() > lastDisable + 5000)
+            driver.setBrake(false);
     }
 
     @Override
@@ -123,6 +126,7 @@ public class Robot extends TimedRobot {
         }
         if (RobotToggles.ENABLE_DRIVE) {
             driver.setBrake(true);
+            lastDisable = System.currentTimeMillis();
         }
     }
 

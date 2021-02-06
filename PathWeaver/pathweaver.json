@@ -2,7 +2,7 @@
   "lengthUnit": "Meter",
   "exportUnit": "Always Meters",
   "maxVelocity": 4.0,
-  "maxAcceleration": 3.56,
-  "wheelBase": 1.866666666,
+  "maxAcceleration": 1.5,
+  "wheelBase": 0.508,
   "gameName": "Carpet Field 1-31-2021"
 }

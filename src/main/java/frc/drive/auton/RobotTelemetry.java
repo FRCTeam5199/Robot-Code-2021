@@ -15,19 +15,18 @@ import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 
 public class RobotTelemetry implements ISubsystem {
+    private final DriveManager driver;
     public Pose2d robotPose;
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
-    private final DriveManager driver;
-    private PigeonIMU pigeon;
     public PIDController headingPID;
     public DifferentialDriveOdometry odometer;
-
     public double[] ypr = new double[3];
     public double[] startypr = new double[3];
+    private PigeonIMU pigeon;
     private double startYaw;
 
-    public RobotTelemetry(DriveManager driver){
+    public RobotTelemetry(DriveManager driver) {
         this.driver = driver;
         init();
     }
@@ -35,10 +34,10 @@ public class RobotTelemetry implements ISubsystem {
     /**
      * Wraps the angle between prograde (straight forward) and the location of the given point on a range of -180 to 180
      *
-     * @see #headingError(double, double)
      * @param x x coord of other point
      * @param y y coord of other point
      * @return apparent angle between heading and passed coords
+     * @see #headingError(double, double)
      */
     public double realHeadingError(double x, double y) {
         return UtilFunctions.mathematicalMod(headingError(x, y) + 180, 360) - 180;
@@ -98,7 +97,7 @@ public class RobotTelemetry implements ISubsystem {
 
     /**
      * Yaw since last restart
-     * 
+     *
      * @return yaw since last restart
      */
     public double yawRel() { //return relative(to start) yaw of pigeon
@@ -123,8 +122,8 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     /**
-    * Zeroes the encoders at their current position
-    */
+     * Zeroes the encoders at their current position
+     */
     public void resetEncoders() {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             driver.leaderL.getEncoder().setPosition(0);
@@ -138,10 +137,10 @@ public class RobotTelemetry implements ISubsystem {
     /**
      * Resets all orienting to zeroes.
      *
-     * @param pose ignored
+     * @param pose     ignored
      * @param rotation ignored
      */
-    public void resetOdometry(Pose2d pose, Rotation2d rotation){
+    public void resetOdometry(Pose2d pose, Rotation2d rotation) {
         //odometer.resetPosition(pose, rotation);
         resetPigeon();
         resetEncoders();
@@ -202,6 +201,8 @@ public class RobotTelemetry implements ISubsystem {
         pigeon = new PigeonIMU(RobotMap.PIGEON);
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(yawAbs()), new Pose2d(0, 0, new Rotation2d()));
+        if (RobotToggles.USE_PIGEON && RobotToggles.ENABLE_IMU)
+            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(yawAbs())), getMetersLeft(), getMetersRight());
     }
 
     /**
