@@ -24,9 +24,9 @@ public enum ShootingEnums {
         //shooter.setSpeed(0);
         if (RobotToggles.ENABLE_VISION) {
             //shooter.setSpeed(shooter.interpolateSpeed());
-            shooter.setSpeed(4200 * (shooter.joystickController.get(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
+            shooter.setSpeed(4200); //* (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1)
         } else {
-            shooter.setSpeed(4200 * (shooter.joystickController.get(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
+            shooter.setSpeed(4200); //* (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1)
         }
 
         if (RobotToggles.ENABLE_HOPPER) {

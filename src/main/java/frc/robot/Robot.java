@@ -58,11 +58,12 @@ public class Robot extends TimedRobot {
         //autonManager = new AutonManager(AutonRoutines.GO_FORWARD_GO_BACK, driver);
         //autonManager = new AutonManager(AutonRoutines.CARPET_TEST_SLALOM, driver);
         autonManager = new AutonManager("ForwardAndBack", driver);
+        driver.setBrake(false);
 
-        autonomousCommand = autonManager.getAutonomousCommand();
+        /*autonomousCommand = autonManager.getAutonomousCommand();
         if (autonomousCommand != null) {
             autonomousCommand.schedule();
-        }
+        }*/
     }
 
     @Override
@@ -88,6 +89,9 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         if (RobotToggles.ENABLE_SHOOTER) {
             turret.teleopInit();
+        }
+        if (RobotToggles.ENABLE_DRIVE) {
+            driver.setBrake(false);
         }
     }
 
@@ -144,6 +148,9 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         if (RobotToggles.ENABLE_SHOOTER) {
             turret.disabledInit();
+        }
+        if (RobotToggles.ENABLE_DRIVE){
+            driver.setBrake(true);
         }
     }
 

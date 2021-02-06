@@ -73,11 +73,11 @@ public class Shooter implements ISubsystem {
     private boolean timerStarted = false;
     private boolean timerFlag = false;
 
-    private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
-    private final NetworkTableEntry P = tab2.add("P", 0).getEntry();
-    private final NetworkTableEntry I = tab2.add("I", 0).getEntry();
-    private final NetworkTableEntry D = tab2.add("D", 0).getEntry();
-    private final NetworkTableEntry F = tab2.add("F", 0).getEntry();
+    private final ShuffleboardTab tab2 = tab;//Shuffleboard.getTab("drive");
+    private final NetworkTableEntry P = tab2.add("P", RobotNumbers.SHOOTER_P).getEntry();
+    private final NetworkTableEntry I = tab2.add("I", RobotNumbers.SHOOTER_I).getEntry();
+    private final NetworkTableEntry D = tab2.add("D", RobotNumbers.SHOOTER_D).getEntry();
+    private final NetworkTableEntry F = tab2.add("F", RobotNumbers.SHOOTER_F).getEntry();
     private double lastP = 0;
     private double lastI = 0;
     private double lastD = 0;
@@ -213,11 +213,13 @@ public class Shooter implements ISubsystem {
             recoveryPID = false;
             spunUp = false;
         }
+        /* You're bad.
         if (recoveryPID) {
             setPID(RobotNumbers.SHOOTER_RECOVERY_P, RobotNumbers.SHOOTER_RECOVERY_I, RobotNumbers.SHOOTER_RECOVERY_D, RobotNumbers.SHOOTER_F);
         } else {
             setPID(RobotNumbers.SHOOTER_P, RobotNumbers.SHOOTER_I, RobotNumbers.SHOOTER_D, RobotNumbers.SHOOTER_F);
         }
+        */
     }
 
     /**
@@ -236,6 +238,16 @@ public class Shooter implements ISubsystem {
         }
         if (RobotToggles.DEBUG) {
             System.out.println("setSpeed2");
+        }
+    }
+
+    public void setPercentSpeed(double percent){
+        if (percent <= 1){
+            if (RobotToggles.SHOOTER_USE_SPARKS) {
+                leader.set(percent);
+            } else {
+                falconLeader.set(ControlMode.PercentOutput, percent);
+            }
         }
     }
 
@@ -263,10 +275,10 @@ public class Shooter implements ISubsystem {
             speedo.setD(D);
             speedo.setFF(F);
         } else {
-            falconLeader.config_kF(0, RobotNumbers.SHOOTER_F, RobotNumbers.SHOOTER_TIMEOUT_MS);
-            falconLeader.config_kP(0, RobotNumbers.SHOOTER_P, RobotNumbers.SHOOTER_TIMEOUT_MS);
-            falconLeader.config_kI(0, RobotNumbers.SHOOTER_I, RobotNumbers.SHOOTER_TIMEOUT_MS);
-            falconLeader.config_kD(0, RobotNumbers.SHOOTER_D, RobotNumbers.SHOOTER_TIMEOUT_MS);
+            falconLeader.config_kF(0, F, RobotNumbers.SHOOTER_TIMEOUT_MS);
+            falconLeader.config_kP(0, P, RobotNumbers.SHOOTER_TIMEOUT_MS);
+            falconLeader.config_kI(0, I, RobotNumbers.SHOOTER_TIMEOUT_MS);
+            falconLeader.config_kD(0, D, RobotNumbers.SHOOTER_TIMEOUT_MS);
         }
     }
 
@@ -309,7 +321,7 @@ public class Shooter implements ISubsystem {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else {
                     hopper.setAll(false);
-                    setSpeed(constSpeed.getDouble(0));
+                    setPercentSpeed(constSpeed.getDouble(0));
                 }
                 break;
             }
@@ -317,14 +329,17 @@ public class Shooter implements ISubsystem {
                 throw new IllegalStateException("This UI not implemented for this controller");
         }
         if (RobotToggles.CALIBRATE_SHOOTER_PID) {
-            System.out.println("P: " + P.getDouble(0) + " from " + lastP);
+
             if (lastP != P.getDouble(0) || lastI != I.getDouble(0) || lastD != D.getDouble(0) || lastF != F.getDouble(0)) {
+                System.out.println("P: " + P.getDouble(0) + " from " + lastP);
+                System.out.println("I: " + I.getDouble(0) + " from " + lastI);
+                System.out.println("D: " + D.getDouble(0) + " from " + lastD);
+                System.out.println("F: " + F.getDouble(0) + " from " + lastF);
                 lastP = P.getDouble(0);
                 lastI = I.getDouble(0);
                 lastD = D.getDouble(0);
                 lastF = F.getDouble(0);
-                setPID(lastF, lastP, lastI, lastD);
-                setPID(lastF, lastP, lastI, lastD);
+                setPID(lastP, lastI, lastD, lastF);
             }
         }
         if (RobotToggles.DEBUG) {

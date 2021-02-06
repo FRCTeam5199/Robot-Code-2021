@@ -74,7 +74,7 @@ public class Hopper implements ISubsystem {
         } else {
             indexer.set(ControlMode.PercentOutput, indexerActive ? 0.8 : 0);
             agitator.set(ControlMode.PercentOutput, agitatorActive ? 0.6 : 0);
-            indexed = indexerSensorRange() > 9;
+            indexed = true;//indexerSensorRange() > 9;
         }
     }
 

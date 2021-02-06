@@ -1,6 +1,7 @@
 package frc.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -116,6 +117,34 @@ public class DriveManager implements ISubsystem {
             }
             leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
             leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
+        }
+    }
+
+    public void setBrake(boolean braking){
+        if (!braking){
+            if (RobotToggles.DRIVE_USE_SPARKS){
+                leaderL.setIdleMode(CANSparkMax.IdleMode.kCoast);
+                leaderR.setIdleMode(CANSparkMax.IdleMode.kCoast);
+                followerL.setIdleMode(CANSparkMax.IdleMode.kCoast);
+                followerR.setIdleMode(CANSparkMax.IdleMode.kCoast);
+            } else {
+                leaderLTalon.setNeutralMode(NeutralMode.Coast);
+                leaderRTalon.setNeutralMode(NeutralMode.Coast);
+                followerLTalon.setNeutralMode(NeutralMode.Coast);
+                followerRTalon.setNeutralMode(NeutralMode.Coast);
+            }
+        } else {
+            if (RobotToggles.DRIVE_USE_SPARKS){
+                leaderL.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                leaderR.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                followerL.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                followerR.setIdleMode(CANSparkMax.IdleMode.kBrake);
+            } else {
+                leaderLTalon.setNeutralMode(NeutralMode.Brake);
+                leaderRTalon.setNeutralMode(NeutralMode.Brake);
+                followerLTalon.setNeutralMode(NeutralMode.Brake);
+                followerRTalon.setNeutralMode(NeutralMode.Brake);
+            }
         }
     }
 
@@ -480,6 +509,11 @@ public class DriveManager implements ISubsystem {
                 follower.setSmartCurrentLimit(limit);
             }
         }
+        public void setIdleMode(CANSparkMax.IdleMode idleMode){
+            for (CANSparkMax follower : this.motors){
+                follower.setIdleMode(idleMode);
+            }
+        }
     }
 
     /**
@@ -525,6 +559,12 @@ public class DriveManager implements ISubsystem {
         public void follow(@NotNull WPI_TalonFX leader) {
             for (WPI_TalonFX follower : this.motors) {
                 follower.follow(leader);
+            }
+        }
+
+        public void setNeutralMode(NeutralMode mode){
+            for (WPI_TalonFX follower : this.motors) {
+                follower.setNeutralMode(mode);
             }
         }
     }

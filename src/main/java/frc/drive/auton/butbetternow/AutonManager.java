@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
@@ -37,8 +40,12 @@ public class AutonManager implements ISubsystem {
     public void init() {
         try {
             Trajectory = TrajectoryUtil.fromPathweaverJson(routinePath);
-            telem.resetOdometry(Trajectory.getInitialPose(), telem.yawAbs());
-            Trajectory.relativeTo(telem.robotPose);
+            //telem.resetOdometry(Trajectory.getInitialPose(), Rotation2d.fromDegrees(telem.yawAbs()));//telem.yawAbs());
+            telem.resetOdometry(telem.robotPose, Rotation2d.fromDegrees(telem.yawAbs()));
+            Transform2d transform = telem.robotPose.minus(Trajectory.getInitialPose());
+            Trajectory.transformBy(transform);
+            //Transform2d transform2 = new Pose2d(0, 3.682, Rotation2d.fromDegrees(0)).minus(Trajectory.getInitialPose());
+            //Trajectory.transformBy(transform2);
         } catch (IOException e) {
             DriverStation.reportError("Unable to open trajectory: " + routinePath, e.getStackTrace());
         }
@@ -58,6 +65,7 @@ public class AutonManager implements ISubsystem {
         telem.updateAuton();
         //RamseteCommand ramseteCommand = new RamseteCommand(Trajectory, () -> telem.robotPose, controller, DRIVING_CHILD.kinematics, DRIVING_CHILD::driveFPS);
         Trajectory.State goal = Trajectory.sample(timer.get());
+        System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
         chassisSpeeds = controller.calculate(telem.robotPose, goal);
         DRIVING_CHILD.drivePure(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
     }
