@@ -369,27 +369,18 @@ public class DriveManager implements ISubsystem {
     public void driveFPS(double leftFPS, double rightFPS) {
         double mult = 3.8 * 2.16 * RobotNumbers.DRIVE_SCALE;
         if (RobotToggles.DEBUG) {
-            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + convertFPStoRPM(leftFPS) + " " + convertFPStoRPM(rightFPS));
+            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + UtilFunctions.convertDriveFPStoRPM(leftFPS) + " " + UtilFunctions.convertDriveFPStoRPM(rightFPS));
             System.out.println("Req left: " + (getTargetVelocity(leftFPS) * mult) + " Req Right: " + (getTargetVelocity(rightFPS) * mult));
         }
         if (RobotToggles.DRIVE_USE_SPARKS) {
-            leftPID.setReference(convertFPStoRPM(leftFPS) * mult, ControlType.kVelocity);
-            rightPID.setReference(convertFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
+            leftPID.setReference(UtilFunctions.convertDriveFPStoRPM(leftFPS) * mult, ControlType.kVelocity);
+            rightPID.setReference(UtilFunctions.convertDriveFPStoRPM(rightFPS) * mult, ControlType.kVelocity);
         } else {
             leaderLTalon.set(ControlMode.Velocity, getTargetVelocity(leftFPS) * mult);
             leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
         }
     }
-
-    /**
-     * Can you read the name?
-     *
-     * @param FPS speed in feet/second
-     * @return fps converted to rpm based on max speds
-     */
-    private static double convertFPStoRPM(double FPS) {
-        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
-    }
+    
 
     /**
      * Gets the target velocity based on the speed requested

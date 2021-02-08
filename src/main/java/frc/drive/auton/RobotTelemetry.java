@@ -156,22 +156,38 @@ public class RobotTelemetry implements ISubsystem {
         return ypr[0];
     }
 
-    //TODO implement for falcos
+    //TODO implement for falcons
     public double getRPMLeft() {
-        return (driver.leaderL.getEncoder().getVelocity()) / 9;
+        if (RobotToggles.DRIVE_USE_SPARKS){
+            return (driver.leaderL.getEncoder().getVelocity()) / 9;
+        } else {
+            return 0;
+        }
     }
 
     public double getRPMRight() {
-        return (driver.leaderR.getEncoder().getVelocity()) / 9;
+        if (RobotToggles.DRIVE_USE_SPARKS){
+            return (driver.leaderR.getEncoder().getVelocity()) / 9;
+        } else {
+            return 0; //return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0; //THIS IS FPS > SENSOR UNITS. TODO reverse this
+        }
     }
 
-    //TODO implement for falcos
+    //TODO implement for falcons
     public double getRotationsLeft() {
-        return (driver.leaderL.getEncoder().getPosition()) / 9;
+        if (RobotToggles.DRIVE_USE_SPARKS){
+            return (driver.leaderL.getEncoder().getPosition()) / 9;
+        } else {
+            return 0;
+        }
     }
 
     public double getRotationsRight() {
-        return (driver.leaderR.getEncoder().getPosition()) / 9;
+        if (RobotToggles.DRIVE_USE_SPARKS){
+            return (driver.leaderR.getEncoder().getPosition()) / 9;
+        } else {
+            return 0;
+        }
     }
 
     /**
