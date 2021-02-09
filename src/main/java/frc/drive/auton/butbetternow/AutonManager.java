@@ -50,7 +50,7 @@ public class AutonManager implements ISubsystem {
         } catch (IOException e) {
             DriverStation.reportError("Unable to open trajectory: " + routinePath, e.getStackTrace());
         }
-        timer.reset();
+        //timer.reset();
         timer.start();
         //System.out.println("Starting timer.");
     }

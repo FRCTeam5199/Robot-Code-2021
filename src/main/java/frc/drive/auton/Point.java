@@ -23,6 +23,10 @@ public class Point {
         return distance > getDistanceFromPoint(otherPoint);
     }
 
+    public boolean isWithinEllipse(double distx, double disty, Point otherPoint){
+        return Math.pow(otherPoint.X - X, 2)/Math.pow(distx, 2) + Math.pow(otherPoint.Y - Y, 2)/Math.pow(disty, 2) <= 1;
+    }
+
     /**
      * Find the distance between this and another point
      * 

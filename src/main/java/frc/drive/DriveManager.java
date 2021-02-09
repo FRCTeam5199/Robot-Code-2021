@@ -3,6 +3,7 @@ package frc.drive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -556,6 +557,12 @@ public class DriveManager implements ISubsystem {
         public void setNeutralMode(NeutralMode mode){
             for (WPI_TalonFX follower : this.motors) {
                 follower.setNeutralMode(mode);
+            }
+        }
+           
+        public void addInstrument(Orchestra orchestra){
+            for (WPI_TalonFX follower : this.motors) {
+                orchestra.addInstrument(follower);
             }
         }
     }
