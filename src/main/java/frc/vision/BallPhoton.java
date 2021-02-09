@@ -6,15 +6,17 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
 import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPipelineResult;
+import org.photonvision.PhotonTrackedTarget;
+
+import java.util.List;
 
 public class BallPhoton implements ISubsystem {
-    public NetworkTableEntry yaw;
-    public NetworkTableEntry size;
-    public NetworkTableEntry hasTarget;
-    public NetworkTableEntry pitch;
-    public NetworkTableEntry pose;
-    NetworkTableInstance table;
-    NetworkTable cameraTable;
+
+    PhotonCamera ballCamera;
+    List<PhotonTrackedTarget> targets;
+    PhotonPipelineResult cameraResult;
     LinearFilter filter;
 
     /**
@@ -29,13 +31,8 @@ public class BallPhoton implements ISubsystem {
      */
     public void init() {
         filter = LinearFilter.movingAverage(5);
-        table = NetworkTableInstance.getDefault();
-        cameraTable = table.getTable("photonvision").getSubTable(RobotMap.BALL_CAM_NAME);
-        yaw = cameraTable.getEntry("targetYaw");
-        size = cameraTable.getEntry("targetArea");
-        hasTarget = cameraTable.getEntry("hasTarget");
-        pitch = cameraTable.getEntry("targetPitch");
-        pose = cameraTable.getEntry("targetPose");
+        ballCamera = new PhotonCamera("BallCamera");
+        cameraResult = ballCamera.getLatestResult();
     }
 
     /**
@@ -68,6 +65,9 @@ public class BallPhoton implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
+        if (validTarget()) {
+            targets = cameraResult.getTargets();
+        }
     }
 
     /**
@@ -75,12 +75,11 @@ public class BallPhoton implements ISubsystem {
      *
      * @return angle between crosshair and Ball, left negative, 29.8 degrees in both directions.
      */
-    public double getBallAngleSmoothed() {
-        double angle = yaw.getDouble(0);
-        if (validTarget()) {
-            return filter.calculate(angle);
+    public double getBallAngleSmoothed(int targetId) {
+        if (validTarget() && targetId <= targets.size()) {
+            return filter.calculate(targets.get(targetId).getYaw());
         }
-        return 0;
+        return -10;
     }
 
     /**
@@ -89,7 +88,7 @@ public class BallPhoton implements ISubsystem {
      * @return whether or not there is a valid target in view.
      */
     public boolean validTarget() {
-        return hasTarget.getBoolean(false);
+        return cameraResult.hasTargets();
     }
 
     /**
@@ -97,12 +96,11 @@ public class BallPhoton implements ISubsystem {
      *
      * @return angle between crosshair and Ball, left negative, 29.8 degrees in both directions.
      */
-    public double getBallAngle(int num) {
-        double angle = yaw.getDouble(num);
-        if (validTarget()) {
-            return angle;
+    public double getBallAngle(int targetId) {
+        if (validTarget() && targetId <= targets.size()) {
+            return targets.get(targetId).getYaw();
         }
-        return 0;
+        return -10;
     }
 
     /**
@@ -110,12 +108,11 @@ public class BallPhoton implements ISubsystem {
      *
      * @return angle between crosshair and Ball, down negative, 22 degrees in both directions.
      */
-    public double getBallPitch(int num) {
-        double angle = pitch.getDouble(num);
-        if (validTarget()) {
-            return angle;
+    public double getBallPitch(int targetId) {
+        if (validTarget() && targetId <= targets.size()) {
+            return targets.get(targetId).getPitch();
         }
-        return 0;
+        return -10;
     }
 
     /**
@@ -123,11 +120,10 @@ public class BallPhoton implements ISubsystem {
      *
      * @return size of the Ball in % of the screen, 0-100.
      */
-    public double getBallSize(int num) {
-        double BallSize = size.getDouble(num);
-        if (validTarget()) {
-            return BallSize;
+    public double getBallSize(int targetId) {
+        if (validTarget() && targetId <= targets.size()) {
+            return targets.get(targetId).getArea();
         }
-        return 0;
+        return -10;
     }
 }
