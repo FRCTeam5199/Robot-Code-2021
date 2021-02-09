@@ -39,7 +39,7 @@ public class GoalPhoton implements ISubsystem {
     }
 
     /**
-     * calls updateGeneric 
+     * calls updateGeneric
      * see GoalPhoton.updateGeneric
      */
     @Override
@@ -48,7 +48,7 @@ public class GoalPhoton implements ISubsystem {
     }
 
     /**
-     * calls updateGeneric 
+     * calls updateGeneric
      * see GoalPhoton.updateGeneric
      */
     @Override
@@ -57,16 +57,18 @@ public class GoalPhoton implements ISubsystem {
     }
 
     /**
-     * 
+     *
      */
     @Override
-    public void updateAuton() { }
+    public void updateAuton() {
+    }
 
     /**
      * updates generic things for GoalPhoton
      */
     @Override
-    public void updateGeneric() { }
+    public void updateGeneric() {
+    }
 
     /**
      * Get angle between crosshair and goal left/right with filter calculation.

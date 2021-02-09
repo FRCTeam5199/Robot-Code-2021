@@ -27,6 +27,12 @@ import frc.vision.GoalPhoton;
  * Turret refers to the shooty thing that spinny spinny in the yaw direction
  */
 public class Turret implements ISubsystem {
+    private final ShuffleboardTab tab = Shuffleboard.getTab("Turret");
+    private final NetworkTableEntry fMult = tab.add("F Multiplier", 0).getEntry();
+    private final NetworkTableEntry pos = tab.add("Position", 0).getEntry();
+    private final NetworkTableEntry arbDriveMult = tab.add("drive omega mult", -0.25).getEntry();
+    private final NetworkTableEntry angleOffset = tab.add("angle offset", -2.9).getEntry();
+    private final NetworkTableEntry rotSpeed = tab.add("rotationSpeed", 0).getEntry();
     public boolean track;
     public boolean atTarget = false;
     public boolean chasingTarget = false;
@@ -37,12 +43,6 @@ public class Turret implements ISubsystem {
     private CANPIDController controller;
     private PIDController positionControl;
     private RobotTelemetry guidance;
-    private final ShuffleboardTab tab = Shuffleboard.getTab("Turret");
-    private final NetworkTableEntry fMult = tab.add("F Multiplier", 0).getEntry();
-    private final NetworkTableEntry pos = tab.add("Position", 0).getEntry();
-    private final NetworkTableEntry arbDriveMult = tab.add("drive omega mult", -0.25).getEntry();
-    private final NetworkTableEntry angleOffset = tab.add("angle offset", -2.9).getEntry();
-    private final NetworkTableEntry rotSpeed = tab.add("rotationSpeed", 0).getEntry();
     private GoalPhoton goalPhoton;
     private int scanDirection = -1;
 
@@ -92,7 +92,8 @@ public class Turret implements ISubsystem {
     }
 
     @Override
-    public void updateAuton() { }
+    public void updateAuton() {
+    }
 
     /**
      * prevents the turret from rotating too far, does debug
@@ -159,6 +160,27 @@ public class Turret implements ISubsystem {
     }
 
     /**
+     * @return position of turret in degrees
+     */
+    private double turretDegrees() {
+        return 270 - encoder.getPosition();
+    }
+
+    /**
+     * Scan the turret back and forth to find a target.
+     *
+     * @return an integer to determine the direction of turret scan
+     */
+    private double scan() {
+        if (turretDegrees() >= 260) {
+            scanDirection = 1;
+        } else if (turretDegrees() <= 100) {
+            scanDirection = -1;
+        }
+        return scanDirection;
+    }
+
+    /**
      * Is the shooter overrotated?
      *
      * @return yes the shooter is overrotated or no the shooter is not overrotated
@@ -202,17 +224,10 @@ public class Turret implements ISubsystem {
     }
 
     /**
-     * @return position of turret in degrees
-     */
-    private double turretDegrees() {
-        return 270 - encoder.getPosition();
-    }
-
-    /**
      * If the angle is greater than the acceptable max, or less than the acceptable min, returns the nearest bound, else bounces input
-     * 
+     *
      * @param angle the current angle of the turret
-     * @return angle at the minimum or maximum angle  
+     * @return angle at the minimum or maximum angle
      */
     private double limitAngle(double angle) {
         return Math.max(Math.min(angle, RobotNumbers.TURRET_MAX_POS), RobotNumbers.TURRET_MIN_POS);
@@ -241,20 +256,6 @@ public class Turret implements ISubsystem {
         } else {
             motor.setIdleMode(IdleMode.kCoast);
         }
-    }
-      
-    /**
-     * Scan the turret back and forth to find a target.
-     * 
-     * @return an integer to determine the direction of turret scan  
-     */
-    private double scan() {
-        if (turretDegrees() >= 260) {
-            scanDirection = 1;
-        } else if (turretDegrees() <= 100) {
-            scanDirection = -1;
-        }
-        return scanDirection;
     }
 
     /**

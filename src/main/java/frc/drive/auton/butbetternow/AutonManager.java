@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
@@ -25,9 +24,9 @@ public class AutonManager implements ISubsystem {
     private final RobotTelemetry telem;
     private final Path routinePath;
     private ChassisSpeeds chassisSpeeds;
-    private RamseteController controller = new RamseteController();
+    private final RamseteController controller = new RamseteController();
     private Trajectory Trajectory = new Trajectory();
-    private Timer timer = new Timer();
+    private final Timer timer = new Timer();
 
     public AutonManager(String routine, DriveManager driveObject) { //Routine should be in the form of "YourPath" (paths/YourPath.wpilib.json)
         routinePath = Filesystem.getDeployDirectory().toPath().resolve("paths/" + (routine).trim() + ".wpilib.json");
@@ -56,10 +55,12 @@ public class AutonManager implements ISubsystem {
     }
 
     @Override
-    public void updateTest() { }
+    public void updateTest() {
+    }
 
     @Override
-    public void updateTeleop() { }
+    public void updateTeleop() {
+    }
 
     @Override
     public void updateAuton() {
@@ -72,5 +73,6 @@ public class AutonManager implements ISubsystem {
     }
 
     @Override
-    public void updateGeneric() { }
+    public void updateGeneric() {
+    }
 }

@@ -20,10 +20,10 @@ public class AutonManager implements ISubsystem {
     private final AutonRoutines routine;
     private final DriveManager DRIVING_CHILD;
     private final RobotTelemetry telem;
-    private PIDController headingPID;
     DifferentialDriveOdometry odometer;
+    private PIDController headingPID;
 
-    public AutonManager(AutonRoutines routine, DriveManager driveObject){
+    public AutonManager(AutonRoutines routine, DriveManager driveObject) {
         this.routine = routine;
         this.routine.currentWaypoint = 0;
         DRIVING_CHILD = driveObject;
@@ -54,11 +54,11 @@ public class AutonManager implements ISubsystem {
             return;
         updateGeneric();
         System.out.println("Home is: " + routine.WAYPOINTS.get(0).LOCATION + " and im going to " + routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION));
-        if (attackPoint(routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION), 1)){
+        if (attackPoint(routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION), 1)) {
             System.out.println("IN TOLERANCE");
             if (++routine.currentWaypoint < routine.WAYPOINTS.size())
                 //throw new IllegalStateException("Holy crap theres no way it worked. This is illegal");
-            attackPoint(routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION), 1);
+                attackPoint(routine.WAYPOINTS.get(routine.currentWaypoint).LOCATION.subtract(routine.WAYPOINTS.get(0).LOCATION), 1);
         }
     }
 

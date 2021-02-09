@@ -13,6 +13,41 @@ public class AutonManager implements ISubsystem {
     private BallPhoton ballPhoton;
     private GalacticSearchPaths path;
 
+    @Override
+    public void init() {
+        driveManager.init();
+
+    }
+
+    @Override
+    public void updateTest() {
+
+    }
+
+    @Override
+    public void updateTeleop() {
+
+    }
+
+    @Override
+    public void updateAuton() {
+
+    }
+
+    @Override
+    public void updateGeneric() {
+
+    }
+
+    public void initAuton() {
+        path = getPath(new Point[]{
+                new Point(ballPhoton.getBallAngle(0), ballPhoton.getBallSize(0)),
+                new Point(ballPhoton.getBallAngle(1), ballPhoton.getBallSize(1)),
+                new Point(ballPhoton.getBallAngle(2), ballPhoton.getBallSize(2))
+        });
+        System.out.println("I chose" + path.name());
+    }
+
     private static GalacticSearchPaths getPath(Point[] pointData) {
         for (double tolerance = 0.1; tolerance < 10; tolerance += 0.1) {
             int matches = (countMatches(pointData, GalacticSearchPaths.ALL_POINTS, BASE_YAW_TOLERANCE * tolerance, BASE_AREA_TOLERANCE * tolerance));
@@ -44,40 +79,5 @@ public class AutonManager implements ISubsystem {
             out &= guesses[i].Y - testPoints[i].Y >= correctionY - toleranceY && guesses[i].Y - testPoints[i].Y <= correctionY + toleranceY;
         }
         return out;
-    }
-
-    @Override
-    public void init() {
-        driveManager.init();
-
-    }
-
-    public void initAuton() {
-        path = getPath(new Point[]{
-                new Point(ballPhoton.getBallAngle(0), ballPhoton.getBallSize(0)),
-                new Point(ballPhoton.getBallAngle(1), ballPhoton.getBallSize(1)),
-                new Point(ballPhoton.getBallAngle(2), ballPhoton.getBallSize(2))
-        });
-        System.out.println("I chose" + path.name());
-    }
-
-    @Override
-    public void updateTest() {
-
-    }
-
-    @Override
-    public void updateTeleop() {
-
-    }
-
-    @Override
-    public void updateAuton() {
-
-    }
-
-    @Override
-    public void updateGeneric() {
-
     }
 }

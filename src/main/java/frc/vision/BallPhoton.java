@@ -60,13 +60,15 @@ public class BallPhoton implements ISubsystem {
      *
      */
     @Override
-    public void updateAuton() { }
+    public void updateAuton() {
+    }
 
     /**
      * updates generic things for BallPhoton
      */
     @Override
-    public void updateGeneric() { }
+    public void updateGeneric() {
+    }
 
     /**
      * Get angle between crosshair and Ball left/right with filter calculation.

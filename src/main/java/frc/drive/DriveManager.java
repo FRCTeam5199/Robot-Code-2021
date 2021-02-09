@@ -52,15 +52,35 @@ public class DriveManager implements ISubsystem {
     public boolean autoComplete = false;
     public CANSparkMax leaderL, leaderR;
     public RobotTelemetry guidance;
-    private BaseController controller;
-    private SparkFollowerMotors followerL, followerR;
     public WPI_TalonFX leaderLTalon, leaderRTalon;
     public TalonFollowerMotors followerLTalon, followerRTalon;
+    private BaseController controller;
+    private SparkFollowerMotors followerL, followerR;
     private CANPIDController leftPID, rightPID;
     private double lastP = 0;
     private double lastI = 0;
     private double lastD = 0;
     private double lastF = 0;
+
+    /**
+     * Configures talon motor pid
+     *
+     * @param motor - motor
+     * @param idx   - PID loop, by default 0
+     * @param kF    - Feed forward
+     * @param kP    - Proportional constant
+     * @param kI    - Integral constant
+     * @param kD    - Derivative constant
+     * @deprecated {@link #setPID(double, double, double, double)}
+     */
+    @Deprecated
+    private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
+        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
+        motor.config_kF(idx, kF, timeout);
+        motor.config_kP(idx, kP, timeout);
+        motor.config_kI(idx, kI, timeout);
+        motor.config_kD(idx, kD, timeout);
+    }
 
     public DriveManager() throws RuntimeException {
         init();
@@ -118,34 +138,6 @@ public class DriveManager implements ISubsystem {
             }
             leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
             leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
-        }
-    }
-
-    public void setBrake(boolean braking){
-        if (!braking){
-            if (RobotToggles.DRIVE_USE_SPARKS){
-                leaderL.setIdleMode(CANSparkMax.IdleMode.kCoast);
-                leaderR.setIdleMode(CANSparkMax.IdleMode.kCoast);
-                followerL.setIdleMode(CANSparkMax.IdleMode.kCoast);
-                followerR.setIdleMode(CANSparkMax.IdleMode.kCoast);
-            } else {
-                leaderLTalon.setNeutralMode(NeutralMode.Coast);
-                leaderRTalon.setNeutralMode(NeutralMode.Coast);
-                followerLTalon.setNeutralMode(NeutralMode.Coast);
-                followerRTalon.setNeutralMode(NeutralMode.Coast);
-            }
-        } else {
-            if (RobotToggles.DRIVE_USE_SPARKS){
-                leaderL.setIdleMode(CANSparkMax.IdleMode.kBrake);
-                leaderR.setIdleMode(CANSparkMax.IdleMode.kBrake);
-                followerL.setIdleMode(CANSparkMax.IdleMode.kBrake);
-                followerR.setIdleMode(CANSparkMax.IdleMode.kBrake);
-            } else {
-                leaderLTalon.setNeutralMode(NeutralMode.Brake);
-                leaderRTalon.setNeutralMode(NeutralMode.Brake);
-                followerLTalon.setNeutralMode(NeutralMode.Brake);
-                followerRTalon.setNeutralMode(NeutralMode.Brake);
-            }
         }
     }
 
@@ -244,26 +236,6 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     * Configures talon motor pid
-     *
-     * @param motor - motor
-     * @param idx   - PID loop, by default 0
-     * @param kF    - Feed forward
-     * @param kP    - Proportional constant
-     * @param kI    - Integral constant
-     * @param kD    - Derivative constant
-     * @deprecated {@link #setPID(double, double, double, double)}
-     */
-    @Deprecated
-    private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
-        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
-        motor.config_kF(idx, kF, timeout);
-        motor.config_kP(idx, kP, timeout);
-        motor.config_kI(idx, kI, timeout);
-        motor.config_kD(idx, kD, timeout);
-    }
-
-    /**
      * Put any experimental stuff to do with the drivetrain here
      */
     @Override
@@ -275,9 +247,6 @@ public class DriveManager implements ISubsystem {
         }
     }
 
-    public void initGeneric(){
-    setBrake(false);
-    }
     /**
      * This is where driving happens. Call this every tick to drive and set {@link RobotToggles#EXPERIMENTAL_DRIVE} to change the drive stype
      *
@@ -381,7 +350,6 @@ public class DriveManager implements ISubsystem {
             leaderRTalon.set(ControlMode.Velocity, getTargetVelocity(rightFPS) * mult);
         }
     }
-    
 
     /**
      * Gets the target velocity based on the speed requested
@@ -394,7 +362,8 @@ public class DriveManager implements ISubsystem {
     }
 
     @Override
-    public void updateAuton() { }
+    public void updateAuton() {
+    }
 
     /**
      * updates telemetry and if calibrating pid, does that
@@ -409,9 +378,41 @@ public class DriveManager implements ISubsystem {
                 lastD = D.getDouble(RobotNumbers.DRIVEBASE_D);
                 lastF = F.getDouble(RobotNumbers.DRIVEBASE_F);
                 setPID(lastP, lastI, lastD, lastF);
-                if (RobotToggles.DEBUG){
+                if (RobotToggles.DEBUG) {
                     System.out.println("Set drive pid to P: " + lastP + " I: " + lastI + " D: " + lastD + " F: " + lastF);
                 }
+            }
+        }
+    }
+
+    public void initGeneric() {
+        setBrake(false);
+    }
+
+    public void setBrake(boolean braking) {
+        if (!braking) {
+            if (RobotToggles.DRIVE_USE_SPARKS) {
+                leaderL.setIdleMode(CANSparkMax.IdleMode.kCoast);
+                leaderR.setIdleMode(CANSparkMax.IdleMode.kCoast);
+                followerL.setIdleMode(CANSparkMax.IdleMode.kCoast);
+                followerR.setIdleMode(CANSparkMax.IdleMode.kCoast);
+            } else {
+                leaderLTalon.setNeutralMode(NeutralMode.Coast);
+                leaderRTalon.setNeutralMode(NeutralMode.Coast);
+                followerLTalon.setNeutralMode(NeutralMode.Coast);
+                followerRTalon.setNeutralMode(NeutralMode.Coast);
+            }
+        } else {
+            if (RobotToggles.DRIVE_USE_SPARKS) {
+                leaderL.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                leaderR.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                followerL.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                followerR.setIdleMode(CANSparkMax.IdleMode.kBrake);
+            } else {
+                leaderLTalon.setNeutralMode(NeutralMode.Brake);
+                leaderRTalon.setNeutralMode(NeutralMode.Brake);
+                followerLTalon.setNeutralMode(NeutralMode.Brake);
+                followerRTalon.setNeutralMode(NeutralMode.Brake);
             }
         }
     }
@@ -501,8 +502,9 @@ public class DriveManager implements ISubsystem {
                 follower.setSmartCurrentLimit(limit);
             }
         }
-        public void setIdleMode(CANSparkMax.IdleMode idleMode){
-            for (CANSparkMax follower : this.motors){
+
+        public void setIdleMode(CANSparkMax.IdleMode idleMode) {
+            for (CANSparkMax follower : this.motors) {
                 follower.setIdleMode(idleMode);
             }
         }
@@ -554,13 +556,13 @@ public class DriveManager implements ISubsystem {
             }
         }
 
-        public void setNeutralMode(NeutralMode mode){
+        public void setNeutralMode(NeutralMode mode) {
             for (WPI_TalonFX follower : this.motors) {
                 follower.setNeutralMode(mode);
             }
         }
-           
-        public void addInstrument(Orchestra orchestra){
+
+        public void addInstrument(Orchestra orchestra) {
             for (WPI_TalonFX follower : this.motors) {
                 orchestra.addInstrument(follower);
             }

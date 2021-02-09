@@ -1,9 +1,9 @@
 package frc.misc;
 
 /**
- * The generic layout for any subsystem. 
+ * The generic layout for any subsystem.
  * Ensures that any subsystem on the robot has the appropriate fields
- * 
+ *
  * @author jojo2357
  */
 public interface ISubsystem {

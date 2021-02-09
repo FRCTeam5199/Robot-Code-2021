@@ -28,7 +28,7 @@ public class Intake implements ISubsystem {
      * create controller and motor
      *
      * @throws InitializationFailureException intake motor failed to be created
-     * @throws IllegalStateException if the selected control is not implemented
+     * @throws IllegalStateException          if the selected control is not implemented
      */
     @Override
     public void init() throws InitializationFailureException, IllegalStateException {
@@ -62,17 +62,9 @@ public class Intake implements ISubsystem {
         updateGeneric();
     }
 
-    /**
-     * Set intake direction
-     *
-     * @param input -1 for out, 1 for in, 0 for off
-     */
-    public void setIntake(int input) {
-        intakeMult = input;
-    }
-
     @Override
-    public void updateAuton() { }
+    public void updateAuton() {
+    }
 
     public void updateGeneric() {
         victor.set(ControlMode.PercentOutput, 0.8 * intakeMult);
@@ -92,6 +84,15 @@ public class Intake implements ISubsystem {
         if (RobotToggles.DEBUG) {
             SmartDashboard.putNumber("Intake Speed", intakeMult);
         }
+    }
+
+    /**
+     * Set intake direction
+     *
+     * @param input -1 for out, 1 for in, 0 for off
+     */
+    public void setIntake(int input) {
+        intakeMult = input;
     }
 
 }

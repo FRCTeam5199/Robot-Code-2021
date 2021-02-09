@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj.Joystick;
 public abstract class BaseController {
     protected final Joystick stick;
 
-    protected BaseController(int channel){
+    protected BaseController(int channel) {
         stick = new Joystick(channel);
     }
 
     @Deprecated
-    public double get(int channel){
+    public double get(int channel) {
         return stick.getRawAxis(channel);
     }
 
@@ -64,11 +64,11 @@ public abstract class BaseController {
         throw new UnsupportedOperationException("This controller does not support getting an xbox joystick status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
-    public double get(ControllerEnums.WiiAxis axis){
+    public double get(ControllerEnums.WiiAxis axis) {
         throw new UnsupportedOperationException("This controller does not support getting an wii remote tilt status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
-    public ControllerEnums.ButtonStatus get(ControllerEnums.WiiButton button){
+    public ControllerEnums.ButtonStatus get(ControllerEnums.WiiButton button) {
         throw new UnsupportedOperationException("This controller does not support getting an wii remote button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 }

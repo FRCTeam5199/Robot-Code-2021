@@ -46,7 +46,7 @@ public class RobotToggles {
     public static final boolean SHOOTER_USE_SPARKS;
     public static final boolean SHOOTER_USE_TWO_MOTORS;
     public static final boolean SHOOTER_INVERTED;
-    
+
     //INTAKE
     public static final boolean INDEXER_AUTO_INDEX;
 
@@ -68,7 +68,7 @@ public class RobotToggles {
             DRIVE_USE_6_MOTORS = getNumbersFrom.getClass().getField("DRIVE_USE_6_MOTORS").getBoolean(getNumbersFrom);
             DRIVE_INVERT_LEFT = getNumbersFrom.getClass().getField("DRIVE_INVERT_LEFT").getBoolean(getNumbersFrom);
             DRIVE_INVERT_RIGHT = getNumbersFrom.getClass().getField("DRIVE_INVERT_RIGHT").getBoolean(getNumbersFrom);
-            
+
             CALIBRATE_DRIVE_PID = getNumbersFrom.getClass().getField("CALIBRATE_DRIVE_PID").getBoolean(getNumbersFrom);
             CALIBRATE_SHOOTER_PID = getNumbersFrom.getClass().getField("CALIBRATE_SHOOTER_PID").getBoolean(getNumbersFrom);
 
@@ -83,7 +83,7 @@ public class RobotToggles {
             SHOOTER_INVERTED = getNumbersFrom.getClass().getField("SHOOTER_INVERTED").getBoolean(getNumbersFrom);
 
             INDEXER_AUTO_INDEX = getNumbersFrom.getClass().getField("INDEXER_AUTO_INDEX").getBoolean(getNumbersFrom);
-            
+
             EXPERIMENTAL_DRIVE = (DriveTypes) getNumbersFrom.getClass().getField("EXPERIMENTAL_DRIVE").get(getNumbersFrom);
             SHOOTER_CONTROL_STYLE = (ShootingControlStyles) getNumbersFrom.getClass().getField("SHOOTER_CONTROL_STYLE").get(getNumbersFrom);
             INTAKE_CONTROL_STYLE = (IntakeControlStyles) getNumbersFrom.getClass().getField("INTAKE_CONTROL_STYLE").get(getNumbersFrom);

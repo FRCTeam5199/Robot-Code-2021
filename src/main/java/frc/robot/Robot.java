@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.ballstuff.intaking.Hopper;
 import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
@@ -47,7 +46,18 @@ public class Robot extends TimedRobot {
             goalPhoton = new GoalPhoton();
         }
     }
-    
+
+    @Override
+    public void disabledInit() {
+        if (RobotToggles.ENABLE_SHOOTER) {
+            turret.disabledInit();
+        }
+        if (RobotToggles.ENABLE_DRIVE) {
+            driver.setBrake(true);
+            lastDisable = System.currentTimeMillis();
+        }
+    }
+
     @Override
     public void autonomousInit() {
         if (RobotToggles.ENABLE_DRIVE) {
@@ -119,16 +129,6 @@ public class Robot extends TimedRobot {
             }
         }
     }
-    @Override
-    public void disabledInit() {
-        if (RobotToggles.ENABLE_SHOOTER) {
-            turret.disabledInit();
-        }
-        if (RobotToggles.ENABLE_DRIVE) {
-            driver.setBrake(true);
-            lastDisable = System.currentTimeMillis();
-        }
-    }
 
     @Override
     public void testPeriodic() {
@@ -150,5 +150,5 @@ public class Robot extends TimedRobot {
                 goalPhoton.updateTest();
             }
         }
-    }    
+    }
 }

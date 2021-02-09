@@ -1,15 +1,16 @@
 package frc.misc;
 
 import com.ctre.phoenix.music.Orchestra;
-import frc.robot.RobotToggles;
-import frc.drive.DriveManager;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.drive.DriveManager;
+import frc.robot.RobotToggles;
+
 import java.nio.file.Path;
 
 public class Chirp {
-    private Orchestra orchestra;
     private final DriveManager DRIVING_CHILD;
     private final Path filePath;
+    private final Orchestra orchestra;
 
     public Chirp(DriveManager driveManager, String soundName) {
         orchestra = new Orchestra();
@@ -19,7 +20,7 @@ public class Chirp {
     }
 
     public void initChirp() {
-        if (!RobotToggles.DRIVE_USE_SPARKS){
+        if (!RobotToggles.DRIVE_USE_SPARKS) {
             orchestra.addInstrument(DRIVING_CHILD.leaderLTalon);
             orchestra.addInstrument(DRIVING_CHILD.leaderRTalon);
             DRIVING_CHILD.followerLTalon.addInstrument(orchestra);
@@ -30,6 +31,7 @@ public class Chirp {
     private void playChirp() {
         orchestra.play();
     }
+
     private void stopChirp() {
         orchestra.stop();
     }
