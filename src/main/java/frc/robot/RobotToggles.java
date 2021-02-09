@@ -55,6 +55,8 @@ public class RobotToggles {
     public static final ShootingControlStyles SHOOTER_CONTROL_STYLE;
     public static final IntakeControlStyles INTAKE_CONTROL_STYLE;
 
+    public static final boolean GALACTIC_SEARCH;
+
     //@author jojo2357
     static {
         try {
@@ -87,6 +89,8 @@ public class RobotToggles {
             EXPERIMENTAL_DRIVE = (DriveTypes) getNumbersFrom.getClass().getField("EXPERIMENTAL_DRIVE").get(getNumbersFrom);
             SHOOTER_CONTROL_STYLE = (ShootingControlStyles) getNumbersFrom.getClass().getField("SHOOTER_CONTROL_STYLE").get(getNumbersFrom);
             INTAKE_CONTROL_STYLE = (IntakeControlStyles) getNumbersFrom.getClass().getField("INTAKE_CONTROL_STYLE").get(getNumbersFrom);
+
+            GALACTIC_SEARCH = getNumbersFrom.getClass().getField("GALACTIC_SEARCH").getBoolean(getNumbersFrom);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new InitializationFailureException(e.toString(), "");
         }

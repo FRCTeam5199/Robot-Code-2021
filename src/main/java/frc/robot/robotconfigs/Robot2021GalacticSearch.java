@@ -40,6 +40,7 @@ public class Robot2021GalacticSearch extends AbstractConfig {
     public static final DriveTypes EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
     public static final ShootingControlStyles SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
     public static final IntakeControlStyles INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
+    public static final boolean GALACTIC_SEARCH = true;
 
     public static final double DRIVEBASE_P = 0.0075;
     public static final double DRIVEBASE_I = 0;

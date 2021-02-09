@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.drive.DriveManager;
+import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.RobotTelemetry;
-import frc.misc.ISubsystem;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -19,8 +19,7 @@ import java.nio.file.Path;
 /**
  * Check back later for some fun and fresh auton routines!
  */
-public class AutonManager implements ISubsystem {
-    private final DriveManager DRIVING_CHILD;
+public class AutonManager extends AbstractAutonManager {
     private final RobotTelemetry telem;
     private final Path routinePath;
     private ChassisSpeeds chassisSpeeds;
@@ -29,8 +28,8 @@ public class AutonManager implements ISubsystem {
     private final Timer timer = new Timer();
 
     public AutonManager(String routine, DriveManager driveObject) { //Routine should be in the form of "YourPath" (paths/YourPath.wpilib.json)
+        super(driveObject);
         routinePath = Filesystem.getDeployDirectory().toPath().resolve("paths/" + (routine).trim() + ".wpilib.json");
-        DRIVING_CHILD = driveObject;
         telem = DRIVING_CHILD.guidance;
         init();
     }

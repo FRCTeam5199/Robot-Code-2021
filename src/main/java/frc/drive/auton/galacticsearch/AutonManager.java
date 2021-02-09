@@ -1,17 +1,21 @@
 package frc.drive.auton.galacticsearch;
 
 import frc.drive.DriveManager;
+import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
-import frc.misc.ISubsystem;
 import frc.vision.BallPhoton;
 
-public class AutonManager implements ISubsystem {
+public class AutonManager extends AbstractAutonManager {
     private static final double BASE_YAW_TOLERANCE = 2;
     private static final double BASE_AREA_TOLERANCE = 0.15;
     private static Point[] lastPoints;
     DriveManager driveManager;
     private BallPhoton ballPhoton;
     private GalacticSearchPaths path;
+
+    public AutonManager(DriveManager driveManager){
+        super(driveManager);
+    }
 
     @Override
     public void init() {
@@ -39,13 +43,14 @@ public class AutonManager implements ISubsystem {
 
     }
 
-    public void initAuton() {
+    public AutonManager initAuton() {
         path = getPath(new Point[]{
                 new Point(ballPhoton.getBallAngle(0), ballPhoton.getBallSize(0)),
                 new Point(ballPhoton.getBallAngle(1), ballPhoton.getBallSize(1)),
                 new Point(ballPhoton.getBallAngle(2), ballPhoton.getBallSize(2))
         });
         System.out.println("I chose" + path.name());
+        return this;
     }
 
     private static GalacticSearchPaths getPath(Point[] pointData) {
