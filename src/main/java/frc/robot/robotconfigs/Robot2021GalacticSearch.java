@@ -24,7 +24,7 @@ public class Robot2021GalacticSearch extends AbstractConfig {
     //Misc
     public static final boolean ENABLE_VISION = true;
     public static final boolean USE_PHOTONVISION = true;
-    public static final boolean ENABLE_IMU = true;
+    public static final boolean ENABLE_IMU = false;
     public static final boolean USE_PIGEON = false;
     public static final boolean USE_NAVX2 = true;
 

@@ -36,7 +36,7 @@ public enum GalacticSearchPaths {
             , ""
     );
 
-    public static final Point[][] ALL_POINTS = new Point[4][3];
+    public static Point[][] ALL_POINTS;
     private static int registerIndex = 0;
     public final String PATH_FILE_LOCATION;
     public final Point[] POINTS;
@@ -55,6 +55,9 @@ public enum GalacticSearchPaths {
     }
 
     void addMyPoint() {
-        ALL_POINTS[registerIndex++] = POINTS;
+        if (ALL_POINTS == null)
+            ALL_POINTS = new Point[4][3];
+        System.arraycopy(POINTS, 0, ALL_POINTS[registerIndex], 0, 3);
+        registerIndex++;
     }
 }

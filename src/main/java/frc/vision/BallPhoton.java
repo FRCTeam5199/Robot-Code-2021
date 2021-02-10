@@ -31,8 +31,9 @@ public class BallPhoton implements ISubsystem {
      */
     public void init() {
         filter = LinearFilter.movingAverage(5);
-        ballCamera = new PhotonCamera("BallCamera");
+        ballCamera = new PhotonCamera(RobotMap.BALL_CAM_NAME);
         cameraResult = ballCamera.getLatestResult();
+        System.out.println("Found " + cameraResult.targets.size() + " targets");
     }
 
     /**
@@ -58,6 +59,7 @@ public class BallPhoton implements ISubsystem {
      */
     @Override
     public void updateAuton() {
+        updateGeneric();
     }
 
     /**
@@ -76,10 +78,10 @@ public class BallPhoton implements ISubsystem {
      * @return angle between crosshair and Ball, left negative, 29.8 degrees in both directions.
      */
     public double getBallAngleSmoothed(int targetId) {
-        if (validTarget() && targetId <= targets.size()) {
+        if (validTarget()/* && targetId <= targets.size()*/) {
             return filter.calculate(targets.get(targetId).getYaw());
         }
-        return -10;
+        return -10000;
     }
 
     /**
@@ -97,10 +99,10 @@ public class BallPhoton implements ISubsystem {
      * @return angle between crosshair and Ball, left negative, 29.8 degrees in both directions.
      */
     public double getBallAngle(int targetId) {
-        if (validTarget() && targetId <= targets.size()) {
+        if (validTarget() && targetId < targets.size()) {
             return targets.get(targetId).getYaw();
         }
-        return -10;
+        return -10000;
     }
 
     /**
@@ -109,7 +111,7 @@ public class BallPhoton implements ISubsystem {
      * @return angle between crosshair and Ball, down negative, 22 degrees in both directions.
      */
     public double getBallPitch(int targetId) {
-        if (validTarget() && targetId <= targets.size()) {
+        if (validTarget()/* && targetId <= targets.size()*/) {
             return targets.get(targetId).getPitch();
         }
         return -10;
@@ -121,7 +123,7 @@ public class BallPhoton implements ISubsystem {
      * @return size of the Ball in % of the screen, 0-100.
      */
     public double getBallSize(int targetId) {
-        if (validTarget() && targetId <= targets.size()) {
+        if (validTarget() && targetId < targets.size()) {
             return targets.get(targetId).getArea();
         }
         return -10;

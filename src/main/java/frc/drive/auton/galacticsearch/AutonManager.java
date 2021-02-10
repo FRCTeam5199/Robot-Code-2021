@@ -3,24 +3,19 @@ package frc.drive.auton.galacticsearch;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
-import frc.vision.BallPhoton;
+import frc.robot.Robot;
 
 public class AutonManager extends AbstractAutonManager {
-    private static final double BASE_YAW_TOLERANCE = 2;
-    private static final double BASE_AREA_TOLERANCE = 0.15;
-    private static Point[] lastPoints;
-    DriveManager driveManager;
-    private BallPhoton ballPhoton;
     private GalacticSearchPaths path;
 
     public AutonManager(DriveManager driveManager){
         super(driveManager);
+        init();
     }
 
     @Override
     public void init() {
-        driveManager.init();
-
+        DRIVING_CHILD.init();
     }
 
     @Override
@@ -45,27 +40,45 @@ public class AutonManager extends AbstractAutonManager {
 
     public AutonManager initAuton() {
         path = getPath(new Point[]{
-                new Point(ballPhoton.getBallAngle(0), ballPhoton.getBallSize(0)),
-                new Point(ballPhoton.getBallAngle(1), ballPhoton.getBallSize(1)),
-                new Point(ballPhoton.getBallAngle(2), ballPhoton.getBallSize(2))
+                new Point(Robot.ballPhoton.getBallAngle(0), Robot.ballPhoton.getBallSize(0)),
+                new Point(Robot.ballPhoton.getBallAngle(1), Robot.ballPhoton.getBallSize(1)),
+                new Point(Robot.ballPhoton.getBallAngle(2), Robot.ballPhoton.getBallSize(2))
         });
         System.out.println("I chose" + path.name());
         return this;
     }
 
     private static GalacticSearchPaths getPath(Point[] pointData) {
-        for (double tolerance = 0.1; tolerance < 10; tolerance += 0.1) {
-            int matches = (countMatches(pointData, GalacticSearchPaths.ALL_POINTS, BASE_YAW_TOLERANCE * tolerance, BASE_AREA_TOLERANCE * tolerance));
-            if (matches > 1)
-                throw new IllegalStateException("Too many possibilities");
-            if (matches == 1) {
-                return GalacticSearchPaths.getFromPoints(lastPoints);
+        GalacticSearchPaths bestPath = null;
+        double bestOption = Double.MAX_VALUE;
+        System.out.print("Data in: ");
+        for (int i = 0; i < 3; i ++)
+            System.out.print(pointData[i]);
+        System.out.println();
+        for (GalacticSearchPaths path : GalacticSearchPaths.values()){
+            double SOSQ = sumOfSquares(path.POINTS, pointData);
+            if (SOSQ < bestOption){
+                bestOption = SOSQ;
+                bestPath = path;
             }
         }
-        throw new IllegalStateException("Could not find a matching path");
+        return bestPath;
+        /*for (double tolerance = 0.1; tolerance < 1000; tolerance += 0.1) {
+            int matches = 0;
+            for (GalacticSearchPaths path : GalacticSearchPaths.values())
+                if (isMatch(pointData, path.POINTS, BASE_YAW_TOLERANCE * tolerance, BASE_AREA_TOLERANCE * tolerance))
+                    matches++;
+            if (matches == 1) {
+                for (GalacticSearchPaths path : GalacticSearchPaths.values())
+                    if (isMatch(pointData, path.POINTS, BASE_YAW_TOLERANCE * tolerance, BASE_AREA_TOLERANCE * tolerance))
+                        return path;
+                    throw new IllegalThreadStateException("If this happens, your fucked");
+            }
+        }
+        throw new IllegalStateException("Could not find a matching path");*/
     }
 
-    private static int countMatches(Point[] guesses, Point[][] testPoints, double toleranceX, double toleranceY) {
+    /*private static int countMatches(Point[] guesses, Point[][] testPoints, double toleranceX, double toleranceY) {
         int count = 0;
         for (Point[] testPoint : testPoints)
             if (isMatch(guesses, testPoint, toleranceX, toleranceY)) {
@@ -73,16 +86,16 @@ public class AutonManager extends AbstractAutonManager {
                 lastPoints = testPoint;
             }
         return count;
-    }
+    }*/
 
-    private static boolean isMatch(Point[] guesses, Point[] testPoints, double toleranceX, double toleranceY) {
-        boolean out = true;
-        double correctionX = guesses[0].X - testPoints[0].X;
-        double correctionY = guesses[0].Y - testPoints[0].Y;
-        for (int i = 1; i < 3; i++) {
-            out &= guesses[i].X - testPoints[i].X >= correctionX - toleranceX && guesses[i].X - testPoints[i].X <= correctionX + toleranceX;
-            out &= guesses[i].Y - testPoints[i].Y >= correctionY - toleranceY && guesses[i].Y - testPoints[i].Y <= correctionY + toleranceY;
+    private static double sumOfSquares(Point[] guesses, Point[] testPoints) {
+        double out = 0;
+        for (int i = 0; i < 3; i++) {
+            System.out.print(guesses[i]);
+            out += Math.pow(guesses[i].X - testPoints[i].X, 2);
+            out += Math.pow(100 * (guesses[i].Y - testPoints[i].Y), 2);
         }
+        System.out.println(" had " + out);
         return out;
     }
 }
