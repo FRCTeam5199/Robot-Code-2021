@@ -13,8 +13,8 @@ public class Robot2021 extends AbstractConfig{
     public static final boolean ENABLE_HOPPER = false;
 
     //Drivetrain
-    public static final boolean DRIVE_USE_SPARKS = true;
-    public static final boolean DRIVE_USE_6_MOTORS = true;
+    public static final boolean DRIVE_USE_SPARKS = false;
+    public static final boolean DRIVE_USE_6_MOTORS = false;
     public static final boolean DRIVE_INVERT_LEFT = true;
     public static final boolean DRIVE_INVERT_RIGHT = false;
 
@@ -97,10 +97,10 @@ public class Robot2021 extends AbstractConfig{
 
     //Drive Motors
     public static final int DRIVE_LEADER_L = 1; //talon
-    public static final int[] DRIVE_FOLLOWERS_L = {2, 3}; //talon
+    public static final int[] DRIVE_FOLLOWERS_L = {2}; //talon
 
-    public static final int DRIVE_LEADER_R = 4; //talon
-    public static final int[] DRIVE_FOLLOWERS_R = {5, 6}; //talon
+    public static final int DRIVE_LEADER_R = 3; //talon
+    public static final int[] DRIVE_FOLLOWERS_R = {4}; //talon
 
     //Shooter Motors
     public static final int SHOOTER_LEADER = 7; //talon

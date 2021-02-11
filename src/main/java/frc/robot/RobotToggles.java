@@ -6,6 +6,7 @@ import frc.drive.DriveTypes;
 import frc.misc.InitializationFailureException;
 import frc.robot.robotconfigs.AbstractConfig;
 import frc.robot.robotconfigs.Robot2020;
+import frc.robot.robotconfigs.Robot2021;
 import frc.robot.robotconfigs.Robot2021GalacticSearch;
 
 public class RobotToggles {
@@ -13,7 +14,7 @@ public class RobotToggles {
      * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE.
      * Use this to select which robot you are using from the list under robotconfigs
      */
-    public static final AbstractConfig getNumbersFrom = new Robot2021GalacticSearch();
+    public static final AbstractConfig getNumbersFrom = new Robot2021();
 
     public static final boolean DEBUG = true;
     //Subsystems

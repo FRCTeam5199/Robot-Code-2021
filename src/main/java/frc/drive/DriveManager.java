@@ -279,6 +279,12 @@ public class DriveManager implements ISubsystem {
                 drive(0.75 * gogoTime, -0.5 * controller.get(ControllerEnums.WiiAxis.ROTATIONAL_TILT) * gogoTime);
             }
             break;
+            case GUITAR: {
+                double turn = controller.get(ControllerEnums.SixKeyGuitarAxis.PITCH);
+                double gogo = controller.get(ControllerEnums.SixKeyGuitarAxis.STRUM);
+                drive(gogo, turn);
+                break;
+            }
             default:
                 throw new IllegalStateException("Invalid drive type");
         }

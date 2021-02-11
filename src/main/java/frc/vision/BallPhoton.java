@@ -67,9 +67,11 @@ public class BallPhoton implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (validTarget()) {
+        cameraResult = ballCamera.getLatestResult();
+        System.out.println("Found " + cameraResult.targets.size() + " targets");
+        //if (validTarget()) {
             targets = cameraResult.getTargets();
-        }
+        //}
     }
 
     /**
@@ -99,7 +101,7 @@ public class BallPhoton implements ISubsystem {
      * @return angle between crosshair and Ball, left negative, 29.8 degrees in both directions.
      */
     public double getBallAngle(int targetId) {
-        if (validTarget() && targetId < targets.size()) {
+        if (validTarget()/* && targetId < targets.size()*/) {
             return targets.get(targetId).getYaw();
         }
         return -10000;
@@ -123,7 +125,7 @@ public class BallPhoton implements ISubsystem {
      * @return size of the Ball in % of the screen, 0-100.
      */
     public double getBallSize(int targetId) {
-        if (validTarget() && targetId < targets.size()) {
+        if (validTarget()/* && targetId < targets.size()*/) {
             return targets.get(targetId).getArea();
         }
         return -10;

@@ -9,5 +9,6 @@ public enum DriveTypes {
     STANDARD,
     EXPERIMENTAL,
     MARIO_KART,
-    DRUM_TIME;
+    DRUM_TIME,
+    GUITAR;
 }

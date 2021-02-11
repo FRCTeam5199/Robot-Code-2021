@@ -71,4 +71,12 @@ public abstract class BaseController {
     public ControllerEnums.ButtonStatus get(ControllerEnums.WiiButton button) {
         throw new UnsupportedOperationException("This controller does not support getting an wii remote button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
+
+    public ControllerEnums.ButtonStatus get (ControllerEnums.SixKeyGuitarButtons button){
+        throw new UnsupportedOperationException("This controller does not support getting an guitar button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    }
+
+    public double get (ControllerEnums.SixKeyGuitarAxis button){
+        throw new UnsupportedOperationException("This controller does not support getting an guitar axis status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    }
 }

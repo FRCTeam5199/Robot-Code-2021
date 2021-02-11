@@ -39,11 +39,14 @@ public class AutonManager extends AbstractAutonManager {
     }
 
     public AutonManager initAuton() {
-        path = getPath(new Point[]{
+        Point[] cringePoints = new Point[]{
                 new Point(Robot.ballPhoton.getBallAngle(0), Robot.ballPhoton.getBallSize(0)),
                 new Point(Robot.ballPhoton.getBallAngle(1), Robot.ballPhoton.getBallSize(1)),
                 new Point(Robot.ballPhoton.getBallAngle(2), Robot.ballPhoton.getBallSize(2))
-        });
+        };
+        for (Point point : cringePoints)
+            System.out.println("Heres what they told me: " + point);
+        path = getPath(cringePoints);
         System.out.println("I chose" + path.name());
         return this;
     }
@@ -56,6 +59,7 @@ public class AutonManager extends AbstractAutonManager {
             System.out.print(pointData[i]);
         System.out.println();
         for (GalacticSearchPaths path : GalacticSearchPaths.values()){
+            System.out.print(path.name() + " ");
             double SOSQ = sumOfSquares(path.POINTS, pointData);
             if (SOSQ < bestOption){
                 bestOption = SOSQ;
