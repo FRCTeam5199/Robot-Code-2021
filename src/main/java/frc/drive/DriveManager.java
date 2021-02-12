@@ -15,14 +15,11 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Units;
-import frc.controllers.BaseController;
-import frc.controllers.ControllerEnums;
+import frc.controllers.*;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
-import frc.controllers.WiiController;
-import frc.controllers.XBoxController;
-import frc.drive.auton.RobotTelemetry;
+import frc.telemetry.RobotTelemetry;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.misc.UtilFunctions;
@@ -61,26 +58,6 @@ public class DriveManager implements ISubsystem {
     private double lastI = 0;
     private double lastD = 0;
     private double lastF = 0;
-
-    /**
-     * Configures talon motor pid
-     *
-     * @param motor - motor
-     * @param idx   - PID loop, by default 0
-     * @param kF    - Feed forward
-     * @param kP    - Proportional constant
-     * @param kI    - Integral constant
-     * @param kD    - Derivative constant
-     * @deprecated {@link #setPID(double, double, double, double)}
-     */
-    @Deprecated
-    private static void configureTalon(@NotNull WPI_TalonFX motor, int idx, double kF, double kP, double kI, double kD) {
-        int timeout = RobotNumbers.DRIVE_TIMEOUT_MS;
-        motor.config_kF(idx, kF, timeout);
-        motor.config_kP(idx, kP, timeout);
-        motor.config_kI(idx, kI, timeout);
-        motor.config_kD(idx, kD, timeout);
-    }
 
     public DriveManager() throws RuntimeException {
         init();
@@ -143,19 +120,10 @@ public class DriveManager implements ISubsystem {
 
     /**
      * Initialize the IMU and telemetry
-     *
-     * @throws InitializationFailureException When the Pigeon IMU fails to init
      */
-    private void initGuidance() throws InitializationFailureException {
+    private void initGuidance() {
         guidance = new RobotTelemetry(this);
-        try {
-            if (RobotToggles.ENABLE_IMU) {
-                guidance.resetPigeon();
-                guidance.updatePigeon();
-            }
-        } catch (Exception e) {
-            throw new InitializationFailureException("Pigeon IMU Failed to init", "Ensure the pigeon is plugged in and other hardware is operating nomially. Can also disable RobotToggles.ENABLE_IMU");
-        }
+        guidance.resetOdometry(null, null);
     }
 
     /**
@@ -183,6 +151,9 @@ public class DriveManager implements ISubsystem {
                 break;
             case MARIO_KART:
                 controller = new WiiController(0);
+                break;
+            case GUITAR:
+                controller = new SixButtonGuitar(0);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotToggles.EXPERIMENTAL_DRIVE.name() + " to control the drivetrain. Please implement me");

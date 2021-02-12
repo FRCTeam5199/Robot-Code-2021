@@ -4,10 +4,9 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
-import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
 
-public class GoalPhoton implements ISubsystem {
+public class GoalPhoton extends AbstractVision {
     public NetworkTableEntry yaw;
     public NetworkTableEntry size;
     public NetworkTableEntry hasTarget;
@@ -27,6 +26,7 @@ public class GoalPhoton implements ISubsystem {
     /**
      * stores values in simpler variable names
      */
+    @Override
     public void init() {
         filter = LinearFilter.movingAverage(5);
         table = NetworkTableInstance.getDefault();
@@ -75,9 +75,10 @@ public class GoalPhoton implements ISubsystem {
      *
      * @return angle between crosshair and goal, left negative, 29.8 degrees in both directions.
      */
-    public double getGoalAngleSmoothed() {
+    @Override
+    public double getAngleSmoothed() {
         double angle = yaw.getDouble(0);
-        if (validTarget()) {
+        if (hasValidTarget()) {
             return filter.calculate(angle);
         }
         return 0;
@@ -88,7 +89,8 @@ public class GoalPhoton implements ISubsystem {
      *
      * @return whether or not there is a valid target in view.
      */
-    public boolean validTarget() {
+    @Override
+    public boolean hasValidTarget() { 
         return hasTarget.getBoolean(false);
     }
 
@@ -97,9 +99,10 @@ public class GoalPhoton implements ISubsystem {
      *
      * @return angle between crosshair and goal, left negative, 29.8 degrees in both directions.
      */
-    public double getGoalAngle() {
+    @Override
+    public double getAngle() {
         double angle = yaw.getDouble(0);
-        if (validTarget()) {
+        if (hasValidTarget()) {
             return angle;
         }
         return 0;
@@ -110,9 +113,10 @@ public class GoalPhoton implements ISubsystem {
      *
      * @return angle between crosshair and goal, down negative, 22 degrees in both directions.
      */
-    public double getGoalPitch() {
+    @Override
+    public double getPitch() {
         double angle = pitch.getDouble(0);
-        if (validTarget()) {
+        if (hasValidTarget()) {
             return angle;
         }
         return 0;
@@ -123,9 +127,10 @@ public class GoalPhoton implements ISubsystem {
      *
      * @return size of the goal in % of the screen, 0-100.
      */
-    public double getGoalSize() {
+    @Override
+    public double getSize() {
         double goalSize = size.getDouble(0);
-        if (validTarget()) {
+        if (hasValidTarget()) {
             return goalSize;
         }
         return 0;

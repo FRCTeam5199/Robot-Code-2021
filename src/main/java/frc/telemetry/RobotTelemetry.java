@@ -1,6 +1,5 @@
-package frc.drive.auton;
+package frc.telemetry;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -10,7 +9,6 @@ import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.misc.ISubsystem;
 import frc.misc.UtilFunctions;
-import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 
@@ -21,10 +19,7 @@ public class RobotTelemetry implements ISubsystem {
     public Rotation2d robotRotation;
     public PIDController headingPID;
     public DifferentialDriveOdometry odometer;
-    public double[] ypr = new double[3];
-    public double[] startypr = new double[3];
-    private PigeonIMU pigeon;
-    private double startYaw;
+    public AbstractIMU imu;
 
     public RobotTelemetry(DriveManager driver) {
         this.driver = driver;
@@ -51,7 +46,7 @@ public class RobotTelemetry implements ISubsystem {
      * @return angle between heading and given point
      */
     private double headingError(double wayX, double wayY) {
-        return angleFromHere(wayX, wayY) - fieldHeading();
+        return angleFromHere(wayX, wayY) - imu.yawWraparoundAhead();
     }
 
     /**
@@ -63,10 +58,6 @@ public class RobotTelemetry implements ISubsystem {
      */
     private double angleFromHere(double wayX, double wayY) {
         return Math.toDegrees(Math.atan2(wayY - fieldY(), wayX - fieldX()));
-    }
-
-    public double fieldHeading() {
-        return yawWraparoundAhead();
     }
 
     /**
@@ -83,42 +74,6 @@ public class RobotTelemetry implements ISubsystem {
      */
     public double fieldY() {
         return robotTranslation.getY();
-    }
-
-    /**
-     * Gets the yaw of the bot and wraps it on the bound -180 to 180
-     *
-     * @return wrapped yaw val
-     */
-    public double yawWraparoundAhead() {
-        return UtilFunctions.mathematicalMod(yawRel() + 180, 360) - 180;
-    }
-
-
-    /**
-     * Yaw since last restart
-     *
-     * @return yaw since last restart
-     */
-    public double yawRel() { //return relative(to start) yaw of pigeon
-        updatePigeon();
-        return (ypr[0] - startYaw);
-    }
-
-    /**
-     * Updates the Pigeon IMU data
-     */
-    public void updatePigeon() {
-        pigeon.getYawPitchRoll(ypr);
-    }
-
-    /**
-     * Resets the Pigeon IMU
-     */
-    public void resetPigeon() {
-        updatePigeon();
-        startypr = ypr;
-        startYaw = yawAbs();
     }
 
     /**
@@ -142,23 +97,13 @@ public class RobotTelemetry implements ISubsystem {
      */
     public void resetOdometry(Pose2d pose, Rotation2d rotation) {
         //odometer.resetPosition(pose, rotation);
-        resetPigeon();
+        imu.resetOdometry();
         resetEncoders();
-    }
-
-    /**
-     * gets the absolute yaw of the pigeon since last zeroing event (startup and {@link RobotTelemetry#resetPigeon() reset})
-     *
-     * @return absolute yaw of pigeon
-     */
-    public double yawAbs() {  //get absolute yaw of pigeon
-        updatePigeon();
-        return ypr[0];
     }
 
     //TODO implement for falcons
     public double getRPMLeft() {
-        if (RobotToggles.DRIVE_USE_SPARKS){
+        if (RobotToggles.DRIVE_USE_SPARKS) {
             return (driver.leaderL.getEncoder().getVelocity()) / 9;
         } else {
             return 0;
@@ -166,7 +111,7 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     public double getRPMRight() {
-        if (RobotToggles.DRIVE_USE_SPARKS){
+        if (RobotToggles.DRIVE_USE_SPARKS) {
             return (driver.leaderR.getEncoder().getVelocity()) / 9;
         } else {
             return 0; //return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0; //THIS IS FPS > SENSOR UNITS. TODO reverse this
@@ -175,7 +120,7 @@ public class RobotTelemetry implements ISubsystem {
 
     //TODO implement for falcons
     public double getRotationsLeft() {
-        if (RobotToggles.DRIVE_USE_SPARKS){
+        if (RobotToggles.DRIVE_USE_SPARKS) {
             return (driver.leaderL.getEncoder().getPosition()) / 9;
         } else {
             return 0;
@@ -183,7 +128,7 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     public double getRotationsRight() {
-        if (RobotToggles.DRIVE_USE_SPARKS){
+        if (RobotToggles.DRIVE_USE_SPARKS) {
             return (driver.leaderR.getEncoder().getPosition()) / 9;
         } else {
             return 0;
@@ -214,11 +159,16 @@ public class RobotTelemetry implements ISubsystem {
     @Override
     public void init() {
         resetEncoders();
-        pigeon = new PigeonIMU(RobotMap.PIGEON);
+        if (!RobotToggles.ENABLE_IMU)
+            return;
+        if (RobotToggles.USE_PIGEON) {
+            imu = new WrappedPigeonIMU();
+        } else {
+            imu = new WrappedNavX2IMU();
+        }
+        robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
-        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(yawAbs()), new Pose2d(0, 0, new Rotation2d()));
-        if (RobotToggles.USE_PIGEON && RobotToggles.ENABLE_IMU)
-            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(yawAbs())), getMetersLeft(), getMetersRight());
+        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()), new Pose2d(0, 0, new Rotation2d()));
     }
 
     /**
@@ -251,7 +201,7 @@ public class RobotTelemetry implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (RobotToggles.ENABLE_IMU) {
-            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(yawAbs())), getMetersLeft(), getMetersRight());
+            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
             robotTranslation = robotPose.getTranslation();
             robotRotation = robotPose.getRotation();
         }

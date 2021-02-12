@@ -286,7 +286,7 @@ public class Shooter implements ISubsystem {
                 if (RobotToggles.ENABLE_VISION) {
                     lockOntoTarget = panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
                 }
-                trackingTarget = goalPhoton.validTarget() && lockOntoTarget;
+                trackingTarget = goalPhoton.hasValidTarget() && lockOntoTarget;
                 if (interpolationEnabled) {
                     speed = (solidSpeed) ? (4200 * (adjustmentFactor * 0.25 + 1)) : 0;
                 } else {
@@ -385,12 +385,12 @@ public class Shooter implements ISubsystem {
     }
 
     /**
-     * adjusts speed based on distance based on {@link GoalPhoton#getGoalSize() goalPhoton.getGoalSize()}
+     * adjusts speed based on distance based on {@link GoalPhoton#getSize() goalPhoton.getGoalSize()}
      *
      * @return the adjusted speed in RPM based on vision determined distance
      */
     public double interpolateSpeed() {
-        double size = goalPhoton.getGoalSize();
+        double size = goalPhoton.getSize();
         double finalMult = (joystickController.get(JoystickAxis.SLIDER) * 0.25) + 1;
         if (size > sizeSpeedsArray[sizeSpeedsArray.length - 1][0]) {
             SmartDashboard.putNumber("Interpolating Shooter Speed", sizeSpeedsArray[sizeSpeedsArray.length - 1][1] * finalMult * speedMult);
@@ -434,7 +434,7 @@ public class Shooter implements ISubsystem {
      */
     public boolean validTarget() {
         if (RobotToggles.ENABLE_VISION) {
-            return goalPhoton.validTarget();
+            return goalPhoton.hasValidTarget();
         } else {
             return false;
         }

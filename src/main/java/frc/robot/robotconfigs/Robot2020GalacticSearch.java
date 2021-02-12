@@ -117,7 +117,7 @@ public class Robot2020GalacticSearch extends AbstractConfig{
     //intake
     public static final int INTAKE_MOTOR = 12; //victor
 
-    public static final int PIGEON = 22; //pigeon
+    public static final int IMU = 22; //pigeon
     public static final int PCM = 23; //pcm
 
     //pneumatics

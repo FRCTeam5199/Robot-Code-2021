@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
-import frc.drive.auton.RobotTelemetry;
+import frc.telemetry.RobotTelemetry;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -40,7 +40,7 @@ public class AutonManager extends AbstractAutonManager {
             //Thread.sleep(100);
             Trajectory = TrajectoryUtil.fromPathweaverJson(routinePath);
             //telem.resetOdometry(Trajectory.getInitialPose(), Rotation2d.fromDegrees(telem.yawAbs()));//telem.yawAbs());
-            telem.resetOdometry(telem.robotPose, Rotation2d.fromDegrees(telem.yawAbs()));
+            telem.resetOdometry(telem.robotPose, Rotation2d.fromDegrees(telem.imu.absoluteYaw()));
             Transform2d transform = telem.robotPose.minus(Trajectory.getInitialPose());
             Trajectory = Trajectory.transformBy(transform);
             //Transform2d transform2 = new Pose2d(0, 3.682, Rotation2d.fromDegrees(0)).minus(Trajectory.getInitialPose());

@@ -31,7 +31,7 @@ public class RobotMap {
     //intake
     public static final int INTAKE_MOTOR;
 
-    public static final int PIGEON;
+    public static final int IMU;
     public static final int PCM;
 
     //pneumatics
@@ -66,7 +66,7 @@ public class RobotMap {
             INDEXER_MOTOR = getNumbersFrom.getClass().getField("INDEXER_MOTOR").getInt(getNumbersFrom);
             INTAKE_MOTOR = getNumbersFrom.getClass().getField("INTAKE_MOTOR").getInt(getNumbersFrom);
 
-            PIGEON = getNumbersFrom.getClass().getField("PIGEON").getInt(getNumbersFrom);
+            IMU = getNumbersFrom.getClass().getField("IMU").getInt(getNumbersFrom);
             PCM = getNumbersFrom.getClass().getField("PCM").getInt(getNumbersFrom);
 
             INTAKE_OUT = getNumbersFrom.getClass().getField("INTAKE_OUT").getInt(getNumbersFrom);

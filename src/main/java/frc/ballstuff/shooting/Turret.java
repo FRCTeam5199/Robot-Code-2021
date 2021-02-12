@@ -16,7 +16,7 @@ import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.JoystickController;
-import frc.drive.auton.RobotTelemetry;
+import frc.telemetry.RobotTelemetry;
 import frc.misc.ISubsystem;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
@@ -109,10 +109,10 @@ public class Turret implements ISubsystem {
         if (RobotToggles.ENABLE_VISION) {
             if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) { //Check if the Target button is held down
                 if (RobotToggles.DEBUG) {
-                    System.out.println("I'm looking. Target is valid? " + goalPhoton.validTarget());
+                    System.out.println("I'm looking. Target is valid? " + goalPhoton.hasValidTarget());
                 }
-                if (goalPhoton.validTarget()) {
-                    omegaSetpoint = -goalPhoton.getGoalAngle() / 30;
+                if (goalPhoton.hasValidTarget()) {
+                    omegaSetpoint = -goalPhoton.getAngle() / 30;
                 } else {
                     omegaSetpoint = scan();
                 }
@@ -149,9 +149,8 @@ public class Turret implements ISubsystem {
             SmartDashboard.putBoolean("Turret Safe", isSafe());
             if (RobotToggles.ENABLE_IMU && guidance != null) {
                 //no warranties
-                SmartDashboard.putNumber("YawWrap", guidance.yawWraparoundAhead() - 360);
-                SmartDashboard.putNumber("Turret Heading from North", guidance.fieldHeading());
-                SmartDashboard.putNumber("Turret North", limitAngle(235 + guidance.yawWraparoundAhead() - 360));
+                SmartDashboard.putNumber("YawWrap", guidance.imu.yawWraparoundAhead() - 360);
+                SmartDashboard.putNumber("Turret North", limitAngle(235 + guidance.imu.yawWraparoundAhead() - 360));
             }
             SmartDashboard.putBoolean("Turret At Target", atTarget);
             SmartDashboard.putBoolean("Turret Track", track);

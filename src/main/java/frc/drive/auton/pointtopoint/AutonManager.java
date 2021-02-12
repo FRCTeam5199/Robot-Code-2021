@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.Point;
-import frc.drive.auton.RobotTelemetry;
+import frc.telemetry.RobotTelemetry;
 import frc.misc.ISubsystem;
 import frc.robot.RobotNumbers;
 
@@ -34,8 +34,8 @@ public class AutonManager implements ISubsystem {
     @Override
     public void init() {
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
-        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(telem.yawAbs()), new Pose2d(0, 0, new Rotation2d()));
-        telem.resetPigeon();
+        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(telem.imu.absoluteYaw()), new Pose2d(0, 0, new Rotation2d()));
+        telem.imu.resetOdometry();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class AutonManager implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        telem.robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(telem.yawAbs())), telem.getMetersLeft(), telem.getMetersRight());
+        telem.robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(telem.imu.absoluteYaw())), telem.getMetersLeft(), telem.getMetersRight());
         telem.updateGeneric();
     }
 
