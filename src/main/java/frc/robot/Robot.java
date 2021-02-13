@@ -27,6 +27,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() throws IllegalStateException {
+        RobotMap.printMappings();
+        RobotToggles.printToggles();
+        RobotNumbers.printNumbers();
         if (RobotToggles.ENABLE_DRIVE) {
             driver = new DriveManager();
         }

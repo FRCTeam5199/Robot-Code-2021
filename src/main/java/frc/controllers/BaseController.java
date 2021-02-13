@@ -79,4 +79,12 @@ public abstract class BaseController {
     public double get (ControllerEnums.SixKeyGuitarAxis button){
         throw new UnsupportedOperationException("This controller does not support getting an guitar axis status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
+
+    public ControllerEnums.ButtonStatus get(ControllerEnums.Drums drum) {
+        throw new UnsupportedOperationException("This controller does not support getting an guitar axis status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    }
+
+    public ControllerEnums.ButtonStatus get(ControllerEnums.DrumButton drum) {
+        throw new UnsupportedOperationException("This controller does not support getting an guitar axis status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    }
 }

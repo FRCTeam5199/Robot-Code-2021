@@ -115,6 +115,8 @@ public class DriveManager implements ISubsystem {
             }
             leaderLTalon.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
             leaderRTalon.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
+            followerLTalon.invert(RobotToggles.DRIVE_INVERT_LEFT);
+            followerRTalon.invert(RobotToggles.DRIVE_INVERT_RIGHT);
         }
     }
 
@@ -154,6 +156,9 @@ public class DriveManager implements ISubsystem {
                 break;
             case GUITAR:
                 controller = new SixButtonGuitar(0);
+                break;
+            case DRUM_TIME:
+                controller = new DrumTime(0);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotToggles.EXPERIMENTAL_DRIVE.name() + " to control the drivetrain. Please implement me");
@@ -238,8 +243,8 @@ public class DriveManager implements ISubsystem {
                 double invertedDrive = invert ? -1 : 1;
                 double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-                System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                 if (RobotToggles.DEBUG) {
+                    System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                     //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                 }
                 drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
@@ -256,9 +261,17 @@ public class DriveManager implements ISubsystem {
                 drive(gogo, turn);
                 break;
             }
+            case DRUM_TIME:{
+                double speedFactor = controller.get(ControllerEnums.DrumButton.PEDAL) == ButtonStatus.DOWN ? 2 : 0.5;
+                double goLeft = controller.get(ControllerEnums.Drums.RED) == ButtonStatus.DOWN ? 2 : controller.get(ControllerEnums.Drums.YELLOW) == ButtonStatus.DOWN ? -2 : 0;
+                double goRight = controller.get(ControllerEnums.Drums.GREEN) == ButtonStatus.DOWN ? 2 : controller.get(ControllerEnums.Drums.BLUE) == ButtonStatus.DOWN ? -2 : 0;
+                driveFPS(goLeft * speedFactor, goRight * speedFactor);
+                break;
+            }
             default:
                 throw new IllegalStateException("Invalid drive type");
         }
+        //System.out.println(guidance.imu.yawWraparoundAhead());
     }
 
     /**
@@ -314,6 +327,8 @@ public class DriveManager implements ISubsystem {
      * @param rightFPS Right drivetrain speed in feet per second
      */
     public void driveFPS(double leftFPS, double rightFPS) {
+        if (leftFPS != 0)
+        System.out.println(leftFPS + ", " + rightFPS);
         double mult = 3.8 * 2.16 * RobotNumbers.DRIVE_SCALE;
         if (RobotToggles.DEBUG) {
             System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + UtilFunctions.convertDriveFPStoRPM(leftFPS) + " " + UtilFunctions.convertDriveFPStoRPM(rightFPS));
@@ -530,6 +545,12 @@ public class DriveManager implements ISubsystem {
         public void follow(@NotNull WPI_TalonFX leader) {
             for (WPI_TalonFX follower : this.motors) {
                 follower.follow(leader);
+            }
+        }
+
+        public void invert(boolean invert){
+            for (WPI_TalonFX follower : this.motors) {
+                follower.setInverted(invert);
             }
         }
 

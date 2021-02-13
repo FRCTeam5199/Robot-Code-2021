@@ -254,4 +254,62 @@ public class ControllerEnums {
             this.AXIS_VALUE = value;
         }
     }
+
+    public enum Drums{
+        RED(3),
+        YELLOW(4),
+        BLUE(1),
+        GREEN(2);
+
+        public final int AXIS_VALUE;
+
+        /**
+         * @param id - the drum drum id requested
+         * @return the {@link Drums} enum with id mathing input
+         * @throws NoSuchFieldException if there is no mapped drum drum with that id
+         * @deprecated Feature that should <b>never</b> be used. Gets the drum drum from a provided int
+         */
+        @Deprecated
+        public static Drums get(int id) throws NoSuchFieldException {
+            for (Drums axis : Drums.values()) {
+                if (axis.AXIS_VALUE == id) return axis;
+            }
+            throw new NoSuchFieldException("There is no Button Panel Button with an ID of " + id);
+        }
+
+        Drums(int value) {
+            this.AXIS_VALUE = value;
+        }
+    }
+
+    public enum DrumButton{
+        ONE(1),
+        TWO(4),
+        A(2),
+        B(3),
+        PEDAL(5),
+        SELECT(9),
+        START(10),
+        HOME(13);
+
+        public final int AXIS_VALUE;
+
+        /**
+         * @param id - the Drum button id requested
+         * @return the {@link DrumButton} enum with id mathing input
+         * @throws NoSuchFieldException if there is no mapped drum button with that id
+         * @deprecated Feature that should <b>never</b> be used. Gets the drum button from a provided int
+         */
+        @Deprecated
+        public static DrumButton get(int id) throws NoSuchFieldException {
+            for (DrumButton axis : DrumButton.values()) {
+                if (axis.AXIS_VALUE == id) return axis;
+            }
+            throw new NoSuchFieldException("There is no Button Panel Button with an ID of " + id);
+        }
+
+        DrumButton(int value) {
+            this.AXIS_VALUE = value;
+        }
+    }
 }

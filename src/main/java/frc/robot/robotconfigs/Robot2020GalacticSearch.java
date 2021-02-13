@@ -4,7 +4,7 @@ import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 
-public class Robot2020GalacticSearch extends AbstractConfig{
+public class Robot2020GalacticSearch extends DefaultConfig {
     //Subsystems
     public static final boolean ENABLE_DRIVE = true;
     public static final boolean ENABLE_INTAKE = true;

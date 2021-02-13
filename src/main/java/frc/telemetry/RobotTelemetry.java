@@ -97,7 +97,8 @@ public class RobotTelemetry implements ISubsystem {
      */
     public void resetOdometry(Pose2d pose, Rotation2d rotation) {
         //odometer.resetPosition(pose, rotation);
-        imu.resetOdometry();
+        if (RobotToggles.ENABLE_IMU)
+            imu.resetOdometry();
         resetEncoders();
     }
 
@@ -166,9 +167,9 @@ public class RobotTelemetry implements ISubsystem {
         } else {
             imu = new WrappedNavX2IMU();
         }
-        robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
         headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()), new Pose2d(0, 0, new Rotation2d()));
+        robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
     }
 
     /**
@@ -184,7 +185,7 @@ public class RobotTelemetry implements ISubsystem {
      */
     @Override
     public void updateTeleop() {
-        //updateGeneric();
+        updateGeneric();
     }
 
     /**

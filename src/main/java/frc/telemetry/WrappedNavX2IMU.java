@@ -2,6 +2,8 @@ package frc.telemetry;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -16,7 +18,7 @@ public class WrappedNavX2IMU extends AbstractIMU {
     private AHRS createIMU() {
         AHRS out = null;
         try {
-            out = new AHRS(SPI.Port.kMXP);
+            out = new AHRS(SerialPort.Port.kUSB);
         } catch (RuntimeException ex) {
             DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
         }
