@@ -1,16 +1,30 @@
 package frc.drive.auton.galacticsearch;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
 import frc.robot.Robot;
+import frc.telemetry.RobotTelemetry;
+
+import java.io.IOException;
+import java.nio.file.Path;
 
 public class AutonManager extends AbstractAutonManager {
-    private GalacticSearchPaths path;
+    private final Timer timer = new Timer();
+    private Trajectory trajectory = new Trajectory();
+    private final RobotTelemetry telem;
+    private final RamseteController controller = new RamseteController();
 
     public AutonManager(DriveManager driveManager){
         super(driveManager);
+        telem = DRIVING_CHILD.guidance;
         init();
     }
 
@@ -31,6 +45,12 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void updateAuton() {
+        telem.updateAuton();
+        //RamseteCommand ramseteCommand = new RamseteCommand(Trajectory, () -> telem.robotPose, controller, DRIVING_CHILD.kinematics, DRIVING_CHILD::driveFPS);
+        Trajectory.State goal = trajectory.sample(timer.get());
+        System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
+        ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
+        DRIVING_CHILD.drivePure(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
 
     }
 
@@ -47,9 +67,15 @@ public class AutonManager extends AbstractAutonManager {
         };
         for (Point point : cringePoints)
             System.out.println("Heres what they told me: " + point);
-        path = getPath(cringePoints);
+        GalacticSearchPaths path = getPath(cringePoints);
         System.out.println("I chose" + path.name());
-        Trajectory = TrajectoryUtil.fromPathweaverJson(path.PATH_FILE_LOCATION);
+        Path routinePath = Filesystem.getDeployDirectory().toPath().resolve("paths/" + (path.PATH_FILE_LOCATION).trim() + ".wpilib.json");
+        try {
+            trajectory = TrajectoryUtil.fromPathweaverJson(routinePath);
+        } catch(IOException e) {
+            DriverStation.reportError("Unable to open trajectory: " + routinePath, e.getStackTrace());
+        }
+        timer.start();
         return this;
     }
 

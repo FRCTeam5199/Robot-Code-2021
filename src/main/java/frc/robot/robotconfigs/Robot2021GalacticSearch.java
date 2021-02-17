@@ -22,7 +22,7 @@ public class Robot2021GalacticSearch extends DefaultConfig {
         CALIBRATE_SHOOTER_PID = false;
 
         //Misc
-        ENABLE_VISION = false;
+        ENABLE_VISION = true;
         USE_PHOTONVISION = true;
         ENABLE_IMU = false;
         USE_PIGEON = false;

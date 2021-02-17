@@ -9,7 +9,7 @@ public enum GalacticSearchPaths {
                     new Point(-14.4, 0.22),
                     new Point(17.4, 0.12)
             }
-            , ""
+            , "PathARed"
     ),
     PATH_A_BLUE(
             new Point[]{
@@ -17,7 +17,7 @@ public enum GalacticSearchPaths {
                     new Point(6, 0.1),
                     new Point(-2.1, 0.07)
             }
-            , ""
+            , "PathABlue"
     ),
     PATH_B_RED(
             new Point[]{
@@ -25,7 +25,7 @@ public enum GalacticSearchPaths {
                     new Point(-14, .25),
                     new Point(7.15, 0.08)
             }
-            , ""
+            , "PathBRed"
     ),
     PATH_B_BLUE(
             new Point[]{
@@ -33,7 +33,7 @@ public enum GalacticSearchPaths {
                     new Point(5.7, 0.06),
                     new Point(-8.2, 0.04)
             }
-            , ""
+            , "PathBBlue"
     );
 
     public static Point[][] ALL_POINTS;

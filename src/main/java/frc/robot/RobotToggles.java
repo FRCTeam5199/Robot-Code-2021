@@ -4,14 +4,14 @@ import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 import frc.robot.robotconfigs.DefaultConfig;
-import frc.robot.robotconfigs.Robot2021;
+import frc.robot.robotconfigs.Robot2021GalacticSearch;
 
 public class RobotToggles {
     /**
      * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE.
      * Use this to select which robot you are using from the list under robotconfigs
      */
-    public static final DefaultConfig getNumbersFrom = new Robot2021();
+    public static final DefaultConfig getNumbersFrom = new Robot2021GalacticSearch();
 
     public static final boolean DEBUG = false;
     //Subsystems
