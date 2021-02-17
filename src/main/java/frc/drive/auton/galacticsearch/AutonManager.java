@@ -1,5 +1,6 @@
 package frc.drive.auton.galacticsearch;
 
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
@@ -48,6 +49,7 @@ public class AutonManager extends AbstractAutonManager {
             System.out.println("Heres what they told me: " + point);
         path = getPath(cringePoints);
         System.out.println("I chose" + path.name());
+        Trajectory = TrajectoryUtil.fromPathweaverJson(path.PATH_FILE_LOCATION);
         return this;
     }
 
