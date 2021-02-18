@@ -312,4 +312,16 @@ public class ControllerEnums {
             this.AXIS_VALUE = value;
         }
     }
+
+    public enum BopItButtons{
+        BOPIT(3),
+        PULLIT(4),
+        TWISTIT(1);
+
+        public final int AXIS_VALUE;
+
+        BopItButtons(int value){
+            AXIS_VALUE = value;
+        }
+    }
 }

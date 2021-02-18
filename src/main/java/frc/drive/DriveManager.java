@@ -41,6 +41,8 @@ public class DriveManager implements ISubsystem {
     private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry();
     private final NetworkTableEntry driveScaleMult = tab2.add("Speed Factor", RobotNumbers.DRIVE_SCALE).getEntry();
+    private boolean cost;
+    private final NetworkTableEntry coast = tab2.add("Coast", cost).getEntry();
     private final boolean invert = true;
     private final NetworkTableEntry P = tab2.add("P", RobotNumbers.DRIVEBASE_P).getEntry();
     private final NetworkTableEntry I = tab2.add("I", RobotNumbers.DRIVEBASE_I).getEntry();
@@ -160,6 +162,9 @@ public class DriveManager implements ISubsystem {
             case DRUM_TIME:
                 controller = new DrumTime(0);
                 break;
+            case BOP_IT:
+                controller = new BopItBasic(0);
+                break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotToggles.EXPERIMENTAL_DRIVE.name() + " to control the drivetrain. Please implement me");
         }
@@ -231,6 +236,7 @@ public class DriveManager implements ISubsystem {
     @Override
     public void updateTeleop() throws IllegalArgumentException {
         updateGeneric();
+
         switch (RobotToggles.EXPERIMENTAL_DRIVE) {
             case EXPERIMENTAL: {
                 double invertedDrive = invert ? -1 : 1;
@@ -261,16 +267,24 @@ public class DriveManager implements ISubsystem {
                 drive(gogo, turn);
                 break;
             }
-            case DRUM_TIME:{
+            case DRUM_TIME: {
                 double speedFactor = controller.get(ControllerEnums.DrumButton.PEDAL) == ButtonStatus.DOWN ? 2 : 0.5;
                 double goLeft = controller.get(ControllerEnums.Drums.RED) == ButtonStatus.DOWN ? 2 : controller.get(ControllerEnums.Drums.YELLOW) == ButtonStatus.DOWN ? -2 : 0;
                 double goRight = controller.get(ControllerEnums.Drums.GREEN) == ButtonStatus.DOWN ? 2 : controller.get(ControllerEnums.Drums.BLUE) == ButtonStatus.DOWN ? -2 : 0;
                 driveFPS(goLeft * speedFactor, goRight * speedFactor);
                 break;
             }
+            case BOP_IT: {
+                double driveamt = (controller.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN ? .1 : 0) * (controller.get(ControllerEnums.BopItButtons.BOPIT) == ButtonStatus.DOWN ? -1 : 1);
+                double turnamt = controller.get(ControllerEnums.BopItButtons.TWISTIT) == ButtonStatus.DOWN ? .1 : 0;
+                drive(driveamt, turnamt);
+                break;
+            }
             default:
                 throw new IllegalStateException("Invalid drive type");
         }
+        if (RobotToggles.DEBUG)
+            System.out.println("Created a " + controller.toString());
         //System.out.println(guidance.imu.yawWraparoundAhead());
     }
 
@@ -363,6 +377,7 @@ public class DriveManager implements ISubsystem {
     @Override
     public void updateGeneric() {
         guidance.updateGeneric();
+        setBrake(!coast.getBoolean(false));
         if (RobotToggles.CALIBRATE_DRIVE_PID) {
             if (lastP != P.getDouble(RobotNumbers.DRIVEBASE_P) || lastI != I.getDouble(RobotNumbers.DRIVEBASE_I) || lastD != D.getDouble(RobotNumbers.DRIVEBASE_D) || lastF != F.getDouble(RobotNumbers.DRIVEBASE_P)) {
                 lastP = P.getDouble(RobotNumbers.DRIVEBASE_P);
@@ -378,10 +393,11 @@ public class DriveManager implements ISubsystem {
     }
 
     public void initGeneric() {
-        setBrake(false);
+        setBrake(true);
     }
 
     public void setBrake(boolean braking) {
+        //System.out.println("Set brake: " + braking + " at " + System.currentTimeMillis() + " \r");
         if (!braking) {
             if (RobotToggles.DRIVE_USE_SPARKS) {
                 leaderL.setIdleMode(CANSparkMax.IdleMode.kCoast);

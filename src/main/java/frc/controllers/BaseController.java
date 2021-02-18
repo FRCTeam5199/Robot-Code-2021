@@ -10,9 +10,11 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public abstract class BaseController {
     protected final Joystick stick;
+    private final int JOYSTICK_CHANNEL;
 
     protected BaseController(int channel) {
         stick = new Joystick(channel);
+        JOYSTICK_CHANNEL = channel;
     }
 
     @Deprecated
@@ -86,5 +88,15 @@ public abstract class BaseController {
 
     public ControllerEnums.ButtonStatus get(ControllerEnums.DrumButton drum) {
         throw new UnsupportedOperationException("This controller does not support getting an guitar axis status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    }
+
+    public ControllerEnums.ButtonStatus get(ControllerEnums.BopItButtons button){
+        throw new UnsupportedOperationException("hehe");
+    }
+
+    //should NOT print BaseController (i hope)
+    @Override
+    public String toString(){
+        return this.getClass().getName() + " on channel " + JOYSTICK_CHANNEL;
     }
 }
