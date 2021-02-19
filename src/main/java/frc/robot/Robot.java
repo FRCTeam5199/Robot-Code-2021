@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
     @Override
     public void testInit() {
         if (RobotToggles.ENABLE_MUSIC) {
-            chirp.loadSound("Megalovania");
+            chirp.loadSound("Megalovania_4Motors");
         }
     }
 
