@@ -277,6 +277,7 @@ public class DriveManager implements ISubsystem {
             case BOP_IT: {
                 double driveamt = (controller.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN ? .1 : 0) * (controller.get(ControllerEnums.BopItButtons.BOPIT) == ButtonStatus.DOWN ? -1 : 1);
                 double turnamt = controller.get(ControllerEnums.BopItButtons.TWISTIT) == ButtonStatus.DOWN ? .1 : 0;
+                System.out.println("bop it says: " + driveamt + ", " + turnamt);
                 drive(driveamt, turnamt);
                 break;
             }
@@ -309,9 +310,7 @@ public class DriveManager implements ISubsystem {
         FPS *= driveScaleMult.getDouble(RobotNumbers.DRIVE_SCALE);
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
-        double leftFPS = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
-        double rightFPS = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
-        driveFPS(leftFPS, rightFPS);
+        driveMPS(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
     }
 
     /**

@@ -255,7 +255,7 @@ public class ControllerEnums {
         }
     }
 
-    public enum Drums{
+    public enum Drums {
         RED(3),
         YELLOW(4),
         BLUE(1),
@@ -282,7 +282,7 @@ public class ControllerEnums {
         }
     }
 
-    public enum DrumButton{
+    public enum DrumButton {
         ONE(1),
         TWO(4),
         A(2),
@@ -313,14 +313,14 @@ public class ControllerEnums {
         }
     }
 
-    public enum BopItButtons{
+    public enum BopItButtons {
         BOPIT(3),
         PULLIT(4),
         TWISTIT(1);
 
         public final int AXIS_VALUE;
 
-        BopItButtons(int value){
+        BopItButtons(int value) {
             AXIS_VALUE = value;
         }
     }
