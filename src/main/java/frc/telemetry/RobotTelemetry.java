@@ -102,12 +102,12 @@ public class RobotTelemetry implements ISubsystem {
         resetEncoders();
     }
 
-    //TODO implement for falcons
+
     public double getRPMLeft() {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             return (driver.leaderL.getEncoder().getVelocity()) / 9;
         } else {
-            return 0;
+            return driver.leaderLTalon.getSelectedSensorVelocity() * 600 / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION ;
         }
     }
 
@@ -115,16 +115,15 @@ public class RobotTelemetry implements ISubsystem {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             return (driver.leaderR.getEncoder().getVelocity()) / 9;
         } else {
-            return 0; //return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0; //THIS IS FPS > SENSOR UNITS. TODO reverse this
+            return driver.leaderRTalon.getSelectedSensorVelocity() * 600 / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION ;
         }
     }
 
-    //TODO implement for falcons
     public double getRotationsLeft() {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             return (driver.leaderL.getEncoder().getPosition()) / 9;
         } else {
-            return 0;
+            return driver.leaderLTalon.getSelectedSensorPosition() / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
         }
     }
 
@@ -132,7 +131,7 @@ public class RobotTelemetry implements ISubsystem {
         if (RobotToggles.DRIVE_USE_SPARKS) {
             return (driver.leaderR.getEncoder().getPosition()) / 9;
         } else {
-            return 0;
+            return driver.leaderRTalon.getSelectedSensorPosition() / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
         }
     }
 
