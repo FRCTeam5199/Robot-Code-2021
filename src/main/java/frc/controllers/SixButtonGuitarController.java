@@ -1,8 +1,8 @@
 package frc.controllers;
 
-public class SixButtonGuitar extends BaseController{
+public class SixButtonGuitarController extends BaseController{
 
-    public SixButtonGuitar(int channel) {
+    public SixButtonGuitarController(int channel) {
         super(channel);
     }
 

@@ -1,7 +1,7 @@
 package frc.controllers;
 
-public class BopItBasic extends BaseController{
-    public BopItBasic(int channel) {
+public class BopItBasicController extends BaseController{
+    public BopItBasicController(int channel) {
         super(channel);
     }
 

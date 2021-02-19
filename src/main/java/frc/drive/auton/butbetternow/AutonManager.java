@@ -22,10 +22,10 @@ import java.nio.file.Path;
 public class AutonManager extends AbstractAutonManager {
     private final RobotTelemetry telem;
     private final Path routinePath;
-    private ChassisSpeeds chassisSpeeds;
     private final RamseteController controller = new RamseteController();
-    private Trajectory Trajectory = new Trajectory();
     private final Timer timer = new Timer();
+    private ChassisSpeeds chassisSpeeds;
+    private Trajectory Trajectory = new Trajectory();
 
     public AutonManager(String routine, DriveManager driveObject) { //Routine should be in the form of "YourPath" (paths/YourPath.wpilib.json)
         super(driveObject);

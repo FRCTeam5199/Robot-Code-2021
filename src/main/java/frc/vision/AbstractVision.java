@@ -33,14 +33,14 @@ public abstract class AbstractVision implements ISubsystem {
 
     }
 
-    abstract double getAngle();
+    public abstract double getAngle();
 
-    abstract double getPitch();
+    public abstract double getPitch();
 
-    abstract double getAngleSmoothed();
+    public abstract double getAngleSmoothed();
 
-    abstract double getSize();
+    public abstract double getSize();
 
-    abstract boolean hasValidTarget();
+    public abstract boolean hasValidTarget();
 
 }

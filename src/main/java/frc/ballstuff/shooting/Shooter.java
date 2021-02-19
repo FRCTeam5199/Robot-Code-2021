@@ -1,15 +1,5 @@
 package frc.ballstuff.shooting;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.ControlType;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,16 +7,20 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
-import frc.controllers.ButtonPanel;
+import frc.controllers.ButtonPanelController;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickAxis;
 import frc.controllers.ControllerEnums.JoystickButtons;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
+import frc.motors.AbstractMotor;
+import frc.motors.PhoenixMotor;
+import frc.motors.TalonMotor;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
+import frc.vision.AbstractVision;
 import frc.vision.GoalPhoton;
 
 import static frc.misc.UtilFunctions.weightedAverage;
@@ -40,7 +34,6 @@ public class Shooter implements ISubsystem {
 
     public final String[] data = {"match time", "init time", "speed", "target speed", "motor temperature", "motor current", "powered", "P", "I", "D", "rP", "rI", "rD", "distance"};
     public final String[] units = {"seconds", "seconds", "rpm", "rpm", "C", "A", "T/F", "num", "num", "num", "num", "num", "num", "meters"};
-    private final Timer timer = new Timer();
     private final int ballsShot = 0;
     private final boolean poweredState = false;
     /**
@@ -53,33 +46,26 @@ public class Shooter implements ISubsystem {
      */
     private final double[][] voltageFFArray = {{0, 0}, {11, 190}, {13, 185}};
     private final ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-    private final NetworkTableEntry P = tab.add("P", RobotNumbers.SHOOTER_P).getEntry();
-    private final NetworkTableEntry I = tab.add("I", RobotNumbers.SHOOTER_I).getEntry();
-    private final NetworkTableEntry D = tab.add("D", RobotNumbers.SHOOTER_D).getEntry();
-    private final NetworkTableEntry F = tab.add("F", RobotNumbers.SHOOTER_F).getEntry();
-    private final NetworkTableEntry constSpeed = tab.add("Constant Speed", 0).getEntry();
+    private final NetworkTableEntry P = tab.add("P", RobotNumbers.SHOOTER_P).getEntry(),
+            I = tab.add("I", RobotNumbers.SHOOTER_I).getEntry(),
+            D = tab.add("D", RobotNumbers.SHOOTER_D).getEntry(),
+            F = tab.add("F", RobotNumbers.SHOOTER_F).getEntry(),
+            constSpeed = tab.add("Constant Speed", 0).getEntry();
     public BaseController panel, joystickController;
-    public double speed;
-    public boolean atSpeed = false;
-    public double actualRPM;
-    public boolean interpolationEnabled = false;
+    public double speed, actualRPM;
     public boolean shooting;
+    public boolean atSpeed = false;
+    public boolean interpolationEnabled = false;
     boolean trackingTarget = false;
-    private CANSparkMax leader, follower;
-    private TalonFX falconLeader, falconFollower;
-    private CANPIDController speedo;
-    private CANEncoder encoder;
-    private GoalPhoton goalPhoton;
+    private AbstractMotor leader, follower;
+    private AbstractVision goalPhoton;
     private boolean enabled = true;
     private boolean spunUp = false;
     private boolean recoveryPID = false;
-    private Timer shootTimer, indexTimer, shooterTimer;
+    private Timer shootTimer, indexTimer, shooterTimer, timer;
     private boolean timerStarted = false;
     private boolean timerFlag = false;
-    private double lastP = 0;
-    private double lastI = 0;
-    private double lastD = 0;
-    private double lastF = 0;
+    private double lastP = 0, lastI = 0, lastD = 0, lastF = 0;
 
     public Shooter() {
         init();
@@ -93,7 +79,7 @@ public class Shooter implements ISubsystem {
         switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
             case STANDARD:
                 joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
-                panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
+                panel = new ButtonPanelController(RobotNumbers.BUTTON_PANEL_SLOT);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotToggles.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
@@ -116,42 +102,32 @@ public class Shooter implements ISubsystem {
      */
     private void createAndInitMotors() {
         if (RobotToggles.SHOOTER_USE_SPARKS) {
-            leader = new CANSparkMax(RobotMap.SHOOTER_LEADER, MotorType.kBrushless);
+            leader = new PhoenixMotor(RobotMap.SHOOTER_LEADER);
             if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
-                follower = new CANSparkMax(RobotMap.SHOOTER_FOLLOWER, MotorType.kBrushless);
+                follower = new PhoenixMotor(RobotMap.SHOOTER_FOLLOWER);
             }
-
-            leader.setInverted(RobotToggles.SHOOTER_INVERTED);
-            if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
-                follower.follow(leader, RobotToggles.SHOOTER_INVERTED);
-            }
-
-            leader.setSmartCurrentLimit(80);
-            if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
-                follower.setSmartCurrentLimit(80);
-                follower.setIdleMode(IdleMode.kCoast);
-            }
-            leader.setIdleMode(IdleMode.kCoast);
-            leader.getEncoder().setPosition(0);
-            leader.setOpenLoopRampRate(40);
-            encoder = leader.getEncoder();
-
-            speedo = leader.getPIDController();
-            speedo.setOutputRange(-1, 1);
+            leader.setSensorToRevolutionFactor(1);
         } else {
-            TalonFXInvertType leaderDirection = RobotToggles.SHOOTER_INVERTED ? TalonFXInvertType.CounterClockwise : TalonFXInvertType.Clockwise;
-            falconLeader = new TalonFX(RobotMap.SHOOTER_LEADER);
-            falconLeader.setInverted(leaderDirection);
+            leader = new TalonMotor(RobotMap.SHOOTER_LEADER);
             if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
-                TalonFXInvertType followerDirection = !RobotToggles.SHOOTER_INVERTED ? TalonFXInvertType.CounterClockwise : TalonFXInvertType.Clockwise;
-                falconFollower = new TalonFX(RobotMap.SHOOTER_FOLLOWER);
-                falconFollower.setInverted(followerDirection);
-                falconFollower.follow(falconLeader);
-                falconFollower.setNeutralMode(NeutralMode.Coast);
+                follower = new TalonMotor(RobotMap.SHOOTER_FOLLOWER);
             }
-
-            falconLeader.setNeutralMode(NeutralMode.Coast);
+            leader.setSensorToRevolutionFactor(600 / RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION);
         }
+
+        leader.setInverted(RobotToggles.SHOOTER_INVERTED);
+        if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
+            follower.follow(leader);
+            follower.setInverted(RobotToggles.SHOOTER_INVERTED);
+        }
+        leader.setCurrentLimit(80);
+        if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
+            follower.setCurrentLimit(80);
+            follower.setBrake(false);
+        }
+        leader.setBrake(false);
+        leader.resetEncoder();
+        leader.setOpenLoopRampRate(40);
     }
 
     /**
@@ -173,10 +149,12 @@ public class Shooter implements ISubsystem {
      */
     private boolean makeSurePreconditionsMet() {
         for (int i = 0; i < sizeSpeedsArray.length - 1; i++) {
-            if (sizeSpeedsArray[i][0] > sizeSpeedsArray[i + 1][0]) return false;
+            if (sizeSpeedsArray[i][0] > sizeSpeedsArray[i + 1][0])
+                return false;
         }
         for (int i = 0; i < voltageFFArray.length - 1; i++) {
-            if (voltageFFArray[i][0] > voltageFFArray[i + 1][0]) return false;
+            if (voltageFFArray[i][0] > voltageFFArray[i + 1][0])
+                return false;
         }
         return true;
     }
@@ -213,11 +191,7 @@ public class Shooter implements ISubsystem {
 
     public void setPercentSpeed(double percent) {
         if (percent <= 1) {
-            if (RobotToggles.SHOOTER_USE_SPARKS) {
-                leader.set(percent);
-            } else {
-                falconLeader.set(ControlMode.PercentOutput, percent);
-            }
+            leader.moveAtPercent(percent);
         }
     }
 
@@ -230,17 +204,7 @@ public class Shooter implements ISubsystem {
      * @param F - F value
      */
     private void setPID(double P, double I, double D, double F) {
-        if (RobotToggles.SHOOTER_USE_SPARKS) {
-            speedo.setP(P);
-            speedo.setI(I);
-            speedo.setD(D);
-            speedo.setFF(F);
-        } else {
-            falconLeader.config_kP(0, P, RobotNumbers.SHOOTER_TIMEOUT_MS);
-            falconLeader.config_kI(0, I, RobotNumbers.SHOOTER_TIMEOUT_MS);
-            falconLeader.config_kD(0, D, RobotNumbers.SHOOTER_TIMEOUT_MS);
-            falconLeader.config_kF(0, F, RobotNumbers.SHOOTER_TIMEOUT_MS);
-        }
+        leader.setPid(P, I, D, F);
     }
 
     public void updateControls() {
@@ -276,7 +240,7 @@ public class Shooter implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        actualRPM = RobotToggles.SHOOTER_USE_SPARKS ? leader.getEncoder().getVelocity() : falconLeader.getSelectedSensorVelocity() * 600 / RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION;
+        actualRPM = leader.getRotations();
         checkState();
         boolean lockOntoTarget = false;
         switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
@@ -342,11 +306,7 @@ public class Shooter implements ISubsystem {
         if (RobotToggles.DEBUG) {
             System.out.println("setSpeed1");
         }
-        if (RobotToggles.SHOOTER_USE_SPARKS) {
-            speedo.setReference(rpm, ControlType.kVelocity);
-        } else {
-            falconLeader.set(ControlMode.Velocity, rpm * RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION / 600.0);
-        }
+        leader.moveAtRotations(rpm);
         if (RobotToggles.DEBUG) {
             System.out.println("setSpeed2");
         }
@@ -358,11 +318,7 @@ public class Shooter implements ISubsystem {
      * @return if the shooter is actually at the requested speed
      */
     public boolean atSpeed() {
-        if (RobotToggles.SHOOTER_USE_SPARKS) {
-            return leader.getEncoder().getVelocity() > speed - 80;
-        } else {
-            return falconLeader.getSelectedSensorVelocity() > speed - 80;
-        }
+        return leader.getRotations() > speed - 80;
     }
 
 
@@ -433,11 +389,7 @@ public class Shooter implements ISubsystem {
      * @return if the goal photon is in use and has a valid target in its sights
      */
     public boolean validTarget() {
-        if (RobotToggles.ENABLE_VISION) {
-            return goalPhoton.hasValidTarget();
-        } else {
-            return false;
-        }
+        return RobotToggles.ENABLE_VISION && goalPhoton.hasValidTarget();
     }
 
     /**

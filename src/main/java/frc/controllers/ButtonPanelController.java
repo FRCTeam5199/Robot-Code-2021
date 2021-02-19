@@ -2,8 +2,8 @@ package frc.controllers;
 
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 
-public class ButtonPanel extends BaseController {
-    public ButtonPanel(int n) {
+public class ButtonPanelController extends BaseController {
+    public ButtonPanelController(int n) {
         super(n);
     }
 

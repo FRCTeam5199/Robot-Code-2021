@@ -80,13 +80,8 @@ public class RobotTelemetry implements ISubsystem {
      * Zeroes the encoders at their current position
      */
     public void resetEncoders() {
-        if (RobotToggles.DRIVE_USE_SPARKS) {
-            driver.leaderL.getEncoder().setPosition(0);
-            driver.leaderR.getEncoder().setPosition(0);
-        } else {
-            driver.leaderLTalon.setSelectedSensorPosition(0);
-            driver.leaderRTalon.setSelectedSensorPosition(0);
-        }
+        driver.leaderL.resetEncoder();
+        driver.leaderR.resetEncoder();
     }
 
     /**
@@ -102,46 +97,13 @@ public class RobotTelemetry implements ISubsystem {
         resetEncoders();
     }
 
-
-    public double getRPMLeft() {
-        if (RobotToggles.DRIVE_USE_SPARKS) {
-            return (driver.leaderL.getEncoder().getVelocity()) / 9;
-        } else {
-            return driver.leaderLTalon.getSelectedSensorVelocity() * 600 / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION ;
-        }
-    }
-
-    public double getRPMRight() {
-        if (RobotToggles.DRIVE_USE_SPARKS) {
-            return (driver.leaderR.getEncoder().getVelocity()) / 9;
-        } else {
-            return driver.leaderRTalon.getSelectedSensorVelocity() * 600 / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION ;
-        }
-    }
-
-    public double getRotationsLeft() {
-        if (RobotToggles.DRIVE_USE_SPARKS) {
-            return (driver.leaderL.getEncoder().getPosition()) / 9;
-        } else {
-            return driver.leaderLTalon.getSelectedSensorPosition() / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
-        }
-    }
-
-    public double getRotationsRight() {
-        if (RobotToggles.DRIVE_USE_SPARKS) {
-            return (driver.leaderR.getEncoder().getPosition()) / 9;
-        } else {
-            return driver.leaderRTalon.getSelectedSensorPosition() / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
-        }
-    }
-
     /**
      * Gets the meters traveled by the left encoder
      *
      * @return wheel meters traveled
      */
     public double getMetersLeft() {
-        return Units.feetToMeters(getRotationsLeft() * UtilFunctions.wheelCircumference() / 12);
+        return Units.feetToMeters(driver.leaderL.getRotations() * UtilFunctions.wheelCircumference() / 12);
     }
 
     /**
@@ -150,7 +112,7 @@ public class RobotTelemetry implements ISubsystem {
      * @return wheel meters traveled
      */
     public double getMetersRight() {
-        return Units.feetToMeters(getRotationsRight() * UtilFunctions.wheelCircumference() / 12);
+        return Units.feetToMeters(driver.leaderR.getRotations() * UtilFunctions.wheelCircumference() / 12);
     }
 
     /**

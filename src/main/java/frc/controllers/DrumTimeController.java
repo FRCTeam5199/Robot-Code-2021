@@ -1,7 +1,7 @@
 package frc.controllers;
 
-public class DrumTime extends BaseController{
-    public DrumTime(int channel) {
+public class DrumTimeController extends BaseController{
+    public DrumTimeController(int channel) {
         super(channel);
     }
 

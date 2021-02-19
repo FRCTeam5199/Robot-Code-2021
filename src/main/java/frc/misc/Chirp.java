@@ -2,37 +2,24 @@ package frc.misc;
 
 import com.ctre.phoenix.music.Orchestra;
 import edu.wpi.first.wpilibj.Filesystem;
-import frc.drive.DriveManager;
-import frc.robot.RobotToggles;
+import frc.motors.TalonMotor;
 
-import java.nio.file.Path;
+import java.util.ArrayList;
 
-public class Chirp {
-    private final DriveManager DRIVING_CHILD;
-    private final Path filePath;
-    private final Orchestra orchestra;
+public class Chirp extends Orchestra{
+    public static final ArrayList<TalonMotor> talonMotorArrayList = new ArrayList<>();
 
-    public Chirp(DriveManager driveManager, String soundName) {
-        orchestra = new Orchestra();
-        this.DRIVING_CHILD = driveManager;
-        this.filePath = Filesystem.getDeployDirectory().toPath().resolve("Sounds/" + soundName);
-        orchestra.loadMusic(this.filePath.toString());
+    public Chirp() {
+        initChirp();
     }
 
     public void initChirp() {
-        if (!RobotToggles.DRIVE_USE_SPARKS) {
-            orchestra.addInstrument(DRIVING_CHILD.leaderLTalon);
-            orchestra.addInstrument(DRIVING_CHILD.leaderRTalon);
-            DRIVING_CHILD.followerLTalon.addInstrument(orchestra);
-            DRIVING_CHILD.followerRTalon.addInstrument(orchestra);
+        for (TalonMotor motor : talonMotorArrayList) {
+            motor.addToOrchestra(this);
         }
     }
 
-    private void playChirp() {
-        orchestra.play();
-    }
-
-    private void stopChirp() {
-        orchestra.stop();
+    public void loadSound(String soundName) {
+        loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString());
     }
 }

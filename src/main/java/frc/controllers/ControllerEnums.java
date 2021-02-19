@@ -181,7 +181,7 @@ public class ControllerEnums {
     }
 
     /**
-     * @see ButtonPanel
+     * @see ButtonPanelController
      */
     public enum ButtonPanelButtons {
         RAISE_CLIMBER(1), LOWER_CLIMBER(2), CLIMBER_LOCK(3), CLIMBER_UNLOCK(4), BUDDY_CLIMB(5), AUX_TOP(6), AUX_BOTTOM(7), INTAKE_UP(8), INTAKE_DOWN(9), HOPPER_IN(10), HOPPER_OUT(11), TARGET(12), SOLID_SPEED(13);

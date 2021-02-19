@@ -18,6 +18,7 @@ public abstract class DefaultConfig {
     public boolean ENABLE_CLIMBER = false;
     public boolean ENABLE_SHOOTER = false;
     public boolean ENABLE_HOPPER = false;
+    public boolean ENABLE_MUSIC = true;
 
     //Drivetrain
     public boolean DRIVE_USE_SPARKS = false;

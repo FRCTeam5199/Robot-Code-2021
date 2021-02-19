@@ -25,6 +25,7 @@ public class RobotToggles {
     public static final boolean ENABLE_CLIMBER = getNumbersFrom.ENABLE_CLIMBER;
     public static final boolean ENABLE_SHOOTER = getNumbersFrom.ENABLE_SHOOTER;
     public static final boolean ENABLE_HOPPER = getNumbersFrom.ENABLE_HOPPER;
+    public static final boolean ENABLE_MUSIC = getNumbersFrom.ENABLE_MUSIC;
 
     //Drivetrain
     public static final boolean DRIVE_USE_SPARKS = getNumbersFrom.DRIVE_USE_SPARKS;

@@ -9,6 +9,7 @@ import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
+import frc.misc.Chirp;
 
 public class Robot extends TimedRobot {
     public static DriveManager driver;
@@ -16,6 +17,7 @@ public class Robot extends TimedRobot {
     public static Hopper hopper;
     public static Shooter shooter;
     public static Turret turret;
+    public static Chirp chirp;
     public static GoalPhoton goalPhoton;
     public static BallPhoton ballPhoton;
     public static AbstractAutonManager autonManager;
@@ -51,6 +53,9 @@ public class Robot extends TimedRobot {
             goalPhoton = new GoalPhoton();
             ballPhoton = new BallPhoton();
         }
+        if (RobotToggles.ENABLE_MUSIC) {
+            chirp = new Chirp();
+        }
     }
 
     @Override
@@ -61,6 +66,11 @@ public class Robot extends TimedRobot {
         if (RobotToggles.ENABLE_DRIVE) {
             driver.setBrake(true);
             lastDisable = System.currentTimeMillis();
+        }
+        if (RobotToggles.ENABLE_MUSIC) {
+            if (chirp.isPlaying()) {
+                chirp.stop();
+            }
         }
     }
 
@@ -90,6 +100,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
+        if (RobotToggles.ENABLE_MUSIC) {
+            chirp.loadSound("Megalovania");
+        }
     }
 
     @Override
@@ -160,6 +173,11 @@ public class Robot extends TimedRobot {
         if (RobotToggles.ENABLE_VISION) {
             if (RobotToggles.USE_PHOTONVISION) {
                 goalPhoton.updateTest();
+            }
+        }
+        if (RobotToggles.ENABLE_MUSIC) {
+            if (!chirp.isPlaying()) {
+                chirp.play();
             }
         }
     }

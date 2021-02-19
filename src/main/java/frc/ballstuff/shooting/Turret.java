@@ -1,26 +1,23 @@
 package frc.ballstuff.shooting;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
-import frc.controllers.ButtonPanel;
+import frc.controllers.ButtonPanelController;
 import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.JoystickController;
-import frc.telemetry.RobotTelemetry;
 import frc.misc.ISubsystem;
+import frc.motors.AbstractMotor;
+import frc.motors.PhoenixMotor;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
+import frc.telemetry.RobotTelemetry;
+import frc.vision.AbstractVision;
 import frc.vision.GoalPhoton;
 
 /**
@@ -36,14 +33,10 @@ public class Turret implements ISubsystem {
     public boolean track;
     public boolean atTarget = false;
     public boolean chasingTarget = false;
-    private BaseController joy;
-    private BaseController panel;
-    private CANSparkMax motor;
-    private CANEncoder encoder;
-    private CANPIDController controller;
-    private PIDController positionControl;
+    private BaseController joy, panel;
+    private AbstractMotor motor;
     private RobotTelemetry guidance;
-    private GoalPhoton goalPhoton;
+    private AbstractVision goalPhoton;
     private int scanDirection = -1;
 
     public Turret() {
@@ -60,18 +53,12 @@ public class Turret implements ISubsystem {
             goalPhoton = new GoalPhoton();
             goalPhoton.init();
         }
-        motor = new CANSparkMax(RobotMap.TURRET_YAW, MotorType.kBrushless);
-        encoder = motor.getEncoder();
-        panel = new ButtonPanel(RobotNumbers.BUTTON_PANEL_SLOT);
-        encoder.setPositionConversionFactor(360 / 77.7);
-        encoder.setPositionConversionFactor(360 / (RobotNumbers.TURRET_SPROCKET_SIZE * RobotNumbers.TURRET_GEAR_RATIO));
-        controller = motor.getPIDController();
-        positionControl = new PIDController(0, 0, 0);
+        motor = new PhoenixMotor(RobotMap.TURRET_YAW);
+        panel = new ButtonPanelController(RobotNumbers.BUTTON_PANEL_SLOT);
+        motor.setSensorToRevolutionFactor(360 / (RobotNumbers.TURRET_SPROCKET_SIZE * RobotNumbers.TURRET_GEAR_RATIO));
         motor.setInverted(false);
-        encoder.setPosition(270);
-        setMotorPID(0.5, 0, 0);
-        setPosPID(0.02, 0, 0);
-        motor.setIdleMode(IdleMode.kBrake);
+        motor.setPid(0.5, 0, 0, 0);
+        motor.setBrake(true);
         setBrake(true);
     }
 
@@ -144,8 +131,7 @@ public class Turret implements ISubsystem {
             //SmartDashboard.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
             SmartDashboard.putNumber("Turret Omega", omegaSetpoint);
             SmartDashboard.putNumber("Turret Position", turretDegrees());
-            SmartDashboard.putNumber("Turret Speed", encoder.getVelocity());
-            SmartDashboard.putNumber("Turret FF", controller.getFF());
+            SmartDashboard.putNumber("Turret Speed", motor.getRotations());
             SmartDashboard.putBoolean("Turret Safe", isSafe());
             if (RobotToggles.ENABLE_IMU && guidance != null) {
                 //no warranties
@@ -162,7 +148,7 @@ public class Turret implements ISubsystem {
      * @return position of turret in degrees
      */
     private double turretDegrees() {
-        return 270 - encoder.getPosition();
+        return -motor.getRotations();
     }
 
     /**
@@ -215,7 +201,7 @@ public class Turret implements ISubsystem {
         if (RobotToggles.DEBUG) {
             System.out.println("Set to " + (motorRPM / 5700 - deadbandComp) + " from " + speed);
         }
-        motor.set(motorRPM / 5700 - deadbandComp);
+        motor.moveAtRotations(motorRPM / 5700 - deadbandComp);
         SmartDashboard.putNumber("Motor RPM out", motorRPM);
         SmartDashboard.putNumber("Turret RPM out", turretRPM);
         SmartDashboard.putNumber("Deadband Add", deadbandComp);
@@ -232,29 +218,13 @@ public class Turret implements ISubsystem {
         return Math.max(Math.min(angle, RobotNumbers.TURRET_MAX_POS), RobotNumbers.TURRET_MIN_POS);
     }
 
-    private void setMotorPID(double P, double I, double D) {
-        controller.setP(P);
-        controller.setI(I);
-        controller.setD(D);
-    }
-
-    private void setPosPID(double P, double I, double D) {
-        positionControl.setP(P);
-        positionControl.setI(I);
-        positionControl.setD(D);
-    }
-
     /**
      * Tells the motor if it should coast or slam da brakes
      *
      * @param brake should i brake when off? (Y/N)
      */
     public void setBrake(boolean brake) {
-        if (brake) {
-            motor.setIdleMode(IdleMode.kBrake);
-        } else {
-            motor.setIdleMode(IdleMode.kCoast);
-        }
+        motor.setBrake(brake);
     }
 
     /**
@@ -270,14 +240,13 @@ public class Turret implements ISubsystem {
      * every time we enter teleop, reset encoder
      */
     public void teleopInit() {
-        encoder = motor.getEncoder();
-        encoder.setPosition(0);
+        motor.resetEncoder();
     }
 
     /**
      * When we enter disabled, unlock the turret to be moved freely
      */
     public void disabledInit() {
-        motor.setIdleMode(IdleMode.kCoast);
+        motor.setBrake(false);
     }
 }

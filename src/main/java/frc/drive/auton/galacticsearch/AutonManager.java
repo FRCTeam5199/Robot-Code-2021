@@ -18,11 +18,11 @@ import java.nio.file.Path;
 
 public class AutonManager extends AbstractAutonManager {
     private final Timer timer = new Timer();
-    private Trajectory trajectory = new Trajectory();
     private final RobotTelemetry telem;
     private final RamseteController controller = new RamseteController();
+    private Trajectory trajectory = new Trajectory();
 
-    public AutonManager(DriveManager driveManager){
+    public AutonManager(DriveManager driveManager) {
         super(driveManager);
         telem = DRIVING_CHILD.guidance;
         init();
@@ -72,7 +72,7 @@ public class AutonManager extends AbstractAutonManager {
         Path routinePath = Filesystem.getDeployDirectory().toPath().resolve("paths/" + (path.PATH_FILE_LOCATION).trim() + ".wpilib.json");
         try {
             trajectory = TrajectoryUtil.fromPathweaverJson(routinePath);
-        } catch(IOException e) {
+        } catch (IOException e) {
             DriverStation.reportError("Unable to open trajectory: " + routinePath, e.getStackTrace());
         }
         timer.start();
@@ -83,13 +83,13 @@ public class AutonManager extends AbstractAutonManager {
         GalacticSearchPaths bestPath = null;
         double bestOption = Double.MAX_VALUE;
         System.out.print("Data in: ");
-        for (int i = 0; i < 3; i ++)
+        for (int i = 0; i < 3; i++)
             System.out.print(pointData[i]);
         System.out.println();
-        for (GalacticSearchPaths path : GalacticSearchPaths.values()){
+        for (GalacticSearchPaths path : GalacticSearchPaths.values()) {
             System.out.print(path.name() + " ");
             double SOSQ = sumOfSquares(path.POINTS, pointData);
-            if (SOSQ < bestOption){
+            if (SOSQ < bestOption) {
                 bestOption = SOSQ;
                 bestPath = path;
             }
