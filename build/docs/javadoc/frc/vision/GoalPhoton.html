@@ -92,7 +92,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 <div class="contentContainer">
 <div class="inheritance" title="Inheritance Tree">java.lang.Object
+<div class="inheritance"><a href="AbstractVision.html" title="class in frc.vision">frc.vision.AbstractVision</a>
 <div class="inheritance">frc.vision.GoalPhoton</div>
+</div>
 </div>
 <section class="description">
 <dl>
@@ -101,8 +103,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">GoalPhoton</span>
-extends java.lang.Object
-implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></pre>
+extends <a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></pre>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -200,74 +201,74 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <tbody>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getGoalAngle()">getGoalAngle</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAngle()">getAngle</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get angle between crosshair and goal left/right.</div>
 </td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getGoalAngleSmoothed()">getGoalAngleSmoothed</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAngleSmoothed()">getAngleSmoothed</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get angle between crosshair and goal left/right with filter calculation.</div>
 </td>
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getGoalPitch()">getGoalPitch</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPitch()">getPitch</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get angle between crosshair and goal up/down.</div>
 </td>
 </tr>
 <tr class="rowColor" id="i3">
 <td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getGoalSize()">getGoalSize</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSize()">getSize</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the size of the goal onscreen.</div>
 </td>
 </tr>
 <tr class="altColor" id="i4">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasValidTarget()">hasValidTarget</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Check for a valid target in the camera's view.</div>
+</td>
+</tr>
+<tr class="rowColor" id="i5">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
 <div class="block">stores values in simpler variable names</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr class="altColor" id="i6">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
 <div class="block">updates generic things for GoalPhoton</div>
 </td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr class="altColor" id="i8">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
-<div class="block">calls updateGeneric 
- see GoalPhoton.updateGeneric</div>
-</td>
-</tr>
-<tr class="altColor" id="i8">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
-<td class="colLast">
-<div class="block">calls updateGeneric 
+<div class="block">calls updateGeneric
  see GoalPhoton.updateGeneric</div>
 </td>
 </tr>
 <tr class="rowColor" id="i9">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#validTarget()">validTarget</a></span>()</code></th>
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Check for a valid target in the camera's view.</div>
+<div class="block">calls updateGeneric
+ see GoalPhoton.updateGeneric</div>
 </td>
 </tr>
 </tbody>
@@ -357,6 +358,8 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="AbstractVision.html#init()">init</a></code>&nbsp;in class&nbsp;<code><a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></code></dd>
 </dl>
 </section>
 </li>
@@ -364,11 +367,13 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <section class="detail">
 <h3><a id="updateTest()">updateTest</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTest</span>()</div>
-<div class="block">calls updateGeneric 
+<div class="block">calls updateGeneric
  see GoalPhoton.updateGeneric</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="AbstractVision.html#updateTest()">updateTest</a></code>&nbsp;in class&nbsp;<code><a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></code></dd>
 </dl>
 </section>
 </li>
@@ -376,11 +381,13 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <section class="detail">
 <h3><a id="updateTeleop()">updateTeleop</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTeleop</span>()</div>
-<div class="block">calls updateGeneric 
+<div class="block">calls updateGeneric
  see GoalPhoton.updateGeneric</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateTeleop()">updateTeleop</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="AbstractVision.html#updateTeleop()">updateTeleop</a></code>&nbsp;in class&nbsp;<code><a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></code></dd>
 </dl>
 </section>
 </li>
@@ -393,6 +400,8 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateAuton()">updateAuton</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="AbstractVision.html#updateAuton()">updateAuton</a></code>&nbsp;in class&nbsp;<code><a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></code></dd>
 </dl>
 </section>
 </li>
@@ -404,15 +413,19 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="AbstractVision.html#updateGeneric()">updateGeneric</a></code>&nbsp;in class&nbsp;<code><a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></code></dd>
 </dl>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getGoalAngleSmoothed()">getGoalAngleSmoothed</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getGoalAngleSmoothed</span>()</div>
+<h3><a id="getAngleSmoothed()">getAngleSmoothed</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getAngleSmoothed</span>()</div>
 <div class="block">Get angle between crosshair and goal left/right with filter calculation.</div>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="AbstractVision.html#getAngleSmoothed()">getAngleSmoothed</a></code>&nbsp;in class&nbsp;<code><a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>angle between crosshair and goal, left negative, 29.8 degrees in both directions.</dd>
 </dl>
@@ -420,10 +433,12 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="validTarget()">validTarget</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">validTarget</span>()</div>
+<h3><a id="hasValidTarget()">hasValidTarget</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">hasValidTarget</span>()</div>
 <div class="block">Check for a valid target in the camera's view.</div>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="AbstractVision.html#hasValidTarget()">hasValidTarget</a></code>&nbsp;in class&nbsp;<code><a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>whether or not there is a valid target in view.</dd>
 </dl>
@@ -431,10 +446,12 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getGoalAngle()">getGoalAngle</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getGoalAngle</span>()</div>
+<h3><a id="getAngle()">getAngle</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getAngle</span>()</div>
 <div class="block">Get angle between crosshair and goal left/right.</div>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="AbstractVision.html#getAngle()">getAngle</a></code>&nbsp;in class&nbsp;<code><a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>angle between crosshair and goal, left negative, 29.8 degrees in both directions.</dd>
 </dl>
@@ -442,10 +459,12 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getGoalPitch()">getGoalPitch</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getGoalPitch</span>()</div>
+<h3><a id="getPitch()">getPitch</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getPitch</span>()</div>
 <div class="block">Get angle between crosshair and goal up/down.</div>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="AbstractVision.html#getPitch()">getPitch</a></code>&nbsp;in class&nbsp;<code><a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>angle between crosshair and goal, down negative, 22 degrees in both directions.</dd>
 </dl>
@@ -453,10 +472,12 @@ implements <a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubs
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="getGoalSize()">getGoalSize</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getGoalSize</span>()</div>
+<h3><a id="getSize()">getSize</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getSize</span>()</div>
 <div class="block">Get the size of the goal onscreen.</div>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="AbstractVision.html#getSize()">getSize</a></code>&nbsp;in class&nbsp;<code><a href="AbstractVision.html" title="class in frc.vision">AbstractVision</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>size of the goal in % of the screen, 0-100.</dd>
 </dl>

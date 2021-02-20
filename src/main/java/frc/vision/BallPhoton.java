@@ -77,6 +77,7 @@ public class BallPhoton implements ISubsystem {
     /**
      * Get angle between crosshair and Ball left/right with filter calculation.
      *
+     * @param targetId the id of the object to query
      * @return angle between crosshair and Ball, left negative, 29.8 degrees in both directions.
      */
     public double getBallAngleSmoothed(int targetId) {
@@ -98,6 +99,7 @@ public class BallPhoton implements ISubsystem {
     /**
      * Get angle between crosshair and Ball left/right.
      *
+     * @param targetId the id of the object to query
      * @return angle between crosshair and Ball, left negative, 29.8 degrees in both directions.
      */
     public double getBallAngle(int targetId) {
@@ -110,6 +112,7 @@ public class BallPhoton implements ISubsystem {
     /**
      * Get angle between crosshair and Ball up/down.
      *
+     * @param targetId the id of the object to query
      * @return angle between crosshair and Ball, down negative, 22 degrees in both directions.
      */
     public double getBallPitch(int targetId) {
@@ -122,6 +125,7 @@ public class BallPhoton implements ISubsystem {
     /**
      * Get the size of the Ball onscreen.
      *
+     * @param targetId the id of the object to query
      * @return size of the Ball in % of the screen, 0-100.
      */
     public double getBallSize(int targetId) {

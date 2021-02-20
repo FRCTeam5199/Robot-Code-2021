@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -254,7 +254,7 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#interpolateSpeed()">interpolateSpeed</a></span>()</code></th>
 <td class="colLast">
-<div class="block">adjusts speed based on distance based on <a href="../../vision/GoalPhoton.html#getGoalSize()"><code>goalPhoton.getGoalSize()</code></a></div>
+<div class="block">adjusts speed based on distance based on <a href="../../vision/GoalPhoton.html#getSize()"><code>goalPhoton.getGoalSize()</code></a></div>
 </td>
 </tr>
 <tr class="altColor" id="i6">
@@ -273,59 +273,64 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </tr>
 <tr class="altColor" id="i8">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setPercentSpeed(double)">setPercentSpeed</a></span>&#8203;(double&nbsp;percent)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i9">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setSpeed(double)">setSpeed</a></span>&#8203;(double&nbsp;rpm)</code></th>
 <td class="colLast">
 <div class="block">Set drive wheel RPM</div>
 </td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="altColor" id="i10">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#spunUp()">spunUp</a></span>()</code></th>
 <td class="colLast">
 <div class="block">getter for spunUp</div>
 </td>
 </tr>
-<tr class="altColor" id="i10">
+<tr class="rowColor" id="i11">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toggle(boolean)">toggle</a></span>&#8203;(boolean&nbsp;toggle)</code></th>
 <td class="colLast">
 <div class="block">Enable or disable the shooter being spun up.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i11">
+<tr class="altColor" id="i12">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
 </td>
 </tr>
-<tr class="altColor" id="i12">
+<tr class="rowColor" id="i13">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateControls()">updateControls</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr class="altColor" id="i14">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Input is parsed and shooter object maintained appropriately</div>
 </td>
 </tr>
-<tr class="altColor" id="i14">
+<tr class="rowColor" id="i15">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put all of the code for tele operation to run every tick in here</div>
 </td>
 </tr>
-<tr class="rowColor" id="i15">
+<tr class="altColor" id="i16">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
 <div class="block">When testing, put the code to execute every tick in here</div>
 </td>
 </tr>
-<tr class="altColor" id="i16">
+<tr class="rowColor" id="i17">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#validTarget()">validTarget</a></span>()</code></th>
 <td class="colLast">
@@ -386,26 +391,26 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="atSpeed">atSpeed</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">atSpeed</span></div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
 <h3><a id="actualRPM">actualRPM</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">actualRPM</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="interpolationEnabled">interpolationEnabled</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">interpolationEnabled</span></div>
+<h3><a id="shooting">shooting</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">shooting</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="shooting">shooting</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">shooting</span></div>
+<h3><a id="atSpeed">atSpeed</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">atSpeed</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="interpolationEnabled">interpolationEnabled</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">interpolationEnabled</span></div>
 </section>
 </li>
 </ul>
@@ -464,25 +469,20 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="updateControls()">updateControls</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateControls</span>()</div>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
 <h3><a id="checkState()">checkState</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">checkState</span>()</div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="setSpeed(double)">setSpeed</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setSpeed</span>&#8203;(<span class="arguments">double&nbsp;rpm)</span></div>
-<div class="block">Set drive wheel RPM</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>rpm</code> - speed to set</dd>
-</dl>
+<h3><a id="setPercentSpeed(double)">setPercentSpeed</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setPercentSpeed</span>&#8203;(<span class="arguments">double&nbsp;percent)</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="updateControls()">updateControls</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateControls</span>()</div>
 </section>
 </li>
 <li class="blockList">
@@ -533,6 +533,17 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="setSpeed(double)">setSpeed</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setSpeed</span>&#8203;(<span class="arguments">double&nbsp;rpm)</span></div>
+<div class="block">Set drive wheel RPM</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>rpm</code> - speed to set</dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="atSpeed()">atSpeed</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">atSpeed</span>()</div>
 <div class="block">if the shooter is actually at the requested speed</div>
@@ -568,7 +579,7 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <section class="detail">
 <h3><a id="interpolateSpeed()">interpolateSpeed</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">interpolateSpeed</span>()</div>
-<div class="block">adjusts speed based on distance based on <a href="../../vision/GoalPhoton.html#getGoalSize()"><code>goalPhoton.getGoalSize()</code></a></div>
+<div class="block">adjusts speed based on distance based on <a href="../../vision/GoalPhoton.html#getSize()"><code>goalPhoton.getGoalSize()</code></a></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the adjusted speed in RPM based on vision determined distance</dd>

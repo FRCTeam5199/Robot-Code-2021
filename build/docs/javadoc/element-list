@@ -4,8 +4,12 @@ frc.controllers
 frc.drive
 frc.drive.auton
 frc.drive.auton.butbetternow
+frc.drive.auton.galacticsearch
 frc.drive.auton.pointtopoint
 frc.misc
+frc.motors
+frc.motors.followers
 frc.robot
 frc.robot.robotconfigs
+frc.telemetry
 frc.vision

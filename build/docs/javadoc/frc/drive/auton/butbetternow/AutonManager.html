@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -56,7 +56,7 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
@@ -92,7 +92,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 <div class="contentContainer">
 <div class="inheritance" title="Inheritance Tree">java.lang.Object
+<div class="inheritance"><a href="../AbstractAutonManager.html" title="class in frc.drive.auton">frc.drive.auton.AbstractAutonManager</a>
 <div class="inheritance">frc.drive.auton.butbetternow.AutonManager</div>
+</div>
 </div>
 <section class="description">
 <dl>
@@ -101,12 +103,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">AutonManager</span>
-extends java.lang.Object
-implements <a href="../../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></pre>
+extends <a href="../AbstractAutonManager.html" title="class in frc.drive.auton">AbstractAutonManager</a></pre>
 <div class="block">Check back later for some fun and fresh auton routines!</div>
 </section>
 <section class="summary">
 <ul class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<li class="blockList">
+<section class="fieldSummary"><a id="field.summary">
+<!--   -->
+</a>
+<h2>Field Summary</h2>
+<div class="inheritedList">
+<h3>Fields inherited from class&nbsp;frc.drive.auton.<a href="../AbstractAutonManager.html" title="class in frc.drive.auton">AbstractAutonManager</a></h3>
+<a id="fields.inherited.from.class.frc.drive.auton.AbstractAutonManager">
+<!--   -->
+</a><code><a href="../AbstractAutonManager.html#DRIVING_CHILD">DRIVING_CHILD</a></code></div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li class="blockList">
 <section class="constructorSummary"><a id="constructor.summary">
@@ -152,39 +166,34 @@ implements <a href="../../../misc/ISubsystem.html" title="interface in frc.misc"
 </thead>
 <tbody>
 <tr class="altColor" id="i0">
-<td class="colFirst"><code>edu.wpi.first.wpilibj2.command.Command</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAutonomousCommand()">getAutonomousCommand</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor" id="i1">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr class="rowColor" id="i1">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateAuton()">updateAuton</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
 </td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
 </td>
 </tr>
-<tr class="altColor" id="i4">
+<tr class="rowColor" id="i3">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTeleop()">updateTeleop</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Put all of the code for tele operation to run every tick in here</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr class="altColor" id="i4">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateTest()">updateTest</a></span>()</code></th>
 <td class="colLast">
@@ -236,10 +245,6 @@ implements <a href="../../../misc/ISubsystem.html" title="interface in frc.misc"
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()</div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../misc/ISubsystem.html#init()">ISubsystem</a></code></span></div>
 <div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../misc/ISubsystem.html#init()">init</a></code>&nbsp;in interface&nbsp;<code><a href="../../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
-</dl>
 </section>
 </li>
 <li class="blockList">
@@ -248,10 +253,6 @@ implements <a href="../../../misc/ISubsystem.html" title="interface in frc.misc"
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTest</span>()</div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../misc/ISubsystem.html#updateTest()">ISubsystem</a></code></span></div>
 <div class="block">When testing, put the code to execute every tick in here</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../misc/ISubsystem.html#updateTest()">updateTest</a></code>&nbsp;in interface&nbsp;<code><a href="../../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
-</dl>
 </section>
 </li>
 <li class="blockList">
@@ -260,10 +261,6 @@ implements <a href="../../../misc/ISubsystem.html" title="interface in frc.misc"
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateTeleop</span>()</div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../misc/ISubsystem.html#updateTeleop()">ISubsystem</a></code></span></div>
 <div class="block">Put all of the code for tele operation to run every tick in here</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../misc/ISubsystem.html#updateTeleop()">updateTeleop</a></code>&nbsp;in interface&nbsp;<code><a href="../../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
-</dl>
 </section>
 </li>
 <li class="blockList">
@@ -272,16 +269,6 @@ implements <a href="../../../misc/ISubsystem.html" title="interface in frc.misc"
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateAuton</span>()</div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../misc/ISubsystem.html#updateAuton()">ISubsystem</a></code></span></div>
 <div class="block">Put subsystem apprpriate code to run every tick during auton code</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../misc/ISubsystem.html#updateAuton()">updateAuton</a></code>&nbsp;in interface&nbsp;<code><a href="../../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getAutonomousCommand()">getAutonomousCommand</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">edu.wpi.first.wpilibj2.command.Command</span>&nbsp;<span class="memberName">getAutonomousCommand</span>()</div>
 </section>
 </li>
 <li class="blockList">
@@ -290,10 +277,6 @@ implements <a href="../../../misc/ISubsystem.html" title="interface in frc.misc"
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateGeneric</span>()</div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../misc/ISubsystem.html#updateGeneric()">ISubsystem</a></code></span></div>
 <div class="block">Put subsystem apprpriate code to run every tick in every mode here</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
-</dl>
 </section>
 </li>
 </ul>
@@ -329,7 +312,7 @@ implements <a href="../../../misc/ISubsystem.html" title="interface in frc.misc"
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
