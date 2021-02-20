@@ -5,6 +5,7 @@ import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 import frc.robot.robotconfigs.CompetitionRobot2021;
 import frc.robot.robotconfigs.DefaultConfig;
+import frc.robot.robotconfigs.PracticeRobot2021;
 
 public class RobotToggles {
     /**
@@ -13,7 +14,7 @@ public class RobotToggles {
      */
     public static final DefaultConfig getNumbersFrom = new CompetitionRobot2021();
 
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     //Subsystems
 
     /**

@@ -1,6 +1,10 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.ballstuff.intaking.Hopper;
 import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
@@ -11,7 +15,15 @@ import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
 import frc.misc.Chirp;
 
+import java.io.File;
+
 public class Robot extends TimedRobot {
+    private static final ShuffleboardTab MUSICK_TAB = Shuffleboard.getTab("musick");
+    private static String song = "WiiSports";
+    private static final NetworkTableEntry songTab = MUSICK_TAB.add("Song" , song).getEntry();
+    private static boolean songFound = false;
+    private static final NetworkTableEntry foundSong = MUSICK_TAB.add("Found it" , songFound).getEntry();
+    private static String lastFoundSong = "";
     public static DriveManager driver;
     public static Intake intake;
     public static Hopper hopper;
@@ -108,6 +120,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
+        String songName = songTab.getString("");
+        foundSong.setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
+        if (new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(lastFoundSong)){
+            chirp.loadSound(songName);
+            lastFoundSong = songName;
+        }
     }
 
     @Override

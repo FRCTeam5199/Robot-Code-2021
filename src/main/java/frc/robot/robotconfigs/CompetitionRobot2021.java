@@ -25,7 +25,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         //Misc
         ENABLE_VISION = false;
         USE_PHOTONVISION = true;
-        ENABLE_IMU = true;
+        ENABLE_IMU = false;
         USE_PIGEON = false;
         USE_NAVX2 = true;
 
@@ -38,7 +38,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         INDEXER_AUTO_INDEX = true;
 
         //UI Styles
-        EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
+        EXPERIMENTAL_DRIVE = DriveTypes.EXPERIMENTAL;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         GALACTIC_SEARCH = false;
@@ -51,8 +51,8 @@ public class CompetitionRobot2021 extends DefaultConfig {
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
-        WHEEL_DIAMETER = 6; //update: now it's used once
-        MAX_MOTOR_SPEED = 5000; //theoretical max motor speed in rpm
+        WHEEL_DIAMETER = 4; //update: now it's used once
+        MAX_MOTOR_SPEED = 6380; //theoretical max motor speed in rpm
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
 

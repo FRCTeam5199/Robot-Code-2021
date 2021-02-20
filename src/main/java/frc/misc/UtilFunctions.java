@@ -9,7 +9,7 @@ public class UtilFunctions {
     }
 
     public static double convertDriveFPStoRPM(double FPS) {
-        return FPS * (RobotNumbers.MAX_MOTOR_SPEED / RobotNumbers.MAX_SPEED);
+        return (FPS / RobotNumbers.MAX_SPEED) * RobotNumbers.MAX_MOTOR_SPEED;
     }
 
     /**

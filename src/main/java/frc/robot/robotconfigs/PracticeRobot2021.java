@@ -25,7 +25,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         //Misc
         ENABLE_VISION = false;
         USE_PHOTONVISION = true;
-        ENABLE_IMU = true;
+        ENABLE_IMU = false;
         USE_PIGEON = false;
         USE_NAVX2 = false;
 
@@ -38,7 +38,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         INDEXER_AUTO_INDEX = true;
 
         //UI Styles
-        EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
+        EXPERIMENTAL_DRIVE = DriveTypes.BOP_IT;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         GALACTIC_SEARCH = false;

@@ -227,10 +227,10 @@ public class DriveManager implements ISubsystem {
 
         switch (RobotToggles.EXPERIMENTAL_DRIVE) {
             case EXPERIMENTAL: {
+                setBrake(controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN);
+                double precision = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double invertedDrive = invert ? -1 : 1;
-                double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-                double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-                drive(invertedDrive / dynamic_gear_L * dynamic_gear_R * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
+                drive(invertedDrive * controller.get(XboxAxes.LEFT_JOY_Y) * precision, -controller.get(XboxAxes.RIGHT_JOY_X) * precision);
             }
             break;
             case STANDARD: {
@@ -263,8 +263,8 @@ public class DriveManager implements ISubsystem {
                 break;
             }
             case BOP_IT: {
-                double driveamt = (controller.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN ? .1 : 0) * (controller.get(ControllerEnums.BopItButtons.BOPIT) == ButtonStatus.DOWN ? -1 : 1);
-                double turnamt = controller.get(ControllerEnums.BopItButtons.TWISTIT) == ButtonStatus.DOWN ? .1 : 0;
+                double driveamt = (controller.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN ? 1 : 0) * (controller.get(ControllerEnums.BopItButtons.BOPIT) == ButtonStatus.DOWN ? -1 : 1);
+                double turnamt = (controller.get(ControllerEnums.BopItButtons.TWISTIT) == ButtonStatus.DOWN ? 1 : 0) * (controller.get(ControllerEnums.BopItButtons.BOPIT) == ButtonStatus.DOWN ? -1 : 1);
                 System.out.println("bop it says: " + driveamt + ", " + turnamt);
                 drive(driveamt, turnamt);
                 break;
@@ -349,6 +349,7 @@ public class DriveManager implements ISubsystem {
     }
 
     public void setBrake(boolean braking) {
+        coast.setBoolean(!braking);
         leaderL.setBrake(braking);
         leaderR.setBrake(braking);
         followerL.setBrake(braking);
