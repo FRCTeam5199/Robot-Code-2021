@@ -4,14 +4,14 @@ import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 
-public class Robot2021 extends DefaultConfig {
+public class CompetitionRobot2021 extends DefaultConfig {
     //Subsystems
-    public Robot2021() {
+    public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
-        ENABLE_INTAKE = false;
+        ENABLE_INTAKE = true;
         ENABLE_CLIMBER = false;
         ENABLE_SHOOTER = false;
-        ENABLE_HOPPER = false;
+        ENABLE_HOPPER = true;
 
         //Drivetrain
         DRIVE_USE_SPARKS = false;
@@ -25,7 +25,7 @@ public class Robot2021 extends DefaultConfig {
         //Misc
         ENABLE_VISION = false;
         USE_PHOTONVISION = true;
-        ENABLE_IMU = false;
+        ENABLE_IMU = true;
         USE_PIGEON = false;
         USE_NAVX2 = true;
 
