@@ -5,7 +5,6 @@ import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 import frc.robot.robotconfigs.CompetitionRobot2021;
 import frc.robot.robotconfigs.DefaultConfig;
-import frc.robot.robotconfigs.PracticeRobot2021;
 
 public class RobotToggles {
     /**
@@ -32,9 +31,6 @@ public class RobotToggles {
     public static final boolean DRIVE_USE_6_MOTORS = getNumbersFrom.DRIVE_USE_6_MOTORS;
     public static final boolean DRIVE_INVERT_LEFT = getNumbersFrom.DRIVE_INVERT_LEFT;
     public static final boolean DRIVE_INVERT_RIGHT = getNumbersFrom.DRIVE_INVERT_RIGHT;
-
-    public static final boolean CALIBRATE_DRIVE_PID = getNumbersFrom.CALIBRATE_DRIVE_PID;
-    public static final boolean CALIBRATE_SHOOTER_PID = getNumbersFrom.CALIBRATE_SHOOTER_PID;
 
     //Misc
     public static final boolean ENABLE_VISION = getNumbersFrom.ENABLE_VISION;
@@ -69,8 +65,6 @@ public class RobotToggles {
         System.out.println("      Pigeon/NavX " + USE_PIGEON + "/" + USE_NAVX2);
         System.out.println("     Drive sparks " + DRIVE_USE_SPARKS);
         System.out.println("   Drive 6 motors " + DRIVE_USE_6_MOTORS);
-        System.out.println("  Calibrate drive " + CALIBRATE_DRIVE_PID);
-        System.out.println("Calibrate shooter " + CALIBRATE_SHOOTER_PID);
         System.out.println("Shoot with sparks " + SHOOTER_USE_SPARKS);
         System.out.println("     Shoot with 2 " + SHOOTER_USE_TWO_MOTORS);
         System.out.println("      Drive style " + EXPERIMENTAL_DRIVE.name());

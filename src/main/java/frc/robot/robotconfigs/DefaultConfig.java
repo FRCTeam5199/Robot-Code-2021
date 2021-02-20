@@ -26,9 +26,6 @@ public abstract class DefaultConfig {
     public boolean DRIVE_INVERT_LEFT = true;
     public boolean DRIVE_INVERT_RIGHT = false;
 
-    public boolean CALIBRATE_DRIVE_PID = false;
-    public boolean CALIBRATE_SHOOTER_PID = false;
-
     //Misc
     public boolean ENABLE_VISION = false;
     public boolean USE_PHOTONVISION = true;

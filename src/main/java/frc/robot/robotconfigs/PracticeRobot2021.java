@@ -19,9 +19,6 @@ public class PracticeRobot2021 extends DefaultConfig {
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 
-        CALIBRATE_DRIVE_PID = false;
-        CALIBRATE_SHOOTER_PID = false;
-
         //Misc
         ENABLE_VISION = false;
         USE_PHOTONVISION = true;

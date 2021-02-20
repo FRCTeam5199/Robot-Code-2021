@@ -20,8 +20,8 @@ import frc.motors.TalonMotor;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
-import frc.vision.AbstractVision;
 import frc.vision.GoalPhoton;
+import frc.vision.IVision;
 
 import static frc.misc.UtilFunctions.weightedAverage;
 import static frc.robot.Robot.hopper;
@@ -50,7 +50,8 @@ public class Shooter implements ISubsystem {
             I = tab.add("I", RobotNumbers.SHOOTER_I).getEntry(),
             D = tab.add("D", RobotNumbers.SHOOTER_D).getEntry(),
             F = tab.add("F", RobotNumbers.SHOOTER_F).getEntry(),
-            constSpeed = tab.add("Constant Speed", 0).getEntry();
+            constSpeed = tab.add("Constant Speed", 0).getEntry(),
+            calibratePID = tab.add("Recalibrate PID", false).getEntry();
     public BaseController panel, joystickController;
     public double speed, actualRPM;
     public boolean shooting;
@@ -58,7 +59,7 @@ public class Shooter implements ISubsystem {
     public boolean interpolationEnabled = false;
     boolean trackingTarget = false;
     private AbstractMotor leader, follower;
-    private AbstractVision goalPhoton;
+    private IVision goalPhoton;
     private boolean enabled = true;
     private boolean spunUp = false;
     private boolean recoveryPID = false;
@@ -68,6 +69,7 @@ public class Shooter implements ISubsystem {
     private double lastP = 0, lastI = 0, lastD = 0, lastF = 0;
 
     public Shooter() {
+        addToMetaList();
         init();
     }
 
@@ -272,8 +274,7 @@ public class Shooter implements ISubsystem {
             default:
                 throw new IllegalStateException("This UI not implemented for this controller");
         }
-        if (RobotToggles.CALIBRATE_SHOOTER_PID) {
-
+        if (calibratePID.getBoolean(false)) {
             if (lastP != P.getDouble(0) || lastI != I.getDouble(0) || lastD != D.getDouble(0) || lastF != F.getDouble(0)) {
                 System.out.println("P: " + P.getDouble(0) + " from " + lastP);
                 System.out.println("I: " + I.getDouble(0) + " from " + lastI);
@@ -295,6 +296,31 @@ public class Shooter implements ISubsystem {
             SmartDashboard.putBoolean("shooter enable", enabled);
         }
         updateControls();
+    }
+
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
     }
 
     /**

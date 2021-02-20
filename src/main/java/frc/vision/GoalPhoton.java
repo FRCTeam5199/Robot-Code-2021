@@ -6,20 +6,19 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
 import frc.robot.RobotMap;
 
-public class GoalPhoton extends AbstractVision {
-    public NetworkTableEntry yaw;
-    public NetworkTableEntry size;
-    public NetworkTableEntry hasTarget;
-    public NetworkTableEntry pitch;
-    public NetworkTableEntry pose;
-    NetworkTableInstance table;
-    NetworkTable cameraTable;
-    LinearFilter filter;
+public class GoalPhoton implements IVision {
+    private NetworkTableEntry yaw;
+    private NetworkTableEntry size;
+    private NetworkTableEntry hasTarget;
+    private NetworkTableEntry pitch;
+    private NetworkTableEntry pose;
+    private LinearFilter filter;
 
     /**
      * inits GoalPhoton
      */
     public GoalPhoton() {
+        addToMetaList();
         init();
     }
 
@@ -29,13 +28,12 @@ public class GoalPhoton extends AbstractVision {
     @Override
     public void init() {
         filter = LinearFilter.movingAverage(5);
-        table = NetworkTableInstance.getDefault();
-        cameraTable = table.getTable("photonvision").getSubTable(RobotMap.GOAL_CAM_NAME);
+        NetworkTableInstance table = NetworkTableInstance.getDefault();
+        NetworkTable cameraTable = table.getTable("photonvision").getSubTable(RobotMap.GOAL_CAM_NAME);
         yaw = cameraTable.getEntry("targetYaw");
         size = cameraTable.getEntry("targetArea");
         hasTarget = cameraTable.getEntry("hasTarget");
         pitch = cameraTable.getEntry("targetPitch");
-        pose = cameraTable.getEntry("targetPose");
     }
 
     /**
@@ -70,13 +68,38 @@ public class GoalPhoton extends AbstractVision {
     public void updateGeneric() {
     }
 
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
+    }
+
     /**
      * Get angle between crosshair and goal left/right with filter calculation.
      *
      * @return angle between crosshair and goal, left negative, 29.8 degrees in both directions.
      */
     @Override
-    public double getAngleSmoothed() {
+    public double getAngleSmoothed(int channelIgnored) {
         double angle = yaw.getDouble(0);
         if (hasValidTarget()) {
             return filter.calculate(angle);
@@ -90,7 +113,7 @@ public class GoalPhoton extends AbstractVision {
      * @return whether or not there is a valid target in view.
      */
     @Override
-    public boolean hasValidTarget() { 
+    public boolean hasValidTarget() {
         return hasTarget.getBoolean(false);
     }
 
@@ -100,7 +123,7 @@ public class GoalPhoton extends AbstractVision {
      * @return angle between crosshair and goal, left negative, 29.8 degrees in both directions.
      */
     @Override
-    public double getAngle() {
+    public double getAngle(int channelIgnored) {
         double angle = yaw.getDouble(0);
         if (hasValidTarget()) {
             return angle;
@@ -114,7 +137,7 @@ public class GoalPhoton extends AbstractVision {
      * @return angle between crosshair and goal, down negative, 22 degrees in both directions.
      */
     @Override
-    public double getPitch() {
+    public double getPitch(int channelIgnored) {
         double angle = pitch.getDouble(0);
         if (hasValidTarget()) {
             return angle;
@@ -128,7 +151,7 @@ public class GoalPhoton extends AbstractVision {
      * @return size of the goal in % of the screen, 0-100.
      */
     @Override
-    public double getSize() {
+    public double getSize(int channelIgnored) {
         double goalSize = size.getDouble(0);
         if (hasValidTarget()) {
             return goalSize;

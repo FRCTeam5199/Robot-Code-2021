@@ -5,15 +5,16 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
 
-public class GoalLimelight extends AbstractVision {
-    public NetworkTableEntry yaw;
-    public NetworkTableEntry size;
-    public NetworkTableEntry hasTarget;
-    public NetworkTableEntry pitch;
-    public NetworkTableEntry pose;
+public class GoalLimelight implements IVision {
+    private NetworkTableEntry yaw;
+    private NetworkTableEntry size;
+    private NetworkTableEntry hasTarget;
+    private NetworkTableEntry pitch;
+    private NetworkTableEntry pose;
     private LinearFilter filter;
 
     public GoalLimelight() {
+        addToMetaList();
         init();
     }
 
@@ -48,7 +49,32 @@ public class GoalLimelight extends AbstractVision {
     }
 
     @Override
-    public double getAngle() {
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
+    }
+
+    @Override
+    public double getAngle(int channelIgnored) {
         if (hasValidTarget()) {
             return yaw.getDouble(0);
         } else {
@@ -57,7 +83,7 @@ public class GoalLimelight extends AbstractVision {
     }
 
     @Override
-    public double getPitch() {
+    public double getPitch(int channelIgnored) {
         if (hasValidTarget()) {
             return pitch.getDouble(0);
         } else {
@@ -66,7 +92,7 @@ public class GoalLimelight extends AbstractVision {
     }
 
     @Override
-    public double getAngleSmoothed() {
+    public double getAngleSmoothed(int channelIgnored) {
         if (hasValidTarget()) {
             return filter.calculate(yaw.getDouble(0));
         } else {
@@ -75,7 +101,7 @@ public class GoalLimelight extends AbstractVision {
     }
 
     @Override
-    public double getSize() {
+    public double getSize(int channelIgnored) {
         if (hasValidTarget()) {
             return size.getDouble(0);
         } else {

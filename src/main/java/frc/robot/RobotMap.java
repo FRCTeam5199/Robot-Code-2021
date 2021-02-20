@@ -11,14 +11,14 @@ public class RobotMap {
     //Drive Motors
     public static final int DRIVE_LEADER_L = getNumbersFrom.DRIVE_LEADER_L;
     public static final int[] DRIVE_FOLLOWERS_L = getNumbersFrom.DRIVE_FOLLOWERS_L;
-    
+
     public static final int DRIVE_LEADER_R = getNumbersFrom.DRIVE_LEADER_R;
     public static final int[] DRIVE_FOLLOWERS_R = getNumbersFrom.DRIVE_FOLLOWERS_R;
 
     //Shooter Motors
     public static final int SHOOTER_LEADER = getNumbersFrom.SHOOTER_LEADER;
     public static final int SHOOTER_FOLLOWER = getNumbersFrom.SHOOTER_FOLLOWER;
-    
+
     //turret
     public static final int TURRET_YAW = getNumbersFrom.TURRET_YAW;
     //climber

@@ -11,30 +11,32 @@ import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
+import frc.misc.Chirp;
+import frc.misc.ISubsystem;
+import frc.vision.IVision;
 import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
-import frc.misc.Chirp;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Robot extends TimedRobot {
     private static final ShuffleboardTab MUSICK_TAB = Shuffleboard.getTab("musick");
-    private static String song = "WiiSports";
-    private static final NetworkTableEntry songTab = MUSICK_TAB.add("Song" , song).getEntry();
-    private static boolean songFound = false;
-    private static final NetworkTableEntry foundSong = MUSICK_TAB.add("Found it" , songFound).getEntry();
-    private static String lastFoundSong = "";
+    private static final NetworkTableEntry songTab = MUSICK_TAB.add("Song", "WiiSports").getEntry();
+    private static final boolean songFound = false;
+    private static final NetworkTableEntry foundSong = MUSICK_TAB.add("Found it", songFound).getEntry();
     public static DriveManager driver;
     public static Intake intake;
     public static Hopper hopper;
     public static Shooter shooter;
     public static Turret turret;
     public static Chirp chirp;
-    public static GoalPhoton goalPhoton;
-    public static BallPhoton ballPhoton;
+    public static IVision goalPhoton, ballPhoton;
     public static AbstractAutonManager autonManager;
-
+    private static String lastFoundSong = "";
     private static long lastDisable = 0;
+
+    public static final ArrayList<ISubsystem> subsytems = new ArrayList<>();
 
     /**
      * Init everything
@@ -44,26 +46,23 @@ public class Robot extends TimedRobot {
         RobotMap.printMappings();
         RobotToggles.printToggles();
         RobotNumbers.printNumbers();
+        if (RobotToggles.ENABLE_VISION) {
+            goalPhoton = new GoalPhoton();
+            ballPhoton = new BallPhoton();
+        }
         if (RobotToggles.ENABLE_DRIVE) {
             driver = new DriveManager();
         }
-
         if (RobotToggles.ENABLE_INTAKE) {
             intake = new Intake();
         }
-
         if (RobotToggles.ENABLE_HOPPER) {
             hopper = new Hopper();
         }
-
         if (RobotToggles.ENABLE_SHOOTER) {
             shooter = new Shooter();
             turret = new Turret();
             if (RobotToggles.ENABLE_DRIVE) turret.setTelemetry(driver.guidance);
-        }
-        if (RobotToggles.ENABLE_VISION) {
-            goalPhoton = new GoalPhoton();
-            ballPhoton = new BallPhoton();
         }
         if (RobotToggles.ENABLE_MUSIC) {
             chirp = new Chirp();
@@ -72,13 +71,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        if (RobotToggles.ENABLE_SHOOTER) {
-            turret.disabledInit();
+        for (ISubsystem system : subsytems) {
+            system.initDisabled();
         }
-        if (RobotToggles.ENABLE_DRIVE) {
-            driver.setBrake(true);
-            lastDisable = System.currentTimeMillis();
-        }
+        lastDisable = System.currentTimeMillis();
         if (RobotToggles.ENABLE_MUSIC) {
             if (chirp.isPlaying()) {
                 chirp.stop();
@@ -88,30 +84,31 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        if (RobotToggles.ENABLE_VISION)
-            ballPhoton.updateAuton();
+        for (ISubsystem system : subsytems) {
+            system.initAuton();
+        }
         if (RobotToggles.ENABLE_DRIVE) {
-            driver.initGeneric();
-            driver.guidance.resetEncoders();
             if (RobotToggles.GALACTIC_SEARCH) {
-                autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver).initAuton();
-            } else
+                autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
+            } else {
                 autonManager = new frc.drive.auton.butbetternow.AutonManager("RobotTestPath2", driver);
+            }
+            autonManager.initAuton();
         }
     }
 
     @Override
     public void teleopInit() {
-        if (RobotToggles.ENABLE_SHOOTER) {
-            turret.teleopInit();
-        }
-        if (RobotToggles.ENABLE_DRIVE) {
-            driver.initGeneric();
+        for (ISubsystem system : subsytems) {
+            system.initTeleop();
         }
     }
 
     @Override
     public void testInit() {
+        for (ISubsystem system : subsytems) {
+            system.initTest();
+        }
         if (RobotToggles.ENABLE_MUSIC) {
             chirp.loadSound("Imperial_March");
             //chirp.play();
@@ -122,7 +119,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         String songName = songTab.getString("");
         foundSong.setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
-        if (new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(lastFoundSong)){
+        if (new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(lastFoundSong)) {
             chirp.loadSound(songName);
             lastFoundSong = songName;
         }
@@ -137,67 +134,22 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        if (RobotToggles.ENABLE_INTAKE) {
-            intake.updateAuton();
+        for (ISubsystem system : subsytems) {
+            system.updateAuton();
         }
-        if (RobotToggles.ENABLE_SHOOTER) {
-            shooter.updateAuton();
-        }
-        if (RobotToggles.ENABLE_VISION) {
-            if (RobotToggles.USE_PHOTONVISION) {
-                goalPhoton.updateAuton();
-                ballPhoton.updateAuton();
-            }
-        }
-        autonManager.updateAuton();
     }
 
     @Override
     public void teleopPeriodic() {
-        if (RobotToggles.ENABLE_DRIVE) {
-            driver.updateTeleop();
-        }
-        if (RobotToggles.ENABLE_INTAKE) {
-            intake.updateTeleop();
-        }
-        if (RobotToggles.ENABLE_HOPPER) {
-            hopper.updateTeleop();
-        }
-        if (RobotToggles.ENABLE_SHOOTER) {
-            shooter.updateTeleop();
-            turret.updateTeleop();
-        }
-        if (RobotToggles.ENABLE_VISION) {
-            if (RobotToggles.USE_PHOTONVISION) {
-                goalPhoton.updateTeleop();
-            }
+        for (ISubsystem system : subsytems) {
+            system.updateTeleop();
         }
     }
 
     @Override
     public void testPeriodic() {
-        if (RobotToggles.ENABLE_DRIVE) {
-            driver.updateTest();
-        }
-        if (RobotToggles.ENABLE_INTAKE) {
-            intake.updateTest();
-        }
-        if (RobotToggles.ENABLE_SHOOTER) {
-            shooter.updateTest();
-            turret.updateTest();
-        }
-        if (RobotToggles.ENABLE_HOPPER) {
-            hopper.updateTest();
-        }
-        if (RobotToggles.ENABLE_VISION) {
-            if (RobotToggles.USE_PHOTONVISION) {
-                goalPhoton.updateTest();
-            }
-        }
-        if (RobotToggles.ENABLE_MUSIC) {
-            if (!chirp.isPlaying()) {
-                chirp.play();
-            }
+        for (ISubsystem system : subsytems) {
+            system.updateTest();
         }
     }
 }

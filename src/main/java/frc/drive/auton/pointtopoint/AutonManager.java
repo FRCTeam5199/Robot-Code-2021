@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
+import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
 import frc.misc.ISubsystem;
 import frc.robot.RobotNumbers;
@@ -16,14 +17,15 @@ import frc.telemetry.RobotTelemetry;
  *
  * @author jojo2357
  */
-public class AutonManager implements ISubsystem {
+public class AutonManager extends AbstractAutonManager {
     private final AutonRoutines routine;
     private final DriveManager DRIVING_CHILD;
     private final RobotTelemetry telem;
-    DifferentialDriveOdometry odometer;
+    private DifferentialDriveOdometry odometer;
     private PIDController headingPID;
 
     public AutonManager(AutonRoutines routine, DriveManager driveObject) {
+        super(driveObject);
         this.routine = routine;
         this.routine.currentWaypoint = 0;
         DRIVING_CHILD = driveObject;
@@ -68,6 +70,31 @@ public class AutonManager implements ISubsystem {
         telem.updateGeneric();
     }
 
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
+    }
+
     /**
      * "Attack"(drive towards) a point on the field. Units are in meters and its scary.
      *
@@ -85,25 +112,6 @@ public class AutonManager implements ISubsystem {
         } else {
             DRIVING_CHILD.drive(0, 0);
         }
-        // put("x", fieldX());
-        // put("y", fieldY());
-        // put("head", fieldHeading());
-        // put("angleTo", angleToPos(x.getDouble(0), y.getDouble(0)));
-        // // put("error", headingError(x.getDouble(0), y.getDouble(0)));
-        // put("wrap", headingErrorWraparound(x.getDouble(0), y.getDouble(0)));
-        // put("rotationOffset", rotationOffset);
-        // SmartDashboard.putNumber("xDiff", xDiff);
-        // SmartDashboard.putNumber("yDiff", yDiff);
-        // SmartDashboard.putNumber("xpos", robotTranslation.getY());
-        // SmartDashboard.putNumber("ypos", -robotTranslation.getX());
-        // SmartDashboard.putNumber("angleTarget", angleTarget);
-        // SmartDashboard.putNumber("heading", yawWraparound());
-        // SmartDashboard.putNumber("abs", yawAbs());
-        // SmartDashboard.putNumber("rotationOffset", -rotationOffset*RobotNumbers.autoRotationMultiplier); //number being fed into drive()
-        // SmartDashboard.putNumber("rotationDifference", -(angleTarget-yawWraparound()));
-        // SmartDashboard.putBoolean("inTolerance", inTolerance);
-        // SmartDashboard.putNumber("left", getMetersLeft());
-        // SmartDashboard.putNumber("right", getMetersRight());
         return inTolerance;
     }
 }

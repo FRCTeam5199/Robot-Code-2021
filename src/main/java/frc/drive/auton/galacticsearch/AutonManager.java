@@ -59,11 +59,22 @@ public class AutonManager extends AbstractAutonManager {
 
     }
 
-    public AutonManager initAuton() {
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
         Point[] cringePoints = new Point[]{
-                new Point(Robot.ballPhoton.getBallAngle(0), Robot.ballPhoton.getBallSize(0)),
-                new Point(Robot.ballPhoton.getBallAngle(1), Robot.ballPhoton.getBallSize(1)),
-                new Point(Robot.ballPhoton.getBallAngle(2), Robot.ballPhoton.getBallSize(2))
+                new Point(Robot.ballPhoton.getAngle(0), Robot.ballPhoton.getSize(0)),
+                new Point(Robot.ballPhoton.getAngle(1), Robot.ballPhoton.getSize(1)),
+                new Point(Robot.ballPhoton.getAngle(2), Robot.ballPhoton.getSize(2))
         };
         for (Point point : cringePoints)
             System.out.println("Heres what they told me: " + point);
@@ -76,7 +87,16 @@ public class AutonManager extends AbstractAutonManager {
             DriverStation.reportError("Unable to open trajectory: " + routinePath, e.getStackTrace());
         }
         timer.start();
-        return this;
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
     }
 
     private static GalacticSearchPaths getPath(Point[] pointData) {

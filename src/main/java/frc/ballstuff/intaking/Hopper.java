@@ -23,6 +23,7 @@ public class Hopper implements ISubsystem {
     private boolean indexerActive = false;
 
     public Hopper() {
+        addToMetaList();
         init();
     }
 
@@ -77,6 +78,31 @@ public class Hopper implements ISubsystem {
             agitator.moveAtPercent(agitatorActive ? 0.6 : 0);
             indexed = true;//indexerSensorRange() > 9;
         }
+    }
+
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
     }
 
     /**

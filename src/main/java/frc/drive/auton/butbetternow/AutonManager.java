@@ -74,4 +74,29 @@ public class AutonManager extends AbstractAutonManager {
     @Override
     public void updateGeneric() {
     }
+
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
+    }
 }

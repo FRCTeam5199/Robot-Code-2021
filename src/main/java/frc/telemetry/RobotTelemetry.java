@@ -22,6 +22,7 @@ public class RobotTelemetry implements ISubsystem {
     public AbstractIMU imu;
 
     public RobotTelemetry(DriveManager driver) {
+        addToMetaList();
         this.driver = driver;
         init();
     }
@@ -167,5 +168,30 @@ public class RobotTelemetry implements ISubsystem {
             robotTranslation = robotPose.getTranslation();
             robotRotation = robotPose.getRotation();
         }
+    }
+
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
     }
 }

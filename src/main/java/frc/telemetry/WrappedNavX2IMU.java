@@ -8,21 +8,15 @@ import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.SPI;
 
 public class WrappedNavX2IMU extends AbstractIMU {
-    private final AHRS navX2IMU;
+    private AHRS navX2IMU;
 
     public WrappedNavX2IMU() {
-        navX2IMU = createIMU();
-        //TODO make this better (stop being cringe) & make joey stop sobbing over his failures of hardcoding something
+        addToMetaList();
+        init();
     }
 
-    private AHRS createIMU() {
-        AHRS out = null;
-        try {
-            out = new AHRS(SerialPort.Port.kUSB);
-        } catch (RuntimeException ex) {
-            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-        }
-        return out;
+    public void init() {
+        navX2IMU = new AHRS(SerialPort.Port.kUSB);
     }
 
     @Override
@@ -30,6 +24,31 @@ public class WrappedNavX2IMU extends AbstractIMU {
         ypr[0] = navX2IMU.getYaw();
         ypr[1] = navX2IMU.getPitch();
         ypr[2] = navX2IMU.getRoll();
+    }
+
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
     }
 
     @Override

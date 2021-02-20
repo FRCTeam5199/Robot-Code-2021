@@ -6,7 +6,7 @@ import frc.motors.TalonMotor;
 
 import java.util.ArrayList;
 
-public class Chirp extends Orchestra{
+public class Chirp extends Orchestra {
     public static final ArrayList<TalonMotor> talonMotorArrayList = new ArrayList<>();
 
     public Chirp() {

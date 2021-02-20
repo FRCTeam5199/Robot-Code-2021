@@ -17,8 +17,8 @@ import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
 import frc.telemetry.RobotTelemetry;
-import frc.vision.AbstractVision;
 import frc.vision.GoalPhoton;
+import frc.vision.IVision;
 
 /**
  * Turret refers to the shooty thing that spinny spinny in the yaw direction
@@ -36,10 +36,11 @@ public class Turret implements ISubsystem {
     private BaseController joy, panel;
     private AbstractMotor motor;
     private RobotTelemetry guidance;
-    private AbstractVision goalPhoton;
+    private IVision goalPhoton;
     private int scanDirection = -1;
 
     public Turret() {
+        addToMetaList();
         init();
     }
 
@@ -144,6 +145,37 @@ public class Turret implements ISubsystem {
         }
     }
 
+    @Override
+    public void initTest() {
+
+    }
+
+    /**
+     * every time we enter teleop, reset encoder
+     */
+    @Override
+    public void initTeleop() {
+        motor.resetEncoder();
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    /**
+     * When we enter disabled, unlock the turret to be moved freely
+     */
+    @Override
+    public void initDisabled() {
+        motor.setBrake(false);
+    }
+
+    @Override
+    public void initGeneric() {
+
+    }
+
     /**
      * @return position of turret in degrees
      */
@@ -234,19 +266,5 @@ public class Turret implements ISubsystem {
      */
     public void setTelemetry(RobotTelemetry telem) {
         guidance = telem;
-    }
-
-    /**
-     * every time we enter teleop, reset encoder
-     */
-    public void teleopInit() {
-        motor.resetEncoder();
-    }
-
-    /**
-     * When we enter disabled, unlock the turret to be moved freely
-     */
-    public void disabledInit() {
-        motor.setBrake(false);
     }
 }

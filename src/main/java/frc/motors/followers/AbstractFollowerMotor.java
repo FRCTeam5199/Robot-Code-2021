@@ -39,9 +39,9 @@ public abstract class AbstractFollowerMotor {
      * Sets the idle mode for all children to either be
      * (brake = false) minimally resistive or
      * (brake = true) to resist all motion/use ERF to slow motor (actual implemetation varies between motors)
-     * 
+     *
      * @param brake whether to apply idle resistance
-     * @see AbstractMotor#setBrake(boolean) 
+     * @see AbstractMotor#setBrake(boolean)
      */
     public void setBrake(boolean brake) {
         for (AbstractMotor motor : motors)
@@ -52,7 +52,7 @@ public abstract class AbstractFollowerMotor {
      * Sets the maximum allowable current that will flow through each follower motor
      *
      * @param limit max current in amps
-     * @see AbstractMotor#setCurrentLimit(int) 
+     * @see AbstractMotor#setCurrentLimit(int)
      */
     public void setCurrentLimit(int limit) {
         for (AbstractMotor motor : motors)

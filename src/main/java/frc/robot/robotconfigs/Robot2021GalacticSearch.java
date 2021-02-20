@@ -18,9 +18,6 @@ public class Robot2021GalacticSearch extends DefaultConfig {
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 
-        CALIBRATE_DRIVE_PID = false;
-        CALIBRATE_SHOOTER_PID = false;
-
         //Misc
         ENABLE_VISION = true;
         USE_PHOTONVISION = true;

@@ -46,7 +46,8 @@ public class DriveManager implements ISubsystem {
             P = tab2.add("P", RobotNumbers.DRIVEBASE_P).getEntry(),
             I = tab2.add("I", RobotNumbers.DRIVEBASE_I).getEntry(),
             D = tab2.add("D", RobotNumbers.DRIVEBASE_D).getEntry(),
-            F = tab2.add("F", RobotNumbers.DRIVEBASE_F).getEntry();
+            F = tab2.add("F", RobotNumbers.DRIVEBASE_F).getEntry(),
+            calibratePid = tab2.add("Calibrate PID", false).getEntry();
     private final NetworkTableEntry coast = tab2.add("Coast", true).getEntry();
     public boolean autoComplete = false;
     public AbstractMotor leaderL, leaderR;
@@ -86,11 +87,12 @@ public class DriveManager implements ISubsystem {
     }
 
     public DriveManager() throws RuntimeException {
+        addToMetaList();
         init();
     }
 
     /**
-     * Initialize the driver
+     * Initializes the driver
      *
      * @throws IllegalArgumentException       When IDs for follower motors are too few or too many
      * @throws InitializationFailureException When something fails to init properly
@@ -288,7 +290,7 @@ public class DriveManager implements ISubsystem {
     public void updateGeneric() {
         guidance.updateGeneric();
         setBrake(!coast.getBoolean(false));
-        if (RobotToggles.CALIBRATE_DRIVE_PID) {
+        if (calibratePid.getBoolean(false)) {
             if (lastP != P.getDouble(RobotNumbers.DRIVEBASE_P) || lastI != I.getDouble(RobotNumbers.DRIVEBASE_I) || lastD != D.getDouble(RobotNumbers.DRIVEBASE_D) || lastF != F.getDouble(RobotNumbers.DRIVEBASE_P)) {
                 lastP = P.getDouble(RobotNumbers.DRIVEBASE_P);
                 lastI = I.getDouble(RobotNumbers.DRIVEBASE_I);
@@ -300,6 +302,27 @@ public class DriveManager implements ISubsystem {
                 }
             }
         }
+    }
+
+    @Override
+    public void initTest() {
+        initGeneric();
+    }
+
+    @Override
+    public void initTeleop() {
+        initGeneric();
+    }
+
+    @Override
+    public void initAuton() {
+        initGeneric();
+        guidance.resetEncoders();
+    }
+
+    @Override
+    public void initDisabled() {
+        setBrake(true);
     }
 
     /**
@@ -344,6 +367,7 @@ public class DriveManager implements ISubsystem {
         leaderR.moveAtVelocity(UtilFunctions.convertDriveFPStoRPM(rightFPS) * mult);
     }
 
+    @Override
     public void initGeneric() {
         setBrake(true);
     }
@@ -372,7 +396,9 @@ public class DriveManager implements ISubsystem {
      *
      * @param leftVolts  Left drivetrain volts in ... uh ... volts ig
      * @param rightVolts Right drivetrain volts in ... uh ... volts ig
+     * @deprecated
      */
+    @Deprecated
     public void driveVoltage(double leftVolts, double rightVolts) {
         double invertLeft = RobotToggles.DRIVE_INVERT_LEFT ? -1 : 1;
         double invertRight = RobotToggles.DRIVE_INVERT_RIGHT ? -1 : 1;

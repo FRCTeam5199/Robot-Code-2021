@@ -1,6 +1,6 @@
 package frc.robot;
 
-import frc.robot.robotconfigs.*;
+import frc.robot.robotconfigs.DefaultConfig;
 
 public class RobotNumbers {
     public static final DefaultConfig getNumbersFrom = RobotToggles.getNumbersFrom;

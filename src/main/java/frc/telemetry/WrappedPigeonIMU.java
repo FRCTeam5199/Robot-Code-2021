@@ -4,10 +4,11 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import frc.robot.RobotMap;
 
 public class WrappedPigeonIMU extends AbstractIMU {
-    private final PigeonIMU pigeon;
+    private PigeonIMU pigeon;
 
     public WrappedPigeonIMU() {
-        pigeon = new PigeonIMU(RobotMap.IMU);
+        addToMetaList();
+        init();
     }
 
     /**
@@ -21,12 +22,42 @@ public class WrappedPigeonIMU extends AbstractIMU {
         return (ypr[0] - startYaw);
     }
 
+    @Override
+    public void init() {
+        pigeon = new PigeonIMU(RobotMap.IMU);
+    }
+
     /**
      * Updates the Pigeon IMU data
      */
     @Override
     public void updateGeneric() {
         pigeon.getYawPitchRoll(ypr);
+    }
+
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
     }
 
     /**

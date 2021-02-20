@@ -15,11 +15,6 @@ public abstract class AbstractIMU implements ISubsystem {
     protected double[] startypr = new double[3];
 
     @Override
-    public void init() {
-
-    }
-
-    @Override
     public void updateTest() {
         updateGeneric();
     }
@@ -32,11 +27,6 @@ public abstract class AbstractIMU implements ISubsystem {
     @Override
     public void updateAuton() {
         updateGeneric();
-    }
-
-    @Override
-    public void updateGeneric() {
-
     }
 
     public abstract double relativeYaw();

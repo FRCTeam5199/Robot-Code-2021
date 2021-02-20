@@ -1,7 +1,5 @@
 package frc.ballstuff.intaking;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
@@ -19,10 +17,11 @@ import frc.robot.RobotToggles;
  */
 public class Intake implements ISubsystem {
     private AbstractMotor victor;
-    private int intakeMult;
     private BaseController joystick;
+    private int intakeMult;
 
     public Intake() throws InitializationFailureException, IllegalStateException {
+        addToMetaList();
         init();
     }
 
@@ -87,6 +86,31 @@ public class Intake implements ISubsystem {
         if (RobotToggles.DEBUG) {
             SmartDashboard.putNumber("Intake Speed", intakeMult);
         }
+    }
+
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
     }
 
     /**
