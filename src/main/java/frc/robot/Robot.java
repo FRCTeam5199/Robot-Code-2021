@@ -101,7 +101,8 @@ public class Robot extends TimedRobot {
     @Override
     public void testInit() {
         if (RobotToggles.ENABLE_MUSIC) {
-            chirp.loadSound("Megalovania_4Motors");
+            chirp.loadSound("Imperial_March");
+            //chirp.play();
         }
     }
 
@@ -158,7 +159,7 @@ public class Robot extends TimedRobot {
     @Override
     public void testPeriodic() {
         if (RobotToggles.ENABLE_DRIVE) {
-            driver.updateTeleop();
+            driver.updateTest();
         }
         if (RobotToggles.ENABLE_INTAKE) {
             intake.updateTest();

@@ -11,7 +11,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_INTAKE = true;
         ENABLE_CLIMBER = false;
         ENABLE_SHOOTER = false;
-        ENABLE_HOPPER = true;
+        ENABLE_HOPPER = false;
 
         //Drivetrain
         DRIVE_USE_SPARKS = false;

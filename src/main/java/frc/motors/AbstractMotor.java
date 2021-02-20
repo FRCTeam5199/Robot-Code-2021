@@ -2,7 +2,7 @@ package frc.motors;
 
 public abstract class AbstractMotor {
     //Double not double so it will throw a NPE if not inited
-    protected Double sensorToRevolutionFactor;
+    protected double sensorToRevolutionFactor;
 
     public abstract void moveAtRotations(double rpm);
 
