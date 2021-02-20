@@ -8,6 +8,8 @@ import frc.controllers.ControllerEnums.JoystickHatDirection;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
+import frc.motors.AbstractMotor;
+import frc.motors.VictorMotor;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
@@ -16,7 +18,7 @@ import frc.robot.RobotToggles;
  * The "Intake" is referring to the part that picks up power cells from the floor
  */
 public class Intake implements ISubsystem {
-    private VictorSPX victor;
+    private AbstractMotor victor;
     private int intakeMult;
     private BaseController joystick;
 
@@ -40,7 +42,7 @@ public class Intake implements ISubsystem {
                 throw new IllegalStateException("There is no UI configuration for " + RobotToggles.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         try {
-            victor = new VictorSPX(RobotMap.INTAKE_MOTOR);
+            victor = new VictorMotor(RobotMap.INTAKE_MOTOR);
         } catch (Exception e) {
             throw new InitializationFailureException("Intake motor failed to be created", "Disable the intake or investigate your motor mappings");
         }
@@ -66,8 +68,9 @@ public class Intake implements ISubsystem {
     public void updateAuton() {
     }
 
+    @Override
     public void updateGeneric() {
-        victor.set(ControlMode.PercentOutput, 0.8 * intakeMult);
+        victor.moveAtPercent(0.8 * intakeMult);
         switch (RobotToggles.INTAKE_CONTROL_STYLE) {
             case STANDARD:
                 if (joystick.hatIs(JoystickHatDirection.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {

@@ -1,13 +1,13 @@
 package frc.ballstuff.intaking;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.misc.ISubsystem;
+import frc.motors.AbstractMotor;
+import frc.motors.VictorMotor;
 import frc.robot.RobotMap;
 import frc.robot.RobotToggles;
 
@@ -16,7 +16,7 @@ import frc.robot.RobotToggles;
  * to the {@link frc.ballstuff.shooting.Shooter}
  */
 public class Hopper implements ISubsystem {
-    public VictorSPX agitator, indexer;
+    public AbstractMotor agitator, indexer;
     public Rev2mDistanceSensor indexSensor;
     public boolean indexed = false;
     private boolean agitatorActive = false;
@@ -33,8 +33,8 @@ public class Hopper implements ISubsystem {
             indexSensor.setEnabled(true);
             indexSensor.setAutomaticMode(true);
         }
-        agitator = new VictorSPX(RobotMap.AGITATOR_MOTOR);
-        indexer = new VictorSPX(RobotMap.INDEXER_MOTOR);
+        agitator = new VictorMotor(RobotMap.AGITATOR_MOTOR);
+        indexer = new VictorMotor(RobotMap.INDEXER_MOTOR);
     }
 
     @Override
@@ -69,12 +69,12 @@ public class Hopper implements ISubsystem {
             SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
         }
         if (!indexerActive && !agitatorActive) {
-            indexer.set(ControlMode.PercentOutput, indexerSensorRange() > 9 ? 0.4 : 0);
-            agitator.set(ControlMode.PercentOutput, indexerSensorRange() > 9 ? 0.3 : 0);
+            indexer.moveAtPercent(indexerSensorRange() > 9 ? 0.4 : 0);
+            agitator.moveAtPercent(indexerSensorRange() > 9 ? 0.3 : 0);
             indexed = indexerSensorRange() > 9;
         } else {
-            indexer.set(ControlMode.PercentOutput, indexerActive ? 0.8 : 0);
-            agitator.set(ControlMode.PercentOutput, agitatorActive ? 0.6 : 0);
+            indexer.moveAtPercent(indexerActive ? 0.8 : 0);
+            agitator.moveAtPercent(agitatorActive ? 0.6 : 0);
             indexed = true;//indexerSensorRange() > 9;
         }
     }

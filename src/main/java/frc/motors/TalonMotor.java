@@ -1,10 +1,9 @@
 package frc.motors;
 
-import com.ctre.phoenix.music.Orchestra;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import frc.misc.Chirp;
 import frc.robot.RobotNumbers;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
 import static com.ctre.phoenix.motorcontrol.ControlMode.Velocity;
@@ -18,8 +17,8 @@ public class TalonMotor extends AbstractMotor {
         motor = new WPI_TalonFX(id);
         Chirp.talonMotorArrayList.add(this);
     }
-    
-    public void addToOrchestra(Orchestra orchestra){
+
+    public void addToOrchestra(Orchestra orchestra) {
         orchestra.addInstrument(motor);
     }
 
@@ -70,7 +69,7 @@ public class TalonMotor extends AbstractMotor {
     }
 
     @Override
-    public void setCurrentLimit(int limit){
+    public void setCurrentLimit(int limit) {
         //SupplyCurrentLimitConfiguration config = new SupplyCurrentLimitConfiguration();
         //config.currentLimit = limit;
         //config.enable = true;
