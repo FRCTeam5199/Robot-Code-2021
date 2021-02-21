@@ -21,10 +21,10 @@ import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.misc.UtilFunctions;
 import frc.motors.AbstractMotor;
-import frc.motors.PhoenixMotor;
+import frc.motors.SparkMotor;
 import frc.motors.TalonMotor;
 import frc.motors.followers.AbstractFollowerMotor;
-import frc.motors.followers.PhoenixFollowerMotors;
+import frc.motors.followers.SparkFollowerMotors;
 import frc.motors.followers.TalonFollowerMotor;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
@@ -112,16 +112,25 @@ public class DriveManager implements ISubsystem {
      * @throws InitializationFailureException When follower drive motors fail to link to leaders or when leader drivetrain motors fail to invert
      */
     private void createDriveMotors() throws InitializationFailureException, IllegalArgumentException {
-        if (RobotToggles.DRIVE_USE_SPARKS) {
-            leaderL = new PhoenixMotor(RobotMap.DRIVE_LEADER_L);
-            leaderR = new PhoenixMotor(RobotMap.DRIVE_LEADER_R);
-            followerL = new PhoenixFollowerMotors(RobotMap.DRIVE_FOLLOWERS_L);
-            followerR = new PhoenixFollowerMotors(RobotMap.DRIVE_FOLLOWERS_R);
-        } else {
-            leaderL = new TalonMotor(RobotMap.DRIVE_LEADER_L);
-            leaderR = new TalonMotor(RobotMap.DRIVE_LEADER_R);
-            followerL = new TalonFollowerMotor(RobotMap.DRIVE_FOLLOWERS_L);
-            followerR = new TalonFollowerMotor(RobotMap.DRIVE_FOLLOWERS_R);
+        switch (RobotToggles.DRIVE_MOTOR_TYPE){
+            case CAN_SPARK_MAX:
+                leaderL = new SparkMotor(RobotMap.DRIVE_LEADER_L);
+                leaderR = new SparkMotor(RobotMap.DRIVE_LEADER_R);
+                followerL = new SparkFollowerMotors(RobotMap.DRIVE_FOLLOWERS_L);
+                followerR = new SparkFollowerMotors(RobotMap.DRIVE_FOLLOWERS_R);
+                leaderL.setSensorToRevolutionFactor(RobotNumbers.DRIVE_GEARING);
+                leaderR.setSensorToRevolutionFactor(RobotNumbers.DRIVE_GEARING);
+                break;
+            case TALON_FX:
+                leaderL = new TalonMotor(RobotMap.DRIVE_LEADER_L);
+                leaderR = new TalonMotor(RobotMap.DRIVE_LEADER_R);
+                followerL = new TalonFollowerMotor(RobotMap.DRIVE_FOLLOWERS_L);
+                followerR = new TalonFollowerMotor(RobotMap.DRIVE_FOLLOWERS_R);
+                leaderL.setSensorToRevolutionFactor((600.0 / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotNumbers.DRIVE_GEARING);
+                leaderR.setSensorToRevolutionFactor((600.0 / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotNumbers.DRIVE_GEARING);
+                break;
+            default:
+                throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + RobotToggles.DRIVE_MOTOR_TYPE.name(), "Add an implementation in the init for drive manager");
         }
         try {
             followerL.follow(leaderL);

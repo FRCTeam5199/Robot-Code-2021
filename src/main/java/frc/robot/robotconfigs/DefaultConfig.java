@@ -3,6 +3,8 @@ package frc.robot.robotconfigs;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
+import frc.drive.auton.AutonType;
+import frc.motors.SupportedMotors;
 
 /**
  * Literally dont mind me I am simply vibing
@@ -15,13 +17,10 @@ public abstract class DefaultConfig {
     //Subsystems
     public boolean ENABLE_DRIVE = false;
     public boolean ENABLE_INTAKE = false;
-    public boolean ENABLE_CLIMBER = false;
     public boolean ENABLE_SHOOTER = false;
     public boolean ENABLE_HOPPER = false;
     public boolean ENABLE_MUSIC = true;
-
-    //Drivetrain
-    public boolean DRIVE_USE_SPARKS = false;
+    
     public boolean DRIVE_USE_6_MOTORS = false;
     public boolean DRIVE_INVERT_LEFT = true;
     public boolean DRIVE_INVERT_RIGHT = false;
@@ -45,8 +44,9 @@ public abstract class DefaultConfig {
     public DriveTypes EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
     public ShootingControlStyles SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
     public IntakeControlStyles INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
+    public SupportedMotors DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
 
-    public boolean GALACTIC_SEARCH = false;
+    public AutonType GALACTIC_SEARCH = AutonType.P2P;
 
     public double DRIVEBASE_P = 0;
     public double DRIVEBASE_I = 0;
@@ -60,6 +60,7 @@ public abstract class DefaultConfig {
     public double MAX_MOTOR_SPEED = 0; //theoretical max motor speed in rpm
     public double TURN_SCALE = 1;
     public double DRIVE_SCALE = 1;
+    public double DRIVE_GEARING = 10 / 70.0;
 
     public double SHOOTER_P = 0;
     public double SHOOTER_I = 0;
@@ -105,23 +106,13 @@ public abstract class DefaultConfig {
     public int SHOOTER_FOLLOWER = 8; //talon
     //turret
     public int TURRET_YAW = 33; //550
-    //climber
-    public int CLIMBER_A = 8; //victor
-    public int CLIMBER_B = 9; //victor
     //hopper
     public int AGITATOR_MOTOR = 10; //victor
     public int INDEXER_MOTOR = 11; //victor
     //intake
     public int INTAKE_MOTOR = 12; //victor
     public int IMU = 22; //pigeon
-    public int PCM = 23; //pcm
-    //pneumatics
-    public int INTAKE_OUT = 4;
-    public int INTAKE_IN = 5;
-    public int BUDDY_UNLOCK = 0;
-    public int SHIFTERS = 6;
-    public int CLIMBER_LOCK_IN = 2;
-    public int CLIMBER_LOCK_OUT = 3;
+    
     public double triggerSensitivity = 0.25;
     public int XBOX_CONTROLLER_SLOT = 0;
     public int FLIGHT_STICK_SLOT = 1;

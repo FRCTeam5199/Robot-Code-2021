@@ -6,7 +6,7 @@ import frc.motors.AbstractMotor;
  * This class should be used to hold all the follower motors that will follow the same motor
  *
  * @see AbstractMotor
- * @see PhoenixFollowerMotors
+ * @see SparkFollowerMotors
  * @see TalonFollowerMotor
  */
 public abstract class AbstractFollowerMotor {

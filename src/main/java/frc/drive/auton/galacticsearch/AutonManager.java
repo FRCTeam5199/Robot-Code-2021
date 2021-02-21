@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class AutonManager extends AbstractAutonManager {
-    private final Timer timer = new Timer();
     private final RobotTelemetry telem;
     private final RamseteController controller = new RamseteController();
     private Trajectory trajectory = new Trajectory();

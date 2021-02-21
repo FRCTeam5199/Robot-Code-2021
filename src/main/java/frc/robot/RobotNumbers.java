@@ -17,6 +17,7 @@ public class RobotNumbers {
     public static final double MAX_MOTOR_SPEED = getNumbersFrom.MAX_MOTOR_SPEED;
     public static final double TURN_SCALE = getNumbersFrom.TURN_SCALE;
     public static final double DRIVE_SCALE = getNumbersFrom.DRIVE_SCALE;
+    public static final double DRIVE_GEARING = getNumbersFrom.DRIVE_GEARING;
 
     public static final double SHOOTER_P = getNumbersFrom.SHOOTER_P;
     public static final double SHOOTER_I = getNumbersFrom.SHOOTER_I;

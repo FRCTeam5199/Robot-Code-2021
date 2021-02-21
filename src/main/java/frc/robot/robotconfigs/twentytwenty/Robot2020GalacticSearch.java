@@ -1,30 +1,30 @@
-package frc.robot.robotconfigs;
+package frc.robot.robotconfigs.twentytwenty;
 
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
+import frc.drive.auton.AutonType;
+import frc.motors.SupportedMotors;
+import frc.robot.robotconfigs.DefaultConfig;
 
-public class CompetitionRobot2021 extends DefaultConfig {
-    //Subsystems
-    public CompetitionRobot2021() {
+public class Robot2020GalacticSearch extends DefaultConfig {
+    public Robot2020GalacticSearch() {
+        //Subsystems
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
-        ENABLE_CLIMBER = false;
         ENABLE_SHOOTER = false;
         ENABLE_HOPPER = false;
 
-        //Drivetrain
-        DRIVE_USE_SPARKS = false;
-        DRIVE_USE_6_MOTORS = false;
+        DRIVE_USE_6_MOTORS = true;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = false;
+        ENABLE_VISION = true;
         USE_PHOTONVISION = true;
-        ENABLE_IMU = false;
-        USE_PIGEON = false;
-        USE_NAVX2 = true;
+        ENABLE_IMU = true;
+        USE_PIGEON = true;
+        USE_NAVX2 = false;
 
         //SHOOTER
         SHOOTER_USE_SPARKS = false;
@@ -35,10 +35,12 @@ public class CompetitionRobot2021 extends DefaultConfig {
         INDEXER_AUTO_INDEX = true;
 
         //UI Styles
-        EXPERIMENTAL_DRIVE = DriveTypes.EXPERIMENTAL;
+        EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
-        GALACTIC_SEARCH = false;
+        DRIVE_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
+
+        GALACTIC_SEARCH = AutonType.GALACTIC_SEARCH;
 
         DRIVEBASE_P = 0.0075;
         DRIVEBASE_I = 0;
@@ -48,10 +50,11 @@ public class CompetitionRobot2021 extends DefaultConfig {
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
-        WHEEL_DIAMETER = 4; //update: now it's used once
-        MAX_MOTOR_SPEED = 6380; //theoretical max motor speed in rpm
+        WHEEL_DIAMETER = 6; //update: now it's used once
+        MAX_MOTOR_SPEED = 5000; //theoretical max motor speed in rpm
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
+        DRIVE_GEARING = 1 / 9.0;
 
         SHOOTER_P = 0.001;
         SHOOTER_I = 0.00003;
@@ -77,6 +80,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         TURRET_P = 0.006;
         TURRET_I = 0.00001;
         TURRET_D = 0.001;
+
         //TURRET_F = 0.001;
         SHOOTER_TIMEOUT_MS = 20;
         AUTON_TOLERANCE = 0.1;
@@ -85,20 +89,14 @@ public class CompetitionRobot2021 extends DefaultConfig {
         HEADING_D = 0.0003;
         AUTO_SPEED = 3;
         AUTO_ROTATION_SPEED = 1;
-        triggerSensitivity = 0.25;
-        XBOX_CONTROLLER_SLOT = 0;
-        FLIGHT_STICK_SLOT = 1;
-        BUTTON_PANEL_SLOT = 2;
-
         GOAL_CAM_NAME = "GoalCamera";
         BALL_CAM_NAME = "BallCamera";
 
         //Drive Motors
         DRIVE_LEADER_L = 1; //talon
-        DRIVE_FOLLOWERS_L = new int[]{2}; //talon
-
-        DRIVE_LEADER_R = 3; //talon
-        DRIVE_FOLLOWERS_R = new int[]{4}; //talon
+        DRIVE_FOLLOWERS_L = new int[]{2, 3}; //talon
+        DRIVE_LEADER_R = 4; //talon
+        DRIVE_FOLLOWERS_R = new int[]{5, 6}; //talon
 
         //Shooter Motors
         SHOOTER_LEADER = 7; //talon
@@ -106,24 +104,18 @@ public class CompetitionRobot2021 extends DefaultConfig {
 
         //turret
         TURRET_YAW = 33; //550
-        //climber
-        CLIMBER_A = 8; //victor
-        CLIMBER_B = 9; //victor
+
         //hopper
         AGITATOR_MOTOR = 10; //victor
         INDEXER_MOTOR = 11; //victor
+
         //intake
         INTAKE_MOTOR = 12; //victor
-
         IMU = 22; //pigeon
-        PCM = 23; //pcm
 
-        //pneumatics
-        INTAKE_OUT = 4;
-        INTAKE_IN = 5;
-        BUDDY_UNLOCK = 0;
-        SHIFTERS = 6;
-        CLIMBER_LOCK_IN = 2;
-        CLIMBER_LOCK_OUT = 3;
+        triggerSensitivity = 0.25;
+        XBOX_CONTROLLER_SLOT = 0;
+        FLIGHT_STICK_SLOT = 1;
+        BUTTON_PANEL_SLOT = 2;
     }
 }

@@ -12,7 +12,7 @@ import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.motors.AbstractMotor;
-import frc.motors.PhoenixMotor;
+import frc.motors.SparkMotor;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
@@ -54,7 +54,7 @@ public class Turret implements ISubsystem {
             goalPhoton = new GoalPhoton();
             goalPhoton.init();
         }
-        motor = new PhoenixMotor(RobotMap.TURRET_YAW);
+        motor = new SparkMotor(RobotMap.TURRET_YAW);
         panel = new ButtonPanelController(RobotNumbers.BUTTON_PANEL_SLOT);
         motor.setSensorToRevolutionFactor(360 / (RobotNumbers.TURRET_SPROCKET_SIZE * RobotNumbers.TURRET_GEAR_RATIO));
         motor.setInverted(false);

@@ -1,30 +1,30 @@
-package frc.robot.robotconfigs;
+package frc.robot.robotconfigs.twentyone;
 
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
+import frc.drive.auton.AutonType;
+import frc.motors.SupportedMotors;
+import frc.robot.robotconfigs.DefaultConfig;
 
-public class Robot2020 extends DefaultConfig {
-    public Robot2020() {
-        //Subsystems
+public class CompetitionRobot2021 extends DefaultConfig {
+    //Subsystems
+    public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
-        ENABLE_CLIMBER = false;
-        ENABLE_SHOOTER = true;
-        ENABLE_HOPPER = true;
-
-        //Drivetrain
-        DRIVE_USE_SPARKS = true;
-        DRIVE_USE_6_MOTORS = true;
+        ENABLE_SHOOTER = false;
+        ENABLE_HOPPER = false;
+        
+        DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = true;
+        ENABLE_VISION = false;
         USE_PHOTONVISION = true;
-        ENABLE_IMU = true;
-        USE_PIGEON = true;
-        USE_NAVX2 = false;
+        ENABLE_IMU = false;
+        USE_PIGEON = false;
+        USE_NAVX2 = true;
 
         //SHOOTER
         SHOOTER_USE_SPARKS = false;
@@ -34,24 +34,27 @@ public class Robot2020 extends DefaultConfig {
         //INTAKE
         INDEXER_AUTO_INDEX = true;
 
-        //UI Style
-        EXPERIMENTAL_DRIVE = DriveTypes.BOP_IT;
+        //UI Styles
+        EXPERIMENTAL_DRIVE = DriveTypes.EXPERIMENTAL;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
-        GALACTIC_SEARCH = false;
+        DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
+        
+        GALACTIC_SEARCH = AutonType.BUT_BETTER_NOW;
 
-        DRIVEBASE_P = 0;//0.0075;
-        DRIVEBASE_I = 0;//0
-        DRIVEBASE_D = 0.000005;//0.002;
-        DRIVEBASE_F = 0.00002;//0;
+        DRIVEBASE_P = 0.0075;
+        DRIVEBASE_I = 0;
+        DRIVEBASE_D = 0.002;
+        DRIVEBASE_F = 0;
         DRIVE_TIMEOUT_MS = 30;
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
-        WHEEL_DIAMETER = 6; //update: now it's used once
-        MAX_MOTOR_SPEED = 5000; //theoretical max motor speed in rpm
+        WHEEL_DIAMETER = 4; //update: now it's used once
+        MAX_MOTOR_SPEED = 6380; //theoretical max motor speed in rpm
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
+        DRIVE_GEARING = 10 / 60.0;
 
         SHOOTER_P = 0.001;
         SHOOTER_I = 0.00003;
@@ -95,10 +98,10 @@ public class Robot2020 extends DefaultConfig {
 
         //Drive Motors
         DRIVE_LEADER_L = 1; //talon
-        DRIVE_FOLLOWERS_L = new int[]{2, 3}; //talon
+        DRIVE_FOLLOWERS_L = new int[]{2}; //talon
 
-        DRIVE_LEADER_R = 4; //talon
-        DRIVE_FOLLOWERS_R = new int[]{5, 6}; //talon
+        DRIVE_LEADER_R = 3; //talon
+        DRIVE_FOLLOWERS_R = new int[]{4}; //talon
 
         //Shooter Motors
         SHOOTER_LEADER = 7; //talon
@@ -106,9 +109,6 @@ public class Robot2020 extends DefaultConfig {
 
         //turret
         TURRET_YAW = 33; //550
-        //climber
-        CLIMBER_A = 8; //victor
-        CLIMBER_B = 9; //victor
         //hopper
         AGITATOR_MOTOR = 10; //victor
         INDEXER_MOTOR = 11; //victor
@@ -116,14 +116,5 @@ public class Robot2020 extends DefaultConfig {
         INTAKE_MOTOR = 12; //victor
 
         IMU = 22; //pigeon
-        PCM = 23; //pcm
-
-        //pneumatics
-        INTAKE_OUT = 4;
-        INTAKE_IN = 5;
-        BUDDY_UNLOCK = 0;
-        SHIFTERS = 6;
-        CLIMBER_LOCK_IN = 2;
-        CLIMBER_LOCK_OUT = 3;
     }
 }

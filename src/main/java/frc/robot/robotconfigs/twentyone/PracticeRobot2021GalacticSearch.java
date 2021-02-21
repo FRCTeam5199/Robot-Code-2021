@@ -1,19 +1,19 @@
-package frc.robot.robotconfigs;
+package frc.robot.robotconfigs.twentyone;
 
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
+import frc.drive.auton.AutonType;
+import frc.motors.SupportedMotors;
+import frc.robot.robotconfigs.DefaultConfig;
 
-public class Robot2021GalacticSearch extends DefaultConfig {
-    public Robot2021GalacticSearch() {
+public class PracticeRobot2021GalacticSearch extends DefaultConfig {
+    public PracticeRobot2021GalacticSearch() {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = false;
-        ENABLE_CLIMBER = false;
         ENABLE_SHOOTER = false;
         ENABLE_HOPPER = false;
-
-        //Drivetrain
-        DRIVE_USE_SPARKS = false;
+        
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
@@ -34,10 +34,12 @@ public class Robot2021GalacticSearch extends DefaultConfig {
         INDEXER_AUTO_INDEX = true;
 
         //UI Styles
-        DriveTypes EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
-        ShootingControlStyles SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
-        IntakeControlStyles INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
-        GALACTIC_SEARCH = true;
+        EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
+        SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
+        INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
+        DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
+
+        GALACTIC_SEARCH = AutonType.GALACTIC_SEARCH;
 
         DRIVEBASE_P = 0.0075;
         DRIVEBASE_I = 0;
@@ -51,6 +53,7 @@ public class Robot2021GalacticSearch extends DefaultConfig {
         MAX_MOTOR_SPEED = 5000; //theoretical max motor speed in rpm
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
+        DRIVE_GEARING = 10.0 / 60;
 
         SHOOTER_P = 0.001;
         SHOOTER_I = 0.00003;
@@ -105,24 +108,14 @@ public class Robot2021GalacticSearch extends DefaultConfig {
 
         //turret
         TURRET_YAW = 33; //550
-        //climber
-        CLIMBER_A = 8; //victor
-        CLIMBER_B = 9; //victor
+
         //hopper
         AGITATOR_MOTOR = 10; //victor
         INDEXER_MOTOR = 11; //victor
+
         //intake
         INTAKE_MOTOR = 12; //victor
 
         IMU = 22; //pigeon
-        PCM = 23; //pcm
-
-        //pneumatics
-        INTAKE_OUT = 4;
-        INTAKE_IN = 5;
-        BUDDY_UNLOCK = 0;
-        SHIFTERS = 6;
-        CLIMBER_LOCK_IN = 2;
-        CLIMBER_LOCK_OUT = 3;
     }
 }

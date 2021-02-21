@@ -8,11 +8,11 @@ import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 import static com.revrobotics.ControlType.kVelocity;
 
-public class PhoenixMotor extends AbstractMotor {
+public class SparkMotor extends AbstractMotor {
     private final CANSparkMax motor;
     private final CANPIDController myPid;
 
-    public PhoenixMotor(int channelID) {
+    public SparkMotor(int channelID) {
         motor = new CANSparkMax(channelID, kBrushless);
         myPid = motor.getPIDController();
         //I dont know if talons do this or if we ever dont do this so here it is
@@ -31,8 +31,8 @@ public class PhoenixMotor extends AbstractMotor {
 
     @Override
     public void follow(AbstractMotor leader) {
-        if (leader instanceof PhoenixMotor)
-            motor.follow(((PhoenixMotor) leader).motor);
+        if (leader instanceof SparkMotor)
+            motor.follow(((SparkMotor) leader).motor);
     }
 
     @Override

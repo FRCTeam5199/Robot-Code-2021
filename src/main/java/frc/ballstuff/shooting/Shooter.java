@@ -15,7 +15,7 @@ import frc.controllers.ControllerEnums.JoystickButtons;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.motors.AbstractMotor;
-import frc.motors.PhoenixMotor;
+import frc.motors.SparkMotor;
 import frc.motors.TalonMotor;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
@@ -104,9 +104,9 @@ public class Shooter implements ISubsystem {
      */
     private void createAndInitMotors() {
         if (RobotToggles.SHOOTER_USE_SPARKS) {
-            leader = new PhoenixMotor(RobotMap.SHOOTER_LEADER);
+            leader = new SparkMotor(RobotMap.SHOOTER_LEADER);
             if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
-                follower = new PhoenixMotor(RobotMap.SHOOTER_FOLLOWER);
+                follower = new SparkMotor(RobotMap.SHOOTER_FOLLOWER);
             }
             leader.setSensorToRevolutionFactor(1);
         } else {

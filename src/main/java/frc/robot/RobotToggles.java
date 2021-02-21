@@ -3,7 +3,9 @@ package frc.robot;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
-import frc.robot.robotconfigs.CompetitionRobot2021;
+import frc.drive.auton.AutonType;
+import frc.motors.SupportedMotors;
+import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 import frc.robot.robotconfigs.DefaultConfig;
 
 public class RobotToggles {
@@ -21,13 +23,10 @@ public class RobotToggles {
      */
     public static final boolean ENABLE_DRIVE = getNumbersFrom.ENABLE_DRIVE;
     public static final boolean ENABLE_INTAKE = getNumbersFrom.ENABLE_INTAKE;
-    public static final boolean ENABLE_CLIMBER = getNumbersFrom.ENABLE_CLIMBER;
     public static final boolean ENABLE_SHOOTER = getNumbersFrom.ENABLE_SHOOTER;
     public static final boolean ENABLE_HOPPER = getNumbersFrom.ENABLE_HOPPER;
     public static final boolean ENABLE_MUSIC = getNumbersFrom.ENABLE_MUSIC;
-
-    //Drivetrain
-    public static final boolean DRIVE_USE_SPARKS = getNumbersFrom.DRIVE_USE_SPARKS;
+    
     public static final boolean DRIVE_USE_6_MOTORS = getNumbersFrom.DRIVE_USE_6_MOTORS;
     public static final boolean DRIVE_INVERT_LEFT = getNumbersFrom.DRIVE_INVERT_LEFT;
     public static final boolean DRIVE_INVERT_RIGHT = getNumbersFrom.DRIVE_INVERT_RIGHT;
@@ -52,7 +51,8 @@ public class RobotToggles {
     public static final ShootingControlStyles SHOOTER_CONTROL_STYLE = getNumbersFrom.SHOOTER_CONTROL_STYLE;
     public static final IntakeControlStyles INTAKE_CONTROL_STYLE = getNumbersFrom.INTAKE_CONTROL_STYLE;
 
-    public static final boolean GALACTIC_SEARCH = getNumbersFrom.GALACTIC_SEARCH;
+    public static final AutonType GALACTIC_SEARCH = getNumbersFrom.GALACTIC_SEARCH;
+    public static final SupportedMotors DRIVE_MOTOR_TYPE = getNumbersFrom.DRIVE_MOTOR_TYPE;
 
     public static void printToggles() {
         System.out.println("-------------------<RobotToggles>-----------------");
@@ -63,7 +63,7 @@ public class RobotToggles {
         System.out.println("           Vision " + ENABLE_VISION);
         System.out.println("              IMU " + ENABLE_IMU);
         System.out.println("      Pigeon/NavX " + USE_PIGEON + "/" + USE_NAVX2);
-        System.out.println("     Drive sparks " + DRIVE_USE_SPARKS);
+        System.out.println("     Drive motors " + DRIVE_MOTOR_TYPE.name());
         System.out.println("   Drive 6 motors " + DRIVE_USE_6_MOTORS);
         System.out.println("Shoot with sparks " + SHOOTER_USE_SPARKS);
         System.out.println("     Shoot with 2 " + SHOOTER_USE_TWO_MOTORS);

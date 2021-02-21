@@ -7,7 +7,7 @@ package frc.motors;
  *
  * @author jojo2357
  * @see frc.motors.followers.AbstractFollowerMotor
- * @see PhoenixMotor
+ * @see SparkMotor
  * @see TalonMotor
  */
 public abstract class AbstractMotor {

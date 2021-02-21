@@ -21,25 +21,15 @@ public class RobotMap {
 
     //turret
     public static final int TURRET_YAW = getNumbersFrom.TURRET_YAW;
-    //climber
-    public static final int CLIMBER_A = getNumbersFrom.CLIMBER_A;
-    public static final int CLIMBER_B = getNumbersFrom.CLIMBER_B;
+    
     //hopper
     public static final int AGITATOR_MOTOR = getNumbersFrom.AGITATOR_MOTOR;
     public static final int INDEXER_MOTOR = getNumbersFrom.INDEXER_MOTOR;
+    
     //intake
     public static final int INTAKE_MOTOR = getNumbersFrom.INTAKE_MOTOR;
 
     public static final int IMU = getNumbersFrom.IMU;
-    public static final int PCM = getNumbersFrom.PCM;
-
-    //pneumatics
-    public static final int INTAKE_OUT = getNumbersFrom.INTAKE_OUT;
-    public static final int INTAKE_IN = getNumbersFrom.INTAKE_IN;
-    public static final int BUDDY_UNLOCK = getNumbersFrom.BUDDY_UNLOCK;
-    public static final int SHIFTERS = getNumbersFrom.SHIFTERS;
-    public static final int CLIMBER_LOCK_IN = getNumbersFrom.CLIMBER_LOCK_IN;
-    public static final int CLIMBER_LOCK_OUT = getNumbersFrom.CLIMBER_LOCK_OUT;
 
     public static void printMappings() {
         System.out.println("-------------------<RobotMappings>-----------------");
