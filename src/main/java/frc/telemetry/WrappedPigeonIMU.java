@@ -1,7 +1,7 @@
 package frc.telemetry;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-import frc.robot.RobotMap;
+import frc.robot.RobotSettings;
 
 public class WrappedPigeonIMU extends AbstractIMU {
     private PigeonIMU pigeon;
@@ -24,7 +24,7 @@ public class WrappedPigeonIMU extends AbstractIMU {
 
     @Override
     public void init() {
-        pigeon = new PigeonIMU(RobotMap.IMU);
+        pigeon = new PigeonIMU(RobotSettings.IMU);
     }
 
     /**

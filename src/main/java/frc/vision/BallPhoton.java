@@ -1,7 +1,7 @@
 package frc.vision;
 
 import edu.wpi.first.wpilibj.LinearFilter;
-import frc.robot.RobotMap;
+import frc.robot.RobotSettings;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPipelineResult;
 import org.photonvision.PhotonTrackedTarget;
@@ -27,7 +27,7 @@ public class BallPhoton implements IVision {
      */
     public void init() {
         filter = LinearFilter.movingAverage(5);
-        ballCamera = new PhotonCamera(RobotMap.BALL_CAM_NAME);
+        ballCamera = new PhotonCamera(RobotSettings.BALL_CAM_NAME);
         cameraResult = ballCamera.getLatestResult();
         System.out.println("Found " + cameraResult.targets.size() + " targets");
     }

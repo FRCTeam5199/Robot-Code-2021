@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
-import frc.robot.RobotToggles;
+import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class AutonManager extends AbstractAutonManager {
     @Override
     public void init() {
         DRIVING_CHILD.init();
-        RobotToggles.autonComplete = false;
+        RobotSettings.autonComplete = false;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void updateAuton() {
-        if (!RobotToggles.autonComplete) {
+        if (!RobotSettings.autonComplete) {
             telem.updateAuton();
             //RamseteCommand ramseteCommand = new RamseteCommand(Trajectory, () -> telem.robotPose, controller, DRIVING_CHILD.kinematics, DRIVING_CHILD::driveFPS);
             Trajectory.State goal = trajectory.sample(timer.get());
@@ -54,7 +54,7 @@ public class AutonManager extends AbstractAutonManager {
             ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
             DRIVING_CHILD.drivePure(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
-                RobotToggles.autonComplete = true;
+                RobotSettings.autonComplete = true;
             }
         }
     }
@@ -76,7 +76,7 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void initAuton() {
-        RobotToggles.autonComplete = false;
+        RobotSettings.autonComplete = false;
         Path routinePath = Filesystem.getDeployDirectory().toPath().resolve("paths/PathARed.wpilib.json");
         try {
             trajectory = TrajectoryUtil.fromPathweaverJson(routinePath);

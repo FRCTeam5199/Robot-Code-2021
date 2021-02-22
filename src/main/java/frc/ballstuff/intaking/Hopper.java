@@ -8,8 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.misc.ISubsystem;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
-import frc.robot.RobotMap;
-import frc.robot.RobotToggles;
+import frc.robot.RobotSettings;
 
 /**
  * The Hopper subsystem effectively takes a ball from the front (where the {@link frc.ballstuff.intaking.Intake intake}
@@ -29,13 +28,13 @@ public class Hopper implements ISubsystem {
 
     @Override
     public void init() {
-        if (RobotToggles.INDEXER_AUTO_INDEX) {
+        if (RobotSettings.INDEXER_AUTO_INDEX) {
             indexSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighAccuracy);
             indexSensor.setEnabled(true);
             indexSensor.setAutomaticMode(true);
         }
-        agitator = new VictorMotorController(RobotMap.AGITATOR_MOTOR);
-        indexer = new VictorMotorController(RobotMap.INDEXER_MOTOR);
+        agitator = new VictorMotorController(RobotSettings.AGITATOR_MOTOR);
+        indexer = new VictorMotorController(RobotSettings.INDEXER_MOTOR);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class Hopper implements ISubsystem {
     }
 
     public double indexerSensorRange() {
-        if (RobotToggles.INDEXER_AUTO_INDEX) {
+        if (RobotSettings.INDEXER_AUTO_INDEX) {
             return indexSensor.getRange();
         }
         return -2;
@@ -64,7 +63,7 @@ public class Hopper implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (RobotToggles.DEBUG) {
+        if (RobotSettings.DEBUG) {
             SmartDashboard.putBoolean("indexer enable", indexerActive);
             SmartDashboard.putBoolean("agitator enable", agitatorActive);
             SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
@@ -122,7 +121,7 @@ public class Hopper implements ISubsystem {
      */
     public void setAgitator(boolean set) {
         agitatorActive = set;
-        if (RobotToggles.DEBUG) {
+        if (RobotSettings.DEBUG) {
             System.out.println("Agitator set to " + set);
         }
     }
@@ -133,7 +132,7 @@ public class Hopper implements ISubsystem {
      * @param set a boolean to determine wether or not Indexer is turned on/off
      */
     public void setIndexer(boolean set) {
-        if (RobotToggles.DEBUG) {
+        if (RobotSettings.DEBUG) {
             System.out.println("Indexer set to " + set);
         }
         indexerActive = set;

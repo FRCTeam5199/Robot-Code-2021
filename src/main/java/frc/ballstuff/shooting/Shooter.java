@@ -19,9 +19,7 @@ import frc.misc.ISubsystem;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
-import frc.robot.RobotMap;
-import frc.robot.RobotNumbers;
-import frc.robot.RobotToggles;
+import frc.robot.RobotSettings;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
 
@@ -48,10 +46,10 @@ public class Shooter implements ISubsystem {
      */
     private final double[][] voltageFFArray = {{0, 0}, {11, 190}, {13, 185}};
     private final ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-    private final NetworkTableEntry P = tab.add("P", RobotNumbers.SHOOTER_P).getEntry(),
-            I = tab.add("I", RobotNumbers.SHOOTER_I).getEntry(),
-            D = tab.add("D", RobotNumbers.SHOOTER_D).getEntry(),
-            F = tab.add("F", RobotNumbers.SHOOTER_F).getEntry(),
+    private final NetworkTableEntry P = tab.add("P", RobotSettings.SHOOTER_P).getEntry(),
+            I = tab.add("I", RobotSettings.SHOOTER_I).getEntry(),
+            D = tab.add("D", RobotSettings.SHOOTER_D).getEntry(),
+            F = tab.add("F", RobotSettings.SHOOTER_F).getEntry(),
             constSpeed = tab.add("Constant Speed", 0).getEntry(),
             calibratePID = tab.add("Recalibrate PID", false).getEntry();
     public BaseController panel, joystickController;
@@ -80,21 +78,21 @@ public class Shooter implements ISubsystem {
      */
     @Override
     public void init() throws IllegalStateException {
-        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
+        switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD:
-                joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
-                panel = new ButtonPanelController(RobotNumbers.BUTTON_PANEL_SLOT);
+                joystickController = new JoystickController(RobotSettings.FLIGHT_STICK_SLOT);
+                panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_SLOT);
                 break;
             case BOP_IT:
                 joystickController = new BopItBasicController(1);
                 break;
             default:
-                throw new IllegalStateException("There is no UI configuration for " + RobotToggles.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
+                throw new IllegalStateException("There is no UI configuration for " + RobotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         createAndInitMotors();
 
         //SmartDashboard.putString("ZONE", "none");
-        if (RobotToggles.ENABLE_VISION) {
+        if (RobotSettings.ENABLE_VISION) {
             goalPhoton = new GoalPhoton();
         }
 
@@ -108,27 +106,27 @@ public class Shooter implements ISubsystem {
      * Initialize the motors. Checks for SHOOTER_USE_SPARKS and SHOOTER_USE_TWO_MOTORS to allow modularity.
      */
     private void createAndInitMotors() {
-        if (RobotToggles.SHOOTER_USE_SPARKS) {
-            leader = new SparkMotorController(RobotMap.SHOOTER_LEADER);
-            if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
-                follower = new SparkMotorController(RobotMap.SHOOTER_FOLLOWER);
+        if (RobotSettings.SHOOTER_USE_SPARKS) {
+            leader = new SparkMotorController(RobotSettings.SHOOTER_LEADER);
+            if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
+                follower = new SparkMotorController(RobotSettings.SHOOTER_FOLLOWER);
             }
             leader.setSensorToRevolutionFactor(1);
         } else {
-            leader = new TalonMotorController(RobotMap.SHOOTER_LEADER);
-            if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
-                follower = new TalonMotorController(RobotMap.SHOOTER_FOLLOWER);
+            leader = new TalonMotorController(RobotSettings.SHOOTER_LEADER);
+            if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
+                follower = new TalonMotorController(RobotSettings.SHOOTER_FOLLOWER);
             }
-            leader.setSensorToRevolutionFactor(600 / RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION);
+            leader.setSensorToRevolutionFactor(600 / RobotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
         }
 
-        leader.setInverted(RobotToggles.SHOOTER_INVERTED);
-        if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
+        leader.setInverted(RobotSettings.SHOOTER_INVERTED);
+        if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
             follower.follow(leader);
-            follower.setInverted(RobotToggles.SHOOTER_INVERTED);
+            follower.setInverted(RobotSettings.SHOOTER_INVERTED);
         }
         leader.setCurrentLimit(80);
-        if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
+        if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
             follower.setCurrentLimit(80);
             follower.setBrake(false);
         }
@@ -189,9 +187,9 @@ public class Shooter implements ISubsystem {
         }
         /* You're bad.
         if (recoveryPID) {
-            setPID(RobotNumbers.SHOOTER_RECOVERY_P, RobotNumbers.SHOOTER_RECOVERY_I, RobotNumbers.SHOOTER_RECOVERY_D, RobotNumbers.SHOOTER_F);
+            setPID(RobotSettings.SHOOTER_RECOVERY_P, RobotSettings.SHOOTER_RECOVERY_I, RobotSettings.SHOOTER_RECOVERY_D, RobotSettings.SHOOTER_F);
         } else {
-            setPID(RobotNumbers.SHOOTER_P, RobotNumbers.SHOOTER_I, RobotNumbers.SHOOTER_D, RobotNumbers.SHOOTER_F);
+            setPID(RobotSettings.SHOOTER_P, RobotSettings.SHOOTER_I, RobotSettings.SHOOTER_D, RobotSettings.SHOOTER_F);
         }
         */
     }
@@ -250,11 +248,11 @@ public class Shooter implements ISubsystem {
         actualRPM = leader.getRotations();
         checkState();
         boolean lockOntoTarget = false;
-        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
+        switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD: {
                 boolean solidSpeed = panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN;
                 double adjustmentFactor = joystickController.getPositive(JoystickAxis.SLIDER);
-                if (RobotToggles.ENABLE_VISION) {
+                if (RobotSettings.ENABLE_VISION) {
                     lockOntoTarget = panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN;
                 }
                 trackingTarget = goalPhoton.hasValidTarget() && lockOntoTarget;
@@ -298,7 +296,7 @@ public class Shooter implements ISubsystem {
                 setPID(lastP, lastI, lastD, lastF);
             }
         }
-        if (RobotToggles.DEBUG) {
+        if (RobotSettings.DEBUG) {
             SmartDashboard.putNumber("RPM", actualRPM);
             SmartDashboard.putNumber("Target RPM", speed);
 
@@ -340,11 +338,11 @@ public class Shooter implements ISubsystem {
      * @param rpm speed to set
      */
     public void setSpeed(double rpm) {
-        if (RobotToggles.DEBUG) {
+        if (RobotSettings.DEBUG) {
             System.out.println("setSpeed1");
         }
         leader.moveAtRotations(rpm);
-        if (RobotToggles.DEBUG) {
+        if (RobotSettings.DEBUG) {
             System.out.println("setSpeed2");
         }
     }
@@ -426,7 +424,7 @@ public class Shooter implements ISubsystem {
      * @return if the goal photon is in use and has a valid target in its sights
      */
     public boolean validTarget() {
-        return RobotToggles.ENABLE_VISION && goalPhoton.hasValidTarget();
+        return RobotSettings.ENABLE_VISION && goalPhoton.hasValidTarget();
     }
 
     /**

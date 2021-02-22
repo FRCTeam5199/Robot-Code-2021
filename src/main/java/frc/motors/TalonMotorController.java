@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 import frc.misc.Chirp;
-import frc.robot.RobotNumbers;
+import frc.robot.RobotSettings;
 
 import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Brake;
@@ -57,10 +57,10 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void setPid(double p, double i, double d, double f) {
-        motor.config_kP(0, p, RobotNumbers.DRIVE_TIMEOUT_MS);
-        motor.config_kI(0, i, RobotNumbers.DRIVE_TIMEOUT_MS);
-        motor.config_kD(0, d, RobotNumbers.DRIVE_TIMEOUT_MS);
-        motor.config_kF(0, f, RobotNumbers.DRIVE_TIMEOUT_MS);
+        motor.config_kP(0, p, RobotSettings.DRIVE_TIMEOUT_MS);
+        motor.config_kI(0, i, RobotSettings.DRIVE_TIMEOUT_MS);
+        motor.config_kD(0, d, RobotSettings.DRIVE_TIMEOUT_MS);
+        motor.config_kF(0, f, RobotSettings.DRIVE_TIMEOUT_MS);
     }
 
     @Override

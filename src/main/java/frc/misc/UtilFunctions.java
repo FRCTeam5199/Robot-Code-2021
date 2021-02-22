@@ -1,15 +1,15 @@
 package frc.misc;
 
-import frc.robot.RobotNumbers;
+import frc.robot.RobotSettings;
 
 public class UtilFunctions {
 
     public static double getTargetVelocity(double FPS) {
-        return convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
+        return convertDriveFPStoRPM(FPS) * RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
     }
 
     public static double convertDriveFPStoRPM(double FPS) {
-        return (FPS / RobotNumbers.MAX_SPEED) * RobotNumbers.MAX_MOTOR_SPEED;
+        return (FPS / RobotSettings.MAX_SPEED) * RobotSettings.MAX_MOTOR_SPEED;
     }
 
     /**
@@ -30,6 +30,6 @@ public class UtilFunctions {
     }
 
     public static double wheelCircumference() {
-        return RobotNumbers.WHEEL_DIAMETER * Math.PI;
+        return RobotSettings.WHEEL_DIAMETER * Math.PI;
     }
 }

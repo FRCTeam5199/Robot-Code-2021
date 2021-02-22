@@ -1,7 +1,7 @@
 package frc.ballstuff.shooting;
 
 import frc.controllers.ControllerEnums;
-import frc.robot.RobotToggles;
+import frc.robot.RobotSettings;
 
 import java.util.function.Consumer;
 
@@ -14,7 +14,7 @@ public enum ShootingEnums {
     //Used when solid speed button is held down
     FIRE_SOLID_SPEED(shooter -> {
         shooter.setSpeed(4200 * (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
-        if (RobotToggles.ENABLE_HOPPER) {
+        if (RobotSettings.ENABLE_HOPPER) {
             hopper.setAll(shooter.spunUp() && shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN);
         }
     }),
@@ -22,14 +22,14 @@ public enum ShootingEnums {
     //Used by our current vision tracking
     FIRE_HIGH_SPEED(shooter -> {
         //shooter.setSpeed(0);
-        if (RobotToggles.ENABLE_VISION) {
+        if (RobotSettings.ENABLE_VISION) {
             //shooter.setSpeed(shooter.interpolateSpeed());
             shooter.setSpeed(4200); //* (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1)
         } else {
             shooter.setSpeed(4200); //* (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1)
         }
 
-        if (RobotToggles.ENABLE_HOPPER) {
+        if (RobotSettings.ENABLE_HOPPER) {
             hopper.setAll((shooter.spunUp() || shooter.recovering()) && (shooter.validTarget()));
         }
     }),
@@ -39,12 +39,12 @@ public enum ShootingEnums {
         // boolean spinOverride = hopper.spinupOverride.getBoolean(false);
         boolean runDisable = false;//hopper.disableOverride.getBoolean(false);
         shooter.toggle(true);
-        if (RobotToggles.ENABLE_HOPPER) hopper.setAll(shooter.atSpeed());
+        if (RobotSettings.ENABLE_HOPPER) hopper.setAll(shooter.atSpeed());
     }),
 
     FIRE_INDEXER_INDEPENDENT(shooter -> {
         if (shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN) {
-            if (RobotToggles.ENABLE_HOPPER) hopper.setIndexer(shooter.atSpeed() && hopper.indexed);
+            if (RobotSettings.ENABLE_HOPPER) hopper.setIndexer(shooter.atSpeed() && hopper.indexed);
         }
     }),
 
@@ -54,16 +54,16 @@ public enum ShootingEnums {
             if (shooter.atSpeed()) {
                 shooter.ensureTimerStarted();
                 if (shooter.getShootTimer().hasPeriodPassed(0.5)) {
-                    if (RobotToggles.ENABLE_HOPPER) hopper.setIndexer(true);
+                    if (RobotSettings.ENABLE_HOPPER) hopper.setIndexer(true);
                     //hopper.setAgitator(true);
                 }
             } else {
-                if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
+                if (RobotSettings.ENABLE_HOPPER) hopper.setAll(false);
                 shooter.resetShootTimer();
             }
         } else {
             shooter.shooting = false;
-            if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
+            if (RobotSettings.ENABLE_HOPPER) hopper.setAll(false);
             shooter.resetShootTimer();
         }
     }),
@@ -71,18 +71,18 @@ public enum ShootingEnums {
     FIRE_MIXED(shooter -> {
         shooter.shooting = shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN;
         if (shooter.shooting) {
-            if (shooter.atSpeed() && (!RobotToggles.ENABLE_HOPPER || hopper.indexed)) {
+            if (shooter.atSpeed() && (!RobotSettings.ENABLE_HOPPER || hopper.indexed)) {
                 shooter.ensureTimerStarted();
                 if (shooter.getShootTimer().hasPeriodPassed(0.1)) {
                     hopper.setIndexer(true);
                     //hopper.setAgitator(true);
                 }
             } else {
-                if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
+                if (RobotSettings.ENABLE_HOPPER) hopper.setAll(false);
                 shooter.resetShootTimer();
             }
         } else {
-            if (RobotToggles.ENABLE_HOPPER) hopper.setAll(false);
+            if (RobotSettings.ENABLE_HOPPER) hopper.setAll(false);
             shooter.resetShootTimer();
         }
     });

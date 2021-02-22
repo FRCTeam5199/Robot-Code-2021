@@ -14,9 +14,7 @@ import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
-import frc.robot.RobotMap;
-import frc.robot.RobotNumbers;
-import frc.robot.RobotToggles;
+import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
@@ -50,21 +48,21 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void init() {
-        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
+        switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD:
-                joy = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
-                panel = new ButtonPanelController(RobotNumbers.BUTTON_PANEL_SLOT);
+                joy = new JoystickController(RobotSettings.FLIGHT_STICK_SLOT);
+                panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_SLOT);
                 break;
             case BOP_IT:
                 joy = new BopItBasicController(1);
                 break;
         }
-        if (RobotToggles.ENABLE_VISION) {
+        if (RobotSettings.ENABLE_VISION) {
             goalPhoton = new GoalPhoton();
             goalPhoton.init();
         }
-        motor = new SparkMotorController(RobotMap.TURRET_YAW);
-        motor.setSensorToRevolutionFactor(360 / (RobotNumbers.TURRET_SPROCKET_SIZE * RobotNumbers.TURRET_GEAR_RATIO));
+        motor = new SparkMotorController(RobotSettings.TURRET_YAW);
+        motor.setSensorToRevolutionFactor(360 / (RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO));
         motor.setInverted(false);
         motor.setPid(0.5, 0, 0, 0);
         motor.setBrake(true);
@@ -96,17 +94,17 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (RobotToggles.DEBUG) {
+        if (RobotSettings.DEBUG) {
             System.out.println("Turret degrees:" + turretDegrees());
         }
         //!!!!! THE TURRET ZERO IS THE PHYSICAL STOP CLOSEST TO THE GOAL
 
         double omegaSetpoint = 0;
-        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
+        switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD:
-                if (RobotToggles.ENABLE_VISION) {
+                if (RobotSettings.ENABLE_VISION) {
                     if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) { //Check if the Target button is held down
-                        if (RobotToggles.DEBUG) {
+                        if (RobotSettings.DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + goalPhoton.hasValidTarget());
                         }
                         if (goalPhoton.hasValidTarget()) {
@@ -118,7 +116,7 @@ public class Turret implements ISubsystem {
                 }
                 //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.
                 if (joy.get(ControllerEnums.JoystickButtons.TWO) == ControllerEnums.ButtonStatus.DOWN) {
-                    if (RobotToggles.DEBUG) {
+                    if (RobotSettings.DEBUG) {
                         System.out.println("Joystick is at " + joy.get(ControllerEnums.JoystickAxis.Z_ROTATE));
                     }
                     omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * -2;
@@ -132,7 +130,7 @@ public class Turret implements ISubsystem {
 
         if (isSafe()) {
             rotateTurret(omegaSetpoint);
-            if (RobotToggles.DEBUG) {
+            if (RobotSettings.DEBUG) {
                 System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
             }
         } else {
@@ -144,13 +142,13 @@ public class Turret implements ISubsystem {
                 rotateTurret(0);
             }
         }
-        if (RobotToggles.DEBUG) {
+        if (RobotSettings.DEBUG) {
             //SmartDashboard.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
             SmartDashboard.putNumber("Turret Omega", omegaSetpoint);
             SmartDashboard.putNumber("Turret Position", turretDegrees());
             SmartDashboard.putNumber("Turret Speed", motor.getRotations());
             SmartDashboard.putBoolean("Turret Safe", isSafe());
-            if (RobotToggles.ENABLE_IMU && guidance != null) {
+            if (RobotSettings.ENABLE_IMU && guidance != null) {
                 //no warranties
                 SmartDashboard.putNumber("YawWrap", guidance.imu.yawWraparoundAhead() - 360);
                 SmartDashboard.putNumber("Turret North", limitAngle(235 + guidance.imu.yawWraparoundAhead() - 360));
@@ -231,7 +229,7 @@ public class Turret implements ISubsystem {
     private void rotateTurret(double speed) {
         //1 Radians Per Second to Revolutions Per Minute = 9.5493 RPM
         double turretRPM = speed * 9.5493;
-        double motorRPM = turretRPM * (RobotNumbers.TURRET_SPROCKET_SIZE / RobotNumbers.MOTOR_SPROCKET_SIZE) * RobotNumbers.TURRET_GEAR_RATIO;
+        double motorRPM = turretRPM * (RobotSettings.TURRET_SPROCKET_SIZE / RobotSettings.MOTOR_SPROCKET_SIZE) * RobotSettings.TURRET_GEAR_RATIO;
         //controller.setReference(motorRPM, ControlType.kVelocity);
         double deadbandComp;
         if (track) { //make if true
@@ -246,7 +244,7 @@ public class Turret implements ISubsystem {
             deadbandComp = 0;
             //motorRPM = 0;
         }
-        if (RobotToggles.DEBUG) {
+        if (RobotSettings.DEBUG) {
             System.out.println("Set to " + (motorRPM / 5700 - deadbandComp) + " from " + speed);
         }
         motor.moveAtRotations(motorRPM / 5700 - deadbandComp);
@@ -264,7 +262,7 @@ public class Turret implements ISubsystem {
      * @return angle at the minimum or maximum angle
      */
     private double limitAngle(double angle) {
-        return Math.max(Math.min(angle, RobotNumbers.TURRET_MAX_POS), RobotNumbers.TURRET_MIN_POS);
+        return Math.max(Math.min(angle, RobotSettings.TURRET_MAX_POS), RobotSettings.TURRET_MIN_POS);
     }
 
     /**

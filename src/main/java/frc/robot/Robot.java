@@ -51,32 +51,32 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() throws IllegalStateException {
-        RobotMap.printMappings();
-        RobotToggles.printToggles();
-        RobotNumbers.printNumbers();
-        if (RobotToggles.ENABLE_VISION) {
+        RobotSettings.printMappings();
+        RobotSettings.printToggles();
+        RobotSettings.printNumbers();
+        if (RobotSettings.ENABLE_VISION) {
             goalPhoton = new GoalPhoton();
             ballPhoton = new BallPhoton();
         }
-        if (RobotToggles.ENABLE_DRIVE) {
+        if (RobotSettings.ENABLE_DRIVE) {
             driver = new DriveManager();
         }
-        if (RobotToggles.ENABLE_INTAKE) {
+        if (RobotSettings.ENABLE_INTAKE) {
             intake = new Intake();
         }
-        if (RobotToggles.ENABLE_HOPPER) {
+        if (RobotSettings.ENABLE_HOPPER) {
             hopper = new Hopper();
         }
-        if (RobotToggles.ENABLE_SHOOTER) {
+        if (RobotSettings.ENABLE_SHOOTER) {
             shooter = new Shooter();
             turret = new Turret();
-            if (RobotToggles.ENABLE_DRIVE) turret.setTelemetry(driver.guidance);
+            if (RobotSettings.ENABLE_DRIVE) turret.setTelemetry(driver.guidance);
         }
-        if (RobotToggles.ENABLE_MUSIC) {
+        if (RobotSettings.ENABLE_MUSIC) {
             chirp = new Chirp();
         }
-        if (RobotToggles.ENABLE_DRIVE) {
-            switch (RobotToggles.AUTON_MODE) {
+        if (RobotSettings.ENABLE_DRIVE) {
+            switch (RobotSettings.AUTON_MODE) {
                 case GALACTIC_SEARCH:
                     //autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);
@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
             system.initDisabled();
         }
         lastDisable = System.currentTimeMillis();
-        if (RobotToggles.ENABLE_MUSIC) {
+        if (RobotSettings.ENABLE_MUSIC) {
             if (chirp.isPlaying()) {
                 chirp.stop();
             }
@@ -121,7 +121,7 @@ public class Robot extends TimedRobot {
         for (ISubsystem system : subsytems) {
             system.initTest();
         }
-        if (RobotToggles.ENABLE_MUSIC) {
+        if (RobotSettings.ENABLE_MUSIC) {
             //chirp.loadSound("Imperial_March");
             //chirp.play();
         }
@@ -130,15 +130,15 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         if (printToggles.getBoolean(false)) {
-            RobotToggles.printToggles();
+            RobotSettings.printToggles();
             printToggles.setBoolean(false);
         }
         if (printMappings.getBoolean(false)) {
-            RobotMap.printMappings();
+            RobotSettings.printMappings();
             printMappings.setBoolean(false);
         }
         if (printNumbers.getBoolean(false)) {
-            RobotNumbers.printNumbers();
+            RobotSettings.printNumbers();
             printNumbers.setBoolean(false);
         }
         if (remove.getString("").equals(DELETE_PASSWORD)) {
@@ -158,7 +158,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
         //Do nothing
-        if (RobotToggles.ENABLE_DRIVE && System.currentTimeMillis() > lastDisable + 5000)
+        if (RobotSettings.ENABLE_DRIVE && System.currentTimeMillis() > lastDisable + 5000)
             driver.setBrake(false);
     }
 

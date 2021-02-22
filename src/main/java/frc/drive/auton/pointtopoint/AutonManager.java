@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
-import frc.robot.RobotNumbers;
+import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 
 /**
@@ -34,7 +34,7 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void init() {
-        headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
+        headingPID = new PIDController(RobotSettings.HEADING_P, RobotSettings.HEADING_I, RobotSettings.HEADING_D);
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(telem.imu.absoluteYaw()), new Pose2d(0, 0, new Rotation2d()));
         telem.imu.resetOdometry();
     }
@@ -105,9 +105,9 @@ public class AutonManager extends AbstractAutonManager {
         double rotationOffset = telem.headingPID.calculate(telem.realHeadingError(point.X, point.Y));
         Point here = new Point(telem.fieldX(), telem.fieldY());
         System.out.println("I am at " + here + " and trying to turn " + rotationOffset);
-        boolean inTolerance = here.isWithin(RobotNumbers.AUTON_TOLERANCE, point);
+        boolean inTolerance = here.isWithin(RobotSettings.AUTON_TOLERANCE, point);
         if (!inTolerance) {
-            DRIVING_CHILD.drivePure(RobotNumbers.AUTO_SPEED * speed, -rotationOffset * RobotNumbers.AUTO_ROTATION_SPEED);
+            DRIVING_CHILD.drivePure(RobotSettings.AUTO_SPEED * speed, -rotationOffset * RobotSettings.AUTO_ROTATION_SPEED);
         } else {
             DRIVING_CHILD.drive(0, 0);
         }

@@ -9,8 +9,7 @@ import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.misc.ISubsystem;
 import frc.misc.UtilFunctions;
-import frc.robot.RobotNumbers;
-import frc.robot.RobotToggles;
+import frc.robot.RobotSettings;
 
 public class RobotTelemetry implements ISubsystem {
     private final DriveManager driver;
@@ -95,7 +94,7 @@ public class RobotTelemetry implements ISubsystem {
      */
     public void resetOdometry(Pose2d pose, Rotation2d rotation) {
         //odometer.resetPosition(pose, rotation);
-        if (RobotToggles.ENABLE_IMU)
+        if (RobotSettings.ENABLE_IMU)
             imu.resetOdometry();
         resetEncoders();
     }
@@ -124,14 +123,14 @@ public class RobotTelemetry implements ISubsystem {
     @Override
     public void init() {
         resetEncoders();
-        if (!RobotToggles.ENABLE_IMU)
+        if (!RobotSettings.ENABLE_IMU)
             return;
-        if (RobotToggles.USE_PIGEON) {
+        if (RobotSettings.USE_PIGEON) {
             imu = new WrappedPigeonIMU();
         } else {
             imu = new WrappedNavX2IMU();
         }
-        headingPID = new PIDController(RobotNumbers.HEADING_P, RobotNumbers.HEADING_I, RobotNumbers.HEADING_D);
+        headingPID = new PIDController(RobotSettings.HEADING_P, RobotSettings.HEADING_I, RobotSettings.HEADING_D);
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()), new Pose2d(0, 0, new Rotation2d()));
         robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
     }
@@ -165,7 +164,7 @@ public class RobotTelemetry implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (RobotToggles.ENABLE_IMU) {
+        if (RobotSettings.ENABLE_IMU) {
             robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
             robotTranslation = robotPose.getTranslation();
             robotRotation = robotPose.getRotation();

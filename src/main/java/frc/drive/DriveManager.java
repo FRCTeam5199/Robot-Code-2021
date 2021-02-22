@@ -26,14 +26,12 @@ import frc.motors.TalonMotorController;
 import frc.motors.followers.AbstractFollowerMotorController;
 import frc.motors.followers.SparkFollowerMotorsController;
 import frc.motors.followers.TalonFollowerMotorController;
-import frc.robot.RobotMap;
-import frc.robot.RobotNumbers;
-import frc.robot.RobotToggles;
+import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 
 /**
- * Everything that has to do with driving is in here. There are a lot of auxilairy helpers and {@link RobotToggles} that
- * feed in here.
+ * Everything that has to do with driving is in here. There are a lot of auxilairy helpers and {@link RobotSettings}
+ * that feed in here.
  *
  * @see RobotTelemetry
  */
@@ -41,12 +39,12 @@ public class DriveManager implements ISubsystem {
     public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
     private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     private final boolean invert = true;
-    private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotNumbers.TURN_SCALE).getEntry(),
-            driveScaleMult = tab2.add("Speed Factor", RobotNumbers.DRIVE_SCALE).getEntry(),
-            P = tab2.add("P", RobotNumbers.DRIVEBASE_P).getEntry(),
-            I = tab2.add("I", RobotNumbers.DRIVEBASE_I).getEntry(),
-            D = tab2.add("D", RobotNumbers.DRIVEBASE_D).getEntry(),
-            F = tab2.add("F", RobotNumbers.DRIVEBASE_F).getEntry(),
+    private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotSettings.TURN_SCALE).getEntry(),
+            driveScaleMult = tab2.add("Speed Factor", RobotSettings.DRIVE_SCALE).getEntry(),
+            P = tab2.add("P", RobotSettings.DRIVEBASE_P).getEntry(),
+            I = tab2.add("I", RobotSettings.DRIVEBASE_I).getEntry(),
+            D = tab2.add("D", RobotSettings.DRIVEBASE_D).getEntry(),
+            F = tab2.add("F", RobotSettings.DRIVEBASE_F).getEntry(),
             calibratePid = tab2.add("Calibrate PID", false).getEntry();
     private final NetworkTableEntry coast = tab2.add("Coast", true).getEntry();
     public boolean autoComplete = false;
@@ -63,7 +61,7 @@ public class DriveManager implements ISubsystem {
      * @return input scaled based on the bot's max speed
      */
     private static double adjustedDrive(double input) {
-        return input * RobotNumbers.MAX_SPEED;
+        return input * RobotSettings.MAX_SPEED;
     }
 
     /**
@@ -73,7 +71,7 @@ public class DriveManager implements ISubsystem {
      * @return input scaled based on max turning
      */
     private static double adjustedRotation(double input) {
-        return input * RobotNumbers.MAX_ROTATION;
+        return input * RobotSettings.MAX_ROTATION;
     }
 
     /**
@@ -83,7 +81,7 @@ public class DriveManager implements ISubsystem {
      * @return speed in rotations/minute
      */
     private static double getTargetVelocity(double FPS) {
-        return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
+        return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
     }
 
     public DriveManager() throws RuntimeException {
@@ -113,25 +111,25 @@ public class DriveManager implements ISubsystem {
      *                                        drivetrain motors fail to invert
      */
     private void createDriveMotors() throws InitializationFailureException, IllegalArgumentException {
-        switch (RobotToggles.DRIVE_MOTOR_TYPE) {
+        switch (RobotSettings.DRIVE_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
-                leaderL = new SparkMotorController(RobotMap.DRIVE_LEADER_L);
-                leaderR = new SparkMotorController(RobotMap.DRIVE_LEADER_R);
-                followerL = new SparkFollowerMotorsController(RobotMap.DRIVE_FOLLOWERS_L);
-                followerR = new SparkFollowerMotorsController(RobotMap.DRIVE_FOLLOWERS_R);
-                leaderL.setSensorToRevolutionFactor(RobotNumbers.DRIVE_GEARING);
-                leaderR.setSensorToRevolutionFactor(RobotNumbers.DRIVE_GEARING);
+                leaderL = new SparkMotorController(RobotSettings.DRIVE_LEADER_L);
+                leaderR = new SparkMotorController(RobotSettings.DRIVE_LEADER_R);
+                followerL = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_L);
+                followerR = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_R);
+                leaderL.setSensorToRevolutionFactor(RobotSettings.DRIVE_GEARING);
+                leaderR.setSensorToRevolutionFactor(RobotSettings.DRIVE_GEARING);
                 break;
             case TALON_FX:
-                leaderL = new TalonMotorController(RobotMap.DRIVE_LEADER_L);
-                leaderR = new TalonMotorController(RobotMap.DRIVE_LEADER_R);
-                followerL = new TalonFollowerMotorController(RobotMap.DRIVE_FOLLOWERS_L);
-                followerR = new TalonFollowerMotorController(RobotMap.DRIVE_FOLLOWERS_R);
-                leaderL.setSensorToRevolutionFactor((600.0 / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotNumbers.DRIVE_GEARING);
-                leaderR.setSensorToRevolutionFactor((600.0 / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotNumbers.DRIVE_GEARING);
+                leaderL = new TalonMotorController(RobotSettings.DRIVE_LEADER_L);
+                leaderR = new TalonMotorController(RobotSettings.DRIVE_LEADER_R);
+                followerL = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_L);
+                followerR = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_R);
+                leaderL.setSensorToRevolutionFactor((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING);
+                leaderR.setSensorToRevolutionFactor((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING);
                 break;
             default:
-                throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + RobotToggles.DRIVE_MOTOR_TYPE.name(), "Add an implementation in the init for drive manager");
+                throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + RobotSettings.DRIVE_MOTOR_TYPE.name(), "Add an implementation in the init for drive manager");
         }
         try {
             followerL.follow(leaderL);
@@ -139,16 +137,16 @@ public class DriveManager implements ISubsystem {
         } catch (Exception e) {
             throw new InitializationFailureException("An error has occurred linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
         }
-        leaderL.setInverted(RobotToggles.DRIVE_INVERT_LEFT);
-        leaderR.setInverted(RobotToggles.DRIVE_INVERT_RIGHT);
+        leaderL.setInverted(RobotSettings.DRIVE_INVERT_LEFT);
+        leaderR.setInverted(RobotSettings.DRIVE_INVERT_RIGHT);
 
         leaderL.resetEncoder();
         leaderR.resetEncoder();
 
         setAllMotorCurrentLimits(50);
 
-        followerL.invert(RobotToggles.DRIVE_INVERT_LEFT);
-        followerR.invert(RobotToggles.DRIVE_INVERT_RIGHT);
+        followerL.invert(RobotSettings.DRIVE_INVERT_LEFT);
+        followerR.invert(RobotSettings.DRIVE_INVERT_RIGHT);
     }
 
     /**
@@ -163,20 +161,20 @@ public class DriveManager implements ISubsystem {
      * Initialize the PID for the motor controllers.
      */
     private void initPID() {
-        setPID(RobotNumbers.DRIVEBASE_P, RobotNumbers.DRIVEBASE_I, RobotNumbers.DRIVEBASE_D, RobotNumbers.DRIVEBASE_F);
+        setPID(RobotSettings.DRIVEBASE_P, RobotSettings.DRIVEBASE_I, RobotSettings.DRIVEBASE_D, RobotSettings.DRIVEBASE_F);
     }
 
     /**
      * Creates xbox controller n stuff
      *
-     * @throws IllegalStateException when there is no configuration for {@link RobotToggles#DRIVE_STYLE}
+     * @throws IllegalStateException when there is no configuration for {@link RobotSettings#DRIVE_STYLE}
      */
     private void initMisc() throws IllegalStateException {
-        System.out.println("THE XBOX CONTROLLER IS ON " + RobotNumbers.XBOX_CONTROLLER_SLOT);
-        switch (RobotToggles.DRIVE_STYLE) {
+        System.out.println("THE XBOX CONTROLLER IS ON " + RobotSettings.XBOX_CONTROLLER_SLOT);
+        switch (RobotSettings.DRIVE_STYLE) {
             case STANDARD:
             case EXPERIMENTAL:
-                controller = new XBoxController(RobotNumbers.XBOX_CONTROLLER_SLOT);
+                controller = new XBoxController(RobotSettings.XBOX_CONTROLLER_SLOT);
                 break;
             case MARIO_KART:
                 controller = new WiiController(0);
@@ -191,9 +189,9 @@ public class DriveManager implements ISubsystem {
                 controller = new BopItBasicController(0);
                 break;
             default:
-                throw new IllegalStateException("There is no UI configuration for " + RobotToggles.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");
+                throw new IllegalStateException("There is no UI configuration for " + RobotSettings.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");
         }
-        if (RobotToggles.DEBUG)
+        if (RobotSettings.DEBUG)
             System.out.println("Created a " + controller.toString());
     }
 
@@ -231,17 +229,17 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     * This is where driving happens. Call this every tick to drive and set {@link RobotToggles#DRIVE_STYLE} to change
+     * This is where driving happens. Call this every tick to drive and set {@link RobotSettings#DRIVE_STYLE} to change
      * the drive stype
      *
-     * @throws IllegalArgumentException if {@link RobotToggles#DRIVE_STYLE} is not implemented here or if you missed a
+     * @throws IllegalArgumentException if {@link RobotSettings#DRIVE_STYLE} is not implemented here or if you missed a
      *                                  break statement
      */
     @Override
     public void updateTeleop() throws IllegalArgumentException {
         updateGeneric();
 
-        switch (RobotToggles.DRIVE_STYLE) {
+        switch (RobotSettings.DRIVE_STYLE) {
             case EXPERIMENTAL: {
                 /*setBrake(controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN);
                 double precision = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
@@ -250,12 +248,12 @@ public class DriveManager implements ISubsystem {
                 double invertedDrive = invert ? -1 : 1;
                 if (Math.abs(controller.get(XboxAxes.LEFT_JOY_Y)) > 0.9) {
                     double dir = controller.get(XboxAxes.LEFT_JOY_Y) > 0 ? 1 : -1;
-                    driveFPS(100 * dir * invertedDrive * driveScaleMult.getDouble(RobotNumbers.DRIVE_SCALE), 100 * dir * invertedDrive * driveScaleMult.getDouble(RobotNumbers.DRIVE_SCALE));
+                    driveFPS(100 * dir * invertedDrive * driveScaleMult.getDouble(RobotSettings.DRIVE_SCALE), 100 * dir * invertedDrive * driveScaleMult.getDouble(RobotSettings.DRIVE_SCALE));
                     break;
                 }
                 double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-                if (RobotToggles.DEBUG) {
+                if (RobotSettings.DEBUG) {
                     System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                     //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                 }
@@ -266,7 +264,7 @@ public class DriveManager implements ISubsystem {
                 double invertedDrive = invert ? -1 : 1;
                 double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-                if (RobotToggles.DEBUG) {
+                if (RobotSettings.DEBUG) {
                     System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                     //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                 }
@@ -316,13 +314,13 @@ public class DriveManager implements ISubsystem {
         guidance.updateGeneric();
         setBrake(!coast.getBoolean(false));
         if (calibratePid.getBoolean(false)) {
-            if (lastP != P.getDouble(RobotNumbers.DRIVEBASE_P) || lastI != I.getDouble(RobotNumbers.DRIVEBASE_I) || lastD != D.getDouble(RobotNumbers.DRIVEBASE_D) || lastF != F.getDouble(RobotNumbers.DRIVEBASE_P)) {
-                lastP = P.getDouble(RobotNumbers.DRIVEBASE_P);
-                lastI = I.getDouble(RobotNumbers.DRIVEBASE_I);
-                lastD = D.getDouble(RobotNumbers.DRIVEBASE_D);
-                lastF = F.getDouble(RobotNumbers.DRIVEBASE_F);
+            if (lastP != P.getDouble(RobotSettings.DRIVEBASE_P) || lastI != I.getDouble(RobotSettings.DRIVEBASE_I) || lastD != D.getDouble(RobotSettings.DRIVEBASE_D) || lastF != F.getDouble(RobotSettings.DRIVEBASE_P)) {
+                lastP = P.getDouble(RobotSettings.DRIVEBASE_P);
+                lastI = I.getDouble(RobotSettings.DRIVEBASE_I);
+                lastD = D.getDouble(RobotSettings.DRIVEBASE_D);
+                lastF = F.getDouble(RobotSettings.DRIVEBASE_F);
                 setPID(lastP, lastI, lastD, lastF);
-                if (RobotToggles.DEBUG) {
+                if (RobotSettings.DEBUG) {
                     System.out.println("Set drive pid to P: " + lastP + " I: " + lastI + " D: " + lastD + " F: " + lastF);
                 }
             }
@@ -367,8 +365,8 @@ public class DriveManager implements ISubsystem {
      * @param omega Rotation in Radians per Second
      */
     public void drivePure(double FPS, double omega) {
-        omega *= driveRotMult.getDouble(RobotNumbers.TURN_SCALE);
-        FPS *= driveScaleMult.getDouble(RobotNumbers.DRIVE_SCALE);
+        omega *= driveRotMult.getDouble(RobotSettings.TURN_SCALE);
+        FPS *= driveScaleMult.getDouble(RobotSettings.DRIVE_SCALE);
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         driveMPS(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
@@ -383,8 +381,8 @@ public class DriveManager implements ISubsystem {
     public void driveFPS(double leftFPS, double rightFPS) {
         if (leftFPS != 0)
             System.out.println(leftFPS + ", " + rightFPS);
-        double mult = 3.8 * 2.16 * RobotNumbers.DRIVE_SCALE;
-        if (RobotToggles.DEBUG) {
+        double mult = 3.8 * 2.16 * RobotSettings.DRIVE_SCALE;
+        if (RobotSettings.DEBUG) {
             System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + UtilFunctions.convertDriveFPStoRPM(leftFPS) + " " + UtilFunctions.convertDriveFPStoRPM(rightFPS));
             System.out.println("Req left: " + (getTargetVelocity(leftFPS) * mult) + " Req Right: " + (getTargetVelocity(rightFPS) * mult));
         }
