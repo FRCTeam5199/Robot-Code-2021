@@ -24,7 +24,7 @@ public class WrappedPigeonIMU extends AbstractIMU {
 
     @Override
     public void init() {
-        pigeon = new PigeonIMU(RobotSettings.IMU);
+        pigeon = new PigeonIMU(RobotSettings.IMU_ID);
     }
 
     /**

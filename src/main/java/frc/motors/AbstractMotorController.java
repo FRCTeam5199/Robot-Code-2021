@@ -1,5 +1,6 @@
 package frc.motors;
 
+import frc.misc.PID;
 import frc.motors.followers.AbstractFollowerMotorController;
 
 /**
@@ -57,12 +58,9 @@ public abstract class AbstractMotorController {
     /**
      * You know how it is. Timeout is default per motor, channel defaults to 0 or motor default
      *
-     * @param p proportional (the muscle)
-     * @param i integral (the impatient)
-     * @param d derivative (the careful)
-     * @param f feed-forward (the wildcard)
+     * @param pid the {@link PID} object that contains pertinent pidf data
      */
-    public abstract void setPid(double p, double i, double d, double f);
+    public abstract void setPid(PID pid);
 
     /**
      * Moves the motor at the requested velocity per time (default fps but units vary based on {@link

@@ -28,13 +28,13 @@ public class Hopper implements ISubsystem {
 
     @Override
     public void init() {
-        if (RobotSettings.INDEXER_AUTO_INDEX) {
+        if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
             indexSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighAccuracy);
             indexSensor.setEnabled(true);
             indexSensor.setAutomaticMode(true);
         }
-        agitator = new VictorMotorController(RobotSettings.AGITATOR_MOTOR);
-        indexer = new VictorMotorController(RobotSettings.INDEXER_MOTOR);
+        agitator = new VictorMotorController(RobotSettings.AGITATOR_MOTOR_ID);
+        indexer = new VictorMotorController(RobotSettings.INDEXER_MOTOR_ID);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Hopper implements ISubsystem {
     }
 
     public double indexerSensorRange() {
-        if (RobotSettings.INDEXER_AUTO_INDEX) {
+        if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
             return indexSensor.getRange();
         }
         return -2;

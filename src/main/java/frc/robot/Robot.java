@@ -14,6 +14,8 @@ import frc.drive.auton.AbstractAutonManager;
 import frc.misc.Chirp;
 import frc.misc.ISubsystem;
 import frc.pdp.PDP;
+import frc.robot.robotconfigs.DefaultConfig;
+import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
@@ -22,6 +24,11 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Robot extends TimedRobot {
+    /**
+     * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
+     * using from the list under robotconfigs
+     */
+    public static final DefaultConfig getNumbersFrom = new CompetitionRobot2021();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
     private static final ShuffleboardTab ROBOT_TAB = Shuffleboard.getTab("DANGER!");
     private static final NetworkTableEntry remove = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", "").getEntry(),

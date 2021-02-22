@@ -4,31 +4,69 @@ import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 import frc.drive.auton.AutonType;
+import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
-import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 
+import static frc.robot.Robot.getNumbersFrom;
+
+/**
+ * Here's where the fun happens. Change config files by changing {@link Robot#getNumbersFrom}. Make configs using {@link
+ * DefaultConfig}. If you dont know whats happening here, please see the docs or use intellisense to find what you are
+ * looking for
+ *
+ * @see DefaultConfig
+ * @see Robot#getNumbersFrom
+ */
 public class RobotSettings {
     /**
-     * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
-     * using from the list under robotconfigs
+     * Toggles debug print statements
      */
-    public static final DefaultConfig getNumbersFrom = new CompetitionRobot2021();
-
     public static final boolean DEBUG = true;
     //Subsystems
 
     /**
-     * Enables the drive
+     * Enables the {@link frc.drive.DriveManager drivetrain}
      */
     public static final boolean ENABLE_DRIVE = getNumbersFrom.ENABLE_DRIVE;
+    /**
+     * Enables the {@link frc.ballstuff.intaking.Intake intake}
+     */
     public static final boolean ENABLE_INTAKE = getNumbersFrom.ENABLE_INTAKE;
+    /**
+     * Enables the {@link frc.ballstuff.shooting.Shooter shooter}
+     */
     public static final boolean ENABLE_SHOOTER = getNumbersFrom.ENABLE_SHOOTER;
+    /**
+     * Enables the {@link frc.ballstuff.intaking.Hopper hopper} ({@link frc.ballstuff.intaking.Hopper#agitator} + {@link
+     * frc.ballstuff.intaking.Hopper#indexer} ({@link #ENABLE_INDEXER_AUTO_INDEX}))
+     */
     public static final boolean ENABLE_HOPPER = getNumbersFrom.ENABLE_HOPPER;
+
+    /**
+     * Enables the distance sensor in the {@link #ENABLE_HOPPER indexer}
+     */
+    public static final boolean ENABLE_INDEXER_AUTO_INDEX = getNumbersFrom.ENABLE_INDEXER_AUTO_INDEX;
+
+    /**
+     * Enables {@link Robot#chirp}
+     *
+     * @see frc.motors.TalonMotorController
+     */
     public static final boolean ENABLE_MUSIC = getNumbersFrom.ENABLE_MUSIC;
 
+    /**
+     * Whether the {@link #ENABLE_DRIVE drivetrain} {@link frc.drive.DriveManager#followerL follower motors} will have 1
+     * or 2 followers apeice
+     */
     public static final boolean DRIVE_USE_6_MOTORS = getNumbersFrom.DRIVE_USE_6_MOTORS;
+    /**
+     * Invert left side of {@link #ENABLE_DRIVE drivetrain}
+     */
     public static final boolean DRIVE_INVERT_LEFT = getNumbersFrom.DRIVE_INVERT_LEFT;
+    /**
+     * Invert right side of {@link #ENABLE_DRIVE drivetrain}
+     */
     public static final boolean DRIVE_INVERT_RIGHT = getNumbersFrom.DRIVE_INVERT_RIGHT;
 
     //Misc
@@ -36,23 +74,47 @@ public class RobotSettings {
     public static final boolean USE_PHOTONVISION = getNumbersFrom.USE_PHOTONVISION;
     public static final boolean ENABLE_IMU = getNumbersFrom.ENABLE_IMU;
     public static final boolean USE_PIGEON = getNumbersFrom.USE_PIGEON;
+    //TODO make this a supported imu's enum
     public static final boolean USE_NAVX2 = getNumbersFrom.USE_NAVX2;
 
     //SHOOTER
-    public static final boolean SHOOTER_USE_SPARKS = getNumbersFrom.SHOOTER_USE_SPARKS;
+    /**
+     * Whether the {@link #ENABLE_SHOOTER shooter} has two or one motors
+     */
     public static final boolean SHOOTER_USE_TWO_MOTORS = getNumbersFrom.SHOOTER_USE_TWO_MOTORS;
+    /**
+     * Whether to invert the {@link #ENABLE_SHOOTER shooter} direction
+     */
     public static final boolean SHOOTER_INVERTED = getNumbersFrom.SHOOTER_INVERTED;
 
-    //INTAKE
-    public static final boolean INDEXER_AUTO_INDEX = getNumbersFrom.INDEXER_AUTO_INDEX;
-
     //UI Style
+    /**
+     * The {@link #ENABLE_DRIVE drivetrain} control style to use. Should be used firstly for changing controllers and
+     * secondly changing controller behavior
+     *
+     * @see frc.controllers.BaseController
+     */
     public static final DriveTypes DRIVE_STYLE = getNumbersFrom.DRIVE_STYLE;
+
+    /**
+     * The {@link #ENABLE_SHOOTER shooter} style to use. Should be used firstly for changing controllers and secondly
+     * changing controller behavior
+     *
+     * @see frc.controllers.BaseController
+     */
     public static final ShootingControlStyles SHOOTER_CONTROL_STYLE = getNumbersFrom.SHOOTER_CONTROL_STYLE;
+
+    /**
+     * The {@link #ENABLE_INTAKE intake} style to use. Should be used firstly for changing controllers and secondly
+     * changing controller behavior
+     *
+     * @see frc.controllers.BaseController
+     */
     public static final IntakeControlStyles INTAKE_CONTROL_STYLE = getNumbersFrom.INTAKE_CONTROL_STYLE;
 
     public static final AutonType AUTON_MODE = getNumbersFrom.AUTON_TYPE;
     public static final SupportedMotors DRIVE_MOTOR_TYPE = getNumbersFrom.DRIVE_MOTOR_TYPE;
+    public static final SupportedMotors SHOOTER_MOTOR_TYPE = getNumbersFrom.SHOOTER_MOTOR_TYPE;
 
     public static boolean autonComplete = false;
 
@@ -67,7 +129,7 @@ public class RobotSettings {
         System.out.println("      Pigeon/NavX " + USE_PIGEON + "/" + USE_NAVX2);
         System.out.println("     Drive motors " + DRIVE_MOTOR_TYPE.name());
         System.out.println("   Drive 6 motors " + DRIVE_USE_6_MOTORS);
-        System.out.println("Shoot with sparks " + SHOOTER_USE_SPARKS);
+        System.out.println("   Shooter motors " + SHOOTER_MOTOR_TYPE.name());
         System.out.println("     Shoot with 2 " + SHOOTER_USE_TWO_MOTORS);
         System.out.println("      Drive style " + DRIVE_STYLE.name());
         System.out.println("      Shoot style " + SHOOTER_CONTROL_STYLE.name());
@@ -76,11 +138,7 @@ public class RobotSettings {
         System.out.println("-------------------</RobotSettings>-----------------");
     }
 
-    public static final double DRIVEBASE_P = getNumbersFrom.DRIVEBASE_P;
-    public static final double DRIVEBASE_I = getNumbersFrom.DRIVEBASE_I;
-    public static final double DRIVEBASE_D = getNumbersFrom.DRIVEBASE_D;
-    public static final double DRIVEBASE_F = getNumbersFrom.DRIVEBASE_F;
-    public static final int DRIVE_TIMEOUT_MS = getNumbersFrom.DRIVE_TIMEOUT_MS;
+    public static final PID DRIVEBASE_PID = getNumbersFrom.DRIVEBASE_PID;
     public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = getNumbersFrom.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
     public static final double MAX_SPEED = getNumbersFrom.MAX_SPEED;
     public static final double MAX_ROTATION = getNumbersFrom.MAX_ROTATION;
@@ -90,14 +148,8 @@ public class RobotSettings {
     public static final double DRIVE_SCALE = getNumbersFrom.DRIVE_SCALE;
     public static final double DRIVE_GEARING = getNumbersFrom.DRIVE_GEARING;
 
-    public static final double SHOOTER_P = getNumbersFrom.SHOOTER_P;
-    public static final double SHOOTER_I = getNumbersFrom.SHOOTER_I;
-    public static final double SHOOTER_D = getNumbersFrom.SHOOTER_D;
-    public static final double SHOOTER_F = getNumbersFrom.SHOOTER_F;
-    public static final double SHOOTER_RECOVERY_P = getNumbersFrom.SHOOTER_RECOVERY_P;
-    public static final double SHOOTER_RECOVERY_I = getNumbersFrom.SHOOTER_RECOVERY_I;
-    public static final double SHOOTER_RECOVERY_D = getNumbersFrom.SHOOTER_RECOVERY_D;
-    public static final double SHOOTER_RECOVERY_F = getNumbersFrom.SHOOTER_RECOVERY_F;
+    public static final PID SHOOTER_PID = getNumbersFrom.SHOOTER_PID;
+    public static final PID SHOOTER_RECOVERY_PID = getNumbersFrom.SHOOTER_RECOVERY_PID;
     public static final double SHOOTER_SENSOR_UNITS_PER_ROTATION = getNumbersFrom.SHOOTER_SENSOR_UNITS_PER_ROTATION;
     public static final double motorPulleySize = getNumbersFrom.motorPulleySize;
     public static final double driverPulleySize = getNumbersFrom.driverPulleySize;
@@ -111,24 +163,22 @@ public class RobotSettings {
     public static final double TURRET_GEAR_RATIO = getNumbersFrom.TURRET_GEAR_RATIO;
     public static final double TURRET_MAX_POS = getNumbersFrom.TURRET_MAX_POS;
     public static final double TURRET_MIN_POS = getNumbersFrom.TURRET_MIN_POS;
-    public static final double TURRET_P = getNumbersFrom.TURRET_P;
-    public static final double TURRET_I = getNumbersFrom.TURRET_I;
-    public static final double TURRET_D = getNumbersFrom.TURRET_D;
-    //public static final double TURRET_F = 0.001 = getNumbersFrom.
-    public static final int SHOOTER_TIMEOUT_MS = getNumbersFrom.SHOOTER_TIMEOUT_MS;
+    public static final PID TURRET_PID = getNumbersFrom.TURRET_PID;
     public static final double AUTON_TOLERANCE = getNumbersFrom.AUTON_TOLERANCE;
-    public static final double HEADING_P = getNumbersFrom.HEADING_P;
-    public static final double HEADING_I = getNumbersFrom.HEADING_I;
-    public static final double HEADING_D = getNumbersFrom.HEADING_D;
+    public static final PID HEADING_PID = getNumbersFrom.HEADING_PID;
     public static final double AUTO_SPEED = getNumbersFrom.AUTO_SPEED;
     public static final double AUTO_ROTATION_SPEED = getNumbersFrom.AUTO_ROTATION_SPEED;
-    public static int XBOX_CONTROLLER_SLOT = getNumbersFrom.XBOX_CONTROLLER_SLOT;
-    public static int FLIGHT_STICK_SLOT = getNumbersFrom.FLIGHT_STICK_SLOT;
-    public static int BUTTON_PANEL_SLOT = getNumbersFrom.BUTTON_PANEL_SLOT;
+    public static int XBOX_CONTROLLER_USB_SLOT = getNumbersFrom.XBOX_CONTROLLER_USB_SLOT;
+    public static int FLIGHT_STICK_USB_SLOT = getNumbersFrom.FLIGHT_STICK_USB_SLOT;
+    public static int BUTTON_PANEL_USB_SLOT = getNumbersFrom.BUTTON_PANEL_USB_SLOT;
 
+    /**
+     * Prints out "Numbers" which pertain to constants regarding the robot such as gearings, wheel sizes, etc. Not to be
+     * confused with {@link #printMappings()} which prints numbers associated witd ID's and software. this is hardware
+     */
     public static void printNumbers() {
         System.out.println("-------------------<RobotSettings>-----------------");
-        System.out.println("Drive PIDF (timeout) " + DRIVEBASE_P + ", " + DRIVEBASE_I + ", " + DRIVEBASE_D + ", " + DRIVEBASE_F + " (" + DRIVE_TIMEOUT_MS + ")");
+        System.out.println("Drive PIDF " + DRIVEBASE_PID);
         System.out.println("Max drive speed/rotation " + MAX_SPEED + "/" + MAX_ROTATION);
         System.out.println("Turn + drive scale " + TURN_SCALE + "/" + DRIVE_SCALE);
         //System.out.println("");
@@ -139,40 +189,48 @@ public class RobotSettings {
     public static final String BALL_CAM_NAME = getNumbersFrom.BALL_CAM_NAME;
 
     //Drive Motors
-    public static final int DRIVE_LEADER_L = getNumbersFrom.DRIVE_LEADER_L;
-    public static final int[] DRIVE_FOLLOWERS_L = getNumbersFrom.DRIVE_FOLLOWERS_L;
+    public static final int DRIVE_LEADER_L_ID = getNumbersFrom.DRIVE_LEADER_L_ID;
+    public static final int[] DRIVE_FOLLOWERS_L_IDS = getNumbersFrom.DRIVE_FOLLOWERS_L_IDS;
 
-    public static final int DRIVE_LEADER_R = getNumbersFrom.DRIVE_LEADER_R;
-    public static final int[] DRIVE_FOLLOWERS_R = getNumbersFrom.DRIVE_FOLLOWERS_R;
+    public static final int DRIVE_LEADER_R_ID = getNumbersFrom.DRIVE_LEADER_R_ID;
+    public static final int[] DRIVE_FOLLOWERS_R_IDS = getNumbersFrom.DRIVE_FOLLOWERS_R_IDS;
 
     //Shooter Motors
-    public static final int SHOOTER_LEADER = getNumbersFrom.SHOOTER_LEADER;
-    public static final int SHOOTER_FOLLOWER = getNumbersFrom.SHOOTER_FOLLOWER;
+    public static final int SHOOTER_LEADER_ID = getNumbersFrom.SHOOTER_LEADER_ID;
+    public static final int SHOOTER_FOLLOWER_ID = getNumbersFrom.SHOOTER_FOLLOWER_ID;
 
     //turret
     public static final int TURRET_YAW = getNumbersFrom.TURRET_YAW;
 
     //hopper
-    public static final int AGITATOR_MOTOR = getNumbersFrom.AGITATOR_MOTOR;
-    public static final int INDEXER_MOTOR = getNumbersFrom.INDEXER_MOTOR;
+    public static final int AGITATOR_MOTOR_ID = getNumbersFrom.AGITATOR_MOTOR_ID;
+    public static final int INDEXER_MOTOR_ID = getNumbersFrom.INDEXER_MOTOR_ID;
 
-    //intake
-    public static final int INTAKE_MOTOR = getNumbersFrom.INTAKE_MOTOR;
+    /**
+     * The id for the {@link #ENABLE_INTAKE intake motor}
+     */
+    public static final int INTAKE_MOTOR_ID = getNumbersFrom.INTAKE_MOTOR_ID;
 
-    public static final int IMU = getNumbersFrom.IMU;
+    /**
+     * The id of the {@link #ENABLE_IMU IMU} which should be independent of the {@link #USE_PIGEON IMU type}
+     */
+    public static final int IMU_ID = getNumbersFrom.IMU_ID;
 
+    /**
+     * Prints out all of the id's for anything that needs an id
+     */
     public static void printMappings() {
         System.out.println("-------------------<RobotSettingspings>-----------------");
         System.out.println("                    Goal cam name: " + GOAL_CAM_NAME);
         System.out.println("                    Ball cam name: " + BALL_CAM_NAME);
-        System.out.println(" Drive leader left id (followers): " + DRIVE_LEADER_L + " (" + DRIVE_FOLLOWERS_L[0] + (DRIVE_FOLLOWERS_L.length > 1 ? ", " + DRIVE_FOLLOWERS_L[1] : "") + ")");
-        System.out.println("Drive leader right id (followers): " + DRIVE_LEADER_R + " (" + DRIVE_FOLLOWERS_R[0] + (DRIVE_FOLLOWERS_R.length > 1 ? ", " + DRIVE_FOLLOWERS_R[1] : "") + ")");
-        System.out.println("        Shooter leader (follower): " + SHOOTER_LEADER + " (" + SHOOTER_FOLLOWER + ")");
+        System.out.println(" Drive leader left id (followers): " + DRIVE_LEADER_L_ID + " (" + DRIVE_FOLLOWERS_L_IDS[0] + (DRIVE_FOLLOWERS_L_IDS.length > 1 ? ", " + DRIVE_FOLLOWERS_L_IDS[1] : "") + ")");
+        System.out.println("Drive leader right id (followers): " + DRIVE_LEADER_R_ID + " (" + DRIVE_FOLLOWERS_R_IDS[0] + (DRIVE_FOLLOWERS_R_IDS.length > 1 ? ", " + DRIVE_FOLLOWERS_R_IDS[1] : "") + ")");
+        System.out.println("        Shooter leader (follower): " + SHOOTER_LEADER_ID + " (" + SHOOTER_FOLLOWER_ID + ")");
         System.out.println("                       Turret yaw: " + TURRET_YAW);
-        System.out.println("                      Agitator id: " + AGITATOR_MOTOR);
-        System.out.println("                       Indexer id: " + INDEXER_MOTOR);
-        System.out.println("                        Intake id: " + INTAKE_MOTOR);
-        System.out.println("                           IMU id: " + IMU);
+        System.out.println("                      Agitator id: " + AGITATOR_MOTOR_ID);
+        System.out.println("                       Indexer id: " + INDEXER_MOTOR_ID);
+        System.out.println("                        Intake id: " + INTAKE_MOTOR_ID);
+        System.out.println("                           IMU id: " + IMU_ID);
         System.out.println("-------------------</RobotSettingspings>-----------------");
     }
 }

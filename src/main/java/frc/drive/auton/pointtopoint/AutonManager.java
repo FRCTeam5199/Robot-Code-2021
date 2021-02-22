@@ -34,7 +34,7 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void init() {
-        headingPID = new PIDController(RobotSettings.HEADING_P, RobotSettings.HEADING_I, RobotSettings.HEADING_D);
+        headingPID = new PIDController(RobotSettings.HEADING_PID.getP(), RobotSettings.HEADING_PID.getI(), RobotSettings.HEADING_PID.getD());
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(telem.imu.absoluteYaw()), new Pose2d(0, 0, new Rotation2d()));
         telem.imu.resetOdometry();
     }

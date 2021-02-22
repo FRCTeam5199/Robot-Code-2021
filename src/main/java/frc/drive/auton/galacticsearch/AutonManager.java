@@ -113,30 +113,7 @@ public class AutonManager extends AbstractAutonManager {
             }
         }
         return bestPath;
-        /*for (double tolerance = 0.1; tolerance < 1000; tolerance += 0.1) {
-            int matches = 0;
-            for (GalacticSearchPaths path : GalacticSearchPaths.values())
-                if (isMatch(pointData, path.POINTS, BASE_YAW_TOLERANCE * tolerance, BASE_AREA_TOLERANCE * tolerance))
-                    matches++;
-            if (matches == 1) {
-                for (GalacticSearchPaths path : GalacticSearchPaths.values())
-                    if (isMatch(pointData, path.POINTS, BASE_YAW_TOLERANCE * tolerance, BASE_AREA_TOLERANCE * tolerance))
-                        return path;
-                    throw new IllegalThreadStateException("If this happens, your fucked");
-            }
-        }
-        throw new IllegalStateException("Could not find a matching path");*/
     }
-
-    /*private static int countMatches(Point[] guesses, Point[][] testPoints, double toleranceX, double toleranceY) {
-        int count = 0;
-        for (Point[] testPoint : testPoints)
-            if (isMatch(guesses, testPoint, toleranceX, toleranceY)) {
-                count++;
-                lastPoints = testPoint;
-            }
-        return count;
-    }*/
 
     private static double sumOfSquares(Point[] guesses, Point[] testPoints) {
         double out = 0;

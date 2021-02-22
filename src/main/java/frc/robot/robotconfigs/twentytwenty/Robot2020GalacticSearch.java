@@ -4,6 +4,7 @@ import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 import frc.drive.auton.AutonType;
+import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
 
@@ -27,12 +28,12 @@ public class Robot2020GalacticSearch extends DefaultConfig {
         USE_NAVX2 = false;
 
         //SHOOTER
-        SHOOTER_USE_SPARKS = false;
+        SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = true;
 
         //INTAKE
-        INDEXER_AUTO_INDEX = true;
+        ENABLE_INDEXER_AUTO_INDEX = true;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;
@@ -42,11 +43,12 @@ public class Robot2020GalacticSearch extends DefaultConfig {
 
         AUTON_TYPE = AutonType.GALACTIC_SEARCH;
 
-        DRIVEBASE_P = 0.0075;
-        DRIVEBASE_I = 0;
-        DRIVEBASE_D = 0.002;
-        DRIVEBASE_F = 0;
-        DRIVE_TIMEOUT_MS = 30;
+
+        DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
+        SHOOTER_PID = new PID(0.001, 0.00003, 0.0001, 0.001);
+        SHOOTER_RECOVERY_PID = SHOOTER_PID;
+        TURRET_PID = new PID(0.006, 0.00001, 0.001);
+        HEADING_PID = new PID(0.08, 0.000005, 0.0003);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
@@ -56,14 +58,6 @@ public class Robot2020GalacticSearch extends DefaultConfig {
         DRIVE_SCALE = 1;
         DRIVE_GEARING = 1 / 9.0;
 
-        SHOOTER_P = 0.001;
-        SHOOTER_I = 0.00003;
-        SHOOTER_D = 0.0001;
-        SHOOTER_F = 0.001;
-        SHOOTER_RECOVERY_P = SHOOTER_P;//= 0.00037;
-        SHOOTER_RECOVERY_I = SHOOTER_I;//= 0;
-        SHOOTER_RECOVERY_D = SHOOTER_D;//= 0;
-        SHOOTER_RECOVERY_F = SHOOTER_F;//= 0.00019;
         SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
         motorPulleySize = 0;//?;
         driverPulleySize = 0;//?;
@@ -77,44 +71,36 @@ public class Robot2020GalacticSearch extends DefaultConfig {
         TURRET_GEAR_RATIO = 7;
         TURRET_MAX_POS = 270;
         TURRET_MIN_POS = 0;
-        TURRET_P = 0.006;
-        TURRET_I = 0.00001;
-        TURRET_D = 0.001;
 
-        //TURRET_F = 0.001;
-        SHOOTER_TIMEOUT_MS = 20;
         AUTON_TOLERANCE = 0.1;
-        HEADING_P = 0.08;
-        HEADING_I = 0.000005;
-        HEADING_D = 0.0003;
         AUTO_SPEED = 3;
         AUTO_ROTATION_SPEED = 1;
         GOAL_CAM_NAME = "GoalCamera";
         BALL_CAM_NAME = "BallCamera";
 
         //Drive Motors
-        DRIVE_LEADER_L = 1; //talon
-        DRIVE_FOLLOWERS_L = new int[]{2, 3}; //talon
-        DRIVE_LEADER_R = 4; //talon
-        DRIVE_FOLLOWERS_R = new int[]{5, 6}; //talon
+        DRIVE_LEADER_L_ID = 1; //talon
+        DRIVE_FOLLOWERS_L_IDS = new int[]{2, 3}; //talon
+        DRIVE_LEADER_R_ID = 4; //talon
+        DRIVE_FOLLOWERS_R_IDS = new int[]{5, 6}; //talon
 
         //Shooter Motors
-        SHOOTER_LEADER = 7; //talon
-        SHOOTER_FOLLOWER = 8; //talon
+        SHOOTER_LEADER_ID = 7; //talon
+        SHOOTER_FOLLOWER_ID = 8; //talon
 
         //turret
         TURRET_YAW = 33; //550
 
         //hopper
-        AGITATOR_MOTOR = 10; //victor
-        INDEXER_MOTOR = 11; //victor
+        AGITATOR_MOTOR_ID = 10; //victor
+        INDEXER_MOTOR_ID = 11; //victor
 
         //intake
-        INTAKE_MOTOR = 12; //victor
-        IMU = 22; //pigeon
+        INTAKE_MOTOR_ID = 12; //victor
+        IMU_ID = 22; //pigeon
 
-        XBOX_CONTROLLER_SLOT = 0;
-        FLIGHT_STICK_SLOT = 1;
-        BUTTON_PANEL_SLOT = 2;
+        XBOX_CONTROLLER_USB_SLOT = 0;
+        FLIGHT_STICK_USB_SLOT = 1;
+        BUTTON_PANEL_USB_SLOT = 2;
     }
 }

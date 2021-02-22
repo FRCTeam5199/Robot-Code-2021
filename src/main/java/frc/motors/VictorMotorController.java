@@ -1,6 +1,7 @@
 package frc.motors;
 
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import frc.misc.PID;
 
 import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
 import static com.ctre.phoenix.motorcontrol.ControlMode.Velocity;
@@ -39,11 +40,11 @@ public class VictorMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void setPid(double p, double i, double d, double f) {
-        motor.config_kP(0, p);
-        motor.config_kI(0, i);
-        motor.config_kD(0, d);
-        motor.config_kF(0, f);
+    public void setPid(PID pid) {
+        motor.config_kP(0, pid.getP());
+        motor.config_kI(0, pid.getI());
+        motor.config_kD(0, pid.getD());
+        motor.config_kF(0, pid.getF());
     }
 
     @Override

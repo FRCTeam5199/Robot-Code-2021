@@ -1,6 +1,5 @@
 package frc.ballstuff.shooting;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,15 +22,14 @@ import frc.vision.IVision;
  * Turret refers to the shooty thing that spinny spinny in the yaw direction
  */
 public class Turret implements ISubsystem {
+    //Still required for debug prints?
     private final ShuffleboardTab tab = Shuffleboard.getTab("Turret");
-    private final NetworkTableEntry fMult = tab.add("F Multiplier", 0).getEntry();
-    private final NetworkTableEntry pos = tab.add("Position", 0).getEntry();
-    private final NetworkTableEntry arbDriveMult = tab.add("drive omega mult", -0.25).getEntry();
-    private final NetworkTableEntry angleOffset = tab.add("angle offset", -2.9).getEntry();
-    private final NetworkTableEntry rotSpeed = tab.add("rotationSpeed", 0).getEntry();
-    public boolean track;
-    public boolean atTarget = false;
-    public boolean chasingTarget = false;
+    /*private final NetworkTableEntry fMult = tab.add("F Multiplier", 0).getEntry(),
+            pos = tab.add("Position", 0).getEntry(),
+            arbDriveMult = tab.add("drive omega mult", -0.25).getEntry(),
+            angleOffset = tab.add("angle offset", -2.9).getEntry(),
+            rotSpeed = tab.add("rotationSpeed", 0).getEntry();*/
+    public boolean track, atTarget;
     private BaseController joy, panel;
     private AbstractMotorController motor;
     private RobotTelemetry guidance;
@@ -50,8 +48,8 @@ public class Turret implements ISubsystem {
     public void init() {
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD:
-                joy = new JoystickController(RobotSettings.FLIGHT_STICK_SLOT);
-                panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_SLOT);
+                joy = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
+                panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);
                 break;
             case BOP_IT:
                 joy = new BopItBasicController(1);
@@ -64,7 +62,7 @@ public class Turret implements ISubsystem {
         motor = new SparkMotorController(RobotSettings.TURRET_YAW);
         motor.setSensorToRevolutionFactor(360 / (RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO));
         motor.setInverted(false);
-        motor.setPid(0.5, 0, 0, 0);
+        motor.setPid(RobotSettings.TURRET_PID);
         motor.setBrake(true);
         setBrake(true);
     }
@@ -97,13 +95,11 @@ public class Turret implements ISubsystem {
         if (RobotSettings.DEBUG) {
             System.out.println("Turret degrees:" + turretDegrees());
         }
-        //!!!!! THE TURRET ZERO IS THE PHYSICAL STOP CLOSEST TO THE GOAL
-
         double omegaSetpoint = 0;
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD:
                 if (RobotSettings.ENABLE_VISION) {
-                    if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) { //Check if the Target button is held down
+                    if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) {
                         if (RobotSettings.DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + goalPhoton.hasValidTarget());
                         }

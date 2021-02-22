@@ -19,6 +19,7 @@ import frc.controllers.WiiController;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
+import frc.misc.PID;
 import frc.misc.UtilFunctions;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
@@ -41,10 +42,10 @@ public class DriveManager implements ISubsystem {
     private final boolean invert = true;
     private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotSettings.TURN_SCALE).getEntry(),
             driveScaleMult = tab2.add("Speed Factor", RobotSettings.DRIVE_SCALE).getEntry(),
-            P = tab2.add("P", RobotSettings.DRIVEBASE_P).getEntry(),
-            I = tab2.add("I", RobotSettings.DRIVEBASE_I).getEntry(),
-            D = tab2.add("D", RobotSettings.DRIVEBASE_D).getEntry(),
-            F = tab2.add("F", RobotSettings.DRIVEBASE_F).getEntry(),
+            P = tab2.add("P", RobotSettings.DRIVEBASE_PID.getP()).getEntry(),
+            I = tab2.add("I", RobotSettings.DRIVEBASE_PID.getI()).getEntry(),
+            D = tab2.add("D", RobotSettings.DRIVEBASE_PID.getD()).getEntry(),
+            F = tab2.add("F", RobotSettings.DRIVEBASE_PID.getF()).getEntry(),
             calibratePid = tab2.add("Calibrate PID", false).getEntry();
     private final NetworkTableEntry coast = tab2.add("Coast", true).getEntry();
     public boolean autoComplete = false;
@@ -52,7 +53,7 @@ public class DriveManager implements ISubsystem {
     public RobotTelemetry guidance;
     public AbstractFollowerMotorController followerL, followerR;
     private BaseController controller;
-    private double lastP = 0, lastI = 0, lastD = 0, lastF = 0;
+    private PID lastPID = PID.EMPTY_PID;
 
     /**
      * Takes a -1 to 1 scaled value and returns it scaled based on the max sped
@@ -113,18 +114,18 @@ public class DriveManager implements ISubsystem {
     private void createDriveMotors() throws InitializationFailureException, IllegalArgumentException {
         switch (RobotSettings.DRIVE_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
-                leaderL = new SparkMotorController(RobotSettings.DRIVE_LEADER_L);
-                leaderR = new SparkMotorController(RobotSettings.DRIVE_LEADER_R);
-                followerL = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_L);
-                followerR = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_R);
+                leaderL = new SparkMotorController(RobotSettings.DRIVE_LEADER_L_ID);
+                leaderR = new SparkMotorController(RobotSettings.DRIVE_LEADER_R_ID);
+                followerL = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_L_IDS);
+                followerR = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_R_IDS);
                 leaderL.setSensorToRevolutionFactor(RobotSettings.DRIVE_GEARING);
                 leaderR.setSensorToRevolutionFactor(RobotSettings.DRIVE_GEARING);
                 break;
             case TALON_FX:
-                leaderL = new TalonMotorController(RobotSettings.DRIVE_LEADER_L);
-                leaderR = new TalonMotorController(RobotSettings.DRIVE_LEADER_R);
-                followerL = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_L);
-                followerR = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_R);
+                leaderL = new TalonMotorController(RobotSettings.DRIVE_LEADER_L_ID);
+                leaderR = new TalonMotorController(RobotSettings.DRIVE_LEADER_R_ID);
+                followerL = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_L_IDS);
+                followerR = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_R_IDS);
                 leaderL.setSensorToRevolutionFactor((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING);
                 leaderR.setSensorToRevolutionFactor((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING);
                 break;
@@ -161,7 +162,7 @@ public class DriveManager implements ISubsystem {
      * Initialize the PID for the motor controllers.
      */
     private void initPID() {
-        setPID(RobotSettings.DRIVEBASE_P, RobotSettings.DRIVEBASE_I, RobotSettings.DRIVEBASE_D, RobotSettings.DRIVEBASE_F);
+        setPID(RobotSettings.DRIVEBASE_PID);
     }
 
     /**
@@ -170,11 +171,11 @@ public class DriveManager implements ISubsystem {
      * @throws IllegalStateException when there is no configuration for {@link RobotSettings#DRIVE_STYLE}
      */
     private void initMisc() throws IllegalStateException {
-        System.out.println("THE XBOX CONTROLLER IS ON " + RobotSettings.XBOX_CONTROLLER_SLOT);
+        System.out.println("THE XBOX CONTROLLER IS ON " + RobotSettings.XBOX_CONTROLLER_USB_SLOT);
         switch (RobotSettings.DRIVE_STYLE) {
             case STANDARD:
             case EXPERIMENTAL:
-                controller = new XBoxController(RobotSettings.XBOX_CONTROLLER_SLOT);
+                controller = new XBoxController(RobotSettings.XBOX_CONTROLLER_USB_SLOT);
                 break;
             case MARIO_KART:
                 controller = new WiiController(0);
@@ -210,14 +211,11 @@ public class DriveManager implements ISubsystem {
     /**
      * Sets the pid for all the motors that need pid setting
      *
-     * @param P proportional gain
-     * @param I integral gain
-     * @param D derivative gain
-     * @param F feed-forward gain
+     * @param pid the {@link PID} object that contains pertinent pidf data
      */
-    private void setPID(double P, double I, double D, double F) {
-        leaderL.setPid(P, I, D, F);
-        leaderR.setPid(P, I, D, F);
+    private void setPID(PID pid) {
+        leaderL.setPid(pid);
+        leaderR.setPid(pid);
     }
 
     /**
@@ -314,14 +312,12 @@ public class DriveManager implements ISubsystem {
         guidance.updateGeneric();
         setBrake(!coast.getBoolean(false));
         if (calibratePid.getBoolean(false)) {
-            if (lastP != P.getDouble(RobotSettings.DRIVEBASE_P) || lastI != I.getDouble(RobotSettings.DRIVEBASE_I) || lastD != D.getDouble(RobotSettings.DRIVEBASE_D) || lastF != F.getDouble(RobotSettings.DRIVEBASE_P)) {
-                lastP = P.getDouble(RobotSettings.DRIVEBASE_P);
-                lastI = I.getDouble(RobotSettings.DRIVEBASE_I);
-                lastD = D.getDouble(RobotSettings.DRIVEBASE_D);
-                lastF = F.getDouble(RobotSettings.DRIVEBASE_F);
-                setPID(lastP, lastI, lastD, lastF);
+            PID readPid = new PID(P.getDouble(RobotSettings.DRIVEBASE_PID.getP()), I.getDouble(RobotSettings.DRIVEBASE_PID.getI()), D.getDouble(RobotSettings.DRIVEBASE_PID.getD()), F.getDouble(RobotSettings.DRIVEBASE_PID.getF()));
+            if (!lastPID.equals(readPid)) {
+                lastPID = readPid;
+                setPID(lastPID);
                 if (RobotSettings.DEBUG) {
-                    System.out.println("Set drive pid to P: " + lastP + " I: " + lastI + " D: " + lastD + " F: " + lastF);
+                    System.out.println("Set drive pid to " + lastPID);
                 }
             }
         }

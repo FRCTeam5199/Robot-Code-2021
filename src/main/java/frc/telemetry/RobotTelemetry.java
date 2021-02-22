@@ -130,7 +130,7 @@ public class RobotTelemetry implements ISubsystem {
         } else {
             imu = new WrappedNavX2IMU();
         }
-        headingPID = new PIDController(RobotSettings.HEADING_P, RobotSettings.HEADING_I, RobotSettings.HEADING_D);
+        headingPID = new PIDController(RobotSettings.HEADING_PID.getP(), RobotSettings.HEADING_PID.getI(), RobotSettings.HEADING_PID.getD());
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()), new Pose2d(0, 0, new Rotation2d()));
         robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
     }

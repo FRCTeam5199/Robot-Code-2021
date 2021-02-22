@@ -3,6 +3,7 @@ package frc.motors;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import frc.misc.PID;
 
 import static com.revrobotics.CANSparkMax.IdleMode.kBrake;
 import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
@@ -49,11 +50,11 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void setPid(double p, double i, double d, double f) {
-        myPid.setP(p);
-        myPid.setI(i);
-        myPid.setD(d);
-        myPid.setFF(f);
+    public void setPid(PID pid) {
+        myPid.setP(pid.getP());
+        myPid.setI(pid.getI());
+        myPid.setD(pid.getD());
+        myPid.setFF(pid.getF());
     }
 
     @Override
