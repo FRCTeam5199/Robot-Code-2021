@@ -50,7 +50,7 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void init() {
-        switch (RobotToggles.SHOOTER_CONTROL_STYLE){
+        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
             case STANDARD:
                 joy = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
                 panel = new ButtonPanelController(RobotNumbers.BUTTON_PANEL_SLOT);
@@ -257,7 +257,8 @@ public class Turret implements ISubsystem {
     }
 
     /**
-     * If the angle is greater than the acceptable max, or less than the acceptable min, returns the nearest bound, else bounces input
+     * If the angle is greater than the acceptable max, or less than the acceptable min, returns the nearest bound, else
+     * bounces input
      *
      * @param angle the current angle of the turret
      * @return angle at the minimum or maximum angle

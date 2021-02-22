@@ -10,8 +10,8 @@ import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 
 public class RobotToggles {
     /**
-     * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE.
-     * Use this to select which robot you are using from the list under robotconfigs
+     * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
+     * using from the list under robotconfigs
      */
     public static final DefaultConfig getNumbersFrom = new CompetitionRobot2021();
 

@@ -28,7 +28,8 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     /**
-     * Wraps the angle between prograde (straight forward) and the location of the given point on a range of -180 to 180
+     * Wraps the angle between prograde (straight forward) and the location of the given point on a range of -180 to
+     * 180
      *
      * @param x x coord of other point
      * @param y y coord of other point
@@ -40,7 +41,8 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     /**
-     * Gives the angle between the way the bot is facing and another point (bounds unknown, see {@link #realHeadingError(double, double)})
+     * Gives the angle between the way the bot is facing and another point (bounds unknown, see {@link
+     * #realHeadingError(double, double)})
      *
      * @param wayX x coord of query point
      * @param wayY y coord of query point
@@ -62,16 +64,16 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     /**
-     * @return the robot's X position in relation to its starting position(right positive)
-     * typically facing away from opposing alliance station
+     * @return the robot's X position in relation to its starting position(right positive) typically facing away from
+     * opposing alliance station
      */
     public double fieldX() {
         return robotTranslation.getX();
     }
 
     /**
-     * @return the robot's Y position in relation to its starting position(away positive)
-     * typically facing away from opposing alliance station
+     * @return the robot's Y position in relation to its starting position(away positive) typically facing away from
+     * opposing alliance station
      */
     public double fieldY() {
         return robotTranslation.getY();

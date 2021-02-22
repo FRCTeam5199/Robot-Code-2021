@@ -3,8 +3,7 @@ package frc.vision;
 import frc.misc.ISubsystem;
 
 /**
- * I'm just simply vibing here, calm down bro.
- * Anyone that can SEE would use me
+ * I'm just simply vibing here, calm down bro. Anyone that can SEE would use me
  *
  * @author Smaltin
  */

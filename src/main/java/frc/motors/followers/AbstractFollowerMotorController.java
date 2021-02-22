@@ -24,8 +24,7 @@ public abstract class AbstractFollowerMotorController {
     public abstract void invert(boolean invert);
 
     /**
-     * Makes each motor follow the passed motor
-     * The passed motor type must match the follower types
+     * Makes each motor follow the passed motor The passed motor type must match the follower types
      *
      * @param leader Parent motor for these child motors to follow
      * @see AbstractMotorController#follow(AbstractMotorController)
@@ -36,9 +35,8 @@ public abstract class AbstractFollowerMotorController {
     }
 
     /**
-     * Sets the idle mode for all children to either be
-     * (brake = false) minimally resistive or
-     * (brake = true) to resist all motion/use ERF to slow motor (actual implemetation varies between motors)
+     * Sets the idle mode for all children to either be (brake = false) minimally resistive or (brake = true) to resist
+     * all motion/use ERF to slow motor (actual implemetation varies between motors)
      *
      * @param brake whether to apply idle resistance
      * @see AbstractMotorController#setBrake(boolean)

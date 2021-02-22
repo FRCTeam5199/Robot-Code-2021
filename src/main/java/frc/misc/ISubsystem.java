@@ -3,15 +3,14 @@ package frc.misc;
 import frc.robot.Robot;
 
 /**
- * The generic layout for any subsystem.
- * Ensures that any subsystem on the robot has the appropriate fields
+ * The generic layout for any subsystem. Ensures that any subsystem on the robot has the appropriate fields
  *
  * @author jojo2357
  */
 public interface ISubsystem {
     /**
-     * Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem
-     * (This is basically {@link Robot#robotInit()})
+     * Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem (This is
+     * basically {@link Robot#robotInit()})
      *
      * @see Robot#robotInit()
      */
@@ -39,8 +38,7 @@ public interface ISubsystem {
     void updateAuton();
 
     /**
-     * Put subsystem apprpriate code to run every tick in every mode here
-     * (There is not corrollary in {@link Robot})
+     * Put subsystem apprpriate code to run every tick in every mode here (There is not corrollary in {@link Robot})
      */
     void updateGeneric();
 
@@ -73,7 +71,8 @@ public interface ISubsystem {
     void initDisabled();
 
     /**
-     * Put repeated init code here from {@link #initAuton()} {@link #initTest()} {@link #initTest()} {@link #initDisabled()}
+     * Put repeated init code here from {@link #initAuton()} {@link #initTest()} {@link #initTest()} {@link
+     * #initDisabled()}
      */
     void initGeneric();
 

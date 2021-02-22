@@ -92,7 +92,7 @@ public class Intake implements ISubsystem {
             case BOPIT:
                 if (joystick.get(ControllerEnums.BopItButtons.BOPIT) == ControllerEnums.ButtonStatus.DOWN)
                     setIntake(1);
-                else 
+                else
                     setIntake(0);
                 break;
             default:

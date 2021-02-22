@@ -3,10 +3,10 @@ package frc.controllers;
 import frc.robot.RobotNumbers;
 
 /**
- * These enums are used for each controller. If you make a new controller, create a new enum for its mappings
- * here for safekeeping and then implement a get function in {@link BaseController} and then create a new class
- * extending BaseController that overrides that get (the gets in BaseController should all throw exceptions so
- * if an {@link XBoxController xbox controller} is queried for a {@link WiiAxis wii axis} it should throw a fit)
+ * These enums are used for each controller. If you make a new controller, create a new enum for its mappings here for
+ * safekeeping and then implement a get function in {@link BaseController} and then create a new class extending
+ * BaseController that overrides that get (the gets in BaseController should all throw exceptions so if an {@link
+ * XBoxController xbox controller} is queried for a {@link WiiAxis wii axis} it should throw a fit)
  *
  * @see BaseController
  */

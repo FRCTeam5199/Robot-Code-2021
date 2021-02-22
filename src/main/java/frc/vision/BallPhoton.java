@@ -33,8 +33,7 @@ public class BallPhoton implements IVision {
     }
 
     /**
-     * calls updateGeneric
-     * see BallPhoton.updateGeneric
+     * calls updateGeneric see BallPhoton.updateGeneric
      */
     @Override
     public void updateTest() {
@@ -42,8 +41,7 @@ public class BallPhoton implements IVision {
     }
 
     /**
-     * calls updateGeneric
-     * see BallPhoton.updateGeneric
+     * calls updateGeneric see BallPhoton.updateGeneric
      */
     @Override
     public void updateTeleop() {

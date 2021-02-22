@@ -4,8 +4,8 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
 
 /**
- * This is a class to interface the Navx2 Inertial Measurement Unit (IMU) but allowing versatility 
- * in swapping between different IMU's
+ * This is a class to interface the Navx2 Inertial Measurement Unit (IMU) but allowing versatility in swapping between
+ * different IMU's
  */
 public class WrappedNavX2IMU extends AbstractIMU {
     private AHRS navX2IMU;

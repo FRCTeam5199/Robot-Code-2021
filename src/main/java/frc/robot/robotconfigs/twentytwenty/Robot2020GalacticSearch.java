@@ -112,7 +112,7 @@ public class Robot2020GalacticSearch extends DefaultConfig {
         //intake
         INTAKE_MOTOR = 12; //victor
         IMU = 22; //pigeon
-        
+
         XBOX_CONTROLLER_SLOT = 0;
         FLIGHT_STICK_SLOT = 1;
         BUTTON_PANEL_SLOT = 2;

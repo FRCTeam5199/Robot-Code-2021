@@ -7,9 +7,8 @@ import frc.drive.auton.AutonType;
 import frc.motors.SupportedMotors;
 
 /**
- * Literally dont mind me I am simply vibing
- * I am here because it means you only have to change one value to completely change robot settings
- * (Otherwise, you would have to make 4 changes instead of 1)
+ * Literally dont mind me I am simply vibing I am here because it means you only have to change one value to completely
+ * change robot settings (Otherwise, you would have to make 4 changes instead of 1)
  *
  * @author jojo2357
  */
@@ -112,7 +111,7 @@ public abstract class DefaultConfig {
     //intake
     public int INTAKE_MOTOR = 12; //victor
     public int IMU = 22; //pigeon
-    
+
     public int XBOX_CONTROLLER_SLOT = 0;
     public int FLIGHT_STICK_SLOT = 1;
     public int BUTTON_PANEL_SLOT = 2;

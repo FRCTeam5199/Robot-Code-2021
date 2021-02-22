@@ -5,9 +5,8 @@ import frc.drive.DriveManager;
 import frc.misc.ISubsystem;
 
 /**
- * If you have a custom auton that needs to be implemented, extend this class.
- * Since every Auton Manager needs to have a {@link DriveManager drivetrain} and a {@link Timer timer}, they are here
- * along with {@link ISubsystem}.
+ * If you have a custom auton that needs to be implemented, extend this class. Since every Auton Manager needs to have a
+ * {@link DriveManager drivetrain} and a {@link Timer timer}, they are here along with {@link ISubsystem}.
  *
  * @see ISubsystem
  * @see frc.drive.auton.pointtopoint.AutonManager

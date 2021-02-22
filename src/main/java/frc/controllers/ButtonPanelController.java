@@ -3,8 +3,8 @@ package frc.controllers;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 
 /**
- * Our custom built button panel that has a bunch of levers and switches (lol jk it has buttons silly)
- * that is pretty basic
+ * Our custom built button panel that has a bunch of levers and switches (lol jk it has buttons silly) that is pretty
+ * basic
  *
  * @see BaseController
  * @see ButtonPanelButtons

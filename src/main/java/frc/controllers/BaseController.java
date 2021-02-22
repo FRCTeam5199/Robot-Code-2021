@@ -3,8 +3,8 @@ package frc.controllers;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * for ANY CONTROLLER, put EVERY GET METHOD in here as well as in the proper class!
- * This allows for the COMPLETE HOT SWAPPING of controllers simply by changing the constructor used.
+ * for ANY CONTROLLER, put EVERY GET METHOD in here as well as in the proper class! This allows for the COMPLETE HOT
+ * SWAPPING of controllers simply by changing the constructor used.
  *
  * @author jojo2357
  */

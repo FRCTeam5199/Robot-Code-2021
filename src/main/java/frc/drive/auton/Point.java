@@ -48,8 +48,7 @@ public class Point {
     }
 
     /**
-     * This method means you can just System.out.println(point) without having to format it
-     * Result format "(x, y) "
+     * This method means you can just System.out.println(point) without having to format it Result format "(x, y) "
      *
      * @return these coordinates formatted in a readable string
      */

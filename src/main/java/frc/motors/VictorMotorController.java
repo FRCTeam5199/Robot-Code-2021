@@ -64,7 +64,7 @@ public class VictorMotorController extends AbstractMotorController {
     //TODO make this work lol
     @Override
     public void setCurrentLimit(int limit) {
-        
+
     }
 
     @Override

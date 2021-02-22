@@ -6,6 +6,10 @@ import frc.drive.auton.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * This is where we store paths for point to point auton. Other autons use pathweaver to basically do this except a lot
+ * better but when it comes to debugging this is a solid auton. Points are in meters and speed is relative and unitless
+ */
 public enum AutonRoutines {
     GO_FORWARD_GO_BACK(
             new AutonWaypoint(new Point(0, 0), 1),
@@ -76,7 +80,14 @@ public enum AutonRoutines {
             new AutonWaypoint(new Point(0.5392969988205053, -2.423488054119271), 3)
     );
 
+    /**
+     * Holds all of the waypoints as specified in the constructor calls
+     */
     public final ArrayList<AutonWaypoint> WAYPOINTS = new ArrayList<>();
+    /**
+     * keeps track of what point to attack. Should step forward when {@link Point#isWithin(double, Point)} is within a
+     * suitable tolerance
+     */
     public int currentWaypoint = 0;
 
     AutonRoutines(AutonWaypoint... waypoints) {

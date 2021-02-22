@@ -37,8 +37,7 @@ public class GoalPhoton implements IVision {
     }
 
     /**
-     * calls updateGeneric
-     * see GoalPhoton.updateGeneric
+     * calls updateGeneric see GoalPhoton.updateGeneric
      */
     @Override
     public void updateTest() {
@@ -46,8 +45,7 @@ public class GoalPhoton implements IVision {
     }
 
     /**
-     * calls updateGeneric
-     * see GoalPhoton.updateGeneric
+     * calls updateGeneric see GoalPhoton.updateGeneric
      */
     @Override
     public void updateTeleop() {

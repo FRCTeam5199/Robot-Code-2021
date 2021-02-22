@@ -32,8 +32,8 @@ import frc.robot.RobotToggles;
 import frc.telemetry.RobotTelemetry;
 
 /**
- * Everything that has to do with driving is in here.
- * There are a lot of auxilairy helpers and {@link RobotToggles} that feed in here.
+ * Everything that has to do with driving is in here. There are a lot of auxilairy helpers and {@link RobotToggles} that
+ * feed in here.
  *
  * @see RobotTelemetry
  */
@@ -109,7 +109,8 @@ public class DriveManager implements ISubsystem {
      * Creates the drive motors
      *
      * @throws IllegalArgumentException       When IDs for follower motors are too few or too many
-     * @throws InitializationFailureException When follower drive motors fail to link to leaders or when leader drivetrain motors fail to invert
+     * @throws InitializationFailureException When follower drive motors fail to link to leaders or when leader
+     *                                        drivetrain motors fail to invert
      */
     private void createDriveMotors() throws InitializationFailureException, IllegalArgumentException {
         switch (RobotToggles.DRIVE_MOTOR_TYPE) {
@@ -230,9 +231,11 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     * This is where driving happens. Call this every tick to drive and set {@link RobotToggles#DRIVE_STYLE} to change the drive stype
+     * This is where driving happens. Call this every tick to drive and set {@link RobotToggles#DRIVE_STYLE} to change
+     * the drive stype
      *
-     * @throws IllegalArgumentException if {@link RobotToggles#DRIVE_STYLE} is not implemented here or if you missed a break statement
+     * @throws IllegalArgumentException if {@link RobotToggles#DRIVE_STYLE} is not implemented here or if you missed a
+     *                                  break statement
      */
     @Override
     public void updateTeleop() throws IllegalArgumentException {

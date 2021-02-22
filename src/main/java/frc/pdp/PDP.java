@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
- * PDP (Power Distribution Panel) contains information about power, current, and voltage for the robot
- * Is cosmetic for now, but should become more useful in the future in diagnosing critical failures
+ * PDP (Power Distribution Panel) contains information about power, current, and voltage for the robot Is cosmetic for
+ * now, but should become more useful in the future in diagnosing critical failures
  */
 public class PDP {
     private final PowerDistributionPanel powerDistributionPanel;

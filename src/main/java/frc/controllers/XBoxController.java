@@ -3,17 +3,16 @@ package frc.controllers;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
-import frc.robot.RobotNumbers;
 
 /**
  * The lame and basic controller. Does it get any more simpleton than this?
- * 
+ *
  * @see BaseController
  * @see XboxAxes
  * @see XBoxButtons
  */
 public class XBoxController extends BaseController {
-    private boolean triggerFlag = false;
+    private final boolean triggerFlag = false;
 
     /**
      * Creates a new Xbox Controller object on a specified usb port

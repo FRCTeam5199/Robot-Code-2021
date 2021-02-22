@@ -6,10 +6,13 @@ import com.ctre.phoenix.music.Orchestra;
 import frc.misc.Chirp;
 import frc.robot.RobotNumbers;
 
-import static com.ctre.phoenix.motorcontrol.ControlMode.*;
+import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Brake;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
 
+/**
+ * This is the wrapper for falcon 500's and maybe some other stuff
+ */
 public class TalonMotorController extends AbstractMotorController {
     private final WPI_TalonFX motor;
 
@@ -18,6 +21,13 @@ public class TalonMotorController extends AbstractMotorController {
         Chirp.talonMotorArrayList.add(this);
     }
 
+    /**
+     * The talons are the motors that make music and this is the method to register tham as musick makers. The orchestra
+     * is wrapped inside {@link Chirp} using the {@link Chirp#talonMotorArrayList meta talon registry}
+     *
+     * @param orchestra the {@link Orchestra} object this motor should join
+     * @see Chirp
+     */
     public void addToOrchestra(Orchestra orchestra) {
         orchestra.addInstrument(motor);
     }

@@ -1,8 +1,8 @@
 package frc.controllers;
 
 /**
- * For mario kart drive. Google it if u dunno what it is
- * Wii remote driver for windows: https://www.julianloehr.de/educational-work/hid-wiimote/
+ * For mario kart drive. Google it if u dunno what it is Wii remote driver for windows:
+ * https://www.julianloehr.de/educational-work/hid-wiimote/
  *
  * @see BaseController
  * @see ControllerEnums.WiiAxis

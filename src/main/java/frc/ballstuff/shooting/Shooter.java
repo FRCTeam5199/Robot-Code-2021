@@ -277,7 +277,7 @@ public class Shooter implements ISubsystem {
                 break;
             }
             case BOP_IT: {
-                if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN){
+                if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
                 }
 
