@@ -1,25 +1,25 @@
 package frc.motors.followers;
 
-import frc.motors.AbstractMotor;
+import frc.motors.AbstractMotorController;
 
 /**
  * This class should be used to hold all the follower motors that will follow the same motor
  *
- * @see AbstractMotor
- * @see SparkFollowerMotors
- * @see TalonFollowerMotor
+ * @see AbstractMotorController
+ * @see SparkFollowerMotorsController
+ * @see TalonFollowerMotorController
  */
-public abstract class AbstractFollowerMotor {
+public abstract class AbstractFollowerMotorController {
     /**
      * The list of all motors this object is responsible for maintaining
      */
-    protected AbstractMotor[] motors;
+    protected AbstractMotorController[] motors;
 
     /**
      * Sets the motor inversion for all of the followers based on the param
      *
      * @param invert whether to invert motor rotation
-     * @see AbstractMotor#setInverted(boolean)
+     * @see AbstractMotorController#setInverted(boolean)
      */
     public abstract void invert(boolean invert);
 
@@ -28,10 +28,10 @@ public abstract class AbstractFollowerMotor {
      * The passed motor type must match the follower types
      *
      * @param leader Parent motor for these child motors to follow
-     * @see AbstractMotor#follow(AbstractMotor)
+     * @see AbstractMotorController#follow(AbstractMotorController)
      */
-    public void follow(AbstractMotor leader) {
-        for (AbstractMotor follower : motors)
+    public void follow(AbstractMotorController leader) {
+        for (AbstractMotorController follower : motors)
             follower.follow(leader);
     }
 
@@ -41,10 +41,10 @@ public abstract class AbstractFollowerMotor {
      * (brake = true) to resist all motion/use ERF to slow motor (actual implemetation varies between motors)
      *
      * @param brake whether to apply idle resistance
-     * @see AbstractMotor#setBrake(boolean)
+     * @see AbstractMotorController#setBrake(boolean)
      */
     public void setBrake(boolean brake) {
-        for (AbstractMotor motor : motors)
+        for (AbstractMotorController motor : motors)
             motor.setBrake(brake);
     }
 
@@ -52,10 +52,10 @@ public abstract class AbstractFollowerMotor {
      * Sets the maximum allowable current that will flow through each follower motor
      *
      * @param limit max current in amps
-     * @see AbstractMotor#setCurrentLimit(int)
+     * @see AbstractMotorController#setCurrentLimit(int)
      */
     public void setCurrentLimit(int limit) {
-        for (AbstractMotor motor : motors)
+        for (AbstractMotorController motor : motors)
             motor.setCurrentLimit(limit);
     }
 }

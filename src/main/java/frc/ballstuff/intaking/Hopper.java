@@ -6,8 +6,8 @@ import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.misc.ISubsystem;
-import frc.motors.AbstractMotor;
-import frc.motors.VictorMotor;
+import frc.motors.AbstractMotorController;
+import frc.motors.VictorMotorController;
 import frc.robot.RobotMap;
 import frc.robot.RobotToggles;
 
@@ -16,7 +16,7 @@ import frc.robot.RobotToggles;
  * to the {@link frc.ballstuff.shooting.Shooter}
  */
 public class Hopper implements ISubsystem {
-    public AbstractMotor agitator, indexer;
+    public AbstractMotorController agitator, indexer;
     public Rev2mDistanceSensor indexSensor;
     public boolean indexed = false;
     private boolean agitatorActive = false;
@@ -34,8 +34,8 @@ public class Hopper implements ISubsystem {
             indexSensor.setEnabled(true);
             indexSensor.setAutomaticMode(true);
         }
-        agitator = new VictorMotor(RobotMap.AGITATOR_MOTOR);
-        indexer = new VictorMotor(RobotMap.INDEXER_MOTOR);
+        agitator = new VictorMotorController(RobotMap.AGITATOR_MOTOR);
+        indexer = new VictorMotorController(RobotMap.INDEXER_MOTOR);
     }
 
     @Override

@@ -51,7 +51,6 @@ public class RobotNumbers {
     public static final double HEADING_D = getNumbersFrom.HEADING_D;
     public static final double AUTO_SPEED = getNumbersFrom.AUTO_SPEED;
     public static final double AUTO_ROTATION_SPEED = getNumbersFrom.AUTO_ROTATION_SPEED;
-    public static double triggerSensitivity = getNumbersFrom.triggerSensitivity;
     public static int XBOX_CONTROLLER_SLOT = getNumbersFrom.XBOX_CONTROLLER_SLOT;
     public static int FLIGHT_STICK_SLOT = getNumbersFrom.FLIGHT_STICK_SLOT;
     public static int BUTTON_PANEL_SLOT = getNumbersFrom.BUTTON_PANEL_SLOT;

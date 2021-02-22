@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -171,20 +171,63 @@ extends <a href="AbstractIMU.html" title="class in frc.telemetry">AbstractIMU</a
 </td>
 </tr>
 <tr class="rowColor" id="i1">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#init()">init</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem
+ (This is basically <a href="../robot/Robot.html#robotInit()"><code>Robot.robotInit()</code></a>)</div>
+</td>
+</tr>
+<tr class="altColor" id="i2">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#initAuton()">initAuton</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Runs when the robot is enabled into auton</div>
+</td>
+</tr>
+<tr class="rowColor" id="i3">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#initDisabled()">initDisabled</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Runs when the robot is disabled from any mode</div>
+</td>
+</tr>
+<tr class="altColor" id="i4">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#initGeneric()">initGeneric</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Put repeated init code here from <a href="../misc/ISubsystem.html#initAuton()"><code>ISubsystem.initAuton()</code></a> <a href="../misc/ISubsystem.html#initTest()"><code>ISubsystem.initTest()</code></a> <a href="../misc/ISubsystem.html#initTest()"><code>ISubsystem.initTest()</code></a> <a href="../misc/ISubsystem.html#initDisabled()"><code>ISubsystem.initDisabled()</code></a></div>
+</td>
+</tr>
+<tr class="rowColor" id="i5">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#initTeleop()">initTeleop</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Runs when the robot is enabled into teleop</div>
+</td>
+</tr>
+<tr class="altColor" id="i6">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#initTest()">initTest</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Runs every time the robot is enabled into test mode</div>
+</td>
+</tr>
+<tr class="rowColor" id="i7">
 <td class="colFirst"><code>double</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#relativeYaw()">relativeYaw</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Yaw since last restart</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr class="altColor" id="i8">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resetOdometry()">resetOdometry</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Resets the Pigeon IMU</div>
 </td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr class="rowColor" id="i9">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateGeneric()">updateGeneric</a></span>()</code></th>
 <td class="colLast">
@@ -199,12 +242,17 @@ extends <a href="AbstractIMU.html" title="class in frc.telemetry">AbstractIMU</a
 <h3>Methods inherited from class&nbsp;frc.telemetry.<a href="AbstractIMU.html" title="class in frc.telemetry">AbstractIMU</a></h3>
 <a id="methods.inherited.from.class.frc.telemetry.AbstractIMU">
 <!--   -->
-</a><code><a href="AbstractIMU.html#init()">init</a>, <a href="AbstractIMU.html#updateAuton()">updateAuton</a>, <a href="AbstractIMU.html#updateTeleop()">updateTeleop</a>, <a href="AbstractIMU.html#updateTest()">updateTest</a>, <a href="AbstractIMU.html#yawWraparoundAhead()">yawWraparoundAhead</a></code></div>
+</a><code><a href="AbstractIMU.html#updateAuton()">updateAuton</a>, <a href="AbstractIMU.html#updateTeleop()">updateTeleop</a>, <a href="AbstractIMU.html#updateTest()">updateTest</a>, <a href="AbstractIMU.html#yawWraparoundAhead()">yawWraparoundAhead</a></code></div>
 <div class="inheritedList">
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
 <a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a><code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></div>
+<div class="inheritedList">
+<h3>Methods inherited from interface&nbsp;frc.misc.<a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></h3>
+<a id="methods.inherited.from.class.frc.misc.ISubsystem">
+<!--   -->
+</a><code><a href="../misc/ISubsystem.html#addToMetaList()">addToMetaList</a></code></div>
 </section>
 </li>
 </ul>
@@ -249,15 +297,78 @@ extends <a href="AbstractIMU.html" title="class in frc.telemetry">AbstractIMU</a
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="init()">init</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">init</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#init()">ISubsystem</a></code></span></div>
+<div class="block">Everyone needs to start somewhere! Use this function to set up all of the stuff in the subsystem
+ (This is basically <a href="../robot/Robot.html#robotInit()"><code>Robot.robotInit()</code></a>)</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../robot/Robot.html#robotInit()"><code>Robot.robotInit()</code></a></dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="updateGeneric()">updateGeneric</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">updateGeneric</span>()</div>
 <div class="block">Updates the Pigeon IMU data</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="initTest()">initTest</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">initTest</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#initTest()">ISubsystem</a></code></span></div>
+<div class="block">Runs every time the robot is enabled into test mode</div>
 <dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../misc/ISubsystem.html#updateGeneric()">updateGeneric</a></code>&nbsp;in interface&nbsp;<code><a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></code></dd>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="AbstractIMU.html#updateGeneric()">updateGeneric</a></code>&nbsp;in class&nbsp;<code><a href="AbstractIMU.html" title="class in frc.telemetry">AbstractIMU</a></code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../robot/Robot.html#testInit()"><code>Robot.testInit()</code></a></dd>
 </dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="initTeleop()">initTeleop</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">initTeleop</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#initTeleop()">ISubsystem</a></code></span></div>
+<div class="block">Runs when the robot is enabled into teleop</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../robot/Robot.html#teleopInit()"><code>Robot.teleopInit()</code></a></dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="initAuton()">initAuton</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">initAuton</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#initAuton()">ISubsystem</a></code></span></div>
+<div class="block">Runs when the robot is enabled into auton</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../robot/Robot.html#autonomousInit()"><code>Robot.autonomousInit()</code></a></dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="initDisabled()">initDisabled</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">initDisabled</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#initDisabled()">ISubsystem</a></code></span></div>
+<div class="block">Runs when the robot is disabled from any mode</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../robot/Robot.html#disabledInit()"><code>Robot.disabledInit()</code></a></dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="initGeneric()">initGeneric</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">initGeneric</span>()</div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../misc/ISubsystem.html#initGeneric()">ISubsystem</a></code></span></div>
+<div class="block">Put repeated init code here from <a href="../misc/ISubsystem.html#initAuton()"><code>ISubsystem.initAuton()</code></a> <a href="../misc/ISubsystem.html#initTest()"><code>ISubsystem.initTest()</code></a> <a href="../misc/ISubsystem.html#initTest()"><code>ISubsystem.initTest()</code></a> <a href="../misc/ISubsystem.html#initDisabled()"><code>ISubsystem.initDisabled()</code></a></div>
 </section>
 </li>
 <li class="blockList">

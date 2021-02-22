@@ -41,6 +41,12 @@ public enum GalacticSearchPaths {
     public final String PATH_FILE_LOCATION;
     public final Point[] POINTS;
 
+    /**
+     * Determines the path based on the given points
+     *
+     * @param points a given set of points
+     * @return the path determined
+     */
     public static GalacticSearchPaths getFromPoints(Point[] points) {
         for (GalacticSearchPaths path : GalacticSearchPaths.values())
             if (path.POINTS == points)

@@ -1,0 +1,88 @@
+package frc.motors;
+
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.music.Orchestra;
+import frc.misc.Chirp;
+import frc.robot.RobotNumbers;
+
+import static com.ctre.phoenix.motorcontrol.ControlMode.*;
+import static com.ctre.phoenix.motorcontrol.NeutralMode.Brake;
+import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
+
+public class TalonMotorController extends AbstractMotorController {
+    private final WPI_TalonFX motor;
+
+    public TalonMotorController(int id) {
+        motor = new WPI_TalonFX(id);
+        Chirp.talonMotorArrayList.add(this);
+    }
+
+    public void addToOrchestra(Orchestra orchestra) {
+        orchestra.addInstrument(motor);
+    }
+
+    //public void
+
+    @Override
+    public void moveAtRotations(double rpm) {
+        moveAtVelocity(rpm / sensorToRevolutionFactor);
+    }
+
+    @Override
+    public void setInverted(boolean invert) {
+        motor.setInverted(invert);
+    }
+
+    @Override
+    public void follow(AbstractMotorController leader) {
+        if (leader instanceof TalonMotorController)
+            motor.follow(((TalonMotorController) leader).motor);
+    }
+
+    @Override
+    public void resetEncoder() {
+        motor.setSelectedSensorPosition(0);
+    }
+
+    @Override
+    public void setPid(double p, double i, double d, double f) {
+        motor.config_kP(0, p, RobotNumbers.DRIVE_TIMEOUT_MS);
+        motor.config_kI(0, i, RobotNumbers.DRIVE_TIMEOUT_MS);
+        motor.config_kD(0, d, RobotNumbers.DRIVE_TIMEOUT_MS);
+        motor.config_kF(0, f, RobotNumbers.DRIVE_TIMEOUT_MS);
+    }
+
+    @Override
+    public void moveAtVelocity(double amount) {
+        motor.setVoltage(amount);
+    }
+
+    @Override
+    public void setBrake(boolean brake) {
+        motor.setNeutralMode(brake ? Brake : Coast);
+    }
+
+    @Override
+    public double getRotations() {
+        return motor.getSelectedSensorVelocity() * sensorToRevolutionFactor;
+    }
+
+    @Override
+    public void setCurrentLimit(int limit) {
+        SupplyCurrentLimitConfiguration config = new SupplyCurrentLimitConfiguration();
+        config.currentLimit = limit;
+        config.enable = true;
+        motor.configSupplyCurrentLimit(config);
+    }
+
+    @Override
+    public void moveAtPercent(double percent) {
+        motor.set(PercentOutput, percent);
+    }
+
+    @Override
+    public void setOpenLoopRampRate(double timeToMax) {
+        motor.configOpenloopRamp(timeToMax);
+    }
+}

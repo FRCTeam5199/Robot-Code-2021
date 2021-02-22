@@ -134,7 +134,7 @@ extends edu.wpi.first.wpilibj.TimedRobot</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>static <a href="../vision/BallPhoton.html" title="class in frc.vision">BallPhoton</a></code></td>
+<td class="colFirst"><code>static <a href="../vision/IVision.html" title="interface in frc.vision">IVision</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ballPhoton">ballPhoton</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -149,7 +149,7 @@ extends edu.wpi.first.wpilibj.TimedRobot</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>static <a href="../vision/GoalPhoton.html" title="class in frc.vision">GoalPhoton</a></code></td>
+<td class="colFirst"><code>static <a href="../vision/IVision.html" title="interface in frc.vision">IVision</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#goalPhoton">goalPhoton</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -164,8 +164,18 @@ extends edu.wpi.first.wpilibj.TimedRobot</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static <a href="../pdp/PDP.html" title="class in frc.pdp">PDP</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#pdp">pdp</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../ballstuff/shooting/Shooter.html" title="class in frc.ballstuff.shooting">Shooter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shooter">shooter</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static java.util.ArrayList&lt;<a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#subsytems">subsytems</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -363,20 +373,32 @@ extends edu.wpi.first.wpilibj.TimedRobot</pre>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="pdp">pdp</a></h3>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType"><a href="../pdp/PDP.html" title="class in frc.pdp">PDP</a></span>&nbsp;<span class="memberName">pdp</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="goalPhoton">goalPhoton</a></h3>
-<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType"><a href="../vision/GoalPhoton.html" title="class in frc.vision">GoalPhoton</a></span>&nbsp;<span class="memberName">goalPhoton</span></div>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType"><a href="../vision/IVision.html" title="interface in frc.vision">IVision</a></span>&nbsp;<span class="memberName">goalPhoton</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="ballPhoton">ballPhoton</a></h3>
-<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType"><a href="../vision/BallPhoton.html" title="class in frc.vision">BallPhoton</a></span>&nbsp;<span class="memberName">ballPhoton</span></div>
+<div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType"><a href="../vision/IVision.html" title="interface in frc.vision">IVision</a></span>&nbsp;<span class="memberName">ballPhoton</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="autonManager">autonManager</a></h3>
 <div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType"><a href="../drive/auton/AbstractAutonManager.html" title="class in frc.drive.auton">AbstractAutonManager</a></span>&nbsp;<span class="memberName">autonManager</span></div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="subsytems">subsytems</a></h3>
+<div class="memberSignature"><span class="modifiers">public static final</span>&nbsp;<span class="returnType">java.util.ArrayList&lt;<a href="../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>&gt;</span>&nbsp;<span class="memberName">subsytems</span></div>
 </section>
 </li>
 </ul>

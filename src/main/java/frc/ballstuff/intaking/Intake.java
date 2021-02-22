@@ -2,12 +2,15 @@ package frc.ballstuff.intaking;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
+import frc.controllers.BopItBasicController;
+import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
 import frc.controllers.JoystickController;
+import frc.drive.auton.AutonType;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
-import frc.motors.AbstractMotor;
-import frc.motors.VictorMotor;
+import frc.motors.AbstractMotorController;
+import frc.motors.VictorMotorController;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
@@ -16,7 +19,7 @@ import frc.robot.RobotToggles;
  * The "Intake" is referring to the part that picks up power cells from the floor
  */
 public class Intake implements ISubsystem {
-    private AbstractMotor victor;
+    private AbstractMotorController victor;
     private BaseController joystick;
     private int intakeMult;
 
@@ -37,11 +40,14 @@ public class Intake implements ISubsystem {
             case STANDARD:
                 joystick = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
                 break;
+            case BOPIT:
+                joystick = new BopItBasicController(1);
+                break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotToggles.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         try {
-            victor = new VictorMotor(RobotMap.INTAKE_MOTOR);
+            victor = new VictorMotorController(RobotMap.INTAKE_MOTOR);
         } catch (Exception e) {
             throw new InitializationFailureException("Intake motor failed to be created", "Disable the intake or investigate your motor mappings");
         }
@@ -65,6 +71,9 @@ public class Intake implements ISubsystem {
 
     @Override
     public void updateAuton() {
+        if (RobotToggles.AUTON_MODE == AutonType.GALACTIC_SEARCH) {
+            setIntake(RobotToggles.autonComplete ? 0 : -1);
+        }
     }
 
     @Override
@@ -79,6 +88,12 @@ public class Intake implements ISubsystem {
                 } else {
                     setIntake(0);
                 }
+                break;
+            case BOPIT:
+                if (joystick.get(ControllerEnums.BopItButtons.BOPIT) == ControllerEnums.ButtonStatus.DOWN)
+                    setIntake(1);
+                else 
+                    setIntake(0);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotToggles.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
@@ -100,7 +115,6 @@ public class Intake implements ISubsystem {
 
     @Override
     public void initAuton() {
-
     }
 
     @Override

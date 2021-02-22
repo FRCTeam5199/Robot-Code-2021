@@ -5,6 +5,14 @@ import frc.controllers.ControllerEnums.JoystickAxis;
 import frc.controllers.ControllerEnums.JoystickButtons;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
 
+/**
+ * This is the flight stick that we use. It has a bunch of useless buttons so its special in my heart
+ *
+ * @see BaseController
+ * @see ControllerEnums.JoystickAxis
+ * @see ControllerEnums.JoystickHatDirection
+ * @see ControllerEnums.JoystickButtons
+ */
 public class JoystickController extends BaseController {
 
     /**

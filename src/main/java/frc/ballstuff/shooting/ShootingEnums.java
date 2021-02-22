@@ -13,11 +13,7 @@ import static frc.robot.Robot.hopper;
 public enum ShootingEnums {
     //Used when solid speed button is held down
     FIRE_SOLID_SPEED(shooter -> {
-        if (shooter.actualRPM < 2100) {
-            shooter.setPercentSpeed(0.75);
-        } else {
-            shooter.setSpeed(4200 * (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
-        }
+        shooter.setSpeed(4200 * (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
         if (RobotToggles.ENABLE_HOPPER) {
             hopper.setAll(shooter.spunUp() && shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN);
         }

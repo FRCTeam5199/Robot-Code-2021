@@ -100,6 +100,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">Chirp</span>
 extends com.ctre.phoenix.music.Orchestra</pre>
+<div class="block">This is where we play our gnarly tunez. Although it cant be seen from here, there is a
+ delete deploy directory method in <a href="../robot/Robot.html" title="class in frc.robot"><code>Robot</code></a> that will help remove ghost files.
+ Use this like an <code>Orchestra</code> with extra steps</div>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -121,9 +124,12 @@ extends com.ctre.phoenix.music.Orchestra</pre>
 </thead>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code>static java.util.ArrayList&lt;<a href="../motors/TalonMotor.html" title="class in frc.motors">TalonMotor</a>&gt;</code></td>
+<td class="colFirst"><code>static java.util.ArrayList&lt;<a href="../motors/TalonMotorController.html" title="class in frc.motors">TalonMotorController</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#talonMotorArrayList">talonMotorArrayList</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Contains all of the talons created in <a href="../motors/TalonMotorController.html#%3Cinit%3E(int)"><code>TalonMotorController(int)</code></a> that can be used to play
+ awesome tunez</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -176,12 +182,16 @@ extends com.ctre.phoenix.music.Orchestra</pre>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#initChirp()">initChirp</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">pulls the talons from <a href="#talonMotorArrayList"><code>the meta talon registry</code></a> and adds them to the orchestra</div>
+</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#loadSound(java.lang.String)">loadSound</a></span>&#8203;(java.lang.String&nbsp;soundName)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">See the delete deploy dir method in Robot for help clearing ghost files</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -213,7 +223,9 @@ extends com.ctre.phoenix.music.Orchestra</pre>
 <li class="blockList">
 <section class="detail">
 <h3><a id="talonMotorArrayList">talonMotorArrayList</a></h3>
-<div class="memberSignature"><span class="modifiers">public static final</span>&nbsp;<span class="returnType">java.util.ArrayList&lt;<a href="../motors/TalonMotor.html" title="class in frc.motors">TalonMotor</a>&gt;</span>&nbsp;<span class="memberName">talonMotorArrayList</span></div>
+<div class="memberSignature"><span class="modifiers">public static final</span>&nbsp;<span class="returnType">java.util.ArrayList&lt;<a href="../motors/TalonMotorController.html" title="class in frc.motors">TalonMotorController</a>&gt;</span>&nbsp;<span class="memberName">talonMotorArrayList</span></div>
+<div class="block">Contains all of the talons created in <a href="../motors/TalonMotorController.html#%3Cinit%3E(int)"><code>TalonMotorController(int)</code></a> that can be used to play
+ awesome tunez</div>
 </section>
 </li>
 </ul>
@@ -246,12 +258,18 @@ extends com.ctre.phoenix.music.Orchestra</pre>
 <section class="detail">
 <h3><a id="initChirp()">initChirp</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">initChirp</span>()</div>
+<div class="block">pulls the talons from <a href="#talonMotorArrayList"><code>the meta talon registry</code></a> and adds them to the orchestra</div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="loadSound(java.lang.String)">loadSound</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">loadSound</span>&#8203;(<span class="arguments">java.lang.String&nbsp;soundName)</span></div>
+<div class="block">See the delete deploy dir method in Robot for help clearing ghost files</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>soundName</code> - The name of the file (less extansion, less path, just name) to get sound from (should be .chrp file)</dd>
+</dl>
 </section>
 </li>
 </ul>

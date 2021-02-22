@@ -95,12 +95,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="butbetternow/AutonManager.html" title="class in frc.drive.auton.butbetternow">AutonManager</a></code>, <code><a href="galacticsearch/AutonManager.html" title="class in frc.drive.auton.galacticsearch">AutonManager</a></code></dd>
+<dd><code><a href="butbetternow/AutonManager.html" title="class in frc.drive.auton.butbetternow">AutonManager</a></code>, <code><a href="galacticsearch/AutonManager.html" title="class in frc.drive.auton.galacticsearch">AutonManager</a></code>, <code><a href="galacticsearchscam/AutonManager.html" title="class in frc.drive.auton.galacticsearchscam">AutonManager</a></code>, <code><a href="pointtopoint/AutonManager.html" title="class in frc.drive.auton.pointtopoint">AutonManager</a></code></dd>
 </dl>
 <hr>
 <pre>public abstract class <span class="typeNameLabel">AbstractAutonManager</span>
 extends java.lang.Object
 implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></pre>
+<div class="block">If you have a custom auton that needs to be implemented, extend this class.
+ Since every Auton Manager needs to have a <a href="../DriveManager.html" title="class in frc.drive"><code>drivetrain</code></a> and a <code>timer</code>, they are here
+ along with <a href="../../misc/ISubsystem.html" title="interface in frc.misc"><code>ISubsystem</code></a>.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../misc/ISubsystem.html" title="interface in frc.misc"><code>ISubsystem</code></a>, 
+<a href="pointtopoint/AutonManager.html" title="class in frc.drive.auton.pointtopoint"><code>AutonManager</code></a>, 
+<a href="butbetternow/AutonManager.html" title="class in frc.drive.auton.butbetternow"><code>AutonManager</code></a>, 
+<a href="galacticsearch/AutonManager.html" title="class in frc.drive.auton.galacticsearch"><code>AutonManager</code></a>, 
+<a href="galacticsearchscam/AutonManager.html" title="class in frc.drive.auton.galacticsearchscam"><code>AutonManager</code></a></dd>
+</dl>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -124,6 +135,11 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="../DriveManager.html" title="class in frc.drive">DriveManager</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DRIVING_CHILD">DRIVING_CHILD</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected edu.wpi.first.wpilibj.Timer</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#timer">timer</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -151,7 +167,9 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(frc.drive.DriveManager)">AbstractAutonManager</a></span>&#8203;(<a href="../DriveManager.html" title="class in frc.drive">DriveManager</a>&nbsp;driveManager)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Initializes the auton manager and stores the reference to the drivetrain object</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -173,7 +191,7 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <h3>Methods inherited from interface&nbsp;frc.misc.<a href="../../misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a></h3>
 <a id="methods.inherited.from.class.frc.misc.ISubsystem">
 <!--   -->
-</a><code><a href="../../misc/ISubsystem.html#init()">init</a>, <a href="../../misc/ISubsystem.html#updateAuton()">updateAuton</a>, <a href="../../misc/ISubsystem.html#updateGeneric()">updateGeneric</a>, <a href="../../misc/ISubsystem.html#updateTeleop()">updateTeleop</a>, <a href="../../misc/ISubsystem.html#updateTest()">updateTest</a></code></div>
+</a><code><a href="../../misc/ISubsystem.html#addToMetaList()">addToMetaList</a>, <a href="../../misc/ISubsystem.html#init()">init</a>, <a href="../../misc/ISubsystem.html#initAuton()">initAuton</a>, <a href="../../misc/ISubsystem.html#initDisabled()">initDisabled</a>, <a href="../../misc/ISubsystem.html#initGeneric()">initGeneric</a>, <a href="../../misc/ISubsystem.html#initTeleop()">initTeleop</a>, <a href="../../misc/ISubsystem.html#initTest()">initTest</a>, <a href="../../misc/ISubsystem.html#updateAuton()">updateAuton</a>, <a href="../../misc/ISubsystem.html#updateGeneric()">updateGeneric</a>, <a href="../../misc/ISubsystem.html#updateTeleop()">updateTeleop</a>, <a href="../../misc/ISubsystem.html#updateTest()">updateTest</a></code></div>
 </section>
 </li>
 </ul>
@@ -187,6 +205,12 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 </a>
 <h2>Field Details</h2>
 <ul class="blockList">
+<li class="blockList">
+<section class="detail">
+<h3><a id="timer">timer</a></h3>
+<div class="memberSignature"><span class="modifiers">protected final</span>&nbsp;<span class="returnType">edu.wpi.first.wpilibj.Timer</span>&nbsp;<span class="memberName">timer</span></div>
+</section>
+</li>
 <li class="blockList">
 <section class="detail">
 <h3><a id="DRIVING_CHILD">DRIVING_CHILD</a></h3>
@@ -207,6 +231,11 @@ implements <a href="../../misc/ISubsystem.html" title="interface in frc.misc">IS
 <section class="detail">
 <h3><a id="&lt;init&gt;(frc.drive.DriveManager)">AbstractAutonManager</a></h3>
 <div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="memberName">AbstractAutonManager</span>&#8203;(<span class="arguments"><a href="../DriveManager.html" title="class in frc.drive">DriveManager</a>&nbsp;driveManager)</span></div>
+<div class="block">Initializes the auton manager and stores the reference to the drivetrain object</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>driveManager</code> - the drivetrain object created for the robot</dd>
+</dl>
 </section>
 </li>
 </ul>

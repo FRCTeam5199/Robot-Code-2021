@@ -7,16 +7,18 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
+import frc.controllers.BopItBasicController;
 import frc.controllers.ButtonPanelController;
+import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickAxis;
 import frc.controllers.ControllerEnums.JoystickButtons;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
-import frc.motors.AbstractMotor;
-import frc.motors.SparkMotor;
-import frc.motors.TalonMotor;
+import frc.motors.AbstractMotorController;
+import frc.motors.SparkMotorController;
+import frc.motors.TalonMotorController;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
@@ -58,14 +60,14 @@ public class Shooter implements ISubsystem {
     public boolean atSpeed = false;
     public boolean interpolationEnabled = false;
     boolean trackingTarget = false;
-    private AbstractMotor leader, follower;
+    private AbstractMotorController leader, follower;
     private IVision goalPhoton;
     private boolean enabled = true;
     private boolean spunUp = false;
     private boolean recoveryPID = false;
     private Timer shootTimer, indexTimer, shooterTimer, timer;
     private boolean timerStarted = false;
-    private boolean timerFlag = false;
+    private final boolean timerFlag = false;
     private double lastP = 0, lastI = 0, lastD = 0, lastF = 0;
 
     public Shooter() {
@@ -82,6 +84,9 @@ public class Shooter implements ISubsystem {
             case STANDARD:
                 joystickController = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
                 panel = new ButtonPanelController(RobotNumbers.BUTTON_PANEL_SLOT);
+                break;
+            case BOP_IT:
+                joystickController = new BopItBasicController(1);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotToggles.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
@@ -104,15 +109,15 @@ public class Shooter implements ISubsystem {
      */
     private void createAndInitMotors() {
         if (RobotToggles.SHOOTER_USE_SPARKS) {
-            leader = new SparkMotor(RobotMap.SHOOTER_LEADER);
+            leader = new SparkMotorController(RobotMap.SHOOTER_LEADER);
             if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
-                follower = new SparkMotor(RobotMap.SHOOTER_FOLLOWER);
+                follower = new SparkMotorController(RobotMap.SHOOTER_FOLLOWER);
             }
             leader.setSensorToRevolutionFactor(1);
         } else {
-            leader = new TalonMotor(RobotMap.SHOOTER_LEADER);
+            leader = new TalonMotorController(RobotMap.SHOOTER_LEADER);
             if (RobotToggles.SHOOTER_USE_TWO_MOTORS) {
-                follower = new TalonMotor(RobotMap.SHOOTER_FOLLOWER);
+                follower = new TalonMotorController(RobotMap.SHOOTER_FOLLOWER);
             }
             leader.setSensorToRevolutionFactor(600 / RobotNumbers.SHOOTER_SENSOR_UNITS_PER_ROTATION);
         }
@@ -270,6 +275,12 @@ public class Shooter implements ISubsystem {
                     setPercentSpeed(constSpeed.getDouble(0));
                 }
                 break;
+            }
+            case BOP_IT: {
+                if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN){
+                    ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                }
+
             }
             default:
                 throw new IllegalStateException("This UI not implemented for this controller");

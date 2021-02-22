@@ -21,11 +21,11 @@ public class RobotMap {
 
     //turret
     public static final int TURRET_YAW = getNumbersFrom.TURRET_YAW;
-    
+
     //hopper
     public static final int AGITATOR_MOTOR = getNumbersFrom.AGITATOR_MOTOR;
     public static final int INDEXER_MOTOR = getNumbersFrom.INDEXER_MOTOR;
-    
+
     //intake
     public static final int INTAKE_MOTOR = getNumbersFrom.INTAKE_MOTOR;
 

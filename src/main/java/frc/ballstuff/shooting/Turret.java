@@ -5,14 +5,15 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
+import frc.controllers.BopItBasicController;
 import frc.controllers.ButtonPanelController;
 import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
-import frc.motors.AbstractMotor;
-import frc.motors.SparkMotor;
+import frc.motors.AbstractMotorController;
+import frc.motors.SparkMotorController;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
@@ -34,7 +35,7 @@ public class Turret implements ISubsystem {
     public boolean atTarget = false;
     public boolean chasingTarget = false;
     private BaseController joy, panel;
-    private AbstractMotor motor;
+    private AbstractMotorController motor;
     private RobotTelemetry guidance;
     private IVision goalPhoton;
     private int scanDirection = -1;
@@ -49,13 +50,20 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void init() {
-        joy = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
+        switch (RobotToggles.SHOOTER_CONTROL_STYLE){
+            case STANDARD:
+                joy = new JoystickController(RobotNumbers.FLIGHT_STICK_SLOT);
+                panel = new ButtonPanelController(RobotNumbers.BUTTON_PANEL_SLOT);
+                break;
+            case BOP_IT:
+                joy = new BopItBasicController(1);
+                break;
+        }
         if (RobotToggles.ENABLE_VISION) {
             goalPhoton = new GoalPhoton();
             goalPhoton.init();
         }
-        motor = new SparkMotor(RobotMap.TURRET_YAW);
-        panel = new ButtonPanelController(RobotNumbers.BUTTON_PANEL_SLOT);
+        motor = new SparkMotorController(RobotMap.TURRET_YAW);
         motor.setSensorToRevolutionFactor(360 / (RobotNumbers.TURRET_SPROCKET_SIZE * RobotNumbers.TURRET_GEAR_RATIO));
         motor.setInverted(false);
         motor.setPid(0.5, 0, 0, 0);
@@ -94,24 +102,32 @@ public class Turret implements ISubsystem {
         //!!!!! THE TURRET ZERO IS THE PHYSICAL STOP CLOSEST TO THE GOAL
 
         double omegaSetpoint = 0;
-        if (RobotToggles.ENABLE_VISION) {
-            if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) { //Check if the Target button is held down
-                if (RobotToggles.DEBUG) {
-                    System.out.println("I'm looking. Target is valid? " + goalPhoton.hasValidTarget());
+        switch (RobotToggles.SHOOTER_CONTROL_STYLE) {
+            case STANDARD:
+                if (RobotToggles.ENABLE_VISION) {
+                    if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) { //Check if the Target button is held down
+                        if (RobotToggles.DEBUG) {
+                            System.out.println("I'm looking. Target is valid? " + goalPhoton.hasValidTarget());
+                        }
+                        if (goalPhoton.hasValidTarget()) {
+                            omegaSetpoint = -goalPhoton.getAngle() / 30;
+                        } else {
+                            omegaSetpoint = scan();
+                        }
+                    }
                 }
-                if (goalPhoton.hasValidTarget()) {
-                    omegaSetpoint = -goalPhoton.getAngle() / 30;
-                } else {
+                //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.
+                if (joy.get(ControllerEnums.JoystickButtons.TWO) == ControllerEnums.ButtonStatus.DOWN) {
+                    if (RobotToggles.DEBUG) {
+                        System.out.println("Joystick is at " + joy.get(ControllerEnums.JoystickAxis.Z_ROTATE));
+                    }
+                    omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * -2;
+                }
+                break;
+            case BOP_IT:
+                if (joy.get(ControllerEnums.BopItButtons.TWISTIT) == ButtonStatus.DOWN)
                     omegaSetpoint = scan();
-                }
-            }
-        }
-        //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.
-        if (joy.get(ControllerEnums.JoystickButtons.TWO) == ControllerEnums.ButtonStatus.DOWN) {
-            if (RobotToggles.DEBUG) {
-                System.out.println("Joystick is at " + joy.get(ControllerEnums.JoystickAxis.Z_ROTATE));
-            }
-            omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * -2;
+                break;
         }
 
         if (isSafe()) {

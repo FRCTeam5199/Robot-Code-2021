@@ -1,16 +1,18 @@
 package frc.motors;
 
+import frc.motors.followers.AbstractFollowerMotorController;
+
 /**
  * This is the base class for any motor. It is not an interface because it has to have a
  * {@link #sensorToRevolutionFactor nonstatic field} which is not doable in an interface.
  * If you are to use a motor that we did not implement, make a new class and use an Abstract motor
  *
  * @author jojo2357
- * @see frc.motors.followers.AbstractFollowerMotor
- * @see SparkMotor
- * @see TalonMotor
+ * @see AbstractFollowerMotorController
+ * @see SparkMotorController
+ * @see TalonMotorController
  */
-public abstract class AbstractMotor {
+public abstract class AbstractMotorController {
     /**
      * Value to convert from sensor position to real units (this will vary between motors so know your units!)
      * Destination units are RPM that include the gearing on the motor
@@ -40,9 +42,9 @@ public abstract class AbstractMotor {
      * This motor will be the child and the passed motor will be the leader
      *
      * @param leader motor to follow
-     * @see frc.motors.followers.AbstractFollowerMotor
+     * @see AbstractFollowerMotorController
      */
-    public abstract void follow(AbstractMotor leader);
+    public abstract void follow(AbstractMotorController leader);
 
     /**
      * Sets current encoder position to be the zero position
@@ -90,15 +92,6 @@ public abstract class AbstractMotor {
      * @param limit max current in amps
      */
     public abstract void setCurrentLimit(int limit);
-
-    /**
-     * Sets the motor output based on voltage (please dont do this)
-     *
-     * @param voltage 0 to 12-ish volts requested on this motor
-     * @deprecated
-     */
-    @Deprecated
-    public abstract void moveAtVoltage(double voltage);
 
     /**
      * Sets the motor output on a percent output basis

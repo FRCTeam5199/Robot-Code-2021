@@ -15,8 +15,6 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_SHOOTER = true;
         ENABLE_HOPPER = true;
 
-        //Drivetrain
-        DRIVE_USE_SPARKS = true;
         DRIVE_USE_6_MOTORS = true;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
@@ -37,12 +35,12 @@ public class Robot2020 extends DefaultConfig {
         INDEXER_AUTO_INDEX = true;
 
         //UI Style
-        EXPERIMENTAL_DRIVE = DriveTypes.BOP_IT;
+        DRIVE_STYLE = DriveTypes.BOP_IT;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
 
-        GALACTIC_SEARCH = AutonType.BUT_BETTER_NOW;
+        AUTON_TYPE = AutonType.BUT_BETTER_NOW;
 
         DRIVEBASE_P = 0;//0.0075;
         DRIVEBASE_I = 0;//0
@@ -90,7 +88,6 @@ public class Robot2020 extends DefaultConfig {
         HEADING_D = 0.0003;
         AUTO_SPEED = 3;
         AUTO_ROTATION_SPEED = 1;
-        triggerSensitivity = 0.25;
         XBOX_CONTROLLER_SLOT = 0;
         FLIGHT_STICK_SLOT = 1;
         BUTTON_PANEL_SLOT = 2;
@@ -111,11 +108,11 @@ public class Robot2020 extends DefaultConfig {
 
         //turret
         TURRET_YAW = 33; //550
-        
+
         //hopper
         AGITATOR_MOTOR = 10; //victor
         INDEXER_MOTOR = 11; //victor
-        
+
         //intake
         INTAKE_MOTOR = 12; //victor
 

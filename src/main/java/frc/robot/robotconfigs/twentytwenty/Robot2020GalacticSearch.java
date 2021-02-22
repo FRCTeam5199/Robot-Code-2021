@@ -35,12 +35,12 @@ public class Robot2020GalacticSearch extends DefaultConfig {
         INDEXER_AUTO_INDEX = true;
 
         //UI Styles
-        EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
+        DRIVE_STYLE = DriveTypes.STANDARD;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
 
-        GALACTIC_SEARCH = AutonType.GALACTIC_SEARCH;
+        AUTON_TYPE = AutonType.GALACTIC_SEARCH;
 
         DRIVEBASE_P = 0.0075;
         DRIVEBASE_I = 0;
@@ -112,8 +112,7 @@ public class Robot2020GalacticSearch extends DefaultConfig {
         //intake
         INTAKE_MOTOR = 12; //victor
         IMU = 22; //pigeon
-
-        triggerSensitivity = 0.25;
+        
         XBOX_CONTROLLER_SLOT = 0;
         FLIGHT_STICK_SLOT = 1;
         BUTTON_PANEL_SLOT = 2;

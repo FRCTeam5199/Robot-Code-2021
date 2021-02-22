@@ -20,12 +20,12 @@ import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.misc.UtilFunctions;
-import frc.motors.AbstractMotor;
-import frc.motors.SparkMotor;
-import frc.motors.TalonMotor;
-import frc.motors.followers.AbstractFollowerMotor;
-import frc.motors.followers.SparkFollowerMotors;
-import frc.motors.followers.TalonFollowerMotor;
+import frc.motors.AbstractMotorController;
+import frc.motors.SparkMotorController;
+import frc.motors.TalonMotorController;
+import frc.motors.followers.AbstractFollowerMotorController;
+import frc.motors.followers.SparkFollowerMotorsController;
+import frc.motors.followers.TalonFollowerMotorController;
 import frc.robot.RobotMap;
 import frc.robot.RobotNumbers;
 import frc.robot.RobotToggles;
@@ -50,9 +50,9 @@ public class DriveManager implements ISubsystem {
             calibratePid = tab2.add("Calibrate PID", false).getEntry();
     private final NetworkTableEntry coast = tab2.add("Coast", true).getEntry();
     public boolean autoComplete = false;
-    public AbstractMotor leaderL, leaderR;
+    public AbstractMotorController leaderL, leaderR;
     public RobotTelemetry guidance;
-    public AbstractFollowerMotor followerL, followerR;
+    public AbstractFollowerMotorController followerL, followerR;
     private BaseController controller;
     private double lastP = 0, lastI = 0, lastD = 0, lastF = 0;
 
@@ -112,20 +112,20 @@ public class DriveManager implements ISubsystem {
      * @throws InitializationFailureException When follower drive motors fail to link to leaders or when leader drivetrain motors fail to invert
      */
     private void createDriveMotors() throws InitializationFailureException, IllegalArgumentException {
-        switch (RobotToggles.DRIVE_MOTOR_TYPE){
+        switch (RobotToggles.DRIVE_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
-                leaderL = new SparkMotor(RobotMap.DRIVE_LEADER_L);
-                leaderR = new SparkMotor(RobotMap.DRIVE_LEADER_R);
-                followerL = new SparkFollowerMotors(RobotMap.DRIVE_FOLLOWERS_L);
-                followerR = new SparkFollowerMotors(RobotMap.DRIVE_FOLLOWERS_R);
+                leaderL = new SparkMotorController(RobotMap.DRIVE_LEADER_L);
+                leaderR = new SparkMotorController(RobotMap.DRIVE_LEADER_R);
+                followerL = new SparkFollowerMotorsController(RobotMap.DRIVE_FOLLOWERS_L);
+                followerR = new SparkFollowerMotorsController(RobotMap.DRIVE_FOLLOWERS_R);
                 leaderL.setSensorToRevolutionFactor(RobotNumbers.DRIVE_GEARING);
                 leaderR.setSensorToRevolutionFactor(RobotNumbers.DRIVE_GEARING);
                 break;
             case TALON_FX:
-                leaderL = new TalonMotor(RobotMap.DRIVE_LEADER_L);
-                leaderR = new TalonMotor(RobotMap.DRIVE_LEADER_R);
-                followerL = new TalonFollowerMotor(RobotMap.DRIVE_FOLLOWERS_L);
-                followerR = new TalonFollowerMotor(RobotMap.DRIVE_FOLLOWERS_R);
+                leaderL = new TalonMotorController(RobotMap.DRIVE_LEADER_L);
+                leaderR = new TalonMotorController(RobotMap.DRIVE_LEADER_R);
+                followerL = new TalonFollowerMotorController(RobotMap.DRIVE_FOLLOWERS_L);
+                followerR = new TalonFollowerMotorController(RobotMap.DRIVE_FOLLOWERS_R);
                 leaderL.setSensorToRevolutionFactor((600.0 / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotNumbers.DRIVE_GEARING);
                 leaderR.setSensorToRevolutionFactor((600.0 / RobotNumbers.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotNumbers.DRIVE_GEARING);
                 break;
@@ -168,11 +168,11 @@ public class DriveManager implements ISubsystem {
     /**
      * Creates xbox controller n stuff
      *
-     * @throws IllegalStateException when there is no configuration for {@link RobotToggles#EXPERIMENTAL_DRIVE}
+     * @throws IllegalStateException when there is no configuration for {@link RobotToggles#DRIVE_STYLE}
      */
     private void initMisc() throws IllegalStateException {
         System.out.println("THE XBOX CONTROLLER IS ON " + RobotNumbers.XBOX_CONTROLLER_SLOT);
-        switch (RobotToggles.EXPERIMENTAL_DRIVE) {
+        switch (RobotToggles.DRIVE_STYLE) {
             case STANDARD:
             case EXPERIMENTAL:
                 controller = new XBoxController(RobotNumbers.XBOX_CONTROLLER_SLOT);
@@ -190,8 +190,10 @@ public class DriveManager implements ISubsystem {
                 controller = new BopItBasicController(0);
                 break;
             default:
-                throw new IllegalStateException("There is no UI configuration for " + RobotToggles.EXPERIMENTAL_DRIVE.name() + " to control the drivetrain. Please implement me");
+                throw new IllegalStateException("There is no UI configuration for " + RobotToggles.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");
         }
+        if (RobotToggles.DEBUG)
+            System.out.println("Created a " + controller.toString());
     }
 
     /**
@@ -228,20 +230,33 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     * This is where driving happens. Call this every tick to drive and set {@link RobotToggles#EXPERIMENTAL_DRIVE} to change the drive stype
+     * This is where driving happens. Call this every tick to drive and set {@link RobotToggles#DRIVE_STYLE} to change the drive stype
      *
-     * @throws IllegalArgumentException if {@link RobotToggles#EXPERIMENTAL_DRIVE} is not implemented here or if you missed a break statement
+     * @throws IllegalArgumentException if {@link RobotToggles#DRIVE_STYLE} is not implemented here or if you missed a break statement
      */
     @Override
     public void updateTeleop() throws IllegalArgumentException {
         updateGeneric();
 
-        switch (RobotToggles.EXPERIMENTAL_DRIVE) {
+        switch (RobotToggles.DRIVE_STYLE) {
             case EXPERIMENTAL: {
-                setBrake(controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN);
+                /*setBrake(controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN);
                 double precision = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double invertedDrive = invert ? -1 : 1;
-                drive(invertedDrive * controller.get(XboxAxes.LEFT_JOY_Y) * precision, -controller.get(XboxAxes.RIGHT_JOY_X) * precision);
+                drive(invertedDrive * controller.get(XboxAxes.LEFT_JOY_Y) * precision, -controller.get(XboxAxes.RIGHT_JOY_X) * precision);*/
+                double invertedDrive = invert ? -1 : 1;
+                if (Math.abs(controller.get(XboxAxes.LEFT_JOY_Y)) > 0.9) {
+                    double dir = controller.get(XboxAxes.LEFT_JOY_Y) > 0 ? 1 : -1;
+                    driveFPS(100 * dir * invertedDrive * driveScaleMult.getDouble(RobotNumbers.DRIVE_SCALE), 100 * dir * invertedDrive * driveScaleMult.getDouble(RobotNumbers.DRIVE_SCALE));
+                    break;
+                }
+                double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+                double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+                if (RobotToggles.DEBUG) {
+                    System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
+                    //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
+                }
+                drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
             }
             break;
             case STANDARD: {
@@ -283,8 +298,6 @@ public class DriveManager implements ISubsystem {
             default:
                 throw new IllegalStateException("Invalid drive type");
         }
-        if (RobotToggles.DEBUG)
-            System.out.println("Created a " + controller.toString());
         //System.out.println(guidance.imu.yawWraparoundAhead());
     }
 
@@ -398,20 +411,5 @@ public class DriveManager implements ISubsystem {
      */
     public void driveMPS(double leftMPS, double rightMPS) {
         driveFPS(Units.metersToFeet(leftMPS), Units.metersToFeet(rightMPS));
-    }
-
-    /**
-     * Drives the bot based on the requested left and right drivetrain voltages
-     *
-     * @param leftVolts  Left drivetrain volts in ... uh ... volts ig
-     * @param rightVolts Right drivetrain volts in ... uh ... volts ig
-     * @deprecated
-     */
-    @Deprecated
-    public void driveVoltage(double leftVolts, double rightVolts) {
-        double invertLeft = RobotToggles.DRIVE_INVERT_LEFT ? -1 : 1;
-        double invertRight = RobotToggles.DRIVE_INVERT_RIGHT ? -1 : 1;
-        leaderL.moveAtVoltage(leftVolts * invertLeft);
-        leaderR.moveAtVoltage(rightVolts * invertRight);
     }
 }

@@ -92,6 +92,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">ControllerEnums</span>
 extends java.lang.Object</pre>
+<div class="block">These enums are used for each controller. If you make a new controller, create a new enum for its mappings
+ here for safekeeping and then implement a get function in <a href="BaseController.html" title="class in frc.controllers"><code>BaseController</code></a> and then create a new class
+ extending BaseController that overrides that get (the gets in BaseController should all throw exceptions so
+ if an <a href="XBoxController.html" title="class in frc.controllers"><code>xbox controller</code></a> is queried for a <a href="ControllerEnums.WiiAxis.html" title="enum in frc.controllers"><code>wii axis</code></a> it should throw a fit)</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="BaseController.html" title="class in frc.controllers"><code>BaseController</code></a></dd>
+</dl>
 </section>
 <section class="summary">
 <ul class="blockList">

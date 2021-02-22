@@ -5,8 +5,8 @@ import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 import frc.drive.auton.AutonType;
 import frc.motors.SupportedMotors;
-import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 import frc.robot.robotconfigs.DefaultConfig;
+import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 
 public class RobotToggles {
     /**
@@ -26,7 +26,7 @@ public class RobotToggles {
     public static final boolean ENABLE_SHOOTER = getNumbersFrom.ENABLE_SHOOTER;
     public static final boolean ENABLE_HOPPER = getNumbersFrom.ENABLE_HOPPER;
     public static final boolean ENABLE_MUSIC = getNumbersFrom.ENABLE_MUSIC;
-    
+
     public static final boolean DRIVE_USE_6_MOTORS = getNumbersFrom.DRIVE_USE_6_MOTORS;
     public static final boolean DRIVE_INVERT_LEFT = getNumbersFrom.DRIVE_INVERT_LEFT;
     public static final boolean DRIVE_INVERT_RIGHT = getNumbersFrom.DRIVE_INVERT_RIGHT;
@@ -47,12 +47,14 @@ public class RobotToggles {
     public static final boolean INDEXER_AUTO_INDEX = getNumbersFrom.INDEXER_AUTO_INDEX;
 
     //UI Style
-    public static final DriveTypes EXPERIMENTAL_DRIVE = getNumbersFrom.EXPERIMENTAL_DRIVE;
+    public static final DriveTypes DRIVE_STYLE = getNumbersFrom.DRIVE_STYLE;
     public static final ShootingControlStyles SHOOTER_CONTROL_STYLE = getNumbersFrom.SHOOTER_CONTROL_STYLE;
     public static final IntakeControlStyles INTAKE_CONTROL_STYLE = getNumbersFrom.INTAKE_CONTROL_STYLE;
 
-    public static final AutonType GALACTIC_SEARCH = getNumbersFrom.GALACTIC_SEARCH;
+    public static final AutonType AUTON_MODE = getNumbersFrom.AUTON_TYPE;
     public static final SupportedMotors DRIVE_MOTOR_TYPE = getNumbersFrom.DRIVE_MOTOR_TYPE;
+
+    public static boolean autonComplete = false;
 
     public static void printToggles() {
         System.out.println("-------------------<RobotToggles>-----------------");
@@ -67,9 +69,10 @@ public class RobotToggles {
         System.out.println("   Drive 6 motors " + DRIVE_USE_6_MOTORS);
         System.out.println("Shoot with sparks " + SHOOTER_USE_SPARKS);
         System.out.println("     Shoot with 2 " + SHOOTER_USE_TWO_MOTORS);
-        System.out.println("      Drive style " + EXPERIMENTAL_DRIVE.name());
+        System.out.println("      Drive style " + DRIVE_STYLE.name());
         System.out.println("      Shoot style " + SHOOTER_CONTROL_STYLE.name());
         System.out.println("     Intake style " + INTAKE_CONTROL_STYLE.name());
+        System.out.println("  Auton Completed " + autonComplete);
         System.out.println("-------------------</RobotToggles>-----------------");
     }
 }

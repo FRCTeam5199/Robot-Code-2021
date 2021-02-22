@@ -1,32 +1,25 @@
 package frc.motors;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.music.Orchestra;
-import frc.misc.Chirp;
-import frc.robot.RobotNumbers;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
 import static com.ctre.phoenix.motorcontrol.ControlMode.Velocity;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Brake;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
 
-public class TalonMotor extends AbstractMotor {
-    private final WPI_TalonFX motor;
+/**
+ * This works to wrap 775 Pros and maybe some other motors
+ */
+public class VictorMotorController extends AbstractMotorController {
+    private final VictorSPX motor;
 
-    public TalonMotor(int id) {
-        motor = new WPI_TalonFX(id);
-        Chirp.talonMotorArrayList.add(this);
+    public VictorMotorController(int id) {
+        motor = new VictorSPX(id);
     }
-
-    public void addToOrchestra(Orchestra orchestra) {
-        orchestra.addInstrument(motor);
-    }
-
-    //public void
 
     @Override
     public void moveAtRotations(double rpm) {
-        moveAtVelocity(rpm / sensorToRevolutionFactor);
+        motor.set(Velocity, rpm);
     }
 
     @Override
@@ -35,9 +28,9 @@ public class TalonMotor extends AbstractMotor {
     }
 
     @Override
-    public void follow(AbstractMotor leader) {
-        if (leader instanceof TalonMotor)
-            motor.follow(((TalonMotor) leader).motor);
+    public void follow(AbstractMotorController leader) {
+        if (leader instanceof VictorMotorController)
+            motor.follow(((VictorMotorController) leader).motor);
     }
 
     @Override
@@ -47,15 +40,15 @@ public class TalonMotor extends AbstractMotor {
 
     @Override
     public void setPid(double p, double i, double d, double f) {
-        motor.config_kP(0, p, RobotNumbers.DRIVE_TIMEOUT_MS);
-        motor.config_kI(0, i, RobotNumbers.DRIVE_TIMEOUT_MS);
-        motor.config_kD(0, d, RobotNumbers.DRIVE_TIMEOUT_MS);
-        motor.config_kF(0, f, RobotNumbers.DRIVE_TIMEOUT_MS);
+        motor.config_kP(0, p);
+        motor.config_kI(0, i);
+        motor.config_kD(0, d);
+        motor.config_kF(0, f);
     }
 
     @Override
     public void moveAtVelocity(double amount) {
-        motor.set(Velocity, amount);
+        motor.set(Velocity, amount / sensorToRevolutionFactor);
     }
 
     @Override
@@ -68,17 +61,10 @@ public class TalonMotor extends AbstractMotor {
         return motor.getSelectedSensorVelocity() * sensorToRevolutionFactor;
     }
 
+    //TODO make this work lol
     @Override
     public void setCurrentLimit(int limit) {
-        //SupplyCurrentLimitConfiguration config = new SupplyCurrentLimitConfiguration();
-        //config.currentLimit = limit;
-        //config.enable = true;
-        //motor.configSupplyCurrentLimit(config);
-    }
-
-    @Override
-    public void moveAtVoltage(double voltage) {
-        motor.setVoltage(voltage);
+        
     }
 
     @Override

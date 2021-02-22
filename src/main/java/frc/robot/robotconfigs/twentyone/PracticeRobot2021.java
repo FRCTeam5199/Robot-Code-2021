@@ -14,7 +14,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         ENABLE_INTAKE = false;
         ENABLE_SHOOTER = false;
         ENABLE_HOPPER = false;
-        
+
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
@@ -35,12 +35,12 @@ public class PracticeRobot2021 extends DefaultConfig {
         INDEXER_AUTO_INDEX = true;
 
         //UI Styles
-        EXPERIMENTAL_DRIVE = DriveTypes.BOP_IT;
+        DRIVE_STYLE = DriveTypes.BOP_IT;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
-        
-        GALACTIC_SEARCH = AutonType.BUT_BETTER_NOW;
+
+        AUTON_TYPE = AutonType.BUT_BETTER_NOW;
 
         DRIVEBASE_P = 0.0075;
         DRIVEBASE_I = 0;
@@ -88,7 +88,6 @@ public class PracticeRobot2021 extends DefaultConfig {
         HEADING_D = 0.0003;
         AUTO_SPEED = 3;
         AUTO_ROTATION_SPEED = 1;
-        triggerSensitivity = 0.25;
         XBOX_CONTROLLER_SLOT = 0;
         FLIGHT_STICK_SLOT = 1;
         BUTTON_PANEL_SLOT = 2;
@@ -109,11 +108,11 @@ public class PracticeRobot2021 extends DefaultConfig {
 
         //turret
         TURRET_YAW = 33; //550
-        
+
         //hopper
         AGITATOR_MOTOR = 10; //victor
         INDEXER_MOTOR = 11; //victor
-        
+
         //intake
         INTAKE_MOTOR = 12; //victor
 

@@ -80,7 +80,7 @@ public interface ISubsystem {
     /**
      * In devlopment, adds this object to {@link Robot#subsytems a master registry} for later use
      */
-    default void addToMetaList(){
+    default void addToMetaList() {
         Robot.subsytems.add(this);
     }
 }

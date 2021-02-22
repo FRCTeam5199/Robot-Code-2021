@@ -20,7 +20,7 @@ public abstract class DefaultConfig {
     public boolean ENABLE_SHOOTER = false;
     public boolean ENABLE_HOPPER = false;
     public boolean ENABLE_MUSIC = true;
-    
+
     public boolean DRIVE_USE_6_MOTORS = false;
     public boolean DRIVE_INVERT_LEFT = true;
     public boolean DRIVE_INVERT_RIGHT = false;
@@ -41,12 +41,12 @@ public abstract class DefaultConfig {
     public boolean INDEXER_AUTO_INDEX = true;
 
     //UI Styles
-    public DriveTypes EXPERIMENTAL_DRIVE = DriveTypes.STANDARD;
+    public DriveTypes DRIVE_STYLE = DriveTypes.STANDARD;
     public ShootingControlStyles SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
     public IntakeControlStyles INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
     public SupportedMotors DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
 
-    public AutonType GALACTIC_SEARCH = AutonType.P2P;
+    public AutonType AUTON_TYPE = AutonType.P2P;
 
     public double DRIVEBASE_P = 0;
     public double DRIVEBASE_I = 0;
@@ -113,7 +113,6 @@ public abstract class DefaultConfig {
     public int INTAKE_MOTOR = 12; //victor
     public int IMU = 22; //pigeon
     
-    public double triggerSensitivity = 0.25;
     public int XBOX_CONTROLLER_SLOT = 0;
     public int FLIGHT_STICK_SLOT = 1;
     public int BUTTON_PANEL_SLOT = 2;

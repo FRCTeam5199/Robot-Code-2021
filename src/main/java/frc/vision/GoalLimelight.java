@@ -5,6 +5,9 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
 
+/**
+ * This is for the limelight looking at the goal that the shooter is shooting at
+ */
 public class GoalLimelight implements IVision {
     private NetworkTableEntry yaw;
     private NetworkTableEntry size;
@@ -18,6 +21,9 @@ public class GoalLimelight implements IVision {
         init();
     }
 
+    /**
+     * creates all of the network table stuff
+     */
     @Override
     public void init() {
         NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");

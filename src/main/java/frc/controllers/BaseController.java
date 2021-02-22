@@ -46,24 +46,12 @@ public abstract class BaseController {
         throw new UnsupportedOperationException("This controller does not support getting the flight stick hat status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
-    public boolean isTriggerPressedMomentary(ControllerEnums.XboxAxes trigger) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("This controller does not support getting an xbox joystick status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public boolean isTriggerPressed(ControllerEnums.XboxAxes trigger) {
-        throw new UnsupportedOperationException("This controller does not support getting an xbox trigger status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
     public double get(ControllerEnums.XboxAxes axis) {
         throw new UnsupportedOperationException("This controller does not support getting an xbox joystick status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
     public ControllerEnums.ButtonStatus get(ControllerEnums.XBoxButtons button) {
         throw new UnsupportedOperationException("This controller does not support getting an xbox button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public double getIgnoreSensitivity(ControllerEnums.XboxAxes axis) {
-        throw new UnsupportedOperationException("This controller does not support getting an xbox joystick status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
     public double get(ControllerEnums.WiiAxis axis) {
@@ -74,11 +62,11 @@ public abstract class BaseController {
         throw new UnsupportedOperationException("This controller does not support getting an wii remote button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
-    public ControllerEnums.ButtonStatus get (ControllerEnums.SixKeyGuitarButtons button){
+    public ControllerEnums.ButtonStatus get(ControllerEnums.SixKeyGuitarButtons button) {
         throw new UnsupportedOperationException("This controller does not support getting an guitar button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
-    public double get (ControllerEnums.SixKeyGuitarAxis button){
+    public double get(ControllerEnums.SixKeyGuitarAxis button) {
         throw new UnsupportedOperationException("This controller does not support getting an guitar axis status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
@@ -90,13 +78,13 @@ public abstract class BaseController {
         throw new UnsupportedOperationException("This controller does not support getting an guitar axis status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
-    public ControllerEnums.ButtonStatus get(ControllerEnums.BopItButtons button){
+    public ControllerEnums.ButtonStatus get(ControllerEnums.BopItButtons button) {
         throw new UnsupportedOperationException("hehe");
     }
 
     //should NOT print BaseController (i hope)
     @Override
-    public String toString(){
+    public String toString() {
         return this.getClass().getName() + " on channel " + JOYSTICK_CHANNEL;
     }
 }

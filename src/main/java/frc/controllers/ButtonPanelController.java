@@ -2,6 +2,14 @@ package frc.controllers;
 
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 
+/**
+ * Our custom built button panel that has a bunch of levers and switches (lol jk it has buttons silly)
+ * that is pretty basic
+ *
+ * @see BaseController
+ * @see ButtonPanelButtons
+ * @see ControllerEnums.ButtonStatus
+ */
 public class ButtonPanelController extends BaseController {
     public ButtonPanelController(int n) {
         super(n);

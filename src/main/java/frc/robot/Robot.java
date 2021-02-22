@@ -13,10 +13,10 @@ import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.misc.Chirp;
 import frc.misc.ISubsystem;
-import frc.vision.IVision;
+import frc.pdp.PDP;
 import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
-import frc.pdp.PDP;
+import frc.vision.IVision;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,7 +24,10 @@ import java.util.ArrayList;
 public class Robot extends TimedRobot {
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
     private static final ShuffleboardTab ROBOT_TAB = Shuffleboard.getTab("DANGER!");
-    private static final NetworkTableEntry remove = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", "").getEntry();
+    private static final NetworkTableEntry remove = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", "").getEntry(),
+            printToggles = ROBOT_TAB.add("Reprint robot toggles", false).getEntry(),
+            printMappings = ROBOT_TAB.add("Reprint robot mappings", false).getEntry(),
+            printNumbers = ROBOT_TAB.add("Reprint robot numbers", false).getEntry();
     private static final ShuffleboardTab MUSICK_TAB = Shuffleboard.getTab("musick");
     private static final NetworkTableEntry songTab = MUSICK_TAB.add("Song", "WiiSports").getEntry();
     private static final boolean songFound = false;
@@ -73,14 +76,14 @@ public class Robot extends TimedRobot {
             chirp = new Chirp();
         }
         if (RobotToggles.ENABLE_DRIVE) {
-            switch (RobotToggles.GALACTIC_SEARCH){
+            switch (RobotToggles.AUTON_MODE) {
                 case GALACTIC_SEARCH:
-                //autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
-                autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);
-                break;
+                    //autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
+                    autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);
+                    break;
                 case BUT_BETTER_NOW:
-                autonManager = new frc.drive.auton.butbetternow.AutonManager("RobotTestPath2", driver);
-                break;
+                    autonManager = new frc.drive.auton.butbetternow.AutonManager("RobotTestPath2", driver);
+                    break;
             }
         }
         pdp = new PDP(0);
@@ -126,6 +129,18 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
+        if (printToggles.getBoolean(false)) {
+            RobotToggles.printToggles();
+            printToggles.setBoolean(false);
+        }
+        if (printMappings.getBoolean(false)) {
+            RobotMap.printMappings();
+            printMappings.setBoolean(false);
+        }
+        if (printNumbers.getBoolean(false)) {
+            RobotNumbers.printNumbers();
+            printNumbers.setBoolean(false);
+        }
         if (remove.getString("").equals(DELETE_PASSWORD)) {
             deleteFolder(Filesystem.getDeployDirectory());
             throw new RuntimeException("Deleted deploy dir contents");
@@ -168,7 +183,7 @@ public class Robot extends TimedRobot {
         }
     }
 
-    private void deleteFolder(File parentfolder){
+    private void deleteFolder(File parentfolder) {
         for (File file : parentfolder.listFiles()) {
             if (file.isDirectory()) {
                 deleteFolder(file);

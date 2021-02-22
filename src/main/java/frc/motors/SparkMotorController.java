@@ -2,18 +2,26 @@ package frc.motors;
 
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 
 import static com.revrobotics.CANSparkMax.IdleMode.kBrake;
 import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 import static com.revrobotics.ControlType.kVelocity;
 
-public class SparkMotor extends AbstractMotor {
+/**
+ * This works to wrap Neo's and maybe some other motors
+ */
+public class SparkMotorController extends AbstractMotorController {
     private final CANSparkMax motor;
     private final CANPIDController myPid;
 
-    public SparkMotor(int channelID) {
-        motor = new CANSparkMax(channelID, kBrushless);
+    public SparkMotorController(int channelID) {
+        this(channelID, kBrushless);
+    }
+
+    public SparkMotorController(int channelID, CANSparkMaxLowLevel.MotorType type) {
+        motor = new CANSparkMax(channelID, type);
         myPid = motor.getPIDController();
         //I dont know if talons do this or if we ever dont do this so here it is
         myPid.setOutputRange(-1, 1);
@@ -30,9 +38,9 @@ public class SparkMotor extends AbstractMotor {
     }
 
     @Override
-    public void follow(AbstractMotor leader) {
-        if (leader instanceof SparkMotor)
-            motor.follow(((SparkMotor) leader).motor);
+    public void follow(AbstractMotorController leader) {
+        if (leader instanceof SparkMotorController)
+            motor.follow(((SparkMotorController) leader).motor);
     }
 
     @Override
@@ -67,11 +75,6 @@ public class SparkMotor extends AbstractMotor {
     @Override
     public void setCurrentLimit(int limit) {
         motor.setSmartCurrentLimit(limit);
-    }
-
-    @Override
-    public void moveAtVoltage(double voltage) {
-        motor.setVoltage(voltage);
     }
 
     @Override
