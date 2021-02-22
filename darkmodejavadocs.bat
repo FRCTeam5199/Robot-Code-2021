@@ -2,7 +2,7 @@
 
 dir /s/b stylesheet.css>myfile.dat
 
-for /F "tokens=*" %%A in (myfile.dat) do if not "%%A"=="%cd%\stylesheet.css" copy /Y "stylesheet.css" "%%A" >NUL
+for /F "tokens=*" %%A in (myfile.dat) do if not "%%A"=="%cd%\darkmodestylesheet.css" copy /Y "darkmodestylesheet.css" "%%A" >NUL
 
-if ERRORLEVEL 1 (echo fail) else (echo Success)
+if ERRORLEVEL 1 (echo Fail. Your eyes must burn) else (echo Success. Your eyes are saved)
 pause>NUL
