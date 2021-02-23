@@ -377,7 +377,7 @@ public class DriveManager implements ISubsystem {
     public void driveFPS(double leftFPS, double rightFPS) {
         if (leftFPS != 0)
             System.out.println(leftFPS + ", " + rightFPS);
-        double mult = 3.8 * 2.16 * RobotSettings.DRIVE_SCALE;
+        double mult = /*3.8 * 2.16 */ RobotSettings.DRIVE_SCALE;
         if (RobotSettings.DEBUG) {
             System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + UtilFunctions.convertDriveFPStoRPM(leftFPS) + " " + UtilFunctions.convertDriveFPStoRPM(rightFPS));
             System.out.println("Req left: " + (getTargetVelocity(leftFPS) * mult) + " Req Right: " + (getTargetVelocity(rightFPS) * mult));

@@ -1,5 +1,6 @@
 package frc.motors.followers;
 
+import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 
 /**
@@ -7,6 +8,7 @@ import frc.motors.SparkMotorController;
  */
 public class SparkFollowerMotorsController extends AbstractFollowerMotorController {
     public SparkFollowerMotorsController(int... ids) {
+        motors = new AbstractMotorController[ids.length];
         for (int i = 0; i < ids.length; i++)
             motors[i] = new SparkMotorController(ids[i]);
     }

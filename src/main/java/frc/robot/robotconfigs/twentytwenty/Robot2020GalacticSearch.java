@@ -15,6 +15,8 @@ public class Robot2020GalacticSearch extends DefaultConfig {
         ENABLE_INTAKE = true;
         ENABLE_SHOOTER = false;
         ENABLE_HOPPER = false;
+        ENABLE_AGITATOR = true;
+        ENABLE_INDEXER = true;
 
         DRIVE_USE_6_MOTORS = true;
         DRIVE_INVERT_LEFT = true;

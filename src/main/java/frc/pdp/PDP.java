@@ -36,8 +36,9 @@ public class PDP {
         peakCurrentVal = Math.max(peakCurrentVal, powerDistributionPanel.getTotalCurrent());
         peakCurrent.setDouble(peakCurrentVal);
 
-        if (powerDistributionPanel.getVoltage() < 10.5) {
-            throw new IllegalStateException("The robot is browning out. Replace the battery or else I will call a programmer and they will be cranky. Plus I doubt the robot will drive anyways as a result of this message.");
+        if (powerDistributionPanel.getVoltage() < 9.5) {
+            System.err.println(">>>>>>>POSSIBLE BROWNOUT DETECTED<<<<<<<");
+            //throw new IllegalStateException("The robot is browning out. Replace the battery or else I will call a programmer and they will be cranky. Plus I doubt the robot will drive anyways as a result of this message.");
         }
     }
 }

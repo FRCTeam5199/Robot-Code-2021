@@ -60,7 +60,7 @@ public class Turret implements ISubsystem {
             goalPhoton.init();
         }
         motor = new SparkMotorController(RobotSettings.TURRET_YAW);
-        motor.setSensorToRevolutionFactor(360 / (RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO));
+        motor.setSensorToRevolutionFactor((RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30));
         motor.setInverted(false);
         motor.setPid(RobotSettings.TURRET_PID);
         motor.setBrake(true);
@@ -106,7 +106,7 @@ public class Turret implements ISubsystem {
                         if (goalPhoton.hasValidTarget()) {
                             omegaSetpoint = -goalPhoton.getAngle() / 30;
                         } else {
-                            omegaSetpoint = scan();
+                            omegaSetpoint = 0;//scan();
                         }
                     }
                 }
@@ -125,14 +125,16 @@ public class Turret implements ISubsystem {
         }
 
         if (isSafe()) {
+            //System.out.println("SAFE");
             rotateTurret(omegaSetpoint);
             if (RobotSettings.DEBUG) {
                 System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
             }
         } else {
+            //System.out.println("Unsafe " + turretDegrees());
             if (turretDegrees() > 270) {
                 rotateTurret(0.25);
-            } else if (turretDegrees() < 100) {
+            } else if (turretDegrees() < 0) {
                 rotateTurret(-0.25);
             } else {
                 rotateTurret(0);
@@ -190,7 +192,7 @@ public class Turret implements ISubsystem {
      * @return position of turret in degrees
      */
     private double turretDegrees() {
-        return -motor.getRotations();
+        return motor.getRotations();
     }
 
     /**
@@ -214,40 +216,20 @@ public class Turret implements ISubsystem {
      */
     private boolean isSafe() {
         double turretDeg = turretDegrees();
-        return turretDeg <= 270 && turretDeg >= 100;
+        return turretDeg <= 270 && turretDeg >= 0;
     }
 
     /**
      * Rotate the turret at a certain rad/sec
      *
-     * @param speed - rad/sec to rotate the turret at
+     * @param speed - % max speed to rotate at (too fast and the gremlins gonna eat u)
      */
     private void rotateTurret(double speed) {
-        //1 Radians Per Second to Revolutions Per Minute = 9.5493 RPM
-        double turretRPM = speed * 9.5493;
-        double motorRPM = turretRPM * (RobotSettings.TURRET_SPROCKET_SIZE / RobotSettings.MOTOR_SPROCKET_SIZE) * RobotSettings.TURRET_GEAR_RATIO;
-        //controller.setReference(motorRPM, ControlType.kVelocity);
-        double deadbandComp;
-        if (track) { //make if true
-            if (motorRPM < 0) { // make if <usual rpm
-                deadbandComp = 0.01;
-            } else if (motorRPM > 0) { //make if >usual rpm
-                deadbandComp = -0.01;
-            } else {
-                deadbandComp = 0;
-            }
-        } else {
-            deadbandComp = 0;
-            //motorRPM = 0;
-        }
         if (RobotSettings.DEBUG) {
-            System.out.println("Set to " + (motorRPM / 5700 - deadbandComp) + " from " + speed);
+            System.out.println("Set to " + (speed * (RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30)) + " from " + speed);
         }
-        motor.moveAtRotations(motorRPM / 5700 - deadbandComp);
-        SmartDashboard.putNumber("Motor RPM out", motorRPM);
-        SmartDashboard.putNumber("Turret RPM out", turretRPM);
-        SmartDashboard.putNumber("Deadband Add", deadbandComp);
-        SmartDashboard.putNumber("Turret out", motorRPM / 5700 - deadbandComp);
+        //Dont overcook it pls
+        motor.moveAtPercent(speed * 0.1);
     }
 
     /**

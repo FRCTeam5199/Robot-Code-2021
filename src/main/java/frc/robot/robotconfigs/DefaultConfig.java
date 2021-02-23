@@ -19,6 +19,8 @@ public abstract class DefaultConfig {
     public boolean ENABLE_INTAKE = false;
     public boolean ENABLE_SHOOTER = false;
     public boolean ENABLE_HOPPER = false;
+    public boolean ENABLE_AGITATOR = false;
+    public boolean ENABLE_INDEXER = false;
     public boolean ENABLE_MUSIC = true;
 
     public boolean DRIVE_USE_6_MOTORS = false;

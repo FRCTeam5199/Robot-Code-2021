@@ -33,8 +33,10 @@ public class Hopper implements ISubsystem {
             indexSensor.setEnabled(true);
             indexSensor.setAutomaticMode(true);
         }
-        agitator = new VictorMotorController(RobotSettings.AGITATOR_MOTOR_ID);
-        indexer = new VictorMotorController(RobotSettings.INDEXER_MOTOR_ID);
+        if (RobotSettings.ENABLE_AGITATOR)
+            agitator = new VictorMotorController(RobotSettings.AGITATOR_MOTOR_ID);
+        if (RobotSettings.ENABLE_INDEXER)
+            indexer = new VictorMotorController(RobotSettings.INDEXER_MOTOR_ID);
     }
 
     @Override
@@ -69,12 +71,16 @@ public class Hopper implements ISubsystem {
             SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
         }
         if (!indexerActive && !agitatorActive) {
-            indexer.moveAtPercent(indexerSensorRange() > 9 ? 0.4 : 0);
-            agitator.moveAtPercent(indexerSensorRange() > 9 ? 0.3 : 0);
-            indexed = indexerSensorRange() > 9;
+            if (RobotSettings.ENABLE_INDEXER)
+                indexer.moveAtPercent(indexerSensorRange() > 9 ? 0.4 : 0);
+            if (RobotSettings.ENABLE_AGITATOR)
+                agitator.moveAtPercent(indexerSensorRange() > 9 ? 0.3 : 0);
+            indexed = (RobotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() > 9);
         } else {
-            indexer.moveAtPercent(indexerActive ? 0.8 : 0);
-            agitator.moveAtPercent(agitatorActive ? 0.6 : 0);
+            if (RobotSettings.ENABLE_INDEXER)
+                indexer.moveAtPercent(indexerActive ? 0.8 : 0);
+            if (RobotSettings.ENABLE_AGITATOR)
+                agitator.moveAtPercent(agitatorActive ? 0.6 : 0);
             indexed = true;//indexerSensorRange() > 9;
         }
     }

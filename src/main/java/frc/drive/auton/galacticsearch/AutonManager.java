@@ -15,6 +15,13 @@ import frc.telemetry.RobotTelemetry;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static frc.robot.Robot.ballPhoton;
+
+/**
+ * Used for the galactic search challenge which includes automatically determining a path to take at enable-time.
+ * <p>
+ * Requirements: {@link frc.robot.RobotSettings#ENABLE_VISION} {@link frc.robot.RobotSettings#ENABLE_IMU}
+ */
 public class AutonManager extends AbstractAutonManager {
     private final RobotTelemetry telem;
     private final RamseteController controller = new RamseteController();
@@ -44,7 +51,6 @@ public class AutonManager extends AbstractAutonManager {
     @Override
     public void updateAuton() {
         telem.updateAuton();
-        //RamseteCommand ramseteCommand = new RamseteCommand(Trajectory, () -> telem.robotPose, controller, DRIVING_CHILD.kinematics, DRIVING_CHILD::driveFPS);
         Trajectory.State goal = trajectory.sample(timer.get());
         System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
         ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
@@ -67,12 +73,18 @@ public class AutonManager extends AbstractAutonManager {
 
     }
 
+    /**
+     * gathers data points (yaw, apparent size) from {@link Robot#ballPhoton} and plots them against expected values.
+     * However, given the fact that the robot wont always be exactly in the right place and that the auton paths will
+     * have a bit of tolerance to them, we need a flexible solution. Introducing {@link #sumOfSquares(Point[], Point[])
+     * Least Sum of Squares regression}! It takes the expected layout with the smallest error and runs that path
+     */
     @Override
     public void initAuton() {
         Point[] cringePoints = new Point[]{
-                new Point(Robot.ballPhoton.getAngle(0), Robot.ballPhoton.getSize(0)),
-                new Point(Robot.ballPhoton.getAngle(1), Robot.ballPhoton.getSize(1)),
-                new Point(Robot.ballPhoton.getAngle(2), Robot.ballPhoton.getSize(2))
+                new Point(ballPhoton.getAngle(0), ballPhoton.getSize(0)),
+                new Point(ballPhoton.getAngle(1), ballPhoton.getSize(1)),
+                new Point(ballPhoton.getAngle(2), ballPhoton.getSize(2))
         };
         for (Point point : cringePoints)
             System.out.println("Heres what they told me: " + point);
@@ -97,6 +109,13 @@ public class AutonManager extends AbstractAutonManager {
 
     }
 
+    /**
+     * This is the method that organizes the path comparisons using {@link #sumOfSquares(Point[], Point[])} to calculate
+     * the error.
+     *
+     * @param pointData the (perceived yaw, apparent size) array size 3 points of observations
+     * @return the path with the smallest error from the passed points
+     */
     private static GalacticSearchPaths getPath(Point[] pointData) {
         GalacticSearchPaths bestPath = null;
         double bestOption = Double.MAX_VALUE;
@@ -115,9 +134,16 @@ public class AutonManager extends AbstractAutonManager {
         return bestPath;
     }
 
+    /**
+     * takes the distance between each point and squares it and returns the sum of the square errors
+     *
+     * @param guesses the perceived points
+     * @param testPoints the points to plot against
+     * @return the sum of squares error
+     */
     private static double sumOfSquares(Point[] guesses, Point[] testPoints) {
         double out = 0;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < Math.min(guesses.length, testPoints.length); i++) {
             System.out.print(guesses[i]);
             out += Math.pow(guesses[i].X - testPoints[i].X, 2);
             out += Math.pow(100 * (guesses[i].Y - testPoints[i].Y), 2);

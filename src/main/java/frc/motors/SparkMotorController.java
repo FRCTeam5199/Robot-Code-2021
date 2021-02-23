@@ -14,7 +14,7 @@ import static com.revrobotics.ControlType.kVelocity;
  * This works to wrap Neo's and maybe some other motors
  */
 public class SparkMotorController extends AbstractMotorController {
-    private final CANSparkMax motor;
+    public final CANSparkMax motor;
     private final CANPIDController myPid;
 
     public SparkMotorController(int channelID) {
@@ -59,7 +59,7 @@ public class SparkMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtVelocity(double amount) {
-        myPid.setReference(amount, kVelocity);
+        myPid.setReference(amount / sensorToRevolutionFactor, kVelocity);
     }
 
     @Override
@@ -70,6 +70,12 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public double getRotations() {
         //why 9? i dunno
+        return motor.getEncoder().getPosition() * sensorToRevolutionFactor;
+        //return motor.getEncoder().getVelocity() * sensorToRevolutionFactor;
+    }
+
+    @Override
+    public double getSpeed() {
         return motor.getEncoder().getVelocity() * sensorToRevolutionFactor;
     }
 

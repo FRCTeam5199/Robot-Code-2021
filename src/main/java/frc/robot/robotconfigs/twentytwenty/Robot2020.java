@@ -15,13 +15,15 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_INTAKE = true;
         ENABLE_SHOOTER = true;
         ENABLE_HOPPER = true;
+        ENABLE_AGITATOR = true;
+        ENABLE_INDEXER = true;
 
         DRIVE_USE_6_MOTORS = true;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = true;
+        ENABLE_VISION = false;
         USE_PHOTONVISION = true;
         ENABLE_IMU = true;
         USE_PIGEON = true;
@@ -36,7 +38,7 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_INDEXER_AUTO_INDEX = true;
 
         //UI Style
-        DRIVE_STYLE = DriveTypes.BOP_IT;
+        DRIVE_STYLE = DriveTypes.STANDARD;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
@@ -46,7 +48,6 @@ public class Robot2020 extends DefaultConfig {
         DRIVEBASE_PID = new PID(0, 0, 0.000005, 0.00002);
         SHOOTER_PID = new PID(0.001, 0.00003, 0.0001, 0.001);
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
-        TURRET_PID = new PID(0.006, 0.00001, 0.001);
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)

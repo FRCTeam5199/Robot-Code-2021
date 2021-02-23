@@ -65,7 +65,7 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtVelocity(double amount) {
-        motor.setVoltage(amount);
+        motor.set(amount);
     }
 
     @Override
@@ -75,6 +75,11 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public double getRotations() {
+        return motor.getSelectedSensorPosition() * sensorToRevolutionFactor;
+    }
+
+    @Override
+    public double getSpeed() {
         return motor.getSelectedSensorVelocity() * sensorToRevolutionFactor;
     }
 

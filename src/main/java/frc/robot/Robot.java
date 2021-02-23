@@ -15,7 +15,7 @@ import frc.misc.Chirp;
 import frc.misc.ISubsystem;
 import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
-import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
+import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
@@ -28,7 +28,7 @@ public class Robot extends TimedRobot {
      * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
      * using from the list under robotconfigs
      */
-    public static final DefaultConfig getNumbersFrom = new CompetitionRobot2021();
+    public static final DefaultConfig getNumbersFrom = new Robot2020();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
     private static final ShuffleboardTab ROBOT_TAB = Shuffleboard.getTab("DANGER!");
     private static final NetworkTableEntry remove = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", "").getEntry(),
@@ -36,7 +36,8 @@ public class Robot extends TimedRobot {
             printMappings = ROBOT_TAB.add("Reprint robot mappings", false).getEntry(),
             printNumbers = ROBOT_TAB.add("Reprint robot numbers", false).getEntry();
     private static final ShuffleboardTab MUSICK_TAB = Shuffleboard.getTab("musick");
-    private static final NetworkTableEntry songTab = MUSICK_TAB.add("Song", "WiiSports").getEntry();
+    private static final NetworkTableEntry songTab = MUSICK_TAB.add("Song", "").getEntry(),
+            disableSongTab = MUSICK_TAB.add("Stop Song", false).getEntry();
     private static final boolean songFound = false;
     private static final NetworkTableEntry foundSong = MUSICK_TAB.add("Found it", songFound).getEntry();
     public static DriveManager driver;
@@ -148,23 +149,34 @@ public class Robot extends TimedRobot {
             RobotSettings.printNumbers();
             printNumbers.setBoolean(false);
         }
+        if (disableSongTab.getBoolean(false)) {
+            chirp.stop();
+            disableSongTab.setBoolean(false);
+        }
         if (remove.getString("").equals(DELETE_PASSWORD)) {
+            remove.setString("Correct password");
             deleteFolder(Filesystem.getDeployDirectory());
             throw new RuntimeException("Deleted deploy dir contents");
         }
-        String songName = songTab.getString("");
-        foundSong.setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
-        if (new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(lastFoundSong)) {
-            chirp.loadSound(songName);
-            lastFoundSong = songName;
-        }
-
         pdp.update();
     }
 
     @Override
     public void disabledPeriodic() {
         //Do nothing
+        if (RobotSettings.ENABLE_MUSIC) {
+            String songName = songTab.getString("");
+            foundSong.setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
+            if (!songName.equals("") && !chirp.isPlaying()) {
+                if (new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(lastFoundSong)) {
+                    lastFoundSong = songName;
+                    chirp.loadSound(songName);
+                    chirp.play();
+                }
+            } else {
+                chirp.updateDisabled();
+            }
+        }
         if (RobotSettings.ENABLE_DRIVE && System.currentTimeMillis() > lastDisable + 5000)
             driver.setBrake(false);
     }

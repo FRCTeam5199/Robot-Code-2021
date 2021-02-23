@@ -14,6 +14,8 @@ public class PracticeRobot2021GalacticSearch extends DefaultConfig {
         ENABLE_INTAKE = false;
         ENABLE_SHOOTER = false;
         ENABLE_HOPPER = false;
+        ENABLE_AGITATOR = true;
+        ENABLE_INDEXER = true;
 
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;

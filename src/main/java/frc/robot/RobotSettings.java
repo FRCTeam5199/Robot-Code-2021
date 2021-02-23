@@ -22,7 +22,7 @@ public class RobotSettings {
     /**
      * Toggles debug print statements
      */
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     //Subsystems
 
     /**
@@ -47,6 +47,9 @@ public class RobotSettings {
      * Enables the distance sensor in the {@link #ENABLE_HOPPER indexer}
      */
     public static final boolean ENABLE_INDEXER_AUTO_INDEX = getNumbersFrom.ENABLE_INDEXER_AUTO_INDEX;
+
+    public static final boolean ENABLE_AGITATOR = getNumbersFrom.ENABLE_AGITATOR;
+    public static final boolean ENABLE_INDEXER = getNumbersFrom.ENABLE_INDEXER;
 
     /**
      * Enables {@link Robot#chirp}
@@ -138,7 +141,6 @@ public class RobotSettings {
         System.out.println("-------------------</RobotSettings>-----------------");
     }
 
-    public static final PID DRIVEBASE_PID = getNumbersFrom.DRIVEBASE_PID;
     public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = getNumbersFrom.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
     public static final double MAX_SPEED = getNumbersFrom.MAX_SPEED;
     public static final double MAX_ROTATION = getNumbersFrom.MAX_ROTATION;
@@ -150,6 +152,9 @@ public class RobotSettings {
 
     public static final PID SHOOTER_PID = getNumbersFrom.SHOOTER_PID;
     public static final PID SHOOTER_RECOVERY_PID = getNumbersFrom.SHOOTER_RECOVERY_PID;
+    public static final PID HEADING_PID = getNumbersFrom.HEADING_PID;
+    public static final PID DRIVEBASE_PID = getNumbersFrom.DRIVEBASE_PID;
+    public static final PID TURRET_PID = getNumbersFrom.TURRET_PID;
     public static final double SHOOTER_SENSOR_UNITS_PER_ROTATION = getNumbersFrom.SHOOTER_SENSOR_UNITS_PER_ROTATION;
     public static final double motorPulleySize = getNumbersFrom.motorPulleySize;
     public static final double driverPulleySize = getNumbersFrom.driverPulleySize;
@@ -163,9 +168,7 @@ public class RobotSettings {
     public static final double TURRET_GEAR_RATIO = getNumbersFrom.TURRET_GEAR_RATIO;
     public static final double TURRET_MAX_POS = getNumbersFrom.TURRET_MAX_POS;
     public static final double TURRET_MIN_POS = getNumbersFrom.TURRET_MIN_POS;
-    public static final PID TURRET_PID = getNumbersFrom.TURRET_PID;
     public static final double AUTON_TOLERANCE = getNumbersFrom.AUTON_TOLERANCE;
-    public static final PID HEADING_PID = getNumbersFrom.HEADING_PID;
     public static final double AUTO_SPEED = getNumbersFrom.AUTO_SPEED;
     public static final double AUTO_ROTATION_SPEED = getNumbersFrom.AUTO_ROTATION_SPEED;
     public static int XBOX_CONTROLLER_USB_SLOT = getNumbersFrom.XBOX_CONTROLLER_USB_SLOT;

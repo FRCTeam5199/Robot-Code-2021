@@ -2,9 +2,9 @@ package frc.ballstuff.intaking;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
-import frc.controllers.BopItBasicController;
 import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
+import frc.controllers.DrumTimeController;
 import frc.controllers.JoystickController;
 import frc.drive.auton.AutonType;
 import frc.misc.ISubsystem;
@@ -39,7 +39,7 @@ public class Intake implements ISubsystem {
                 joystick = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
                 break;
             case BOPIT:
-                joystick = new BopItBasicController(1);
+                joystick = new DrumTimeController(0);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
@@ -88,7 +88,7 @@ public class Intake implements ISubsystem {
                 }
                 break;
             case BOPIT:
-                if (joystick.get(ControllerEnums.BopItButtons.BOPIT) == ControllerEnums.ButtonStatus.DOWN)
+                if (joystick.get(ControllerEnums.DrumButton.PEDAL) == ControllerEnums.ButtonStatus.DOWN)
                     setIntake(1);
                 else
                     setIntake(0);

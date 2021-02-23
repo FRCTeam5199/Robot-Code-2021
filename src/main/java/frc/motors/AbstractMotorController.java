@@ -22,7 +22,7 @@ public abstract class AbstractMotorController {
      * This is a Double (object, not value). If required but not set, will throw a NPE If it is giving you hell and you
      * dont want to actually fix the issue, just change to double
      */
-    protected Double sensorToRevolutionFactor;
+    public Double sensorToRevolutionFactor;
 
     /**
      * Uses PID to attempt to reach the requested speed Different from {@link #moveAtVelocity(double)} because this does
@@ -86,6 +86,8 @@ public abstract class AbstractMotorController {
      * @return Distance output shaft has moved in rotations
      */
     public abstract double getRotations();
+
+    public abstract double getSpeed();
 
     /**
      * Sets the maximum allowable current that will flow through this motor
