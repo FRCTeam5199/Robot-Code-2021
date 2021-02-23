@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import frc.motors.TalonMotorController;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * This is where we play our gnarly tunez. Although it cant be seen from here, there is a delete deploy directory method
@@ -16,6 +17,10 @@ public class Chirp extends Orchestra {
      * play awesome tunez
      */
     public static final ArrayList<TalonMotorController> talonMotorArrayList = new ArrayList<>();
+    public static final String[] musicNames = {"BokuNoSensou_4Motors", "CoconutMall_4Motors", "Electroman_Adventures_4Motors", "Imperial_March_4Motors", "kiraTheme_4Motors", "Megalovania_4Motors", "TheOnlyThingTheyFearlsYou_4Motors", "WiiSports_4Motors"};
+    Random musicRand = new Random();
+    int upperbound = 8;
+    int randomMusic = musicRand.nextInt(upperbound);
 
     public Chirp() {
         initChirp();
@@ -24,19 +29,28 @@ public class Chirp extends Orchestra {
     /**
      * pulls the talons from {@link #talonMotorArrayList the meta talon registry} and adds them to the orchestra
      */
+    public void disabledChirp(){
+        if(!isPlaying()){
+            loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + musicNames[randomMusic] + ".chrp").toString());
+        }
+    } 
+
     public void initChirp() {
         for (TalonMotorController motor : talonMotorArrayList) {
             motor.addToOrchestra(this);
         }
     }
-
+    
     /**
      * See the delete deploy dir method in Robot for help clearing ghost files
      *
      * @param soundName The name of the file (less extansion, less path, just name) to get sound from (should be .chrp
      *                  file)
      */
+
     public void loadSound(String soundName) {
+        
         loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString());
     }
+
 }
