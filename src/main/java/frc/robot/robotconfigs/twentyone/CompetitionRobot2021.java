@@ -12,18 +12,19 @@ public class CompetitionRobot2021 extends DefaultConfig {
     //Subsystems
     public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
-        ENABLE_INTAKE = true;
+        ENABLE_INTAKE = false;
         ENABLE_SHOOTER = false;
         ENABLE_HOPPER = false;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
+        ENABLE_MUSIC = false;
 
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = false;
+        ENABLE_VISION = true;
         USE_PHOTONVISION = true;
         ENABLE_IMU = false;
         USE_PIGEON = false;
@@ -43,7 +44,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
 
-        AUTON_TYPE = AutonType.BUT_BETTER_NOW;
+        AUTON_TYPE = AutonType.GALACTIC_SEARCH;
 
         DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
         SHOOTER_PID = new PID(0.001, 0.00003, 0.0001, 0.001);
@@ -82,6 +83,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         GOAL_CAM_NAME = "GoalCamera";
         BALL_CAM_NAME = "BallCamera";
 
+        PDP = 0;
         //Drive Motors
         DRIVE_LEADER_L_ID = 1; //talon
         DRIVE_FOLLOWERS_L_IDS = new int[]{2}; //talon

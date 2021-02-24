@@ -5,33 +5,33 @@ import frc.drive.auton.Point;
 public enum GalacticSearchPaths {
     PATH_A_RED(
             new Point[]{
-                    new Point(-0.3, 0.75),
-                    new Point(-14.4, 0.22),
-                    new Point(17.4, 0.12)
+                    new Point(-7, 0.53),
+                    new Point(-6.53, 0.09),
+                    new Point(-5.97, 0.07)
             }
             , "PathARed"
     ),
     PATH_A_BLUE(
             new Point[]{
-                    new Point(-21.8, 0.18),
-                    new Point(6, 0.1),
-                    new Point(-2.1, 0.07)
+                    new Point(15, 0.06),
+                    new Point(-6.4, 0.03),
+                    new Point(-0.25, 0.01)
             }
             , "PathABlue"
     ),
     PATH_B_RED(
             new Point[]{
-                    new Point(23.5, .8),
-                    new Point(-14, .25),
-                    new Point(7.15, 0.08)
+                    new Point(-20.25, .7),
+                    new Point(8.6, .11),
+                    new Point(-7.89, 0.04)
             }
             , "PathBRed"
     ),
     PATH_B_BLUE(
             new Point[]{
-                    new Point(-12.4, 0.15),
-                    new Point(5.7, 0.06),
-                    new Point(-8.2, 0.04)
+                    new Point(6.3, 0.07),
+                    new Point(-6.9, 0.02),
+                    new Point(3.5, 0.01)
             }
             , "PathBBlue"
     );

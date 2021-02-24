@@ -10,6 +10,7 @@ import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
 import frc.robot.Robot;
+import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 
 import java.io.IOException;
@@ -50,12 +51,13 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void updateAuton() {
-        telem.updateAuton();
         Trajectory.State goal = trajectory.sample(timer.get());
-        System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
-        ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-        DRIVING_CHILD.drivePure(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
-
+        if (RobotSettings.ENABLE_IMU) {
+            telem.updateAuton();
+            System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
+            ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
+            DRIVING_CHILD.drivePure(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+        }
     }
 
     @Override

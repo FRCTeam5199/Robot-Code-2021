@@ -57,7 +57,7 @@ public class Robot2020GalacticSearch extends DefaultConfig {
         WHEEL_DIAMETER = 6; //update: now it's used once
         MAX_MOTOR_SPEED = 5000; //theoretical max motor speed in rpm
         TURN_SCALE = 0.7;
-        DRIVE_SCALE = 1;
+        DRIVE_SCALE = 0.1;
         DRIVE_GEARING = 1 / 9.0;
 
         SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;

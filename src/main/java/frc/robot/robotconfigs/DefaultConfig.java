@@ -82,6 +82,8 @@ public abstract class DefaultConfig {
     public double AUTO_ROTATION_SPEED = 1;
     public String GOAL_CAM_NAME = "GoalCamera";
     public String BALL_CAM_NAME = "BallCamera";
+
+    public int PDP = 0;
     //Drive Motors
     public int DRIVE_LEADER_L_ID; //talon
     public int[] DRIVE_FOLLOWERS_L_IDS; //talon

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.robot.RobotSettings;
@@ -30,7 +31,6 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void init() {
-        DRIVING_CHILD.init();
         RobotSettings.autonComplete = false;
     }
 
@@ -52,7 +52,7 @@ public class AutonManager extends AbstractAutonManager {
             Trajectory.State goal = trajectory.sample(timer.get());
             System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
             ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-            DRIVING_CHILD.drivePure(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+            DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
                 RobotSettings.autonComplete = true;
             }

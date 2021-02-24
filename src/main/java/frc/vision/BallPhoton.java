@@ -62,7 +62,9 @@ public class BallPhoton implements IVision {
     @Override
     public void updateGeneric() {
         cameraResult = ballCamera.getLatestResult();
-        System.out.println("Found " + cameraResult.targets.size() + " targets");
+        if(RobotSettings.DEBUG) {
+            System.out.println("Found " + cameraResult.targets.size() + " targets");
+        }
         //if (validTarget()) {
         targets = cameraResult.getTargets();
         //}
