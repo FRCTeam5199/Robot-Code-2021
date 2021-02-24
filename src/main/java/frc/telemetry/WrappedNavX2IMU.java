@@ -20,7 +20,8 @@ public class WrappedNavX2IMU extends AbstractIMU {
      */
     //TODO make this a setting
     public void init() {
-        navX2IMU = new AHRS(SerialPort.Port.kUSB);
+        SerialPort.Port port = SerialPort.Port.kUSB;
+        navX2IMU = new AHRS(port);
     }
 
     /**

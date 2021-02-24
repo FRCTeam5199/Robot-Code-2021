@@ -24,14 +24,17 @@ public class VictorMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void setInverted(boolean invert) {
+    public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
+        return this;
     }
 
     @Override
-    public void follow(AbstractMotorController leader) {
-        if (leader instanceof VictorMotorController)
+    public AbstractMotorController follow(AbstractMotorController leader) {
+        if (leader instanceof VictorMotorController){
             motor.follow(((VictorMotorController) leader).motor);
+        }
+        return this;
     }
 
     @Override
@@ -40,37 +43,39 @@ public class VictorMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void setPid(PID pid) {
+    public AbstractMotorController setPid(PID pid) {
         motor.config_kP(0, pid.getP());
         motor.config_kI(0, pid.getI());
         motor.config_kD(0, pid.getD());
         motor.config_kF(0, pid.getF());
+        return this;
     }
 
     @Override
-    public void moveAtVelocity(double amount) {
-        motor.set(Velocity, amount / sensorToRevolutionFactor);
+    public void moveAtVelocity(double realVelocity) {
+        motor.set(Velocity, realVelocity / sensorToRealDistanceFactor);
     }
 
     @Override
-    public void setBrake(boolean brake) {
+    public AbstractMotorController setBrake(boolean brake) {
         motor.setNeutralMode(brake ? Brake : Coast);
+        return this;
     }
 
     @Override
     public double getRotations() {
-        return motor.getSelectedSensorPosition() * sensorToRevolutionFactor;
+        return motor.getSelectedSensorPosition() * sensorToRealDistanceFactor;
     }
 
     @Override
     public double getSpeed() {
-        return motor.getSelectedSensorVelocity() * sensorToRevolutionFactor;
+        return motor.getSelectedSensorVelocity() * sensorToRealDistanceFactor;
     }
 
     //TODO make this work lol
     @Override
-    public void setCurrentLimit(int limit) {
-
+    public AbstractMotorController setCurrentLimit(int limit) {
+        return this;
     }
 
     @Override
@@ -79,7 +84,8 @@ public class VictorMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void setOpenLoopRampRate(double timeToMax) {
+    public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
         motor.configOpenloopRamp(timeToMax);
+        return this;
     }
 }

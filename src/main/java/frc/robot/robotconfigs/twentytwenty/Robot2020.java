@@ -50,6 +50,7 @@ public class Robot2020 extends DefaultConfig {
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
+        DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.5588;
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
         WHEEL_DIAMETER = 6; //update: now it's used once

@@ -1,7 +1,5 @@
 package frc.ballstuff.shooting;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
@@ -22,13 +20,6 @@ import frc.vision.IVision;
  * Turret refers to the shooty thing that spinny spinny in the yaw direction
  */
 public class Turret implements ISubsystem {
-    //Still required for debug prints?
-    private final ShuffleboardTab tab = Shuffleboard.getTab("Turret");
-    /*private final NetworkTableEntry fMult = tab.add("F Multiplier", 0).getEntry(),
-            pos = tab.add("Position", 0).getEntry(),
-            arbDriveMult = tab.add("drive omega mult", -0.25).getEntry(),
-            angleOffset = tab.add("angle offset", -2.9).getEntry(),
-            rotSpeed = tab.add("rotationSpeed", 0).getEntry();*/
     public boolean track, atTarget;
     private BaseController joy, panel;
     private AbstractMotorController motor;
@@ -60,10 +51,8 @@ public class Turret implements ISubsystem {
             goalPhoton.init();
         }
         motor = new SparkMotorController(RobotSettings.TURRET_YAW);
-        motor.setSensorToRevolutionFactor((RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30));
-        motor.setInverted(false);
-        motor.setPid(RobotSettings.TURRET_PID);
-        motor.setBrake(true);
+        motor.setInverted(false).setPid(RobotSettings.TURRET_PID).setBrake(true)
+                .setSensorToRealDistanceFactor((RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30));
         setBrake(true);
     }
 

@@ -7,6 +7,7 @@ import frc.misc.Chirp;
 import frc.misc.PID;
 
 import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
+import static com.ctre.phoenix.motorcontrol.ControlMode.Velocity;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Brake;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
 
@@ -32,22 +33,23 @@ public class TalonMotorController extends AbstractMotorController {
         orchestra.addInstrument(motor);
     }
 
-    //public void
-
+    //DANGER USING TALONS WILL BE FUNKY
     @Override
-    public void moveAtRotations(double rpm) {
-        moveAtVelocity(rpm / sensorToRevolutionFactor);
+    public void moveAtRotations(double sensorSpeedRequested) {
+        moveAtVelocity(sensorSpeedRequested * sensorToRealDistanceFactor);
     }
 
     @Override
-    public void setInverted(boolean invert) {
+    public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
+        return this;
     }
 
     @Override
-    public void follow(AbstractMotorController leader) {
+    public AbstractMotorController follow(AbstractMotorController leader) {
         if (leader instanceof TalonMotorController)
             motor.follow(((TalonMotorController) leader).motor);
+        return this;
     }
 
     @Override
@@ -56,39 +58,42 @@ public class TalonMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void setPid(PID pid) {
+    public AbstractMotorController setPid(PID pid) {
         motor.config_kP(0, pid.getP());
         motor.config_kI(0, pid.getI());
         motor.config_kD(0, pid.getD());
         motor.config_kF(0, pid.getF());
+        return this;
     }
 
     @Override
-    public void moveAtVelocity(double amount) {
-        motor.set(amount);
+    public void moveAtVelocity(double realAmount) {
+        motor.set(Velocity, realAmount / sensorToRealDistanceFactor);
     }
 
     @Override
-    public void setBrake(boolean brake) {
+    public AbstractMotorController setBrake(boolean brake) {
         motor.setNeutralMode(brake ? Brake : Coast);
+        return this;
     }
 
     @Override
     public double getRotations() {
-        return motor.getSelectedSensorPosition() * sensorToRevolutionFactor;
+        return motor.getSelectedSensorPosition() * sensorToRealDistanceFactor;
     }
 
     @Override
     public double getSpeed() {
-        return motor.getSelectedSensorVelocity() * sensorToRevolutionFactor;
+        return motor.getSelectedSensorVelocity() * sensorToRealDistanceFactor;
     }
 
     @Override
-    public void setCurrentLimit(int limit) {
+    public AbstractMotorController setCurrentLimit(int limit) {
         SupplyCurrentLimitConfiguration config = new SupplyCurrentLimitConfiguration();
         config.currentLimit = limit;
         config.enable = true;
         motor.configSupplyCurrentLimit(config);
+        return this;
     }
 
     @Override
@@ -97,7 +102,8 @@ public class TalonMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void setOpenLoopRampRate(double timeToMax) {
+    public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
         motor.configOpenloopRamp(timeToMax);
+        return this;
     }
 }

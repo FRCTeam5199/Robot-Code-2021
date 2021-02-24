@@ -47,14 +47,15 @@ public class AutonManager extends AbstractAutonManager {
     @Override
     public void updateAuton() {
         if (!RobotSettings.autonComplete) {
-            telem.updateAuton();
-            //RamseteCommand ramseteCommand = new RamseteCommand(Trajectory, () -> telem.robotPose, controller, DRIVING_CHILD.kinematics, DRIVING_CHILD::driveFPS);
             Trajectory.State goal = trajectory.sample(timer.get());
-            System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
-            ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-            DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
                 RobotSettings.autonComplete = true;
+            }
+            if (RobotSettings.ENABLE_IMU) {
+                telem.updateAuton();
+                System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
+                ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
+                DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
             }
         }
     }

@@ -16,6 +16,7 @@ public class PracticeRobot2021GalacticSearch extends DefaultConfig {
         ENABLE_HOPPER = false;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
+        ENABLE_MUSIC = true;
 
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
@@ -25,7 +26,7 @@ public class PracticeRobot2021GalacticSearch extends DefaultConfig {
         ENABLE_VISION = true;
         USE_PHOTONVISION = true;
         ENABLE_IMU = false;
-        USE_PIGEON = false;
+        USE_PIGEON = true;
         USE_NAVX2 = false;
 
         //SHOOTER
@@ -50,6 +51,7 @@ public class PracticeRobot2021GalacticSearch extends DefaultConfig {
         TURRET_PID = new PID(0.006, 0.00001, 0.001);
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
+        DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.524891;
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
         WHEEL_DIAMETER = 6; //update: now it's used once

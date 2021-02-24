@@ -105,7 +105,7 @@ public class RobotTelemetry implements ISubsystem {
      * @return wheel meters traveled
      */
     public double getMetersLeft() {
-        return Units.feetToMeters(driver.leaderL.getRotations() * UtilFunctions.wheelCircumference() / 12);
+        return Units.inchesToMeters(driver.leaderL.getRotations());
     }
 
     /**
@@ -114,7 +114,7 @@ public class RobotTelemetry implements ISubsystem {
      * @return wheel meters traveled
      */
     public double getMetersRight() {
-        return Units.feetToMeters(driver.leaderR.getRotations() * UtilFunctions.wheelCircumference() / 12);
+        return Units.inchesToMeters(driver.leaderR.getRotations());
     }
 
     /**
@@ -131,7 +131,7 @@ public class RobotTelemetry implements ISubsystem {
             imu = new WrappedNavX2IMU();
         }
         headingPID = new PIDController(RobotSettings.HEADING_PID.getP(), RobotSettings.HEADING_PID.getI(), RobotSettings.HEADING_PID.getD());
-        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()), new Pose2d(0, 0, new Rotation2d()));
+        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
         robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
     }
 

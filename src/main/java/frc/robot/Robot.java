@@ -13,10 +13,9 @@ import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.misc.Chirp;
 import frc.misc.ISubsystem;
+import frc.misc.LEDs;
 import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
-import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
-import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.robot.robotconfigs.twentytwenty.Robot2020GalacticSearch;
 import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
@@ -49,6 +48,7 @@ public class Robot extends TimedRobot {
     public static Turret turret;
     public static Chirp chirp;
     public static PDP pdp;
+    public static LEDs leds;
     public static IVision goalPhoton, ballPhoton;
     public static AbstractAutonManager autonManager;
     private static String lastFoundSong = "";
@@ -89,14 +89,19 @@ public class Robot extends TimedRobot {
             switch (RobotSettings.AUTON_MODE) {
                 case GALACTIC_SEARCH:
                     //autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
-                    autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);
+                    autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     break;
                 case BUT_BETTER_NOW:
                     autonManager = new frc.drive.auton.butbetternow.AutonManager("RobotTestPath2", driver);
                     break;
+                case GALACTIC_SCAM:
+                    autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);
+                    break;
             }
         }
-        //pdp = new PDP(0);
+        if (RobotSettings.ENABLE_PDP) {
+            pdp = new PDP(RobotSettings.PDP_ID);
+        }
     }
 
     @Override
@@ -160,7 +165,9 @@ public class Robot extends TimedRobot {
             deleteFolder(Filesystem.getDeployDirectory());
             throw new RuntimeException("Deleted deploy dir contents");
         }
-        //pdp.update();
+        if (RobotSettings.ENABLE_PDP) {
+            pdp.update();
+        }
     }
 
     @Override

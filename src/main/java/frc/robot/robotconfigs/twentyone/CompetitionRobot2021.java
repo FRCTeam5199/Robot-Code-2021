@@ -12,9 +12,9 @@ public class CompetitionRobot2021 extends DefaultConfig {
     //Subsystems
     public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
-        ENABLE_INTAKE = false;
+        ENABLE_INTAKE = true;
         ENABLE_SHOOTER = false;
-        ENABLE_HOPPER = false;
+        ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = false;
@@ -31,7 +31,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         USE_NAVX2 = true;
 
         //SHOOTER
-        SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
+        SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;//SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = true;
 
@@ -52,6 +52,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         TURRET_PID = new PID(0.006, 0.00001, 0.001);
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
+        DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.435991;
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
         WHEEL_DIAMETER = 4; //update: now it's used once
@@ -83,7 +84,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         GOAL_CAM_NAME = "GoalCamera";
         BALL_CAM_NAME = "BallCamera";
 
-        PDP = 0;
+        PDP_ID = 0;
         //Drive Motors
         DRIVE_LEADER_L_ID = 1; //talon
         DRIVE_FOLLOWERS_L_IDS = new int[]{2}; //talon

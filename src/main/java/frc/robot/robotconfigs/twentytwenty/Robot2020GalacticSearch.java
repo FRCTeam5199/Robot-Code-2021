@@ -43,15 +43,15 @@ public class Robot2020GalacticSearch extends DefaultConfig {
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
 
-        AUTON_TYPE = AutonType.GALACTIC_SEARCH;
+        AUTON_TYPE = AutonType.GALACTIC_SCAM;
 
-
-        DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
+        DRIVEBASE_PID = new PID(0, 0, 0.000005, 0.00002);
         SHOOTER_PID = new PID(0.001, 0.00003, 0.0001, 0.001);
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
         TURRET_PID = new PID(0.006, 0.00001, 0.001);
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
+        DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.5588;
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
         WHEEL_DIAMETER = 6; //update: now it's used once

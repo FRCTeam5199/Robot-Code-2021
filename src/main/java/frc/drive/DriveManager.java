@@ -20,7 +20,6 @@ import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.misc.PID;
-import frc.misc.UtilFunctions;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
@@ -37,7 +36,7 @@ import frc.telemetry.RobotTelemetry;
  * @see RobotTelemetry
  */
 public class DriveManager implements ISubsystem {
-    public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(22));
+    public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(RobotSettings.DRIVEBASE_DISTANCE_BETWEEN_WHEELS);
     private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     private final boolean invert = true;
     private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotSettings.TURN_SCALE).getEntry(),
@@ -48,7 +47,6 @@ public class DriveManager implements ISubsystem {
             F = tab2.add("F", RobotSettings.DRIVEBASE_PID.getF()).getEntry(),
             calibratePid = tab2.add("Calibrate PID", false).getEntry();
     private final NetworkTableEntry coast = tab2.add("Coast", true).getEntry();
-    public boolean autoComplete = false;
     public AbstractMotorController leaderL, leaderR;
     public RobotTelemetry guidance;
     public AbstractFollowerMotorController followerL, followerR;
@@ -73,16 +71,6 @@ public class DriveManager implements ISubsystem {
      */
     private static double adjustedRotation(double input) {
         return input * RobotSettings.MAX_ROTATION;
-    }
-
-    /**
-     * Gets the target velocity based on the speed requested
-     *
-     * @param FPS speed in feet/second
-     * @return speed in rotations/minute
-     */
-    private static double getTargetVelocity(double FPS) {
-        return UtilFunctions.convertDriveFPStoRPM(FPS) * RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION / 600.0;
     }
 
     public DriveManager() throws RuntimeException {
@@ -118,16 +106,16 @@ public class DriveManager implements ISubsystem {
                 leaderR = new SparkMotorController(RobotSettings.DRIVE_LEADER_R_ID);
                 followerL = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_L_IDS);
                 followerR = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_R_IDS);
-                leaderL.setSensorToRevolutionFactor(RobotSettings.DRIVE_GEARING);
-                leaderR.setSensorToRevolutionFactor(RobotSettings.DRIVE_GEARING);
+                leaderL.setSensorToRealDistanceFactor(RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER * Math.PI));
+                leaderR.setSensorToRealDistanceFactor(RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER * Math.PI));
                 break;
             case TALON_FX:
                 leaderL = new TalonMotorController(RobotSettings.DRIVE_LEADER_L_ID);
                 leaderR = new TalonMotorController(RobotSettings.DRIVE_LEADER_R_ID);
                 followerL = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_L_IDS);
                 followerR = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_R_IDS);
-                leaderL.setSensorToRevolutionFactor((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING);
-                leaderR.setSensorToRevolutionFactor((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING);
+                leaderL.setSensorToRealDistanceFactor((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER * Math.PI));
+                leaderR.setSensorToRealDistanceFactor((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER * Math.PI));
                 break;
             default:
                 throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + RobotSettings.DRIVE_MOTOR_TYPE.name(), "Add an implementation in the init for drive manager");
@@ -138,11 +126,8 @@ public class DriveManager implements ISubsystem {
         } catch (Exception e) {
             throw new InitializationFailureException("An error has occurred linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
         }
-        leaderL.setInverted(RobotSettings.DRIVE_INVERT_LEFT);
-        leaderR.setInverted(RobotSettings.DRIVE_INVERT_RIGHT);
-
-        leaderL.resetEncoder();
-        leaderR.resetEncoder();
+        leaderL.setInverted(RobotSettings.DRIVE_INVERT_LEFT).resetEncoder();
+        leaderR.setInverted(RobotSettings.DRIVE_INVERT_RIGHT).resetEncoder();
 
         setAllMotorCurrentLimits(50);
 
@@ -379,11 +364,10 @@ public class DriveManager implements ISubsystem {
             System.out.println(leftFPS + ", " + rightFPS);
         double mult = /*3.8 * 2.16 */ RobotSettings.DRIVE_SCALE;
         if (RobotSettings.DEBUG) {
-            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " RPM: " + UtilFunctions.convertDriveFPStoRPM(leftFPS) + " " + UtilFunctions.convertDriveFPStoRPM(rightFPS));
-            System.out.println("Req left: " + (getTargetVelocity(leftFPS) * mult) + " Req Right: " + (getTargetVelocity(rightFPS) * mult));
+            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
         }
-        leaderL.moveAtVelocity(UtilFunctions.convertDriveFPStoRPM(leftFPS) * mult);
-        leaderR.moveAtVelocity(UtilFunctions.convertDriveFPStoRPM(rightFPS) * mult);
+        leaderL.moveAtVelocity((leftFPS) * mult);
+        leaderR.moveAtVelocity((rightFPS) * mult);
     }
 
     @Override

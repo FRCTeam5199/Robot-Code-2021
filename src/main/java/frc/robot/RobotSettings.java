@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.SerialPort;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
@@ -59,6 +60,20 @@ public class RobotSettings {
     public static final boolean ENABLE_MUSIC = getNumbersFrom.ENABLE_MUSIC;
 
     /**
+     * Enables {@link frc.misc.LEDs}
+     */
+    public static final boolean ENABLE_LEDS = getNumbersFrom.ENABLE_LEDS;
+
+    /**
+     * Enables {@link frc.pdp.PDP}
+     */
+    public static final boolean ENABLE_PDP = getNumbersFrom.ENABLE_PDP;
+
+    public static final int LED_STRAND_LENGTH = getNumbersFrom.LED_STRAND_LENGTH;
+
+    public static final int LED_STRAND_PORT_ID = getNumbersFrom.LED_STRAND_PORT_ID;
+
+    /**
      * Whether the {@link #ENABLE_DRIVE drivetrain} {@link frc.drive.DriveManager#followerL follower motors} will have 1
      * or 2 followers apeice
      */
@@ -79,6 +94,7 @@ public class RobotSettings {
     public static final boolean USE_PIGEON = getNumbersFrom.USE_PIGEON;
     //TODO make this a supported imu's enum
     public static final boolean USE_NAVX2 = getNumbersFrom.USE_NAVX2;
+    public static final SerialPort.Port IMU_NAVX_PORT = getNumbersFrom.IMU_NAVX_PORT;
 
     //SHOOTER
     /**
@@ -155,6 +171,7 @@ public class RobotSettings {
     public static final PID HEADING_PID = getNumbersFrom.HEADING_PID;
     public static final PID DRIVEBASE_PID = getNumbersFrom.DRIVEBASE_PID;
     public static final PID TURRET_PID = getNumbersFrom.TURRET_PID;
+    public static final double DRIVEBASE_DISTANCE_BETWEEN_WHEELS = getNumbersFrom.DRIVEBASE_DISTANCE_BETWEEN_WHEELS; //in Meters
     public static final double SHOOTER_SENSOR_UNITS_PER_ROTATION = getNumbersFrom.SHOOTER_SENSOR_UNITS_PER_ROTATION;
     public static final double motorPulleySize = getNumbersFrom.motorPulleySize;
     public static final double driverPulleySize = getNumbersFrom.driverPulleySize;
@@ -219,6 +236,11 @@ public class RobotSettings {
      * The id of the {@link #ENABLE_IMU IMU} which should be independent of the {@link #USE_PIGEON IMU type}
      */
     public static final int IMU_ID = getNumbersFrom.IMU_ID;
+
+    /**
+     * The id for the {@link #ENABLE_PDP PDP}
+     */
+    public static final int PDP_ID = getNumbersFrom.PDP_ID;
 
     /**
      * Prints out all of the id's for anything that needs an id

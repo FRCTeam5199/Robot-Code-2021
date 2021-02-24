@@ -77,14 +77,14 @@ public class Shooter implements ISubsystem {
                 if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
                     follower = new SparkMotorController(RobotSettings.SHOOTER_FOLLOWER_ID);
                 }
-                leader.setSensorToRevolutionFactor(1);
+                leader.setSensorToRealDistanceFactor(1);
                 break;
             case TALON_FX:
                 leader = new TalonMotorController(RobotSettings.SHOOTER_LEADER_ID);
                 if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
                     follower = new TalonMotorController(RobotSettings.SHOOTER_FOLLOWER_ID);
                 }
-                leader.setSensorToRevolutionFactor(600 / RobotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
+                leader.setSensorToRealDistanceFactor(600 / RobotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
                 break;
             default:
                 throw new IllegalStateException("No such supported shooter motor config for " + RobotSettings.SHOOTER_MOTOR_TYPE.name());
@@ -92,16 +92,10 @@ public class Shooter implements ISubsystem {
 
         leader.setInverted(RobotSettings.SHOOTER_INVERTED);
         if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
-            follower.follow(leader);
-            follower.setInverted(RobotSettings.SHOOTER_INVERTED);
-            follower.setCurrentLimit(80);
-            follower.setBrake(false);
+            follower.follow(leader).setInverted(RobotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
             //TODO test if braking leader brakes follower
         }
-        leader.setCurrentLimit(80);
-        leader.setBrake(false);
-        leader.resetEncoder();
-        leader.setOpenLoopRampRate(40);
+        leader.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
     }
 
     /**

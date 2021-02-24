@@ -30,18 +30,20 @@ public class SparkMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtRotations(double rpm) {
-        moveAtVelocity(rpm / sensorToRevolutionFactor);
+        moveAtVelocity(rpm * sensorToRealDistanceFactor);
     }
 
     @Override
-    public void setInverted(boolean invert) {
+    public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
+        return this;
     }
 
     @Override
-    public void follow(AbstractMotorController leader) {
+    public AbstractMotorController follow(AbstractMotorController leader) {
         if (leader instanceof SparkMotorController)
             motor.follow(((SparkMotorController) leader).motor);
+        return this;
     }
 
     @Override
@@ -50,38 +52,41 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void setPid(PID pid) {
+    public AbstractMotorController setPid(PID pid) {
         myPid.setP(pid.getP());
         myPid.setI(pid.getI());
         myPid.setD(pid.getD());
         myPid.setFF(pid.getF());
+        return this;
     }
 
     @Override
-    public void moveAtVelocity(double amount) {
-        myPid.setReference(amount / sensorToRevolutionFactor, kVelocity);
+    public void moveAtVelocity(double realDistance) {
+        myPid.setReference(realDistance / sensorToRealDistanceFactor, kVelocity);
     }
 
     @Override
-    public void setBrake(boolean brake) {
+    public AbstractMotorController setBrake(boolean brake) {
         motor.setIdleMode(brake ? kBrake : kCoast);
+        return this;
     }
 
     @Override
     public double getRotations() {
         //why 9? i dunno
-        return motor.getEncoder().getPosition() * sensorToRevolutionFactor;
+        return motor.getEncoder().getPosition() * sensorToRealDistanceFactor;
         //return motor.getEncoder().getVelocity() * sensorToRevolutionFactor;
     }
 
     @Override
     public double getSpeed() {
-        return motor.getEncoder().getVelocity() * sensorToRevolutionFactor;
+        return motor.getEncoder().getVelocity() * sensorToRealDistanceFactor;
     }
 
     @Override
-    public void setCurrentLimit(int limit) {
+    public AbstractMotorController setCurrentLimit(int limit) {
         motor.setSmartCurrentLimit(limit);
+        return this;
     }
 
     @Override
@@ -90,7 +95,8 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void setOpenLoopRampRate(double timeToMax) {
+    public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
         motor.setOpenLoopRampRate(timeToMax);
+        return this;
     }
 }

@@ -5,8 +5,8 @@ import frc.motors.followers.AbstractFollowerMotorController;
 
 /**
  * This is the base class for any motor. It is not an interface because it has to have a {@link
- * #sensorToRevolutionFactor nonstatic field} which is not doable in an interface. If you are to use a motor that we did
- * not implement, make a new class and use an Abstract motor
+ * #sensorToRealDistanceFactor nonstatic field} which is not doable in an interface. If you are to use a motor that we
+ * did not implement, make a new class and use an Abstract motor
  *
  * @author jojo2357
  * @see AbstractFollowerMotorController
@@ -22,7 +22,7 @@ public abstract class AbstractMotorController {
      * This is a Double (object, not value). If required but not set, will throw a NPE If it is giving you hell and you
      * dont want to actually fix the issue, just change to double
      */
-    public Double sensorToRevolutionFactor;
+    public Double sensorToRealDistanceFactor;
 
     /**
      * Uses PID to attempt to reach the requested speed Different from {@link #moveAtVelocity(double)} because this does
@@ -36,8 +36,9 @@ public abstract class AbstractMotorController {
      * Inverts the motor rotation from default for that motor (varies motor to motor of course)
      *
      * @param invert Whether to inver the motor or not
+     * @return this object (factory style)
      */
-    public abstract void setInverted(boolean invert);
+    public abstract AbstractMotorController setInverted(boolean invert);
 
     /**
      * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
@@ -45,8 +46,9 @@ public abstract class AbstractMotorController {
      *
      * @param leader motor to follow
      * @see AbstractFollowerMotorController
+     * @return
      */
-    public abstract void follow(AbstractMotorController leader);
+    public abstract AbstractMotorController follow(AbstractMotorController leader);
 
     /**
      * Sets current encoder position to be the zero position. If you are absolutely crazy and want to set the encoder to
@@ -59,12 +61,13 @@ public abstract class AbstractMotorController {
      * You know how it is. Timeout is default per motor, channel defaults to 0 or motor default
      *
      * @param pid the {@link PID} object that contains pertinent pidf data
+     * @return
      */
-    public abstract void setPid(PID pid);
+    public abstract AbstractMotorController setPid(PID pid);
 
     /**
      * Moves the motor at the requested velocity per time (default fps but units vary based on {@link
-     * #sensorToRevolutionFactor}) Different from {@link #moveAtRotations(double)} since this accounts for real
+     * #sensorToRealDistanceFactor}) Different from {@link #moveAtRotations(double)} since this accounts for real
      * distances not motor speed.
      *
      * @param amount requested drive velocity
@@ -76,12 +79,13 @@ public abstract class AbstractMotorController {
      * ERF to slow motor (actual implemetation varies between motors)
      *
      * @param brake whether to apply idle resistance
+     * @return
      */
-    public abstract void setBrake(boolean brake);
+    public abstract AbstractMotorController setBrake(boolean brake);
 
     /**
      * Gets the default encoder's position. Accounts for gearings but not wheelings unless ur crazy and accounted for
-     * wheel size in {@link #sensorToRevolutionFactor}
+     * wheel size in {@link #sensorToRealDistanceFactor}
      *
      * @return Distance output shaft has moved in rotations
      */
@@ -93,8 +97,9 @@ public abstract class AbstractMotorController {
      * Sets the maximum allowable current that will flow through this motor
      *
      * @param limit max current in amps
+     * @return
      */
-    public abstract void setCurrentLimit(int limit);
+    public abstract AbstractMotorController setCurrentLimit(int limit);
 
     /**
      * Sets the motor output on a percent output basis
@@ -108,15 +113,16 @@ public abstract class AbstractMotorController {
      * is allowed to change in said mode.
      *
      * @param timeToMax time in seconds to go from 0 to full power
+     * @return
      */
-    public abstract void setOpenLoopRampRate(double timeToMax);
+    public abstract AbstractMotorController setOpenLoopRampRate(double timeToMax);
 
     /**
-     * see docs for {@link #sensorToRevolutionFactor} for full explanation
+     * see docs for {@link #sensorToRealDistanceFactor} for full explanation
      *
      * @param s2rf Conversion from encoder units to RPM including the gearing
      */
-    public void setSensorToRevolutionFactor(double s2rf) {
-        sensorToRevolutionFactor = s2rf;
+    public void setSensorToRealDistanceFactor(double s2rf) {
+        sensorToRealDistanceFactor = s2rf;
     }
 }

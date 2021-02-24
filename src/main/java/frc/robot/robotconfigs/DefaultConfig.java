@@ -1,5 +1,6 @@
 package frc.robot.robotconfigs;
 
+import edu.wpi.first.wpilibj.SerialPort;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
@@ -21,7 +22,9 @@ public abstract class DefaultConfig {
     public boolean ENABLE_HOPPER = false;
     public boolean ENABLE_AGITATOR = false;
     public boolean ENABLE_INDEXER = false;
-    public boolean ENABLE_MUSIC = true;
+    public boolean ENABLE_MUSIC = false;
+    public boolean ENABLE_PDP = false;
+    public boolean ENABLE_LEDS = false;
 
     public boolean DRIVE_USE_6_MOTORS = false;
     public boolean DRIVE_INVERT_LEFT = true;
@@ -51,6 +54,7 @@ public abstract class DefaultConfig {
     public AutonType AUTON_TYPE = AutonType.P2P;
 
     public int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
+    public double DRIVEBASE_DISTANCE_BETWEEN_WHEELS = -2; //Distance in meters between wheels
     public double MAX_SPEED = 0; //max speed in fps - REAL IS 10(for 4in wheels)
     public double MAX_ROTATION = 0; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
     public double WHEEL_DIAMETER = 0; //update: now it's used once
@@ -83,7 +87,7 @@ public abstract class DefaultConfig {
     public String GOAL_CAM_NAME = "GoalCamera";
     public String BALL_CAM_NAME = "BallCamera";
 
-    public int PDP = 0;
+
     //Drive Motors
     public int DRIVE_LEADER_L_ID; //talon
     public int[] DRIVE_FOLLOWERS_L_IDS; //talon
@@ -100,8 +104,16 @@ public abstract class DefaultConfig {
     //intake
     public int INTAKE_MOTOR_ID = 12; //victor
     public int IMU_ID = 22; //pigeon
+    //leds
+    public int LED_STRAND_LENGTH = 60;
+    public int LED_STRAND_PORT_ID = 9;
+    //pdp
+    public int PDP_ID = 0;
 
     public int XBOX_CONTROLLER_USB_SLOT = 0;
     public int FLIGHT_STICK_USB_SLOT = 1;
     public int BUTTON_PANEL_USB_SLOT = 2;
+
+
+    public SerialPort.Port IMU_NAVX_PORT = SerialPort.Port.kUSB;
 }

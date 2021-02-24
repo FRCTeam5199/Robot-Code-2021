@@ -133,5 +133,4 @@ public class Intake implements ISubsystem {
     public void setIntake(int input) {
         intakeMult = input;
     }
-
 }

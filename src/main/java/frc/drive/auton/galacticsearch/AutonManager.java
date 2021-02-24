@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
@@ -30,7 +31,11 @@ public class AutonManager extends AbstractAutonManager {
 
     public AutonManager(DriveManager driveManager) {
         super(driveManager);
-        telem = DRIVING_CHILD.guidance;
+        if (RobotSettings.ENABLE_IMU) {
+            telem = DRIVING_CHILD.guidance;
+        } else {
+            telem = null;
+        }
         init();
     }
 
@@ -56,7 +61,7 @@ public class AutonManager extends AbstractAutonManager {
             telem.updateAuton();
             System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
             ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-            DRIVING_CHILD.drivePure(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+            DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
         }
     }
 
@@ -139,7 +144,7 @@ public class AutonManager extends AbstractAutonManager {
     /**
      * takes the distance between each point and squares it and returns the sum of the square errors
      *
-     * @param guesses the perceived points
+     * @param guesses    the perceived points
      * @param testPoints the points to plot against
      * @return the sum of squares error
      */
