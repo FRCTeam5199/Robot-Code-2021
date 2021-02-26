@@ -45,8 +45,8 @@ public abstract class AbstractMotorController {
      * the passed motor will be the leader
      *
      * @param leader motor to follow
+     * @return this object for factory style construction
      * @see AbstractFollowerMotorController
-     * @return
      */
     public abstract AbstractMotorController follow(AbstractMotorController leader);
 
@@ -61,7 +61,7 @@ public abstract class AbstractMotorController {
      * You know how it is. Timeout is default per motor, channel defaults to 0 or motor default
      *
      * @param pid the {@link PID} object that contains pertinent pidf data
-     * @return
+     * @return this object for factory style construction
      */
     public abstract AbstractMotorController setPid(PID pid);
 
@@ -79,7 +79,7 @@ public abstract class AbstractMotorController {
      * ERF to slow motor (actual implemetation varies between motors)
      *
      * @param brake whether to apply idle resistance
-     * @return
+     * @return this object for factory style construction
      */
     public abstract AbstractMotorController setBrake(boolean brake);
 
@@ -97,7 +97,7 @@ public abstract class AbstractMotorController {
      * Sets the maximum allowable current that will flow through this motor
      *
      * @param limit max current in amps
-     * @return
+     * @return this object for factory style construction
      */
     public abstract AbstractMotorController setCurrentLimit(int limit);
 
@@ -113,9 +113,15 @@ public abstract class AbstractMotorController {
      * is allowed to change in said mode.
      *
      * @param timeToMax time in seconds to go from 0 to full power
-     * @return
+     * @return this object for factory style construction
      */
     public abstract AbstractMotorController setOpenLoopRampRate(double timeToMax);
+
+    /**
+     * Gets the temperature of the motor
+     * @return the temperature in celcius
+     */
+    public abstract double getMotorTemperature();
 
     /**
      * see docs for {@link #sensorToRealDistanceFactor} for full explanation

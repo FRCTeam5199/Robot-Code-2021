@@ -88,4 +88,9 @@ public class VictorMotorController extends AbstractMotorController {
         motor.configOpenloopRamp(timeToMax);
         return this;
     }
+
+    @Override
+    public double getMotorTemperature() {
+        return motor.getTemperature();
+    }
 }

@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -16,6 +17,7 @@ import frc.misc.ISubsystem;
 import frc.misc.LEDs;
 import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
+import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 import frc.robot.robotconfigs.twentyone.PracticeRobot2021;
 import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.vision.BallPhoton;
@@ -30,7 +32,8 @@ public class Robot extends TimedRobot {
      * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
      * using from the list under robotconfigs
      */
-    public static final DefaultConfig getNumbersFrom = new Robot2020();
+    public static final Preferences preferences = Preferences.getInstance();
+    public static final ArrayList<ISubsystem> subsytems = new ArrayList<>();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
     private static final ShuffleboardTab ROBOT_TAB = Shuffleboard.getTab("DANGER!");
     private static final NetworkTableEntry remove = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", "").getEntry(),
@@ -42,6 +45,7 @@ public class Robot extends TimedRobot {
             disableSongTab = MUSICK_TAB.add("Stop Song", false).getEntry();
     private static final boolean songFound = false;
     private static final NetworkTableEntry foundSong = MUSICK_TAB.add("Found it", songFound).getEntry();
+    public static DefaultConfig settingsFile;
     public static DriveManager driver;
     public static Intake intake;
     public static Hopper hopper;
@@ -55,7 +59,23 @@ public class Robot extends TimedRobot {
     private static String lastFoundSong = "";
     private static long lastDisable = 0;
 
-    public static final ArrayList<ISubsystem> subsytems = new ArrayList<>();
+    static {
+        preferences.initString("hostname", "Default");
+        String hostName = preferences.getString("hostname", "Default");
+        switch (hostName) {
+            case "2020-Comp":
+                settingsFile = new Robot2020();
+                break;
+            case "2021-Prac":
+                settingsFile = new PracticeRobot2021();
+                break;
+            case "2021-Comp":
+                settingsFile = new CompetitionRobot2021();
+                break;
+            default:
+                throw new IllegalStateException("You need to ID this robot.");
+        }
+    }
 
     /**
      * Init everything
@@ -81,7 +101,7 @@ public class Robot extends TimedRobot {
         if (RobotSettings.ENABLE_SHOOTER) {
             shooter = new Shooter();
         }
-        if (RobotSettings.ENABLE_TURRET){
+        if (RobotSettings.ENABLE_TURRET) {
             turret = new Turret();
             if (RobotSettings.ENABLE_DRIVE) turret.setTelemetry(driver.guidance);
         }

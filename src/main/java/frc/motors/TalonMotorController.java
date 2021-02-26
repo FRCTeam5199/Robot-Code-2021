@@ -1,5 +1,6 @@
 package frc.motors;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
@@ -56,15 +57,20 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void resetEncoder() {
-        motor.setSelectedSensorPosition(0);
+        if (motor.setSelectedSensorPosition(0) != ErrorCode.OK)
+            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not be reset");
     }
 
     @Override
     public AbstractMotorController setPid(PID pid) {
-        motor.config_kP(0, pid.getP());
-        motor.config_kI(0, pid.getI());
-        motor.config_kD(0, pid.getD());
-        motor.config_kF(0, pid.getF());
+        if (motor.config_kP(0, pid.getP()) != ErrorCode.OK)
+            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " P in PIDF couldnt be reset");
+        if (motor.config_kI(0, pid.getI()) != ErrorCode.OK)
+            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " I in PIDF couldnt be reset");
+        if (motor.config_kD(0, pid.getD()) != ErrorCode.OK)
+            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " D in PIDF couldnt be reset");
+        if (motor.config_kF(0, pid.getF()) != ErrorCode.OK)
+            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " F in PIDF couldnt be reset");
         return this;
     }
 
@@ -95,7 +101,8 @@ public class TalonMotorController extends AbstractMotorController {
         SupplyCurrentLimitConfiguration config = new SupplyCurrentLimitConfiguration();
         config.currentLimit = limit;
         config.enable = true;
-        motor.configSupplyCurrentLimit(config);
+        if (motor.configSupplyCurrentLimit(config) != ErrorCode.OK)
+            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " current limit could not be set");
         return this;
     }
 
@@ -106,7 +113,13 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
-        motor.configOpenloopRamp(timeToMax);
+        if (motor.configOpenloopRamp(timeToMax) != ErrorCode.OK)
+            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not set open ramp rate");
         return this;
+    }
+
+    @Override
+    public double getMotorTemperature() {
+        return motor.getTemperature();
     }
 }

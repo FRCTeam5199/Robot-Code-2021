@@ -46,7 +46,7 @@ public class Robot2020 extends DefaultConfig {
         AUTON_TYPE = AutonType.BUT_BETTER_NOW;
 
         DRIVEBASE_PID = new PID(0, 0, 0.000005, 0.00002);
-        SHOOTER_PID = new PID(0.001, 0.00003, 0.0001, 0.001);
+        SHOOTER_PID = new PID(0.001, 0.000009, 0.0001, 0.023);
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
@@ -54,7 +54,6 @@ public class Robot2020 extends DefaultConfig {
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
         WHEEL_DIAMETER = 6; //update: now it's used once
-        MAX_MOTOR_SPEED = 5000; //theoretical max motor speed in rpm
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
         DRIVE_GEARING = 1 / 9.0;
@@ -94,7 +93,7 @@ public class Robot2020 extends DefaultConfig {
         SHOOTER_FOLLOWER_ID = 8; //talon
 
         //turret
-        TURRET_YAW = 33; //550
+        TURRET_YAW_ID = 33; //550
 
         //hopper
         AGITATOR_MOTOR_ID = 10; //victor

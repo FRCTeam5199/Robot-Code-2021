@@ -39,7 +39,6 @@ public abstract class DefaultConfig {
     public boolean USE_NAVX2 = false;
 
     //SHOOTER
-    public SupportedMotors SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
     public boolean SHOOTER_USE_TWO_MOTORS = true;
     public boolean SHOOTER_INVERTED = true;
 
@@ -50,7 +49,10 @@ public abstract class DefaultConfig {
     public DriveTypes DRIVE_STYLE = DriveTypes.STANDARD;
     public ShootingControlStyles SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
     public IntakeControlStyles INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
+
+    public SupportedMotors SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
     public SupportedMotors DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
+    public SupportedMotors TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
 
     public AutonType AUTON_TYPE = AutonType.P2P;
 
@@ -58,8 +60,7 @@ public abstract class DefaultConfig {
     public double DRIVEBASE_DISTANCE_BETWEEN_WHEELS = -2; //Distance in meters between wheels
     public double MAX_SPEED = 0; //max speed in fps - REAL IS 10(for 4in wheels)
     public double MAX_ROTATION = 0; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
-    public double WHEEL_DIAMETER = 0; //update: now it's used once
-    public double MAX_MOTOR_SPEED = 0; //theoretical max motor speed in rpm
+    public double WHEEL_DIAMETER = 0;
     public double TURN_SCALE = 1;
     public double DRIVE_SCALE = 1;
     public double DRIVE_GEARING = 10 / 70.0;
@@ -98,7 +99,7 @@ public abstract class DefaultConfig {
     public int SHOOTER_LEADER_ID = 7; //talon
     public int SHOOTER_FOLLOWER_ID = 8; //talon
     //turret
-    public int TURRET_YAW = 33; //550
+    public int TURRET_YAW_ID = 33; //550
     //hopper
     public int AGITATOR_MOTOR_ID = 10; //victor
     public int INDEXER_MOTOR_ID = 11; //victor
@@ -114,7 +115,6 @@ public abstract class DefaultConfig {
     public int XBOX_CONTROLLER_USB_SLOT = 0;
     public int FLIGHT_STICK_USB_SLOT = 1;
     public int BUTTON_PANEL_USB_SLOT = 2;
-
 
     public SerialPort.Port IMU_NAVX_PORT = SerialPort.Port.kUSB;
 }

@@ -106,12 +106,6 @@ public class Shooter implements ISubsystem {
         updateGeneric();
     }
 
-    public void setPercentSpeed(double percent) {
-        if (percent <= 1) {
-            leader.moveAtPercent(percent);
-        }
-    }
-
     @Override
     public void updateTeleop() {
         updateGeneric();
@@ -152,8 +146,7 @@ public class Shooter implements ISubsystem {
         }
     }
 
-    private void -
-    +updateShuffleboard() {
+    private void updateShuffleboard() {
         if (calibratePID.getBoolean(false)) {
             PID readPid = new PID(P.getDouble(RobotSettings.DRIVEBASE_PID.getP()), I.getDouble(RobotSettings.DRIVEBASE_PID.getI()), D.getDouble(RobotSettings.DRIVEBASE_PID.getD()), F.getDouble(RobotSettings.DRIVEBASE_PID.getF()));
             if (!lastPID.equals(readPid)) {

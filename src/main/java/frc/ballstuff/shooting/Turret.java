@@ -11,6 +11,7 @@ import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
+import frc.motors.TalonMotorController;
 import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 import frc.vision.GoalPhoton;
@@ -50,9 +51,18 @@ public class Turret implements ISubsystem {
             goalPhoton = new GoalPhoton();
             goalPhoton.init();
         }
-        motor = new SparkMotorController(RobotSettings.TURRET_YAW);
-        motor.setInverted(false).setPid(RobotSettings.TURRET_PID).setBrake(true)
-                .setSensorToRealDistanceFactor((RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30));
+        switch (RobotSettings.SHOOTER_MOTOR_TYPE) {
+            case CAN_SPARK_MAX:
+                motor = new SparkMotorController(RobotSettings.TURRET_YAW_ID);
+                motor.setSensorToRealDistanceFactor(RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30);
+                break;
+            case TALON_FX:
+                motor = new TalonMotorController(RobotSettings.TURRET_YAW_ID);
+                //TODO make a setting maybe
+                motor.setSensorToRealDistanceFactor(RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30 * 600 / 2048);
+        }
+        motor.setInverted(false).setPid(RobotSettings.TURRET_PID).setBrake(true);
+
         setBrake(true);
     }
 
@@ -95,7 +105,7 @@ public class Turret implements ISubsystem {
                         if (goalPhoton.hasValidTarget()) {
                             omegaSetpoint = -goalPhoton.getAngle() / 30;
                         } else {
-                            omegaSetpoint = 0;//scan();
+                            omegaSetpoint = scan();
                         }
                     }
                 }
@@ -114,16 +124,14 @@ public class Turret implements ISubsystem {
         }
 
         if (isSafe()) {
-            //System.out.println("SAFE");
             rotateTurret(omegaSetpoint);
             if (RobotSettings.DEBUG) {
                 System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
             }
         } else {
-            //System.out.println("Unsafe " + turretDegrees());
-            if (turretDegrees() > 270) {
+            if (turretDegrees() > RobotSettings.TURRET_MAX_POS) {
                 rotateTurret(0.25);
-            } else if (turretDegrees() < 0) {
+            } else if (turretDegrees() < RobotSettings.TURRET_MIN_POS) {
                 rotateTurret(-0.25);
             } else {
                 rotateTurret(0);
@@ -205,7 +213,7 @@ public class Turret implements ISubsystem {
      */
     private boolean isSafe() {
         double turretDeg = turretDegrees();
-        return turretDeg <= 270 && turretDeg >= 0;
+        return turretDeg <= RobotSettings.TURRET_MAX_POS && turretDeg >= RobotSettings.TURRET_MIN_POS;
     }
 
     /**

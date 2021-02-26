@@ -1,5 +1,6 @@
 package frc.motors;
 
+import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -48,15 +49,20 @@ public class SparkMotorController extends AbstractMotorController {
 
     @Override
     public void resetEncoder() {
-        motor.getEncoder().setPosition(0);
+        if (motor.getEncoder().setPosition(0) != CANError.kOk)
+            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not reset its encoder");
     }
 
     @Override
     public AbstractMotorController setPid(PID pid) {
-        myPid.setP(pid.getP());
-        myPid.setI(pid.getI());
-        myPid.setD(pid.getD());
-        myPid.setFF(pid.getF());
+        if (myPid.setP(pid.getP()) != CANError.kOk)
+            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " P in PIDF couldnt be reset");
+        if (myPid.setI(pid.getI()) != CANError.kOk)
+            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " I in PIDF couldnt be reset");
+        if (myPid.setD(pid.getD()) != CANError.kOk)
+            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " D in PIDF couldnt be reset");
+        if (myPid.setFF(pid.getF()) != CANError.kOk)
+            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " F in PIDF couldnt be reset");
         return this;
     }
 
@@ -85,7 +91,8 @@ public class SparkMotorController extends AbstractMotorController {
 
     @Override
     public AbstractMotorController setCurrentLimit(int limit) {
-        motor.setSmartCurrentLimit(limit);
+        if (motor.setSmartCurrentLimit(limit) != CANError.kOk)
+            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not set current limit");
         return this;
     }
 
@@ -96,7 +103,13 @@ public class SparkMotorController extends AbstractMotorController {
 
     @Override
     public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
-        motor.setOpenLoopRampRate(timeToMax);
+        if (motor.setOpenLoopRampRate(timeToMax) != CANError.kOk)
+            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not set open loop ramp");
         return this;
+    }
+
+    @Override
+    public double getMotorTemperature() {
+        return motor.getMotorTemperature();
     }
 }

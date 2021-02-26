@@ -56,7 +56,6 @@ public class PracticeRobot2021 extends DefaultConfig {
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
         WHEEL_DIAMETER = 4; //inches. update: now it's used once
-        MAX_MOTOR_SPEED = 5000; //theoretical max motor speed in rpm
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
         DRIVE_GEARING = 10 / 60.0;
@@ -96,7 +95,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         SHOOTER_FOLLOWER_ID = 8; //talon
 
         //turret
-        TURRET_YAW = 33; //550
+        TURRET_YAW_ID = 33; //550
 
         //hopper
         AGITATOR_MOTOR_ID = 10; //victor

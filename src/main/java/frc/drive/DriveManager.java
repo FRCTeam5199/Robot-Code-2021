@@ -106,7 +106,8 @@ public class DriveManager implements ISubsystem {
                 leaderR = new SparkMotorController(RobotSettings.DRIVE_LEADER_R_ID);
                 followerL = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_L_IDS);
                 followerR = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_R_IDS);
-                final double s2rf = RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60;
+                //rpm <=> rps <=> gearing <=> wheel circumference
+                final double s2rf = RobotSettings.DRIVE_GEARING * (RobotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60;
                 leaderL.setSensorToRealDistanceFactor(s2rf);
                 leaderR.setSensorToRealDistanceFactor(s2rf);
                 break;
@@ -116,9 +117,8 @@ public class DriveManager implements ISubsystem {
                 leaderR = new TalonMotorController(RobotSettings.DRIVE_LEADER_R_ID);
                 followerL = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_L_IDS);
                 followerR = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_R_IDS);
-                final double s2rf = ((600.0 / 60) / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER * Math.PI / 12);
-                //final double s2rf = (600 * (RobotSettings.WHEEL_DIAMETER * Math.PI) / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION * RobotSettings.DRIVE_GEARING / 12);
-                //final double s2rf = ((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * (RobotSettings.DRIVE_GEARING * (RobotSettings.WHEEL_DIAMETER * Math.PI)));
+                //Sens units / 100ms <=> rps <=> gearing <=> wheel circumference
+                final double s2rf = (10.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING * (RobotSettings.WHEEL_DIAMETER * Math.PI / 12);
                 leaderL.setSensorToRealDistanceFactor(s2rf);
                 leaderR.setSensorToRealDistanceFactor(s2rf);
                 break;
