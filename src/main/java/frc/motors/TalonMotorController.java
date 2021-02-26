@@ -5,6 +5,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 import frc.misc.Chirp;
 import frc.misc.PID;
+import frc.misc.UtilFunctions;
+import frc.robot.RobotSettings;
 
 import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
 import static com.ctre.phoenix.motorcontrol.ControlMode.Velocity;
@@ -68,7 +70,8 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtVelocity(double realAmount) {
-        motor.set(Velocity, realAmount / sensorToRealDistanceFactor);
+        motor.set(Velocity, realAmount / sensorToRealDistanceFactor);/// sensorToRealDistanceFactor);
+        //System.out.println("I'm crying. RealAmount: " + realAmount + "\nSensortoDist: " + sensorToRealDistanceFactor + "\nSetting motors to " + realAmount / sensorToRealDistanceFactor);
     }
 
     @Override

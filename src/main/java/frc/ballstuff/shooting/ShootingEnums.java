@@ -35,6 +35,7 @@ public enum ShootingEnums {
     }
 
     public void shoot(Shooter shooter) {
+        //System.out.println("Shooting " + this.name());
         this.function.accept(shooter);
     }
 }

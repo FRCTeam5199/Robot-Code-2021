@@ -53,6 +53,11 @@ public class DriveManager implements ISubsystem {
     private BaseController controller;
     private PID lastPID = PID.EMPTY_PID;
 
+    public DriveManager() throws RuntimeException {
+        addToMetaList();
+        init();
+    }
+
     /**
      * Takes a -1 to 1 scaled value and returns it scaled based on the max sped
      *
@@ -71,11 +76,6 @@ public class DriveManager implements ISubsystem {
      */
     private static double adjustedRotation(double input) {
         return input * RobotSettings.MAX_ROTATION;
-    }
-
-    public DriveManager() throws RuntimeException {
-        addToMetaList();
-        init();
     }
 
     /**
@@ -101,22 +101,28 @@ public class DriveManager implements ISubsystem {
      */
     private void createDriveMotors() throws InitializationFailureException, IllegalArgumentException {
         switch (RobotSettings.DRIVE_MOTOR_TYPE) {
-            case CAN_SPARK_MAX:
+            case CAN_SPARK_MAX: {
                 leaderL = new SparkMotorController(RobotSettings.DRIVE_LEADER_L_ID);
                 leaderR = new SparkMotorController(RobotSettings.DRIVE_LEADER_R_ID);
                 followerL = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_L_IDS);
                 followerR = new SparkFollowerMotorsController(RobotSettings.DRIVE_FOLLOWERS_R_IDS);
-                leaderL.setSensorToRealDistanceFactor(RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER * Math.PI));
-                leaderR.setSensorToRealDistanceFactor(RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER * Math.PI));
+                final double s2rf = RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60;
+                leaderL.setSensorToRealDistanceFactor(s2rf);
+                leaderR.setSensorToRealDistanceFactor(s2rf);
                 break;
-            case TALON_FX:
+            }
+            case TALON_FX: {
                 leaderL = new TalonMotorController(RobotSettings.DRIVE_LEADER_L_ID);
                 leaderR = new TalonMotorController(RobotSettings.DRIVE_LEADER_R_ID);
                 followerL = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_L_IDS);
                 followerR = new TalonFollowerMotorController(RobotSettings.DRIVE_FOLLOWERS_R_IDS);
-                leaderL.setSensorToRealDistanceFactor((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER * Math.PI));
-                leaderR.setSensorToRealDistanceFactor((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER * Math.PI));
+                final double s2rf = ((600.0 / 60) / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * RobotSettings.DRIVE_GEARING / (RobotSettings.WHEEL_DIAMETER * Math.PI / 12);
+                //final double s2rf = (600 * (RobotSettings.WHEEL_DIAMETER * Math.PI) / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION * RobotSettings.DRIVE_GEARING / 12);
+                //final double s2rf = ((600.0 / RobotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * (RobotSettings.DRIVE_GEARING * (RobotSettings.WHEEL_DIAMETER * Math.PI)));
+                leaderL.setSensorToRealDistanceFactor(s2rf);
+                leaderR.setSensorToRealDistanceFactor(s2rf);
                 break;
+            }
             default:
                 throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + RobotSettings.DRIVE_MOTOR_TYPE.name(), "Add an implementation in the init for drive manager");
         }
@@ -362,7 +368,7 @@ public class DriveManager implements ISubsystem {
     public void driveFPS(double leftFPS, double rightFPS) {
         if (leftFPS != 0)
             System.out.println(leftFPS + ", " + rightFPS);
-        double mult = /*3.8 * 2.16 */ RobotSettings.DRIVE_SCALE;
+        double mult = 3.8 * 2.16 * RobotSettings.DRIVE_SCALE;
         if (RobotSettings.DEBUG) {
             System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
         }

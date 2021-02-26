@@ -25,7 +25,7 @@ public class Chirp extends Orchestra implements ISubsystem {
     public static final String[] musicNames = {
             "BokuNoSensou_4Motors", "CoconutMall_4Motors", "Electroman_Adventures_4Motors",
             "Imperial_March_4Motors", "kiraTheme_4Motors", "Megalovania_4Motors",
-            "TheOnlyThingTheyFearlsYou_4Motors", "WiiSports_4Motors"
+            "TheOnlyThingTheyFearlsYou_4Motors", "WiiSports_4Motors", "TheSevenSeas_4Motors"
     };
 
     public Chirp() {

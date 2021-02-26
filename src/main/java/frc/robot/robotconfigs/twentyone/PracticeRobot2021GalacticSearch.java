@@ -16,7 +16,7 @@ public class PracticeRobot2021GalacticSearch extends DefaultConfig {
         ENABLE_HOPPER = false;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
-        ENABLE_MUSIC = true;
+        ENABLE_MUSIC = false;
 
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
@@ -25,7 +25,7 @@ public class PracticeRobot2021GalacticSearch extends DefaultConfig {
         //Misc
         ENABLE_VISION = true;
         USE_PHOTONVISION = true;
-        ENABLE_IMU = false;
+        ENABLE_IMU = true;
         USE_PIGEON = true;
         USE_NAVX2 = false;
 

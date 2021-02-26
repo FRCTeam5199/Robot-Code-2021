@@ -25,6 +25,7 @@ public abstract class DefaultConfig {
     public boolean ENABLE_MUSIC = false;
     public boolean ENABLE_PDP = false;
     public boolean ENABLE_LEDS = false;
+    public boolean ENABLE_TURRET = false;
 
     public boolean DRIVE_USE_6_MOTORS = false;
     public boolean DRIVE_INVERT_LEFT = true;

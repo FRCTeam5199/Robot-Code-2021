@@ -16,7 +16,8 @@ import frc.misc.ISubsystem;
 import frc.misc.LEDs;
 import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
-import frc.robot.robotconfigs.twentytwenty.Robot2020GalacticSearch;
+import frc.robot.robotconfigs.twentyone.PracticeRobot2021;
+import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
@@ -29,7 +30,7 @@ public class Robot extends TimedRobot {
      * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
      * using from the list under robotconfigs
      */
-    public static final DefaultConfig getNumbersFrom = new Robot2020GalacticSearch();
+    public static final DefaultConfig getNumbersFrom = new Robot2020();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
     private static final ShuffleboardTab ROBOT_TAB = Shuffleboard.getTab("DANGER!");
     private static final NetworkTableEntry remove = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", "").getEntry(),
@@ -79,6 +80,8 @@ public class Robot extends TimedRobot {
         }
         if (RobotSettings.ENABLE_SHOOTER) {
             shooter = new Shooter();
+        }
+        if (RobotSettings.ENABLE_TURRET){
             turret = new Turret();
             if (RobotSettings.ENABLE_DRIVE) turret.setTelemetry(driver.guidance);
         }
@@ -92,7 +95,7 @@ public class Robot extends TimedRobot {
                     autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     break;
                 case BUT_BETTER_NOW:
-                    autonManager = new frc.drive.auton.butbetternow.AutonManager("RobotTestPath2", driver);
+                    //autonManager = new frc.drive.auton.butbetternow.AutonManager("RobotTestPath2", driver);
                     break;
                 case GALACTIC_SCAM:
                     autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);

@@ -51,6 +51,7 @@ public class RobotSettings {
 
     public static final boolean ENABLE_AGITATOR = getNumbersFrom.ENABLE_AGITATOR;
     public static final boolean ENABLE_INDEXER = getNumbersFrom.ENABLE_INDEXER;
+    public static final boolean ENABLE_TURRET = getNumbersFrom.ENABLE_TURRET;
 
     /**
      * Enables {@link Robot#chirp}

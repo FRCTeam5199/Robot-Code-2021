@@ -90,9 +90,9 @@ public class Shooter implements ISubsystem {
                 throw new IllegalStateException("No such supported shooter motor config for " + RobotSettings.SHOOTER_MOTOR_TYPE.name());
         }
 
-        leader.setInverted(RobotSettings.SHOOTER_INVERTED);
+        leader.setInverted(RobotSettings.SHOOTER_INVERTED).setPid(RobotSettings.SHOOTER_PID);
         if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
-            follower.follow(leader).setInverted(RobotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
+            follower.follow(leader).setInverted(!RobotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
             //TODO test if braking leader brakes follower
         }
         leader.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
@@ -136,7 +136,8 @@ public class Shooter implements ISubsystem {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else {
                     hopper.setAll(false);
-                    setPercentSpeed(constSpeed.getDouble(0));
+                    leader.moveAtPercent(0);
+                    //setSpeed(constSpeed.getDouble(0));
                 }
                 break;
             }
@@ -151,7 +152,8 @@ public class Shooter implements ISubsystem {
         }
     }
 
-    private void updateShuffleboard() {
+    private void -
+    +updateShuffleboard() {
         if (calibratePID.getBoolean(false)) {
             PID readPid = new PID(P.getDouble(RobotSettings.DRIVEBASE_PID.getP()), I.getDouble(RobotSettings.DRIVEBASE_PID.getI()), D.getDouble(RobotSettings.DRIVEBASE_PID.getD()), F.getDouble(RobotSettings.DRIVEBASE_PID.getF()));
             if (!lastPID.equals(readPid)) {
@@ -162,11 +164,9 @@ public class Shooter implements ISubsystem {
                 }
             }
         }
-        if (RobotSettings.DEBUG) {
-            SmartDashboard.putNumber("RPM", leader.getSpeed());
-            SmartDashboard.putNumber("Target RPM", speed);
-            SmartDashboard.putBoolean("atSpeed", isAtSpeed());
-        }
+        SmartDashboard.putNumber("RPM", leader.getSpeed());
+        SmartDashboard.putNumber("Target RPM", speed);
+        SmartDashboard.putBoolean("atSpeed", isAtSpeed());
     }
 
     @Override
@@ -203,7 +203,8 @@ public class Shooter implements ISubsystem {
         if (RobotSettings.DEBUG) {
             System.out.println("set shooter speed to " + rpm);
         }
-        leader.moveAtRotations(rpm);
+        leader.moveAtVelocity(rpm);
+        //leader.moveAtPercent(rpm == 0 ? 0 : rpm > 0 ? .75 : 0);
     }
 
     /**

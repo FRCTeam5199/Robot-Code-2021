@@ -39,7 +39,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         ENABLE_INDEXER_AUTO_INDEX = true;
 
         //UI Styles
-        DRIVE_STYLE = DriveTypes.BOP_IT;
+        DRIVE_STYLE = DriveTypes.STANDARD;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
@@ -55,7 +55,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.524891;
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
-        WHEEL_DIAMETER = 6; //update: now it's used once
+        WHEEL_DIAMETER = 4; //inches. update: now it's used once
         MAX_MOTOR_SPEED = 5000; //theoretical max motor speed in rpm
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;

@@ -11,8 +11,8 @@ import frc.robot.robotconfigs.DefaultConfig;
 public class Robot2020 extends DefaultConfig {
     public Robot2020() {
         //Subsystems
-        ENABLE_DRIVE = true;
-        ENABLE_INTAKE = true;
+        ENABLE_DRIVE = false;
+        ENABLE_INTAKE = false;
         ENABLE_SHOOTER = true;
         ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;
@@ -25,14 +25,14 @@ public class Robot2020 extends DefaultConfig {
         //Misc
         ENABLE_VISION = false;
         USE_PHOTONVISION = true;
-        ENABLE_IMU = true;
+        ENABLE_IMU = false;
         USE_PIGEON = true;
         USE_NAVX2 = false;
 
         //SHOOTER
         SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
-        SHOOTER_INVERTED = true;
+        SHOOTER_INVERTED = false;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
