@@ -14,9 +14,9 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
         ENABLE_SHOOTER = false;
-        ENABLE_HOPPER = true;
-        ENABLE_AGITATOR = true;
-        ENABLE_INDEXER = true;
+        ENABLE_HOPPER = false;
+        ENABLE_AGITATOR = false;
+        ENABLE_INDEXER = false;
         ENABLE_MUSIC = false;
 
         DRIVE_USE_6_MOTORS = false;
@@ -24,9 +24,9 @@ public class CompetitionRobot2021 extends DefaultConfig {
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = true;
+        ENABLE_VISION = false;
         USE_PHOTONVISION = true;
-        ENABLE_IMU = false;
+        ENABLE_IMU = true;
         USE_PIGEON = false;
         USE_NAVX2 = true;
 
@@ -36,15 +36,15 @@ public class CompetitionRobot2021 extends DefaultConfig {
         SHOOTER_INVERTED = true;
 
         //INTAKE
-        ENABLE_INDEXER_AUTO_INDEX = true;
+        ENABLE_INDEXER_AUTO_INDEX = false;
 
         //UI Styles
-        DRIVE_STYLE = DriveTypes.EXPERIMENTAL;
+        DRIVE_STYLE = DriveTypes.STANDARD;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
 
-        AUTON_TYPE = AutonType.GALACTIC_SEARCH;
+        AUTON_TYPE = AutonType.GALACTIC_SCAM;
 
         DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
         SHOOTER_PID = new PID(0.001, 0.00003, 0.0001, 0.001);

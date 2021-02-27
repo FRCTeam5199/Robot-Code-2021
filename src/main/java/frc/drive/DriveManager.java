@@ -326,7 +326,7 @@ public class DriveManager implements ISubsystem {
 
     @Override
     public void initAuton() {
-        initGeneric();
+        //initGeneric();
         guidance.resetEncoders();
     }
 
@@ -369,9 +369,9 @@ public class DriveManager implements ISubsystem {
         if (leftFPS != 0)
             System.out.println(leftFPS + ", " + rightFPS);
         double mult = 3.8 * 2.16 * RobotSettings.DRIVE_SCALE;
-        if (RobotSettings.DEBUG) {
+        //if (RobotSettings.DEBUG) {
             System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
-        }
+        //}
         leaderL.moveAtVelocity((leftFPS) * mult);
         leaderR.moveAtVelocity((rightFPS) * mult);
     }

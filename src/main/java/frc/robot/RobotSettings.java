@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
@@ -95,7 +96,7 @@ public class RobotSettings {
     public static final boolean USE_PIGEON = settingsFile.USE_PIGEON;
     //TODO make this a supported imu's enum
     public static final boolean USE_NAVX2 = settingsFile.USE_NAVX2;
-    public static final SerialPort.Port IMU_NAVX_PORT = settingsFile.IMU_NAVX_PORT;
+    public static final I2C.Port IMU_NAVX_PORT = settingsFile.IMU_NAVX_PORT;
 
     //SHOOTER
     /**

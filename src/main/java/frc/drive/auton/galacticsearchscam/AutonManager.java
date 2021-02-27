@@ -3,6 +3,7 @@ package frc.drive.auton.galacticsearchscam;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
@@ -48,11 +49,12 @@ public class AutonManager extends AbstractAutonManager {
     public void updateAuton() {
         if (!RobotSettings.autonComplete) {
             Trajectory.State goal = trajectory.sample(timer.get());
+
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
                 RobotSettings.autonComplete = true;
             }
             if (RobotSettings.ENABLE_IMU) {
-                telem.updateAuton();
+                //telem.updateAuton();
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
                 ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
                 DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
@@ -85,6 +87,11 @@ public class AutonManager extends AbstractAutonManager {
             DriverStation.reportError("Unable to open trajectory: " + routinePath, e.getStackTrace());
         }
         timer.start();
+        if (RobotSettings.ENABLE_IMU){
+            telem.resetOdometry(null, null);
+        }
+        Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
+        trajectory = trajectory.transformBy(transform);
     }
 
     @Override

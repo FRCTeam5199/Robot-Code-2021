@@ -1,5 +1,6 @@
 package frc.robot.robotconfigs;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
@@ -116,5 +117,5 @@ public abstract class DefaultConfig {
     public int FLIGHT_STICK_USB_SLOT = 1;
     public int BUTTON_PANEL_USB_SLOT = 2;
 
-    public SerialPort.Port IMU_NAVX_PORT = SerialPort.Port.kUSB;
+    public I2C.Port IMU_NAVX_PORT = I2C.Port.kOnboard;
 }

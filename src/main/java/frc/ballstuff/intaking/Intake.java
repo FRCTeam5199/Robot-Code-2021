@@ -69,9 +69,10 @@ public class Intake implements ISubsystem {
 
     @Override
     public void updateAuton() {
-        if (RobotSettings.AUTON_MODE == AutonType.GALACTIC_SEARCH) {
-            setIntake(RobotSettings.autonComplete ? 0 : -1);
+        if (RobotSettings.AUTON_MODE == AutonType.GALACTIC_SEARCH || RobotSettings.AUTON_MODE == AutonType.GALACTIC_SCAM) {
+            setIntake(RobotSettings.autonComplete ? 0 : 1);
         }
+        updateGeneric();
     }
 
     @Override

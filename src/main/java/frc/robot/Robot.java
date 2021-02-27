@@ -73,7 +73,9 @@ public class Robot extends TimedRobot {
                 settingsFile = new CompetitionRobot2021();
                 break;
             default:
-                throw new IllegalStateException("You need to ID this robot.");
+                preferences.putString("hostname", "2021-Comp");
+                settingsFile = new CompetitionRobot2021();
+                //throw new IllegalStateException("You need to ID this robot.");
         }
     }
 

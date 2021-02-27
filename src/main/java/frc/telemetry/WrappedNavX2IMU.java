@@ -2,6 +2,7 @@ package frc.telemetry;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
+import frc.robot.RobotSettings;
 
 /**
  * This is a class to interface the Navx2 Inertial Measurement Unit (IMU) but allowing versatility in swapping between
@@ -20,8 +21,10 @@ public class WrappedNavX2IMU extends AbstractIMU {
      */
     //TODO make this a setting
     public void init() {
-        SerialPort.Port port = SerialPort.Port.kUSB;
-        navX2IMU = new AHRS(port);
+        //SerialPort.Port port = SerialPort.Port.kUSB;
+        navX2IMU = new AHRS(RobotSettings.IMU_NAVX_PORT);
+        navX2IMU.calibrate();
+        resetOdometry();
     }
 
     /**
@@ -29,9 +32,10 @@ public class WrappedNavX2IMU extends AbstractIMU {
      */
     @Override
     public void updateGeneric() {
-        ypr[0] = navX2IMU.getYaw();
+        ypr[0] = -navX2IMU.getYaw();
         ypr[1] = navX2IMU.getPitch();
         ypr[2] = navX2IMU.getRoll();
+        //System.out.println("Yaw: " + ypr[0]);
     }
 
     @Override
@@ -87,7 +91,7 @@ public class WrappedNavX2IMU extends AbstractIMU {
     @Override
     public void resetOdometry() {
         updateGeneric();
-        navX2IMU.reset();
+        navX2IMU.zeroYaw();
         startypr = ypr;
         startYaw = absoluteYaw();
     }
