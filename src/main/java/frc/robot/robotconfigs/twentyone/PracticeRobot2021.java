@@ -44,7 +44,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
 
-        AUTON_TYPE = AutonType.BUT_BETTER_NOW;
+        AUTON_TYPE = AutonType.FOLLOW_PATH;
 
         DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
         SHOOTER_PID = new PID(0.001, 0.00003, 0.0001, 0.001);

@@ -51,7 +51,7 @@ public class Turret implements ISubsystem {
             goalPhoton = new GoalPhoton();
             goalPhoton.init();
         }
-        switch (RobotSettings.SHOOTER_MOTOR_TYPE) {
+        switch (RobotSettings.TURRET_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
                 motor = new SparkMotorController(RobotSettings.TURRET_YAW_ID);
                 motor.setSensorToRealDistanceFactor(RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30);

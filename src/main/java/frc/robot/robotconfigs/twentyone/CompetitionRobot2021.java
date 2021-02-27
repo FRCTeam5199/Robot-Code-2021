@@ -14,10 +14,10 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
         ENABLE_SHOOTER = false;
-        ENABLE_HOPPER = false;
-        ENABLE_AGITATOR = false;
-        ENABLE_INDEXER = false;
-        ENABLE_MUSIC = false;
+        ENABLE_HOPPER = true;
+        ENABLE_AGITATOR = true;
+        ENABLE_INDEXER = true;
+        ENABLE_MUSIC = true;
 
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
@@ -83,7 +83,9 @@ public class CompetitionRobot2021 extends DefaultConfig {
         GOAL_CAM_NAME = "GoalCamera";
         BALL_CAM_NAME = "BallCamera";
 
+        //PDP
         PDP_ID = 0;
+
         //Drive Motors
         DRIVE_LEADER_L_ID = 1; //talon
         DRIVE_FOLLOWERS_L_IDS = new int[]{2}; //talon
@@ -102,7 +104,5 @@ public class CompetitionRobot2021 extends DefaultConfig {
         INDEXER_MOTOR_ID = 11; //victor
         //intake
         INTAKE_MOTOR_ID = 12; //victor
-
-        IMU_ID = 22; //pigeon
     }
 }

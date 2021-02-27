@@ -71,16 +71,28 @@ public class Hopper implements ISubsystem {
             SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
         }
         if (!indexerActive && !agitatorActive) {
-            if (RobotSettings.ENABLE_INDEXER)
-                indexer.moveAtPercent(indexerSensorRange() > 9 ? 0.4 : 0);
-            if (RobotSettings.ENABLE_AGITATOR)
-                agitator.moveAtPercent(indexerSensorRange() > 9 ? 0.3 : 0);
+            if (RobotSettings.ENABLE_INDEXER) {
+                if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
+                    indexer.moveAtPercent(indexerSensorRange() > 9 ? 0.4 : 0);
+                } else {
+                    indexer.moveAtPercent(0.4);
+                }
+            }
+            if (RobotSettings.ENABLE_AGITATOR) {
+                if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
+                    agitator.moveAtPercent(indexerSensorRange() > 9 ? 0.3 : 0);
+                } else {
+                    agitator.moveAtPercent(0.3);
+                }
+            }
             indexed = (RobotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() > 9);
         } else {
-            if (RobotSettings.ENABLE_INDEXER)
+            if (RobotSettings.ENABLE_INDEXER) {
                 indexer.moveAtPercent(indexerActive ? 0.8 : 0);
-            if (RobotSettings.ENABLE_AGITATOR)
+            }
+            if (RobotSettings.ENABLE_AGITATOR) {
                 agitator.moveAtPercent(agitatorActive ? 0.6 : 0);
+            }
             indexed = true;//indexerSensorRange() > 9;
         }
     }

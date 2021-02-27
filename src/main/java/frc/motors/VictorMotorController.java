@@ -1,5 +1,6 @@
 package frc.motors;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.misc.PID;
 
@@ -19,11 +20,6 @@ public class VictorMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void moveAtRotations(double rpm) {
-        motor.set(Velocity, rpm);
-    }
-
-    @Override
     public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
         return this;
@@ -31,7 +27,7 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public AbstractMotorController follow(AbstractMotorController leader) {
-        if (leader instanceof VictorMotorController){
+        if (leader instanceof VictorMotorController) {
             motor.follow(((VictorMotorController) leader).motor);
         }
         return this;
@@ -39,21 +35,29 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public void resetEncoder() {
-        motor.setSelectedSensorPosition(0);
+        if (motor.setSelectedSensorPosition(0) != ErrorCode.OK)
+            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " could not be reset");
     }
 
     @Override
     public AbstractMotorController setPid(PID pid) {
-        motor.config_kP(0, pid.getP());
-        motor.config_kI(0, pid.getI());
-        motor.config_kD(0, pid.getD());
-        motor.config_kF(0, pid.getF());
+        if (motor.config_kP(0, pid.getP()) != ErrorCode.OK)
+            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " P in PIDF could not be reset");
+        if (motor.config_kI(0, pid.getI()) != ErrorCode.OK)
+            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " I in PIDF could not be reset");
+        if (motor.config_kD(0, pid.getD()) != ErrorCode.OK)
+            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " D in PIDF could not be reset");
+        if (motor.config_kF(0, pid.getF()) != ErrorCode.OK)
+            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " F in PIDF could not be reset");
         return this;
     }
 
     @Override
     public void moveAtVelocity(double realVelocity) {
-        motor.set(Velocity, realVelocity / sensorToRealDistanceFactor);
+        if (getMotorTemperature() > 100){
+            System.out.println("Im literally boiling chill out");
+        } else
+            motor.set(Velocity, realVelocity / sensorToRealDistanceFactor);
     }
 
     @Override
@@ -80,7 +84,10 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtPercent(double percent) {
-        motor.set(PercentOutput, percent);
+        if (getMotorTemperature() > 100){
+            System.out.println("Im literally boiling chill out");
+        } else
+            motor.set(PercentOutput, percent);
     }
 
     @Override

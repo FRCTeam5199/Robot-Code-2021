@@ -88,12 +88,8 @@ public class RobotTelemetry implements ISubsystem {
 
     /**
      * Resets all orienting to zeroes.
-     *
-     * @param pose     ignored
-     * @param rotation ignored
      */
-    public void resetOdometry(Pose2d pose, Rotation2d rotation) {
-        //odometer.resetPosition(pose, rotation);
+    public void resetOdometry() {
         if (RobotSettings.ENABLE_IMU)
             imu.resetOdometry();
         resetEncoders();

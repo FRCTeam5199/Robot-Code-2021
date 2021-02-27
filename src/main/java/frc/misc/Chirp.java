@@ -1,5 +1,6 @@
 package frc.misc;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.music.Orchestra;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.motors.TalonMotorController;
@@ -25,7 +26,7 @@ public class Chirp extends Orchestra implements ISubsystem {
     public static final String[] musicNames = {
             "BokuNoSensou_4Motors", "CoconutMall_4Motors", "Electroman_Adventures_4Motors",
             "Imperial_March_4Motors", "kiraTheme_4Motors", "Megalovania_4Motors",
-            "TheOnlyThingTheyFearlsYou_4Motors", "WiiSports_4Motors", "TheSevenSeas_4Motors"
+            "TheOnlyThingTheyFearIsYou_4Motors", "WiiSports_4Motors", "TheSevenSeas_4Motors"
     };
 
     public Chirp() {
@@ -40,7 +41,12 @@ public class Chirp extends Orchestra implements ISubsystem {
      *                  file)
      */
     public void loadSound(String soundName) {
-        loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString());
+        ErrorCode e = loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString());
+        System.out.println("Playing music. " + e);
+        if (e != ErrorCode.OK) {
+            System.out.println("Failed to load " + Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString() + ": " + e);
+        }
+        //new RuntimeException().printStackTrace();
     }
 
     /**
@@ -58,6 +64,7 @@ public class Chirp extends Orchestra implements ISubsystem {
     public void init() {
         for (TalonMotorController motor : talonMotorArrayList) {
             motor.addToOrchestra(this);
+            System.out.println("Adding motor to orchestra!");
         }
     }
 

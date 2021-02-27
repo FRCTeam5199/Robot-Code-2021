@@ -26,6 +26,7 @@ import frc.motors.TalonMotorController;
 import frc.motors.followers.AbstractFollowerMotorController;
 import frc.motors.followers.SparkFollowerMotorsController;
 import frc.motors.followers.TalonFollowerMotorController;
+import frc.robot.Robot;
 import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 
@@ -146,7 +147,7 @@ public class DriveManager implements ISubsystem {
      */
     private void initGuidance() {
         guidance = new RobotTelemetry(this);
-        guidance.resetOdometry(null, null);
+        guidance.resetOdometry();
     }
 
     /**
@@ -300,7 +301,6 @@ public class DriveManager implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        guidance.updateGeneric();
         setBrake(!coast.getBoolean(false));
         if (calibratePid.getBoolean(false)) {
             PID readPid = new PID(P.getDouble(RobotSettings.DRIVEBASE_PID.getP()), I.getDouble(RobotSettings.DRIVEBASE_PID.getI()), D.getDouble(RobotSettings.DRIVEBASE_PID.getD()), F.getDouble(RobotSettings.DRIVEBASE_PID.getF()));
@@ -326,7 +326,8 @@ public class DriveManager implements ISubsystem {
 
     @Override
     public void initAuton() {
-        //initGeneric();
+        initGeneric();
+        setBrake(false);
         guidance.resetEncoders();
     }
 
@@ -370,7 +371,7 @@ public class DriveManager implements ISubsystem {
             System.out.println(leftFPS + ", " + rightFPS);
         double mult = 3.8 * 2.16 * RobotSettings.DRIVE_SCALE;
         //if (RobotSettings.DEBUG) {
-            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
+        System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
         //}
         leaderL.moveAtVelocity((leftFPS) * mult);
         leaderR.moveAtVelocity((rightFPS) * mult);
@@ -379,6 +380,7 @@ public class DriveManager implements ISubsystem {
     @Override
     public void initGeneric() {
         setBrake(true);
+        //Robot.chirp.stop();
     }
 
     public void setBrake(boolean braking) {

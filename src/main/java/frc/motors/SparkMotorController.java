@@ -30,11 +30,6 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void moveAtRotations(double rpm) {
-        moveAtVelocity(rpm * sensorToRealDistanceFactor);
-    }
-
-    @Override
     public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
         return this;

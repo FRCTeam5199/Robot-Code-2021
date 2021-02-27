@@ -25,14 +25,6 @@ public abstract class AbstractMotorController {
     public Double sensorToRealDistanceFactor;
 
     /**
-     * Uses PID to attempt to reach the requested speed Different from {@link #moveAtVelocity(double)} because this does
-     * not account for gearing or real distances
-     *
-     * @param rpm speed requested in rpm (revolutions per minutiae)
-     */
-    public abstract void moveAtRotations(double rpm);
-
-    /**
      * Inverts the motor rotation from default for that motor (varies motor to motor of course)
      *
      * @param invert Whether to inver the motor or not
@@ -66,10 +58,6 @@ public abstract class AbstractMotorController {
     public abstract AbstractMotorController setPid(PID pid);
 
     /**
-     * Moves the motor at the requested velocity per time (default fps but units vary based on {@link
-     * #sensorToRealDistanceFactor}) Different from {@link #moveAtRotations(double)} since this accounts for real
-     * distances not motor speed.
-     *
      * @param amount requested drive velocity
      */
     public abstract void moveAtVelocity(double amount);
@@ -119,6 +107,7 @@ public abstract class AbstractMotorController {
 
     /**
      * Gets the temperature of the motor
+     *
      * @return the temperature in celcius
      */
     public abstract double getMotorTemperature();

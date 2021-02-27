@@ -6,8 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 import frc.misc.Chirp;
 import frc.misc.PID;
-import frc.misc.UtilFunctions;
-import frc.robot.RobotSettings;
 
 import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
 import static com.ctre.phoenix.motorcontrol.ControlMode.Velocity;
@@ -34,12 +32,6 @@ public class TalonMotorController extends AbstractMotorController {
      */
     public void addToOrchestra(Orchestra orchestra) {
         orchestra.addInstrument(motor);
-    }
-
-    //DANGER USING TALONS WILL BE FUNKY
-    @Override
-    public void moveAtRotations(double sensorSpeedRequested) {
-        moveAtVelocity(sensorSpeedRequested * sensorToRealDistanceFactor);
     }
 
     @Override
@@ -76,7 +68,10 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtVelocity(double realAmount) {
-        motor.set(Velocity, realAmount / sensorToRealDistanceFactor);/// sensorToRealDistanceFactor);
+        if (getMotorTemperature() > 100){
+            System.out.println("Im literally boiling chill out");
+        } else
+            motor.set(Velocity, realAmount / sensorToRealDistanceFactor);/// sensorToRealDistanceFactor);
         //System.out.println("I'm crying. RealAmount: " + realAmount + "\nSensortoDist: " + sensorToRealDistanceFactor + "\nSetting motors to " + realAmount / sensorToRealDistanceFactor);
     }
 
@@ -108,7 +103,10 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtPercent(double percent) {
-        motor.set(PercentOutput, percent);
+        if (getMotorTemperature() > 100){
+            System.out.println("Im literally boiling chill out");
+        } else
+            motor.set(PercentOutput, percent);
     }
 
     @Override

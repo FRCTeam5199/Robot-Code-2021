@@ -43,7 +43,7 @@ public class Robot2020 extends DefaultConfig {
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
 
-        AUTON_TYPE = AutonType.BUT_BETTER_NOW;
+        AUTON_TYPE = AutonType.FOLLOW_PATH;
 
         DRIVEBASE_PID = new PID(0, 0, 0.000005, 0.00002);
         SHOOTER_PID = new PID(0.001, 0.000009, 0.0001, 0.023);

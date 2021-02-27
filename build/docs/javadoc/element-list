@@ -3,7 +3,7 @@ frc.ballstuff.shooting
 frc.controllers
 frc.drive
 frc.drive.auton
-frc.drive.auton.butbetternow
+frc.drive.auton.followtrajectory
 frc.drive.auton.galacticsearch
 frc.drive.auton.galacticsearchscam
 frc.drive.auton.pointtopoint

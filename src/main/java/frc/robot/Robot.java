@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix.ErrorCode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
@@ -56,12 +57,37 @@ public class Robot extends TimedRobot {
     public static LEDs leds;
     public static IVision goalPhoton, ballPhoton;
     public static AbstractAutonManager autonManager;
+    public static boolean SECOND_TRY;
     private static String lastFoundSong = "";
     private static long lastDisable = 0;
 
-    static {
-        preferences.initString("hostname", "Default");
+    /**
+     * Init everything
+     */
+    @Override
+    public void robotInit() throws IllegalStateException {
+        //preferences.initString("lastboot", "0" + System.currentTimeMillis());
+        long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
+        long currentBoot = System.currentTimeMillis();
+        preferences.putString("lastboot", "0" + currentBoot);
+        if (lastBoot > currentBoot) {
+            System.out.println("Restart detected");
+            SECOND_TRY = false;
+        } else if (lastBoot > 1614461266977L) {
+            System.out.println("Still going lastboot = (" + lastBoot + "), currentboot = (" + currentBoot + ")");
+            SECOND_TRY = currentBoot - lastBoot < 30000;
+        } else if (lastBoot < 1614461266977L && currentBoot < 1614461266977L) {
+            System.out.println("Both underrated");
+            SECOND_TRY = currentBoot - lastBoot < 30000;
+        } else {
+            SECOND_TRY = false;
+            System.out.println("lastboot = (" + lastBoot + "), currentboot = (" + currentBoot + ")");
+        }
+        //throw new RuntimeException("What the heckleeckle happened here? lastboot = (" + lastBoot + "), currentboot = (" + currentBoot + ")");
+        System.out.println("Are we trying again? " + SECOND_TRY);
+        //preferences.initString("hostname", "Default");
         String hostName = preferences.getString("hostname", "Default");
+        System.out.println("I am " + hostName);
         switch (hostName) {
             case "2020-Comp":
                 settingsFile = new Robot2020();
@@ -77,13 +103,8 @@ public class Robot extends TimedRobot {
                 settingsFile = new CompetitionRobot2021();
                 //throw new IllegalStateException("You need to ID this robot.");
         }
-    }
 
-    /**
-     * Init everything
-     */
-    @Override
-    public void robotInit() throws IllegalStateException {
+        System.out.println(System.currentTimeMillis());
         RobotSettings.printMappings();
         RobotSettings.printToggles();
         RobotSettings.printNumbers();
@@ -116,8 +137,8 @@ public class Robot extends TimedRobot {
                     //autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     break;
-                case BUT_BETTER_NOW:
-                    //autonManager = new frc.drive.auton.butbetternow.AutonManager("RobotTestPath2", driver);
+                case FOLLOW_PATH:
+                    //autonManager = new frc.drive.auton.followtrajectory.AutonManager("RobotTestPath2", driver);
                     break;
                 case GALACTIC_SCAM:
                     autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);
@@ -197,18 +218,24 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        //Do nothing
         if (RobotSettings.ENABLE_MUSIC) {
             String songName = songTab.getString("");
+            //String songName = "CoconutMall_4Motors";
             foundSong.setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
-            if (!songName.equals("") && !chirp.isPlaying()) {
+            if (!songName.equals("")/* && !chirp.isPlaying()*/) {
                 if (new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(lastFoundSong)) {
+                    System.out.println("Attempting to play song " + songName + " on " + Chirp.talonMotorArrayList.size() + " motors.");
                     lastFoundSong = songName;
                     chirp.loadSound(songName);
-                    chirp.play();
+                    ErrorCode e = chirp.play();
+                    if (e != ErrorCode.OK) {
+                        System.out.println("Music Error: " + e);
+                    }
+                    System.out.println("Played song " + songName + " on " + Chirp.talonMotorArrayList.size() + " motors.");
                 }
             } else {
                 chirp.updateDisabled();
+                //System.out.println("Selecting random song.");
             }
         }
         if (RobotSettings.ENABLE_DRIVE && System.currentTimeMillis() > lastDisable + 5000)

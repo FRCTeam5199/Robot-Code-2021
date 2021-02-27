@@ -1,8 +1,15 @@
 package frc.drive.auton;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.drive.DriveManager;
+import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * If you have a custom auton that needs to be implemented, extend this class. Since every Auton Manager needs to have a
@@ -10,11 +17,25 @@ import frc.misc.ISubsystem;
  *
  * @see ISubsystem
  * @see frc.drive.auton.pointtopoint.AutonManager
- * @see frc.drive.auton.butbetternow.AutonManager
+ * @see frc.drive.auton.followtrajectory.AutonManager
  * @see frc.drive.auton.galacticsearch.AutonManager
  * @see frc.drive.auton.galacticsearchscam.AutonManager
  */
 public abstract class AbstractAutonManager implements ISubsystem {
+    protected static final HashMap<IAutonEnumPath, Trajectory> paths;
+
+    static {
+        paths = new HashMap<>();
+        //TODO add barrel racing/other auton paths here
+        for (GalacticSearchPaths path : GalacticSearchPaths.values()) {
+            try {
+                paths.put(path, TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("paths/" + path.PATH_FILE_LOCATION + ".wpilib.json")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     protected final Timer timer = new Timer();
     protected final DriveManager DRIVING_CHILD;
 

@@ -1,8 +1,9 @@
 package frc.drive.auton.galacticsearch;
 
+import frc.drive.auton.IAutonEnumPath;
 import frc.drive.auton.Point;
 
-public enum GalacticSearchPaths {
+public enum GalacticSearchPaths implements IAutonEnumPath {
     PATH_A_RED(
             new Point[]{
                     new Point(-7, 0.53),
@@ -65,5 +66,10 @@ public enum GalacticSearchPaths {
             ALL_POINTS = new Point[4][3];
         System.arraycopy(POINTS, 0, ALL_POINTS[registerIndex], 0, 3);
         registerIndex++;
+    }
+
+    @Override
+    public String getDeployLocation() {
+        return PATH_FILE_LOCATION;
     }
 }
