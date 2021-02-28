@@ -41,7 +41,7 @@ public class Hopper implements ISubsystem {
 
     @Override
     public void updateTest() {
-        updateGeneric();
+        //updateGeneric();
     }
 
     public double indexerSensorRange() {
@@ -75,14 +75,14 @@ public class Hopper implements ISubsystem {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
                     indexer.moveAtPercent(indexerSensorRange() > 9 ? 0.4 : 0);
                 } else {
-                    indexer.moveAtPercent(0.4);
+                    indexer.moveAtPercent(0);
                 }
             }
             if (RobotSettings.ENABLE_AGITATOR) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
                     agitator.moveAtPercent(indexerSensorRange() > 9 ? 0.3 : 0);
                 } else {
-                    agitator.moveAtPercent(0.3);
+                    agitator.moveAtPercent(0);
                 }
             }
             indexed = (RobotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() > 9);

@@ -103,7 +103,7 @@ public class Shooter implements ISubsystem {
      */
     @Override
     public void updateTest() {
-        updateGeneric();
+        //updateGeneric();
     }
 
     @Override

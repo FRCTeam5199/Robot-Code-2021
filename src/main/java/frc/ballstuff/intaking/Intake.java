@@ -56,7 +56,7 @@ public class Intake implements ISubsystem {
      */
     @Override
     public void updateTest() {
-        updateGeneric();
+        //updateGeneric();
     }
 
     /**

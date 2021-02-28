@@ -1,12 +1,13 @@
 package frc.robot;
 
-import com.ctre.phoenix.ErrorCode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.ballstuff.intaking.Hopper;
 import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
@@ -27,6 +28,10 @@ import frc.vision.IVision;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class Robot extends TimedRobot {
     /**
@@ -35,17 +40,20 @@ public class Robot extends TimedRobot {
      */
     public static final Preferences preferences = Preferences.getInstance();
     public static final ArrayList<ISubsystem> subsytems = new ArrayList<>();
+    public static final ShuffleboardTab MUSICK_TAB = Shuffleboard.getTab("musick"),
+            ROBOT_TAB = Shuffleboard.getTab("DANGER!"),
+            FAILURES_TAB = Shuffleboard.getTab("Warnings");
+    public static final boolean songFound = false;
+    public static final SendableChooser<List<String>> leest;
+    public static final NetworkTableEntry //songTab,
+            disableSongTab = MUSICK_TAB.add("Stop Song", false).withWidget(BuiltInWidgets.kToggleButton).getEntry(),
+            foundSong = MUSICK_TAB.add("Found it", songFound).getEntry();
+
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
-    private static final ShuffleboardTab ROBOT_TAB = Shuffleboard.getTab("DANGER!");
     private static final NetworkTableEntry remove = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", "").getEntry(),
-            printToggles = ROBOT_TAB.add("Reprint robot toggles", false).getEntry(),
-            printMappings = ROBOT_TAB.add("Reprint robot mappings", false).getEntry(),
-            printNumbers = ROBOT_TAB.add("Reprint robot numbers", false).getEntry();
-    private static final ShuffleboardTab MUSICK_TAB = Shuffleboard.getTab("musick");
-    private static final NetworkTableEntry songTab = MUSICK_TAB.add("Song", "").getEntry(),
-            disableSongTab = MUSICK_TAB.add("Stop Song", false).getEntry();
-    private static final boolean songFound = false;
-    private static final NetworkTableEntry foundSong = MUSICK_TAB.add("Found it", songFound).getEntry();
+            printToggles = ROBOT_TAB.add("Reprint robot toggles", false).withWidget(BuiltInWidgets.kToggleButton).getEntry(),
+            printMappings = ROBOT_TAB.add("Reprint robot mappings", false).withWidget(BuiltInWidgets.kToggleButton).getEntry(),
+            printNumbers = ROBOT_TAB.add("Reprint robot numbers", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
     public static DefaultConfig settingsFile;
     public static DriveManager driver;
     public static Intake intake;
@@ -58,34 +66,45 @@ public class Robot extends TimedRobot {
     public static IVision goalPhoton, ballPhoton;
     public static AbstractAutonManager autonManager;
     public static boolean SECOND_TRY;
-    private static String lastFoundSong = "";
+    public static String lastFoundSong = "";
     private static long lastDisable = 0;
+
+    static {
+        leest = new SendableChooser<>();
+        getSongs(leest);
+        MUSICK_TAB.add(leest);
+    }
+
+    private static void getSongs(SendableChooser<List<String>> listObject){
+        HashMap<String, List<String>> songnames = new HashMap<>();
+        for (File file : Filesystem.getDeployDirectory().toPath().resolve("sounds").toFile().listFiles())
+            if (!songnames.containsKey(file.getName().split("_")[0])) {
+                songnames.put(file.getName().split("_")[0], new ArrayList<String>(Collections.singleton(file.getName())));
+            }else {
+                songnames.get(file.getName().split("_")[0]).add(file.getName());
+            }
+        for (String key : songnames.keySet())
+            listObject.addOption(key, songnames.get(key));
+    }
 
     /**
      * Init everything
      */
     @Override
     public void robotInit() throws IllegalStateException {
-        //preferences.initString("lastboot", "0" + System.currentTimeMillis());
+        //Yes, it has to be a string otherwise it truncates it after 6 digits
         long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
         long currentBoot = System.currentTimeMillis();
         preferences.putString("lastboot", "0" + currentBoot);
         if (lastBoot > currentBoot) {
-            System.out.println("Restart detected");
             SECOND_TRY = false;
         } else if (lastBoot > 1614461266977L) {
-            System.out.println("Still going lastboot = (" + lastBoot + "), currentboot = (" + currentBoot + ")");
             SECOND_TRY = currentBoot - lastBoot < 30000;
         } else if (lastBoot < 1614461266977L && currentBoot < 1614461266977L) {
-            System.out.println("Both underrated");
             SECOND_TRY = currentBoot - lastBoot < 30000;
         } else {
             SECOND_TRY = false;
-            System.out.println("lastboot = (" + lastBoot + "), currentboot = (" + currentBoot + ")");
         }
-        //throw new RuntimeException("What the heckleeckle happened here? lastboot = (" + lastBoot + "), currentboot = (" + currentBoot + ")");
-        System.out.println("Are we trying again? " + SECOND_TRY);
-        //preferences.initString("hostname", "Default");
         String hostName = preferences.getString("hostname", "Default");
         System.out.println("I am " + hostName);
         switch (hostName) {
@@ -99,12 +118,8 @@ public class Robot extends TimedRobot {
                 settingsFile = new CompetitionRobot2021();
                 break;
             default:
-                preferences.putString("hostname", "2021-Comp");
-                settingsFile = new CompetitionRobot2021();
-                //throw new IllegalStateException("You need to ID this robot.");
+                throw new IllegalStateException("You need to ID this robot.");
         }
-
-        System.out.println(System.currentTimeMillis());
         RobotSettings.printMappings();
         RobotSettings.printToggles();
         RobotSettings.printNumbers();
@@ -158,7 +173,7 @@ public class Robot extends TimedRobot {
         lastDisable = System.currentTimeMillis();
         if (RobotSettings.ENABLE_MUSIC) {
             if (chirp.isPlaying()) {
-                chirp.stop();
+                //chirp.stop();
             }
         }
     }
@@ -183,7 +198,7 @@ public class Robot extends TimedRobot {
             system.initTest();
         }
         if (RobotSettings.ENABLE_MUSIC) {
-            //chirp.loadSound("Imperial_March");
+            chirp.initDisabled();
             //chirp.play();
         }
     }
@@ -218,26 +233,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        if (RobotSettings.ENABLE_MUSIC) {
-            String songName = songTab.getString("");
-            //String songName = "CoconutMall_4Motors";
-            foundSong.setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
-            if (!songName.equals("")/* && !chirp.isPlaying()*/) {
-                if (new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(lastFoundSong)) {
-                    System.out.println("Attempting to play song " + songName + " on " + Chirp.talonMotorArrayList.size() + " motors.");
-                    lastFoundSong = songName;
-                    chirp.loadSound(songName);
-                    ErrorCode e = chirp.play();
-                    if (e != ErrorCode.OK) {
-                        System.out.println("Music Error: " + e);
-                    }
-                    System.out.println("Played song " + songName + " on " + Chirp.talonMotorArrayList.size() + " motors.");
-                }
-            } else {
-                chirp.updateDisabled();
-                //System.out.println("Selecting random song.");
-            }
-        }
+        if (RobotSettings.ENABLE_MUSIC) chirp.updateDisabled();
         if (RobotSettings.ENABLE_DRIVE && System.currentTimeMillis() > lastDisable + 5000)
             driver.setBrake(false);
     }

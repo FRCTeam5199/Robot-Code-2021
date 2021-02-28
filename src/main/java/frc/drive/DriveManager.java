@@ -17,6 +17,7 @@ import frc.controllers.DrumTimeController;
 import frc.controllers.SixButtonGuitarController;
 import frc.controllers.WiiController;
 import frc.controllers.XBoxController;
+import frc.misc.Chirp;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.misc.PID;

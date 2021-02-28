@@ -71,7 +71,7 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void updateTest() {
-        updateGeneric();
+        //updateGeneric();
     }
 
     /**

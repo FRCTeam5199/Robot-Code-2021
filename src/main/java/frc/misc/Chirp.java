@@ -4,8 +4,11 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.music.Orchestra;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.motors.TalonMotorController;
+import frc.robot.Robot;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -34,43 +37,16 @@ public class Chirp extends Orchestra implements ISubsystem {
         addToMetaList();
     }
 
-    /**
-     * Loads a song from the provided name assuming it is in the sounds deploy directory (deploy/sounds).
-     *
-     * @param soundName The name of the file (less extension, less path, just name) to get sound from (should be a .chrp
-     *                  file)
-     */
-    public void loadSound(String soundName) {
-        ErrorCode e = loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString());
-        System.out.println("Playing music. " + e);
-        if (e != ErrorCode.OK) {
-            System.out.println("Failed to load " + Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString() + ": " + e);
-        }
-        //new RuntimeException().printStackTrace();
-    }
-
-    /**
-     * Selects a random song name from our previously mentioned hardcoded list
-     *
-     * @return song name from musicNames
-     */
-    public String getRandomSong() {
-        Random musicRand = new Random();
-        int randomSong = musicRand.nextInt(musicNames.length);
-        return musicNames[randomSong];
-    }
-
     @Override
     public void init() {
         for (TalonMotorController motor : talonMotorArrayList) {
             motor.addToOrchestra(this);
-            System.out.println("Adding motor to orchestra!");
         }
     }
 
     @Override
     public void updateTest() {
-
+        updateDisabled();
     }
 
     @Override
@@ -86,17 +62,6 @@ public class Chirp extends Orchestra implements ISubsystem {
     @Override
     public void updateGeneric() {
 
-    }
-
-    /**
-     * Runs all of the cool orchestra stuff assuming you aren't playing your own cool tunes, while the robot is disabled
-     * (duh.)
-     */
-    public void updateDisabled() {
-        if (!isPlaying()) {
-            loadSound(getRandomSong());
-            play();
-        }
     }
 
     @Override
@@ -122,5 +87,70 @@ public class Chirp extends Orchestra implements ISubsystem {
     @Override
     public void initGeneric() {
 
+    }
+
+    /**
+     * Runs all of the cool orchestra stuff assuming you aren't playing your own cool tunes, while the robot is disabled
+     * (duh.)
+     */
+    public void updateDisabled() {
+        List<String> selected = Robot.leest.getSelected();
+        String songName = "";//Robot.songTab.getString("");
+        if (selected != null && selected.size() > 0) {
+            for (String str : selected){
+                if (songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size())
+                    songName = str;
+                else if (!songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size() && Integer.parseInt(songName.split("_")[1]) < Integer.parseInt(str.split("_")[1]))
+                    songName = str;
+            }
+        }
+
+        //String songName = "CoconutMall_4Motors";
+        Robot.foundSong.setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
+        if (!songName.equals("")/* && !chirp.isPlaying()*/) {
+            if (new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(Robot.lastFoundSong)) {
+                 Robot.lastFoundSong = songName;
+                loadSound(songName);
+                ErrorCode e = play();
+                if (e != ErrorCode.OK) {
+                    System.out.println("Music Error: " + e);
+                }
+                System.out.println("Playing song " + songName + " on " + Chirp.talonMotorArrayList.size() + " motors.");
+            }
+        } else {
+            if (!isPlaying()) {
+                String randomSong = getRandomSong();
+                System.out.println("Playing random song: " + randomSong);
+                loadSound(randomSong);
+                play();
+            }
+        }
+        if (!isPlaying()) {
+            play();
+        }
+    }
+
+    /**
+     * Loads a song from the provided name assuming it is in the sounds deploy directory (deploy/sounds).
+     *
+     * @param soundName The name of the file (less extension, less path, just name) to get sound from (should be a .chrp
+     *                  file)
+     */
+    public void loadSound(String soundName) {
+        ErrorCode e = loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString());
+        if (e != ErrorCode.OK) {
+            System.out.println("Failed to load " + Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString() + ": " + e);
+        }
+    }
+
+    /**
+     * Selects a random song name from our previously mentioned hardcoded list
+     *
+     * @return song name from musicNames
+     */
+    public String getRandomSong() {
+        Random musicRand = new Random();
+        int randomSong = musicRand.nextInt(musicNames.length);
+        return musicNames[randomSong];
     }
 }
