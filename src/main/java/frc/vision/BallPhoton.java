@@ -1,54 +1,161 @@
 package frc.vision;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.LinearFilter;
+import frc.robot.RobotSettings;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPipelineResult;
+import org.photonvision.PhotonTrackedTarget;
 
-public class BallPhoton {
-    public NetworkTableEntry yaw;
-    public NetworkTableEntry size;
-    public NetworkTableEntry isValid;
+import java.util.List;
 
+public class BallPhoton implements IVision {
+    private PhotonCamera ballCamera;
+    private List<PhotonTrackedTarget> targets;
+    private PhotonPipelineResult cameraResult;
+    private LinearFilter filter;
+
+    /**
+     * inits BallPhoton
+     */
     public BallPhoton() {
+        addToMetaList();
         init();
     }
 
+    /**
+     * stores values in simpler variable names
+     */
     public void init() {
-        NetworkTableInstance table = NetworkTableInstance.getDefault();
-        NetworkTable cameraTable = table.getTable("photonvision").getSubTable(RobotMap.BALL_CAM_NAME);
-        yaw = cameraTable.getEntry("targetYaw");
-        size = cameraTable.getEntry("targetFittedWidth");
-        isValid = cameraTable.getEntry("isValid");
+        filter = LinearFilter.movingAverage(5);
+        ballCamera = new PhotonCamera(RobotSettings.BALL_CAM_NAME);
+        cameraResult = ballCamera.getLatestResult();
+        System.out.println("Found " + cameraResult.targets.size() + " targets");
     }
 
-    public void update() {
+    /**
+     * calls updateGeneric see BallPhoton.updateGeneric
+     */
+    @Override
+    public void updateTest() {
+        updateGeneric();
+    }
+
+    /**
+     * calls updateGeneric see BallPhoton.updateGeneric
+     */
+    @Override
+    public void updateTeleop() {
+        updateGeneric();
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void updateAuton() {
+        updateGeneric();
+    }
+
+    /**
+     * updates generic things for BallPhoton
+     */
+    @Override
+    public void updateGeneric() {
+        cameraResult = ballCamera.getLatestResult();
+        if (RobotSettings.DEBUG) {
+            System.out.println("Found " + cameraResult.targets.size() + " targets");
+        }
+        //if (validTarget()) {
+        targets = cameraResult.getTargets();
+        //}
+    }
+
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+        updateAuton();
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
 
     }
 
     /**
-     * Get angle between crosshair and ball.
+     * Get angle between crosshair and Ball left/right.
      *
-     * @return angle between crosshair and ball, left negative, 29.8 degrees in both directions.
+     * @param targetId the id of the object to query
+     * @return angle between crosshair and Ball, left negative, 29.8 degrees in both directions.
      */
-    public double getBallAngle() {
-        double angle = yaw.getDouble(0);
-        if (isValid.getBoolean(false)) {
-            return angle;
+    @Override
+    public double getAngle(int targetId) {
+        if (hasValidTarget()/* && targetId < targets.size()*/) {
+            return targets.get(targetId).getYaw();
         }
-        return 0;
+        return -10000;
     }
 
     /**
-     * Get the size of the ball onscreen.
+     * Get angle between crosshair and Ball up/down.
      *
-     * @return size of the ball in % of the screen, 0-100.
+     * @param targetId the id of the object to query
+     * @return angle between crosshair and Ball, down negative, 22 degrees in both directions.
      */
-    public double getBallSize() {
-        double ballSize = size.getDouble(0);
-        if (isValid.getBoolean(false)) {
-            return ballSize;
+    public double getPitch(int targetId) {
+        if (hasValidTarget()/* && targetId <= targets.size()*/) {
+            return targets.get(targetId).getPitch();
         }
-        return 0;
+        return -10;
+    }
+
+    /**
+     * Get angle between crosshair and Ball left/right with filter calculation.
+     *
+     * @param targetId the id of the object to query
+     * @return angle between crosshair and Ball, left negative, 29.8 degrees in both directions.
+     */
+    @Override
+    public double getAngleSmoothed(int targetId) {
+        if (hasValidTarget()/* && targetId <= targets.size()*/) {
+            return filter.calculate(targets.get(targetId).getYaw());
+        }
+        return -10000;
+    }
+
+    /**
+     * Get the size of the Ball onscreen.
+     *
+     * @param targetId the id of the object to query
+     * @return size of the Ball in % of the screen, 0-100.
+     */
+    public double getSize(int targetId) {
+        if (hasValidTarget()/* && targetId < targets.size()*/) {
+            return targets.get(targetId).getArea();
+        }
+        return -10;
+    }
+
+    /**
+     * Check for a valid target in the camera's view.
+     *
+     * @return whether or not there is a valid target in view.
+     */
+    @Override
+    public boolean hasValidTarget() {
+        return cameraResult.hasTargets();
     }
 }

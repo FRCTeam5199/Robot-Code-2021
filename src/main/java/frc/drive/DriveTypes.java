@@ -8,5 +8,8 @@ package frc.drive;
 public enum DriveTypes {
     STANDARD,
     EXPERIMENTAL,
-    MARIO_KART;
+    MARIO_KART,
+    DRUM_TIME,
+    GUITAR,
+    BOP_IT
 }

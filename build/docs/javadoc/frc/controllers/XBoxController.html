@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../../script-dir/jquery-ui.js"></script>
 </head>
 <body class="class-declaration">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -100,6 +100,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public class <span class="typeNameLabel">XBoxController</span>
 extends <a href="BaseController.html" title="class in frc.controllers">BaseController</a></pre>
+<div class="block">The lame and basic controller. Does it get any more simpleton than this?</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="BaseController.html" title="class in frc.controllers"><code>BaseController</code></a>, 
+<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers"><code>ControllerEnums.XboxAxes</code></a>, 
+<a href="ControllerEnums.XBoxButtons.html" title="enum in frc.controllers"><code>ControllerEnums.XBoxButtons</code></a></dd>
+</dl>
 </section>
 <section class="summary">
 <ul class="blockList">
@@ -175,34 +182,6 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <div class="block">Gets the status of a button on the xbox controller</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
-<td class="colFirst"><code>double</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getIgnoreSensitivity(frc.controllers.ControllerEnums.XboxAxes)">getIgnoreSensitivity</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</code></th>
-<td class="colLast">
-<div class="block">get joystick axis value regardless of deadzone</div>
-</td>
-</tr>
-<tr class="rowColor" id="i3">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isTriggerPressed(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressed</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</code></th>
-<td class="colLast">
-<div class="block">get joystick axis value regardless of deadzone</div>
-</td>
-</tr>
-<tr class="altColor" id="i4">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isTriggerPressedMomentary(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressedMomentary</a></span>&#8203;(<a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</code></th>
-<td class="colLast">
-<div class="block">Gets the momentary status of a trigger</div>
-</td>
-</tr>
-<tr class="rowColor" id="i5">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setTriggerSensitivity(double)">setTriggerSensitivity</a></span>&#8203;(double&nbsp;sens)</code></th>
-<td class="colLast">
-<div class="block">Sets sensitivity equal to triggerSensitivity</div>
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -211,12 +190,12 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <h3>Methods inherited from class&nbsp;frc.controllers.<a href="BaseController.html" title="class in frc.controllers">BaseController</a></h3>
 <a id="methods.inherited.from.class.frc.controllers.BaseController">
 <!--   -->
-</a><code><a href="BaseController.html#get(int)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.ButtonPanelButtons)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.JoystickAxis)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.JoystickButtons)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.WiiAxis)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.WiiButton)">get</a>, <a href="BaseController.html#getHat()">getHat</a>, <a href="BaseController.html#getPositive(frc.controllers.ControllerEnums.JoystickAxis)">getPositive</a>, <a href="BaseController.html#hatIs(frc.controllers.ControllerEnums.JoystickHatDirection)">hatIs</a></code></div>
+</a><code><a href="BaseController.html#get(int)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.BopItButtons)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.ButtonPanelButtons)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.DrumButton)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.Drums)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.JoystickAxis)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.JoystickButtons)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.SixKeyGuitarAxis)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.SixKeyGuitarButtons)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.WiiAxis)">get</a>, <a href="BaseController.html#get(frc.controllers.ControllerEnums.WiiButton)">get</a>, <a href="BaseController.html#getHat()">getHat</a>, <a href="BaseController.html#getPositive(frc.controllers.ControllerEnums.JoystickAxis)">getPositive</a>, <a href="BaseController.html#hatIs(frc.controllers.ControllerEnums.JoystickHatDirection)">hatIs</a>, <a href="BaseController.html#toString()">toString</a></code></div>
 <div class="inheritedList">
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
 <a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
-</a><code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></div>
+</a><code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, wait, wait, wait</code></div>
 </section>
 </li>
 </ul>
@@ -253,50 +232,6 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <ul class="blockList">
 <li class="blockList">
 <section class="detail">
-<h3><a id="setTriggerSensitivity(double)">setTriggerSensitivity</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">setTriggerSensitivity</span>&#8203;(<span class="arguments">double&nbsp;sens)</span></div>
-<div class="block">Sets sensitivity equal to triggerSensitivity</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>sens</code> - the trigger Sensitivity</dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="isTriggerPressedMomentary(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressedMomentary</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">isTriggerPressedMomentary</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</span>
-                                  throws <span class="exceptions">java.lang.IllegalArgumentException</span></div>
-<div class="block">Gets the momentary status of a trigger</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="BaseController.html#isTriggerPressedMomentary(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressedMomentary</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>trigger</code> - the trigger to query</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if the trigger has changed its state being pressed down</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.IllegalArgumentException</code></dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="isTriggerPressed(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressed</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">isTriggerPressed</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;trigger)</span></div>
-<div class="block">get joystick axis value regardless of deadzone</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="BaseController.html#isTriggerPressed(frc.controllers.ControllerEnums.XboxAxes)">isTriggerPressed</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>trigger</code> - trigger position to query</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>returns true when trigger is past its "deadzone"</dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
 <h3><a id="get(frc.controllers.ControllerEnums.XboxAxes)">get</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">get</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</span></div>
 <div class="block">get the state of an xbox axis</div>
@@ -326,21 +261,6 @@ extends <a href="BaseController.html" title="class in frc.controllers">BaseContr
 <dd>the status of queried button</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#get(frc.controllers.ControllerEnums.XboxAxes)"><code>get(XboxAxes)</code></a></dd>
-</dl>
-</section>
-</li>
-<li class="blockList">
-<section class="detail">
-<h3><a id="getIgnoreSensitivity(frc.controllers.ControllerEnums.XboxAxes)">getIgnoreSensitivity</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">double</span>&nbsp;<span class="memberName">getIgnoreSensitivity</span>&#8203;(<span class="arguments"><a href="ControllerEnums.XboxAxes.html" title="enum in frc.controllers">ControllerEnums.XboxAxes</a>&nbsp;axis)</span></div>
-<div class="block">get joystick axis value regardless of deadzone</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="BaseController.html#getIgnoreSensitivity(frc.controllers.ControllerEnums.XboxAxes)">getIgnoreSensitivity</a></code>&nbsp;in class&nbsp;<code><a href="BaseController.html" title="class in frc.controllers">BaseController</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>axis</code> - xbox controller axis to query</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>returns stick axis value regardless of deadzone</dd>
 </dl>
 </section>
 </li>

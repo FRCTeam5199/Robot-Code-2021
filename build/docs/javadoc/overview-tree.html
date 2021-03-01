@@ -73,11 +73,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="frc/controllers/package-tree.html">frc.controllers</a>, </li>
 <li><a href="frc/drive/package-tree.html">frc.drive</a>, </li>
 <li><a href="frc/drive/auton/package-tree.html">frc.drive.auton</a>, </li>
-<li><a href="frc/drive/auton/butbetternow/package-tree.html">frc.drive.auton.butbetternow</a>, </li>
-<li><a href="frc/drive/auton/pointtopoint/package-tree.html">frc.drive.auton.pointtopoint</a>, </li>
+<li><a href="frc/drive/auton/followtrajectory/package-tree.html">frc.drive.auton.followtrajectory</a>, </li>
+<li><a href="frc/drive/auton/galacticsearch/package-tree.html">frc.drive.auton.galacticsearch</a>, </li>
+<li><a href="frc/drive/auton/galacticsearchscam/package-tree.html">frc.drive.auton.galacticsearchscam</a>, </li>
 <li><a href="frc/misc/package-tree.html">frc.misc</a>, </li>
+<li><a href="frc/motors/package-tree.html">frc.motors</a>, </li>
+<li><a href="frc/motors/followers/package-tree.html">frc.motors.followers</a>, </li>
+<li><a href="frc/pdp/package-tree.html">frc.pdp</a>, </li>
 <li><a href="frc/robot/package-tree.html">frc.robot</a>, </li>
 <li><a href="frc/robot/robotconfigs/package-tree.html">frc.robot.robotconfigs</a>, </li>
+<li><a href="frc/robot/robotconfigs/twentyone/package-tree.html">frc.robot.robotconfigs.twentyone</a>, </li>
+<li><a href="frc/robot/robotconfigs/twentytwenty/package-tree.html">frc.robot.robotconfigs.twentytwenty</a>, </li>
+<li><a href="frc/telemetry/package-tree.html">frc.telemetry</a>, </li>
 <li><a href="frc/vision/package-tree.html">frc.vision</a></li>
 </ul>
 </div>
@@ -87,32 +94,66 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul>
 <li class="circle">java.lang.Object
 <ul>
-<li class="circle">frc.robot.robotconfigs.<a href="frc/robot/robotconfigs/AbstractConfig.html" title="class in frc.robot.robotconfigs"><span class="typeNameLink">AbstractConfig</span></a>
+<li class="circle">frc.drive.auton.<a href="frc/drive/auton/AbstractAutonManager.html" title="class in frc.drive.auton"><span class="typeNameLink">AbstractAutonManager</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)
 <ul>
-<li class="circle">frc.robot.robotconfigs.<a href="frc/robot/robotconfigs/Robot2020.html" title="class in frc.robot.robotconfigs"><span class="typeNameLink">Robot2020</span></a></li>
-<li class="circle">frc.robot.robotconfigs.<a href="frc/robot/robotconfigs/Robot2021.html" title="class in frc.robot.robotconfigs"><span class="typeNameLink">Robot2021</span></a></li>
+<li class="circle">frc.drive.auton.followtrajectory.<a href="frc/drive/auton/followtrajectory/AutonManager.html" title="class in frc.drive.auton.followtrajectory"><span class="typeNameLink">AutonManager</span></a></li>
+<li class="circle">frc.drive.auton.galacticsearch.<a href="frc/drive/auton/galacticsearch/AutonManager.html" title="class in frc.drive.auton.galacticsearch"><span class="typeNameLink">AutonManager</span></a></li>
+<li class="circle">frc.drive.auton.galacticsearchscam.<a href="frc/drive/auton/galacticsearchscam/AutonManager.html" title="class in frc.drive.auton.galacticsearchscam"><span class="typeNameLink">AutonManager</span></a></li>
 </ul>
 </li>
-<li class="circle">frc.drive.auton.butbetternow.<a href="frc/drive/auton/butbetternow/AutonManager.html" title="class in frc.drive.auton.butbetternow"><span class="typeNameLink">AutonManager</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
-<li class="circle">frc.drive.auton.pointtopoint.<a href="frc/drive/auton/pointtopoint/AutonManager.html" title="class in frc.drive.auton.pointtopoint"><span class="typeNameLink">AutonManager</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
-<li class="circle">frc.drive.auton.pointtopoint.<a href="frc/drive/auton/pointtopoint/AutonWaypoint.html" title="class in frc.drive.auton.pointtopoint"><span class="typeNameLink">AutonWaypoint</span></a></li>
-<li class="circle">frc.vision.<a href="frc/vision/BallPhoton.html" title="class in frc.vision"><span class="typeNameLink">BallPhoton</span></a></li>
+<li class="circle">frc.motors.followers.<a href="frc/motors/followers/AbstractFollowerMotorController.html" title="class in frc.motors.followers"><span class="typeNameLink">AbstractFollowerMotorController</span></a>
+<ul>
+<li class="circle">frc.motors.followers.<a href="frc/motors/followers/SparkFollowerMotorsController.html" title="class in frc.motors.followers"><span class="typeNameLink">SparkFollowerMotorsController</span></a></li>
+<li class="circle">frc.motors.followers.<a href="frc/motors/followers/TalonFollowerMotorController.html" title="class in frc.motors.followers"><span class="typeNameLink">TalonFollowerMotorController</span></a></li>
+</ul>
+</li>
+<li class="circle">frc.telemetry.<a href="frc/telemetry/AbstractIMU.html" title="class in frc.telemetry"><span class="typeNameLink">AbstractIMU</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)
+<ul>
+<li class="circle">frc.telemetry.<a href="frc/telemetry/WrappedNavX2IMU.html" title="class in frc.telemetry"><span class="typeNameLink">WrappedNavX2IMU</span></a></li>
+<li class="circle">frc.telemetry.<a href="frc/telemetry/WrappedPigeonIMU.html" title="class in frc.telemetry"><span class="typeNameLink">WrappedPigeonIMU</span></a></li>
+</ul>
+</li>
+<li class="circle">frc.motors.<a href="frc/motors/AbstractMotorController.html" title="class in frc.motors"><span class="typeNameLink">AbstractMotorController</span></a>
+<ul>
+<li class="circle">frc.motors.<a href="frc/motors/SparkMotorController.html" title="class in frc.motors"><span class="typeNameLink">SparkMotorController</span></a></li>
+<li class="circle">frc.motors.<a href="frc/motors/TalonMotorController.html" title="class in frc.motors"><span class="typeNameLink">TalonMotorController</span></a></li>
+<li class="circle">frc.motors.<a href="frc/motors/VictorMotorController.html" title="class in frc.motors"><span class="typeNameLink">VictorMotorController</span></a></li>
+</ul>
+</li>
+<li class="circle">frc.vision.<a href="frc/vision/BallPhoton.html" title="class in frc.vision"><span class="typeNameLink">BallPhoton</span></a> (implements frc.vision.<a href="frc/vision/IVision.html" title="interface in frc.vision">IVision</a>)</li>
 <li class="circle">frc.controllers.<a href="frc/controllers/BaseController.html" title="class in frc.controllers"><span class="typeNameLink">BaseController</span></a>
 <ul>
-<li class="circle">frc.controllers.<a href="frc/controllers/ButtonPanel.html" title="class in frc.controllers"><span class="typeNameLink">ButtonPanel</span></a></li>
+<li class="circle">frc.controllers.<a href="frc/controllers/BopItBasicController.html" title="class in frc.controllers"><span class="typeNameLink">BopItBasicController</span></a></li>
+<li class="circle">frc.controllers.<a href="frc/controllers/ButtonPanelController.html" title="class in frc.controllers"><span class="typeNameLink">ButtonPanelController</span></a></li>
+<li class="circle">frc.controllers.<a href="frc/controllers/DrumTimeController.html" title="class in frc.controllers"><span class="typeNameLink">DrumTimeController</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/JoystickController.html" title="class in frc.controllers"><span class="typeNameLink">JoystickController</span></a></li>
+<li class="circle">frc.controllers.<a href="frc/controllers/SixButtonGuitarController.html" title="class in frc.controllers"><span class="typeNameLink">SixButtonGuitarController</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/WiiController.html" title="class in frc.controllers"><span class="typeNameLink">WiiController</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/XBoxController.html" title="class in frc.controllers"><span class="typeNameLink">XBoxController</span></a></li>
 </ul>
 </li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.html" title="class in frc.controllers"><span class="typeNameLink">ControllerEnums</span></a></li>
+<li class="circle">frc.robot.robotconfigs.<a href="frc/robot/robotconfigs/DefaultConfig.html" title="class in frc.robot.robotconfigs"><span class="typeNameLink">DefaultConfig</span></a>
+<ul>
+<li class="circle">frc.robot.robotconfigs.twentyone.<a href="frc/robot/robotconfigs/twentyone/CompetitionRobot2021.html" title="class in frc.robot.robotconfigs.twentyone"><span class="typeNameLink">CompetitionRobot2021</span></a></li>
+<li class="circle">frc.robot.robotconfigs.twentyone.<a href="frc/robot/robotconfigs/twentyone/PracticeRobot2021.html" title="class in frc.robot.robotconfigs.twentyone"><span class="typeNameLink">PracticeRobot2021</span></a></li>
+<li class="circle">frc.robot.robotconfigs.twentytwenty.<a href="frc/robot/robotconfigs/twentytwenty/Robot2020.html" title="class in frc.robot.robotconfigs.twentytwenty"><span class="typeNameLink">Robot2020</span></a></li>
+</ul>
+</li>
 <li class="circle">frc.drive.<a href="frc/drive/DriveManager.html" title="class in frc.drive"><span class="typeNameLink">DriveManager</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
-<li class="circle">frc.drive.<a href="frc/drive/DriveManager.SparkFollowerMotors.html" title="class in frc.drive"><span class="typeNameLink">DriveManager.SparkFollowerMotors</span></a></li>
-<li class="circle">frc.drive.<a href="frc/drive/DriveManager.TalonFollowerMotors.html" title="class in frc.drive"><span class="typeNameLink">DriveManager.TalonFollowerMotors</span></a></li>
-<li class="circle">frc.vision.<a href="frc/vision/GoalPhoton.html" title="class in frc.vision"><span class="typeNameLink">GoalPhoton</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
+<li class="circle">frc.vision.<a href="frc/vision/GoalLimelight.html" title="class in frc.vision"><span class="typeNameLink">GoalLimelight</span></a> (implements frc.vision.<a href="frc/vision/IVision.html" title="interface in frc.vision">IVision</a>)</li>
+<li class="circle">frc.vision.<a href="frc/vision/GoalPhoton.html" title="class in frc.vision"><span class="typeNameLink">GoalPhoton</span></a> (implements frc.vision.<a href="frc/vision/IVision.html" title="interface in frc.vision">IVision</a>)</li>
 <li class="circle">frc.ballstuff.intaking.<a href="frc/ballstuff/intaking/Hopper.html" title="class in frc.ballstuff.intaking"><span class="typeNameLink">Hopper</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
 <li class="circle">frc.ballstuff.intaking.<a href="frc/ballstuff/intaking/Intake.html" title="class in frc.ballstuff.intaking"><span class="typeNameLink">Intake</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
+<li class="circle">frc.misc.<a href="frc/misc/LEDs.html" title="class in frc.misc"><span class="typeNameLink">LEDs</span></a></li>
 <li class="circle">frc.robot.<a href="frc/robot/Main.html" title="class in frc.robot"><span class="typeNameLink">Main</span></a></li>
+<li class="circle">com.ctre.phoenix.music.Orchestra
+<ul>
+<li class="circle">frc.misc.<a href="frc/misc/Chirp.html" title="class in frc.misc"><span class="typeNameLink">Chirp</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
+</ul>
+</li>
+<li class="circle">frc.pdp.<a href="frc/pdp/PDP.html" title="class in frc.pdp"><span class="typeNameLink">PDP</span></a></li>
+<li class="circle">frc.misc.<a href="frc/misc/PID.html" title="class in frc.misc"><span class="typeNameLink">PID</span></a></li>
 <li class="circle">frc.drive.auton.<a href="frc/drive/auton/Point.html" title="class in frc.drive.auton"><span class="typeNameLink">Point</span></a></li>
 <li class="circle">edu.wpi.first.wpilibj.RobotBase (implements java.lang.AutoCloseable)
 <ul>
@@ -127,10 +168,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
-<li class="circle">frc.robot.<a href="frc/robot/RobotMap.html" title="class in frc.robot"><span class="typeNameLink">RobotMap</span></a></li>
-<li class="circle">frc.robot.<a href="frc/robot/RobotNumbers.html" title="class in frc.robot"><span class="typeNameLink">RobotNumbers</span></a></li>
-<li class="circle">frc.drive.auton.<a href="frc/drive/auton/RobotTelemetry.html" title="class in frc.drive.auton"><span class="typeNameLink">RobotTelemetry</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
-<li class="circle">frc.robot.<a href="frc/robot/RobotToggles.html" title="class in frc.robot"><span class="typeNameLink">RobotToggles</span></a></li>
+<li class="circle">frc.robot.<a href="frc/robot/RobotSettings.html" title="class in frc.robot"><span class="typeNameLink">RobotSettings</span></a></li>
+<li class="circle">frc.telemetry.<a href="frc/telemetry/RobotTelemetry.html" title="class in frc.telemetry"><span class="typeNameLink">RobotTelemetry</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
 <li class="circle">frc.ballstuff.shooting.<a href="frc/ballstuff/shooting/Shooter.html" title="class in frc.ballstuff.shooting"><span class="typeNameLink">Shooter</span></a> (implements frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc">ISubsystem</a>)</li>
 <li class="circle">java.lang.Throwable (implements java.io.Serializable)
 <ul>
@@ -154,7 +193,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <section class="hierarchy">
 <h2 title="Interface Hierarchy">Interface Hierarchy</h2>
 <ul>
-<li class="circle">frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc"><span class="typeNameLink">ISubsystem</span></a></li>
+<li class="circle">frc.drive.auton.<a href="frc/drive/auton/IAutonEnumPath.html" title="interface in frc.drive.auton"><span class="typeNameLink">IAutonEnumPath</span></a></li>
+<li class="circle">frc.misc.<a href="frc/misc/ISubsystem.html" title="interface in frc.misc"><span class="typeNameLink">ISubsystem</span></a>
+<ul>
+<li class="circle">frc.vision.<a href="frc/vision/IVision.html" title="interface in frc.vision"><span class="typeNameLink">IVision</span></a></li>
+</ul>
+</li>
 </ul>
 </section>
 <section class="hierarchy">
@@ -164,21 +208,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul>
 <li class="circle">java.lang.Enum&lt;E&gt; (implements java.lang.Comparable&lt;T&gt;, java.lang.constant.Constable, java.io.Serializable)
 <ul>
-<li class="circle">frc.drive.auton.pointtopoint.<a href="frc/drive/auton/pointtopoint/AutonRoutines.html" title="enum in frc.drive.auton.pointtopoint"><span class="typeNameLink">AutonRoutines</span></a></li>
-<li class="circle">frc.drive.auton.pointtopoint.<a href="frc/drive/auton/pointtopoint/AutonSpecialActions.html" title="enum in frc.drive.auton.pointtopoint"><span class="typeNameLink">AutonSpecialActions</span></a></li>
+<li class="circle">frc.drive.auton.<a href="frc/drive/auton/AutonType.html" title="enum in frc.drive.auton"><span class="typeNameLink">AutonType</span></a></li>
+<li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.BopItButtons.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.BopItButtons</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.ButtonPanelButtons.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.ButtonPanelButtons</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.ButtonStatus.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.ButtonStatus</span></a></li>
+<li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.DrumButton.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.DrumButton</span></a></li>
+<li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.Drums.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.Drums</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.JoystickAxis.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.JoystickAxis</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.JoystickButtons.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.JoystickButtons</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.JoystickHatDirection.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.JoystickHatDirection</span></a></li>
+<li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.SixKeyGuitarAxis.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.SixKeyGuitarAxis</span></a></li>
+<li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.SixKeyGuitarButtons.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.SixKeyGuitarButtons</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.WiiAxis.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.WiiAxis</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.WiiButton.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.WiiButton</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.XboxAxes.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.XboxAxes</span></a></li>
 <li class="circle">frc.controllers.<a href="frc/controllers/ControllerEnums.XBoxButtons.html" title="enum in frc.controllers"><span class="typeNameLink">ControllerEnums.XBoxButtons</span></a></li>
 <li class="circle">frc.drive.<a href="frc/drive/DriveTypes.html" title="enum in frc.drive"><span class="typeNameLink">DriveTypes</span></a></li>
+<li class="circle">frc.drive.auton.galacticsearch.<a href="frc/drive/auton/galacticsearch/GalacticSearchPaths.html" title="enum in frc.drive.auton.galacticsearch"><span class="typeNameLink">GalacticSearchPaths</span></a> (implements frc.drive.auton.<a href="frc/drive/auton/IAutonEnumPath.html" title="interface in frc.drive.auton">IAutonEnumPath</a>)</li>
 <li class="circle">frc.ballstuff.intaking.<a href="frc/ballstuff/intaking/IntakeControlStyles.html" title="enum in frc.ballstuff.intaking"><span class="typeNameLink">IntakeControlStyles</span></a></li>
+<li class="circle">frc.misc.<a href="frc/misc/LEDs.LEDEnums.html" title="enum in frc.misc"><span class="typeNameLink">LEDs.LEDEnums</span></a></li>
 <li class="circle">frc.ballstuff.shooting.<a href="frc/ballstuff/shooting/ShootingControlStyles.html" title="enum in frc.ballstuff.shooting"><span class="typeNameLink">ShootingControlStyles</span></a></li>
 <li class="circle">frc.ballstuff.shooting.<a href="frc/ballstuff/shooting/ShootingEnums.html" title="enum in frc.ballstuff.shooting"><span class="typeNameLink">ShootingEnums</span></a></li>
+<li class="circle">frc.motors.<a href="frc/motors/SupportedMotors.html" title="enum in frc.motors"><span class="typeNameLink">SupportedMotors</span></a></li>
 </ul>
 </li>
 </ul>

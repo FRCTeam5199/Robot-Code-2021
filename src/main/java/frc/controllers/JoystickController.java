@@ -5,11 +5,19 @@ import frc.controllers.ControllerEnums.JoystickAxis;
 import frc.controllers.ControllerEnums.JoystickButtons;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
 
-public class JoystickController extends BaseController{
+/**
+ * This is the flight stick that we use. It has a bunch of useless buttons so its special in my heart
+ *
+ * @see BaseController
+ * @see ControllerEnums.JoystickAxis
+ * @see ControllerEnums.JoystickHatDirection
+ * @see ControllerEnums.JoystickButtons
+ */
+public class JoystickController extends BaseController {
 
     /**
      * joystick controller
-     * 
+     *
      * @param n - an integer
      */
     public JoystickController(int n) {
@@ -18,7 +26,7 @@ public class JoystickController extends BaseController{
 
     /**
      * ensures that the joystick hat direction is an accepted value
-     * 
+     *
      * @return The direction of the hat on the joystick
      * @throws IllegalStateException if the current direction doesnt have a matching enum
      */
@@ -32,7 +40,7 @@ public class JoystickController extends BaseController{
 
     /**
      * returns joystick's axis value
-     * 
+     *
      * @param axis the joystick axis to query
      * @return axis.AXIS_VALUE
      */
@@ -43,9 +51,9 @@ public class JoystickController extends BaseController{
     /**
      * returns positive joystick axis value
      *
-     * @see #get(JoystickAxis)
      * @param axis the joystick axis to query
      * @return positive axis value
+     * @see #get(JoystickAxis)
      */
     public double getPositive(JoystickAxis axis) {
         return ((1 - stick.getRawAxis(axis.AXIS_VALUE)) / 2);
@@ -53,7 +61,7 @@ public class JoystickController extends BaseController{
 
     /**
      * gets joystick button status
-     * 
+     *
      * @param button the joystick button to query
      * @return button status
      */

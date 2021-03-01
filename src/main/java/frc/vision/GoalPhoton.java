@@ -4,43 +4,40 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
-import frc.misc.ISubsystem;
-import frc.robot.RobotMap;
+import frc.robot.RobotSettings;
 
-public class GoalPhoton implements ISubsystem {
-    public NetworkTableEntry yaw;
-    public NetworkTableEntry size;
-    public NetworkTableEntry hasTarget;
-    public NetworkTableEntry pitch;
-    public NetworkTableEntry pose;
-    NetworkTableInstance table;
-    NetworkTable cameraTable;
-    LinearFilter filter;
+public class GoalPhoton implements IVision {
+    private NetworkTableEntry yaw;
+    private NetworkTableEntry size;
+    private NetworkTableEntry hasTarget;
+    private NetworkTableEntry pitch;
+    private NetworkTableEntry pose;
+    private LinearFilter filter;
 
     /**
      * inits GoalPhoton
      */
     public GoalPhoton() {
+        addToMetaList();
         init();
     }
 
     /**
      * stores values in simpler variable names
      */
+    @Override
     public void init() {
         filter = LinearFilter.movingAverage(5);
-        table = NetworkTableInstance.getDefault();
-        cameraTable = table.getTable("photonvision").getSubTable(RobotMap.GOAL_CAM_NAME);
+        NetworkTableInstance table = NetworkTableInstance.getDefault();
+        NetworkTable cameraTable = table.getTable("photonvision").getSubTable(RobotSettings.GOAL_CAM_NAME);
         yaw = cameraTable.getEntry("targetYaw");
         size = cameraTable.getEntry("targetArea");
         hasTarget = cameraTable.getEntry("hasTarget");
         pitch = cameraTable.getEntry("targetPitch");
-        pose = cameraTable.getEntry("targetPose");
     }
 
     /**
-     * calls updateGeneric 
-     * see GoalPhoton.updateGeneric
+     * calls updateGeneric see GoalPhoton.updateGeneric
      */
     @Override
     public void updateTest() {
@@ -48,8 +45,7 @@ public class GoalPhoton implements ISubsystem {
     }
 
     /**
-     * calls updateGeneric 
-     * see GoalPhoton.updateGeneric
+     * calls updateGeneric see GoalPhoton.updateGeneric
      */
     @Override
     public void updateTeleop() {
@@ -57,25 +53,53 @@ public class GoalPhoton implements ISubsystem {
     }
 
     /**
-     * 
+     *
      */
     @Override
-    public void updateAuton() { }
+    public void updateAuton() {
+    }
 
     /**
      * updates generic things for GoalPhoton
      */
     @Override
-    public void updateGeneric() { }
+    public void updateGeneric() {
+    }
+
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
+    }
 
     /**
      * Get angle between crosshair and goal left/right with filter calculation.
      *
      * @return angle between crosshair and goal, left negative, 29.8 degrees in both directions.
      */
-    public double getGoalAngleSmoothed() {
+    @Override
+    public double getAngleSmoothed(int channelIgnored) {
         double angle = yaw.getDouble(0);
-        if (validTarget()) {
+        if (hasValidTarget()) {
             return filter.calculate(angle);
         }
         return 0;
@@ -86,7 +110,8 @@ public class GoalPhoton implements ISubsystem {
      *
      * @return whether or not there is a valid target in view.
      */
-    public boolean validTarget() {
+    @Override
+    public boolean hasValidTarget() {
         return hasTarget.getBoolean(false);
     }
 
@@ -95,9 +120,10 @@ public class GoalPhoton implements ISubsystem {
      *
      * @return angle between crosshair and goal, left negative, 29.8 degrees in both directions.
      */
-    public double getGoalAngle() {
+    @Override
+    public double getAngle(int channelIgnored) {
         double angle = yaw.getDouble(0);
-        if (validTarget()) {
+        if (hasValidTarget()) {
             return angle;
         }
         return 0;
@@ -108,9 +134,10 @@ public class GoalPhoton implements ISubsystem {
      *
      * @return angle between crosshair and goal, down negative, 22 degrees in both directions.
      */
-    public double getGoalPitch() {
+    @Override
+    public double getPitch(int channelIgnored) {
         double angle = pitch.getDouble(0);
-        if (validTarget()) {
+        if (hasValidTarget()) {
             return angle;
         }
         return 0;
@@ -121,9 +148,10 @@ public class GoalPhoton implements ISubsystem {
      *
      * @return size of the goal in % of the screen, 0-100.
      */
-    public double getGoalSize() {
+    @Override
+    public double getSize(int channelIgnored) {
         double goalSize = size.getDouble(0);
-        if (validTarget()) {
+        if (hasValidTarget()) {
             return goalSize;
         }
         return 0;
