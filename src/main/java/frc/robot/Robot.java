@@ -75,14 +75,24 @@ public class Robot extends TimedRobot {
         MUSICK_TAB.add(leest);
     }
 
+    public static HashMap<String, List<String>> songnames;
+
     private static void getSongs(SendableChooser<List<String>> listObject){
-        HashMap<String, List<String>> songnames = new HashMap<>();
-        for (File file : Filesystem.getDeployDirectory().toPath().resolve("sounds").toFile().listFiles())
-            if (!songnames.containsKey(file.getName().split("_")[0])) {
-                songnames.put(file.getName().split("_")[0], new ArrayList<String>(Collections.singleton(file.getName())));
-            }else {
-                songnames.get(file.getName().split("_")[0]).add(file.getName());
+        songnames = new HashMap<>();
+        for (File file : Filesystem.getDeployDirectory().toPath().resolve("sounds").toFile().listFiles()) {
+            String filename = file.getName().split("\\.")[0];
+            try {
+                Integer.parseInt(filename.split("_")[1]);
+                Integer.parseInt(filename.split("_")[2]);
+            }catch (Exception e) {
+                continue;
             }
+            if (!songnames.containsKey(filename.split("_")[0])) {
+                songnames.put(filename.split("_")[0], new ArrayList<String>(Collections.singleton(filename)));
+            } else {
+                songnames.get(filename.split("_")[0]).add(filename);
+            }
+        }
         for (String key : songnames.keySet())
             listObject.addOption(key, songnames.get(key));
     }

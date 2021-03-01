@@ -22,15 +22,7 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     public static final ArrayList<TalonMotorController> talonMotorArrayList = new ArrayList<>();
 
-    /**
-     * All of the neat songs that we can play, hardcoded for all your non-modular ideas (basically forget about ever
-     * becoming modular ever again)
-     */
-    public static final String[] musicNames = {
-            "BokuNoSensou_4Motors", "CoconutMall_4Motors", "Electroman_Adventures_4Motors",
-            "Imperial_March_4Motors", "kiraTheme_4Motors", "Megalovania_4Motors",
-            "TheOnlyThingTheyFearIsYou_4Motors", "WiiSports_4Motors", "TheSevenSeas_4Motors"
-    };
+    private static final Random musicRand = new Random(System.currentTimeMillis());
 
     public Chirp() {
         init();
@@ -97,26 +89,23 @@ public class Chirp extends Orchestra implements ISubsystem {
         List<String> selected = Robot.leest.getSelected();
         String songName = "";//Robot.songTab.getString("");
         if (selected != null && selected.size() > 0) {
-            for (String str : selected){
+            for (String str : selected) {
                 if (songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size())
                     songName = str;
                 else if (!songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size() && Integer.parseInt(songName.split("_")[1]) < Integer.parseInt(str.split("_")[1]))
                     songName = str;
             }
         }
-
-        //String songName = "CoconutMall_4Motors";
+        //String songName = "CoconutMall_4";
         Robot.foundSong.setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
-        if (!songName.equals("")/* && !chirp.isPlaying()*/) {
-            if (new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(Robot.lastFoundSong)) {
-                 Robot.lastFoundSong = songName;
-                loadSound(songName);
-                ErrorCode e = play();
-                if (e != ErrorCode.OK) {
-                    System.out.println("Music Error: " + e);
-                }
-                System.out.println("Playing song " + songName + " on " + Chirp.talonMotorArrayList.size() + " motors.");
+        if (!songName.equals("") && new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(Robot.lastFoundSong)) {
+            Robot.lastFoundSong = songName;
+            loadSound(songName);
+            ErrorCode e = play();
+            if (e != ErrorCode.OK) {
+                System.out.println("Music Error: " + e);
             }
+            System.out.println("Playing song " + songName + " on " + Chirp.talonMotorArrayList.size() + " motors.");
         } else {
             if (!isPlaying()) {
                 String randomSong = getRandomSong();
@@ -124,9 +113,6 @@ public class Chirp extends Orchestra implements ISubsystem {
                 loadSound(randomSong);
                 play();
             }
-        }
-        if (!isPlaying()) {
-            play();
         }
     }
 
@@ -143,14 +129,24 @@ public class Chirp extends Orchestra implements ISubsystem {
         }
     }
 
+    @Override
+    public boolean isPlaying() {
+        return super.isPlaying() && getCurrentTime() < Integer.parseInt(Robot.lastFoundSong.split("_")[2]);
+    }
+
     /**
      * Selects a random song name from our previously mentioned hardcoded list
      *
      * @return song name from musicNames
      */
     public String getRandomSong() {
-        Random musicRand = new Random();
-        int randomSong = musicRand.nextInt(musicNames.length);
-        return musicNames[randomSong];
+        String songName = "";//Robot.songTab.getString("");
+        for (String str : Robot.songnames.get(Robot.songnames.keySet().toArray()[musicRand.nextInt(Robot.songnames.keySet().toArray().length)])) {
+            if (songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size())
+                songName = str;
+            else if (!songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size() && Integer.parseInt(songName.split("_")[1]) < Integer.parseInt(str.split("_")[1]))
+                songName = str;
+        }
+        return songName;
     }
 }
