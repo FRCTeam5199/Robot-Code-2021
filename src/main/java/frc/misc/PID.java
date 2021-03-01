@@ -9,7 +9,7 @@ public class PID {
      * Do not instanitate a zeroed PID object. Instead use this static reference.
      */
     public static final PID EMPTY_PID = new PID(0, 0, 0, 0);
-    private final double P, I, D, F;
+    public final double P, I, D, F;
 
     public PID(double p, double i, double d) {
         this(p, i, d, 0);

@@ -41,14 +41,8 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public AbstractMotorController setPid(PID pid) {
-        if (motor.config_kP(0, pid.getP()) != ErrorCode.OK)
-            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " P in PIDF could not be reset");
-        if (motor.config_kI(0, pid.getI()) != ErrorCode.OK)
-            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " I in PIDF could not be reset");
-        if (motor.config_kD(0, pid.getD()) != ErrorCode.OK)
-            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " D in PIDF could not be reset");
-        if (motor.config_kF(0, pid.getF()) != ErrorCode.OK)
-            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " F in PIDF could not be reset");
+        if (motor.config_kP(0, pid.getP()) != ErrorCode.OK || motor.config_kI(0, pid.getI()) != ErrorCode.OK || motor.config_kD(0, pid.getD()) != ErrorCode.OK || motor.config_kF(0, pid.getF()) != ErrorCode.OK)
+            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " PIDF could not be set");
         return this;
     }
 
@@ -92,7 +86,8 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
-        motor.configOpenloopRamp(timeToMax);
+        if (motor.configOpenloopRamp(timeToMax) != ErrorCode.OK)
+            throw new IllegalStateException("Victor Motor Controller with ID " + motor.getDeviceID() + " open loop ramp could not be set");
         return this;
     }
 

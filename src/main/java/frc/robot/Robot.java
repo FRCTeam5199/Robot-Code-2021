@@ -28,13 +28,11 @@ import frc.vision.IVision;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
+/**
+ * Welcome. Please enjoy your stay here in programmer fun time land. And remember, IntelliJ is king
+ */
 public class Robot extends TimedRobot {
     /**
      * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
@@ -46,7 +44,7 @@ public class Robot extends TimedRobot {
             ROBOT_TAB = Shuffleboard.getTab("DANGER!"),
             FAILURES_TAB = Shuffleboard.getTab("Warnings");
     public static final boolean songFound = false;
-    public static final SendableChooser<List<String>> leest;
+    public static final SendableChooser<List<String>> MUSIC_SELECTION;
     public static final NetworkTableEntry //songTab,
             disableSongTab = MUSICK_TAB.add("Stop Song", false).withWidget(BuiltInWidgets.kToggleButton).getEntry(),
             foundSong = MUSICK_TAB.add("Found it", songFound).getEntry();
@@ -72,38 +70,9 @@ public class Robot extends TimedRobot {
     private static long lastDisable = 0;
 
     static {
-        leest = new SendableChooser<>();
-        getSongs(leest);
-        MUSICK_TAB.add(leest);
-    }
-
-    public static HashMap<String, List<String>> songnames;
-
-    private static void getSongs(SendableChooser<List<String>> listObject){
-        songnames = new HashMap<>();
-        File[] files = Filesystem.getDeployDirectory().toPath().resolve("sounds").toFile().listFiles();
-        for (File file : files) {
-            String filename = file.getName().split("\\.")[0];
-            try {
-                Integer.parseInt(filename.split("_")[1]);
-                Integer.parseInt(filename.split("_")[2]);
-            }catch (Exception e) {
-                continue;
-            }
-            if (!songnames.containsKey(filename.split("_")[0])) {
-                songnames.put(filename.split("_")[0], new ArrayList<String>(Collections.singleton(filename)));
-            } else {
-                songnames.get(filename.split("_")[0]).add(filename);
-            }
-        }
-        List<String> filenames = new ArrayList<>();
-        for (int i = 0; i < songnames.keySet().size(); i++)
-            filenames.add((String)songnames.keySet().toArray()[i]);
-        filenames.sort(String::compareTo);
-        for (String key : filenames) {
-            System.out.println((String)key);
-            listObject.addOption((String)key, songnames.get((String) key));
-        }
+        MUSIC_SELECTION = new SendableChooser<>();
+        Chirp.getSongs(MUSIC_SELECTION);
+        MUSICK_TAB.add(MUSIC_SELECTION);
     }
 
     /**
@@ -112,33 +81,8 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() throws IllegalStateException {
         //Yes, it has to be a string otherwise it truncates it after 6 digits
-        long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
-        long currentBoot = System.currentTimeMillis();
-        preferences.putString("lastboot", "0" + currentBoot);
-        if (lastBoot > currentBoot) {
-            SECOND_TRY = false;
-        } else if (lastBoot > 1614461266977L) {
-            SECOND_TRY = currentBoot - lastBoot < 30000;
-        } else if (lastBoot < 1614461266977L && currentBoot < 1614461266977L) {
-            SECOND_TRY = currentBoot - lastBoot < 30000;
-        } else {
-            SECOND_TRY = false;
-        }
-        String hostName = preferences.getString("hostname", "Default");
-        System.out.println("I am " + hostName);
-        switch (hostName) {
-            case "2020-Comp":
-                settingsFile = new Robot2020();
-                break;
-            case "2021-Prac":
-                settingsFile = new PracticeRobot2021();
-                break;
-            case "2021-Comp":
-                settingsFile = new CompetitionRobot2021();
-                break;
-            default:
-                throw new IllegalStateException("You need to ID this robot.");
-        }
+        getRestartProximety();
+        getSettings();
         RobotSettings.printMappings();
         RobotSettings.printToggles();
         RobotSettings.printNumbers();
@@ -181,6 +125,44 @@ public class Robot extends TimedRobot {
         }
         if (RobotSettings.ENABLE_PDP) {
             pdp = new PDP(RobotSettings.PDP_ID);
+        }
+    }
+
+    private static void getRestartProximety() {
+        long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
+        long currentBoot = System.currentTimeMillis();
+        preferences.putString("lastboot", "0" + currentBoot);
+        if (lastBoot > currentBoot) {
+            SECOND_TRY = false;
+        } else if (lastBoot > 1614461266977L) {
+            SECOND_TRY = currentBoot - lastBoot < 30000;
+        } else if (lastBoot < 1614461266977L && currentBoot < 1614461266977L) {
+            SECOND_TRY = currentBoot - lastBoot < 30000;
+        } else {
+            SECOND_TRY = false;
+        }
+    }
+
+    /**
+     * Loads settings based on the id of the robot.
+     *
+     * @see DefaultConfig
+     */
+    private static void getSettings() {
+        String hostName = preferences.getString("hostname", "Default");
+        System.out.println("I am " + hostName);
+        switch (hostName) {
+            case "2020-Comp":
+                settingsFile = new Robot2020();
+                break;
+            case "2021-Prac":
+                settingsFile = new PracticeRobot2021();
+                break;
+            case "2021-Comp":
+                settingsFile = new CompetitionRobot2021();
+                break;
+            default:
+                throw new IllegalStateException("You need to ID this robot.");
         }
     }
 
@@ -252,7 +234,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        if (RobotSettings.ENABLE_MUSIC) chirp.updateDisabled();
         if (RobotSettings.ENABLE_DRIVE && System.currentTimeMillis() > lastDisable + 5000)
             driver.setBrake(false);
     }

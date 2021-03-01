@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.drive.DriveManager;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
+import frc.robot.Robot;
+import frc.robot.RobotSettings;
+import frc.telemetry.RobotTelemetry;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,7 +19,6 @@ import java.util.HashMap;
  * {@link DriveManager drivetrain} and a {@link Timer timer}, they are here along with {@link ISubsystem}.
  *
  * @see ISubsystem
- * @see frc.drive.auton.pointtopoint.AutonManager
  * @see frc.drive.auton.followtrajectory.AutonManager
  * @see frc.drive.auton.galacticsearch.AutonManager
  * @see frc.drive.auton.galacticsearchscam.AutonManager
@@ -29,7 +31,7 @@ public abstract class AbstractAutonManager implements ISubsystem {
         //TODO add barrel racing/other auton paths here
         for (GalacticSearchPaths path : GalacticSearchPaths.values()) {
             try {
-                paths.put(path, TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("paths/" + path.PATH_FILE_LOCATION + ".wpilib.json")));
+                paths.put(path, TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("paths/" + path.getDeployLocation() + ".wpilib.json")));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -38,6 +40,7 @@ public abstract class AbstractAutonManager implements ISubsystem {
 
     protected final Timer timer = new Timer();
     protected final DriveManager DRIVING_CHILD;
+    protected final RobotTelemetry telem;
 
     /**
      * Initializes the auton manager and stores the reference to the drivetrain object
@@ -47,5 +50,18 @@ public abstract class AbstractAutonManager implements ISubsystem {
     protected AbstractAutonManager(DriveManager driveManager) {
         addToMetaList();
         DRIVING_CHILD = driveManager;
+        if (DRIVING_CHILD.guidance != null)
+            telem = DRIVING_CHILD.guidance;
+        else
+            telem = null;
+    }
+
+    protected void onFinish() {
+        RobotSettings.autonComplete = true;
+        if (RobotSettings.ENABLE_MUSIC && !RobotSettings.AUTON_COMPLETE_NOISE.equals("")) {
+            DRIVING_CHILD.setBrake(true);
+            Robot.chirp.loadMusic(RobotSettings.AUTON_COMPLETE_NOISE);
+            Robot.chirp.play();
+        }
     }
 }

@@ -54,7 +54,7 @@ public abstract class DefaultConfig {
     public SupportedMotors DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
     public SupportedMotors TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
 
-    public AutonType AUTON_TYPE = AutonType.P2P;
+    public AutonType AUTON_TYPE = AutonType.FOLLOW_PATH;
 
     public int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
     public double DRIVEBASE_DISTANCE_BETWEEN_WHEELS = -2; //Distance in meters between wheels

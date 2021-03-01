@@ -9,7 +9,6 @@ import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
 import frc.robot.Robot;
 import frc.robot.RobotSettings;
-import frc.telemetry.RobotTelemetry;
 
 import static frc.robot.Robot.ballPhoton;
 
@@ -19,23 +18,17 @@ import static frc.robot.Robot.ballPhoton;
  * Requirements: {@link frc.robot.RobotSettings#ENABLE_VISION} {@link frc.robot.RobotSettings#ENABLE_IMU}
  */
 public class AutonManager extends AbstractAutonManager {
-    private final RobotTelemetry telem;
+
     private final RamseteController controller = new RamseteController();
     private Trajectory trajectory = new Trajectory();
 
     public AutonManager(DriveManager driveManager) {
         super(driveManager);
-        if (RobotSettings.ENABLE_IMU) {
-            telem = DRIVING_CHILD.guidance;
-        } else {
-            telem = null;
-        }
         init();
     }
 
     @Override
     public void init() {
-        DRIVING_CHILD.init();
     }
 
     @Override
@@ -48,13 +41,22 @@ public class AutonManager extends AbstractAutonManager {
 
     }
 
+    /**
+     * Runs the auton path. When complete, sets a flag in {@link RobotSettings#autonComplete} and runs {@link
+     * #onFinish()}
+     */
     @Override
     public void updateAuton() {
-        Trajectory.State goal = trajectory.sample(timer.get());
-        if (RobotSettings.ENABLE_IMU) {
-            System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
-            ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-            DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
+        if (!RobotSettings.autonComplete) {
+            Trajectory.State goal = trajectory.sample(timer.get());
+            if (RobotSettings.ENABLE_IMU) {
+                System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
+                ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
+                DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
+            }
+            if (timer.get() > trajectory.getTotalTimeSeconds()) {
+                onFinish();
+            }
         }
     }
 
@@ -112,8 +114,9 @@ public class AutonManager extends AbstractAutonManager {
      *
      * @param pointData the (perceived yaw, apparent size) array size 3 points of observations
      * @return the path with the smallest error from the passed points
+     * @throws IllegalStateException if the least error is {@literal >} 50, dont run for safety reasons
      */
-    private static GalacticSearchPaths getPath(Point[] pointData) {
+    private static GalacticSearchPaths getPath(Point[] pointData) throws IllegalStateException {
         GalacticSearchPaths bestPath = null;
         double bestOption = Double.MAX_VALUE;
         System.out.print("Data in: ");
@@ -128,6 +131,8 @@ public class AutonManager extends AbstractAutonManager {
                 bestPath = path;
             }
         }
+        if (bestOption > 50)
+            throw new IllegalStateException("I dont see a path. For safety, I will not run " + bestPath);
         return bestPath;
     }
 

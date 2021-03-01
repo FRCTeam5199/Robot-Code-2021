@@ -8,24 +8,17 @@ import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
-import frc.robot.Robot;
 import frc.robot.RobotSettings;
-import frc.telemetry.RobotTelemetry;
 
 /**
  * This is for running a preselected galactic search path
  */
 public class AutonManager extends AbstractAutonManager {
-    private final RobotTelemetry telem;
     private final RamseteController controller = new RamseteController();
     private Trajectory trajectory = new Trajectory();
 
     public AutonManager(DriveManager driveManager) {
         super(driveManager);
-        if (RobotSettings.ENABLE_IMU)
-            telem = DRIVING_CHILD.guidance;
-        else
-            telem = null;
         init();
     }
 
@@ -43,22 +36,20 @@ public class AutonManager extends AbstractAutonManager {
 
     }
 
+    /**
+     * Runs the auton
+     */
     @Override
     public void updateAuton() {
         if (!RobotSettings.autonComplete) {
             Trajectory.State goal = trajectory.sample(timer.get());
-            if (timer.get() > trajectory.getTotalTimeSeconds()) {
-                RobotSettings.autonComplete = true;
-                if (RobotSettings.ENABLE_MUSIC && !RobotSettings.AUTON_COMPLETE_NOISE.equals("")) {
-                    DRIVING_CHILD.setBrake(true);
-                    Robot.chirp.loadSound(RobotSettings.AUTON_COMPLETE_NOISE);
-                    Robot.chirp.play();
-                }
-            }
             if (RobotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
                 ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
                 DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
+            }
+            if (timer.get() > trajectory.getTotalTimeSeconds()) {
+                onFinish();
             }
         }
     }

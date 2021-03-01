@@ -106,6 +106,9 @@ public class Shooter implements ISubsystem {
         //updateGeneric();
     }
 
+    /**
+     * @see #updateGeneric()
+     */
     @Override
     public void updateTeleop() {
         updateGeneric();

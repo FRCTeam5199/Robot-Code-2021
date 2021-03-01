@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 
 public class LEDs {
     private static final Random random = new Random(System.currentTimeMillis());
+    private final boolean drawBackGround = true;
     private AddressableLED ledConfig;
     private AddressableLEDBuffer ledBuffer;
-    private final boolean drawBackGround = true;
     private int chaseLastLEDSet = 0;
 
     public void init() {

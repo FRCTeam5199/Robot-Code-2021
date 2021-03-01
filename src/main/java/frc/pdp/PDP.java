@@ -10,14 +10,12 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  * now, but should become more useful in the future in diagnosing critical failures
  */
 public class PDP {
-    private final PowerDistributionPanel powerDistributionPanel;
-
     private static final ShuffleboardTab POWER_TAB = Shuffleboard.getTab("Lectricity");
     private static final NetworkTableEntry allEnergy = POWER_TAB.add("Total energy on this boot", 0).getEntry(),
             peakCurrent = POWER_TAB.add("Peak current", 0).getEntry(),
     //otherEnergy = POWER_TAB.add("Energy on current enable", 0).getEntry(),
     peakPower = POWER_TAB.add("Peak power", 0).getEntry();
-
+    private final PowerDistributionPanel powerDistributionPanel;
     private double peakCurrentVal = 0, peakPowerVal = 0;
 
     public PDP(int channelID) {

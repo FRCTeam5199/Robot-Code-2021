@@ -140,6 +140,9 @@ public class RobotSettings {
 
     public static boolean autonComplete = false;
 
+    /**
+     * Prints the enabled toggles for the loaded settings
+     */
     public static void printToggles() {
         System.out.println("-------------------<RobotSettings>-----------------");
         System.out.println("          Driving " + ENABLE_DRIVE);
