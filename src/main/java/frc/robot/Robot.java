@@ -4,7 +4,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.ballstuff.intaking.Hopper;
 import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
@@ -14,6 +13,7 @@ import frc.drive.auton.AbstractAutonManager;
 import frc.misc.Chirp;
 import frc.misc.ISubsystem;
 import frc.misc.LEDs;
+import frc.misc.UserInterface;
 import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
@@ -22,11 +22,9 @@ import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
-import frc.misc.ShuffleboardDisplay;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Welcome. Please enjoy your stay here in programmer fun time land. And remember, IntelliJ is king
@@ -38,15 +36,13 @@ public class Robot extends TimedRobot {
      */
     public static final Preferences preferences = Preferences.getInstance();
     public static final ArrayList<ISubsystem> subsytems = new ArrayList<>();
-    public static final boolean songFound = false;
-    public static final SendableChooser<List<String>> MUSIC_SELECTION;
-    public static final NetworkTableEntry disableSongTab = ShuffleboardDisplay.MUSIC_DISABLE_SONG_TAB.getEntry(),
-            foundSong = ShuffleboardDisplay.MUSIC_FOUND_SONG.getEntry();
+    public static final NetworkTableEntry disableSongTab = UserInterface.MUSIC_DISABLE_SONG_TAB.getEntry(),
+            foundSong = UserInterface.MUSIC_FOUND_SONG.getEntry();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
-    private static final NetworkTableEntry remove = ShuffleboardDisplay.DELETE_DEPLOY_DIRECTORY.getEntry(),
-            printToggles = ShuffleboardDisplay.PRINT_ROBOT_TOGGLES.getEntry(),
-            printMappings = ShuffleboardDisplay.PRINT_ROBOT_MAPPINGS.getEntry(),
-            printNumbers = ShuffleboardDisplay.PRINT_ROBOT_NUMBERS.getEntry();
+    private static final NetworkTableEntry remove = UserInterface.DELETE_DEPLOY_DIRECTORY.getEntry(),
+            printToggles = UserInterface.PRINT_ROBOT_TOGGLES.getEntry(),
+            printMappings = UserInterface.PRINT_ROBOT_MAPPINGS.getEntry(),
+            printNumbers = UserInterface.PRINT_ROBOT_NUMBERS.getEntry();
     public static DefaultConfig settingsFile;
     public static DriveManager driver;
     public static Intake intake;
@@ -62,10 +58,42 @@ public class Robot extends TimedRobot {
     public static String lastFoundSong = "";
     private static long lastDisable = 0;
 
-    static {
-        MUSIC_SELECTION = new SendableChooser<>();
-        Chirp.getSongs(MUSIC_SELECTION);
-        ShuffleboardDisplay.MUSICK_TAB.add(MUSIC_SELECTION);
+    private static void getRestartProximety() {
+        long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
+        long currentBoot = System.currentTimeMillis();
+        preferences.putString("lastboot", "0" + currentBoot);
+        if (lastBoot > currentBoot) {
+            SECOND_TRY = false;
+        } else if (lastBoot > 1614461266977L) {
+            SECOND_TRY = currentBoot - lastBoot < 30000;
+        } else if (lastBoot < 1614461266977L && currentBoot < 1614461266977L) {
+            SECOND_TRY = currentBoot - lastBoot < 30000;
+        } else {
+            SECOND_TRY = false;
+        }
+    }
+
+    /**
+     * Loads settings based on the id of the robot.
+     *
+     * @see DefaultConfig
+     */
+    private static void getSettings() {
+        String hostName = preferences.getString("hostname", "Default");
+        System.out.println("I am " + hostName);
+        switch (hostName) {
+            case "2020-Comp":
+                settingsFile = new Robot2020();
+                break;
+            case "2021-Prac":
+                settingsFile = new PracticeRobot2021();
+                break;
+            case "2021-Comp":
+                settingsFile = new CompetitionRobot2021();
+                break;
+            default:
+                throw new IllegalStateException("You need to ID this robot.");
+        }
     }
 
     /**
@@ -121,55 +149,12 @@ public class Robot extends TimedRobot {
         }
     }
 
-    private static void getRestartProximety() {
-        long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
-        long currentBoot = System.currentTimeMillis();
-        preferences.putString("lastboot", "0" + currentBoot);
-        if (lastBoot > currentBoot) {
-            SECOND_TRY = false;
-        } else if (lastBoot > 1614461266977L) {
-            SECOND_TRY = currentBoot - lastBoot < 30000;
-        } else if (lastBoot < 1614461266977L && currentBoot < 1614461266977L) {
-            SECOND_TRY = currentBoot - lastBoot < 30000;
-        } else {
-            SECOND_TRY = false;
-        }
-    }
-
-    /**
-     * Loads settings based on the id of the robot.
-     *
-     * @see DefaultConfig
-     */
-    private static void getSettings() {
-        String hostName = preferences.getString("hostname", "Default");
-        System.out.println("I am " + hostName);
-        switch (hostName) {
-            case "2020-Comp":
-                settingsFile = new Robot2020();
-                break;
-            case "2021-Prac":
-                settingsFile = new PracticeRobot2021();
-                break;
-            case "2021-Comp":
-                settingsFile = new CompetitionRobot2021();
-                break;
-            default:
-                throw new IllegalStateException("You need to ID this robot.");
-        }
-    }
-
     @Override
     public void disabledInit() {
         for (ISubsystem system : subsytems) {
             system.initDisabled();
         }
         lastDisable = System.currentTimeMillis();
-        if (RobotSettings.ENABLE_MUSIC) {
-            if (chirp.isPlaying()) {
-                //chirp.stop();
-            }
-        }
     }
 
     @Override
@@ -190,10 +175,6 @@ public class Robot extends TimedRobot {
     public void testInit() {
         for (ISubsystem system : subsytems) {
             system.initTest();
-        }
-        if (RobotSettings.ENABLE_MUSIC) {
-            chirp.initDisabled();
-            //chirp.play();
         }
     }
 

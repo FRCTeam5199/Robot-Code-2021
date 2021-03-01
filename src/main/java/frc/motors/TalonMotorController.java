@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 import frc.misc.Chirp;
 import frc.misc.PID;
-import frc.misc.ShuffleboardDisplay;
+import frc.misc.UserInterface;
 import frc.robot.Robot;
 
 import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
@@ -61,7 +61,7 @@ public class TalonMotorController extends AbstractMotorController {
             if (!Robot.SECOND_TRY)
                 throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " PIDF couldnt be set");
             else
-                ShuffleboardDisplay.putBoolean("Talon Motor " + motor.getDeviceID() + " failed", false);
+                UserInterface.putBoolean("Talon Motor " + motor.getDeviceID() + " failed", false);
         return this;
     }
 
@@ -69,7 +69,7 @@ public class TalonMotorController extends AbstractMotorController {
     public void moveAtVelocity(double realAmount) {
         if (getMotorTemperature() > 100) {
             System.out.println("Im literally boiling chill out");
-            ShuffleboardDisplay.putBoolean("OVERHEAT " + motor.getDeviceID(), false);
+            UserInterface.putBoolean("OVERHEAT " + motor.getDeviceID(), false);
         } else
             motor.set(Velocity, realAmount / sensorToRealDistanceFactor);/// sensorToRealDistanceFactor);
         //System.out.println("I'm crying. RealAmount: " + realAmount + "\nSensortoDist: " + sensorToRealDistanceFactor + "\nSetting motors to " + realAmount / sensorToRealDistanceFactor);

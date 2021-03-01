@@ -1,7 +1,6 @@
 package frc.ballstuff.shooting;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
 import frc.controllers.ButtonPanelController;
@@ -12,13 +11,13 @@ import frc.controllers.ControllerEnums.JoystickButtons;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.misc.PID;
+import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.RobotSettings;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
-import frc.misc.ShuffleboardDisplay;
 
 import static frc.robot.Robot.hopper;
 
@@ -26,12 +25,12 @@ import static frc.robot.Robot.hopper;
  * Shooter pertains to spinning the flywheel that actually makes the balls go really fast
  */
 public class Shooter implements ISubsystem {
-    private final NetworkTableEntry P = ShuffleboardDisplay.shooterP.getEntry(),
-            I = ShuffleboardDisplay.SHOOTER_I.getEntry(),
-            D = ShuffleboardDisplay.SHOOTER_D.getEntry(),
-            F = ShuffleboardDisplay.SHOOTER_F.getEntry(),
-            constSpeed = ShuffleboardDisplay.SHOOTER_CONST_SPEED.getEntry(),
-            calibratePID = ShuffleboardDisplay.SHOOTER_CALIBRATE_PID.getEntry();
+    private final NetworkTableEntry P = UserInterface.shooterP.getEntry(),
+            I = UserInterface.SHOOTER_I.getEntry(),
+            D = UserInterface.SHOOTER_D.getEntry(),
+            F = UserInterface.SHOOTER_F.getEntry(),
+            constSpeed = UserInterface.SHOOTER_CONST_SPEED.getEntry(),
+            calibratePID = UserInterface.SHOOTER_CALIBRATE_PID.getEntry();
     public double speed = 4200, shooting;
     BaseController panel, joystickController;
     private AbstractMotorController leader, follower;
@@ -158,9 +157,9 @@ public class Shooter implements ISubsystem {
                 }
             }
         }
-        ShuffleboardDisplay.putNumber("RPM", leader.getSpeed());
-        ShuffleboardDisplay.putNumber("Target RPM", speed);
-        ShuffleboardDisplay.putBoolean("atSpeed", isAtSpeed());
+        UserInterface.putNumber("RPM", leader.getSpeed());
+        UserInterface.putNumber("Target RPM", speed);
+        UserInterface.putBoolean("atSpeed", isAtSpeed());
     }
 
     @Override

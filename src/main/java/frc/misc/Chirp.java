@@ -29,6 +29,7 @@ public class Chirp extends Orchestra implements ISubsystem {
      * already so you don't need another one
      */
     private static final Random musicRand = new Random(System.currentTimeMillis());
+    public static final SendableChooser<List<String>> MUSIC_SELECTION = getSongs();
 
     /**
      * K: Title. V: All files matching (differs in motors required)
@@ -36,11 +37,12 @@ public class Chirp extends Orchestra implements ISubsystem {
     private static HashMap<String, List<String>> songnames;
 
     /**
-     * Loads up songs for {@link #songnames} and {@link Robot#MUSIC_SELECTION}
+     * Loads up songs for {@link #songnames} and {@link UserInterface#MUSIC_SELECTOR}
      *
-     * @param listObject The scroll list object to add to
+     * @return listObject a SendableChooser with all the songs
      */
-    public static void getSongs(SendableChooser<List<String>> listObject) {
+    public static SendableChooser<List<String>> getSongs() {
+        SendableChooser<List<String>> listObject = new SendableChooser<>();
         songnames = new HashMap<>();
         File[] files = Filesystem.getDeployDirectory().toPath().resolve("sounds").toFile().listFiles();
         for (File file : files) {
@@ -65,6 +67,7 @@ public class Chirp extends Orchestra implements ISubsystem {
             System.out.println((String) key);
             listObject.addOption((String) key, songnames.get((String) key));
         }
+        return listObject;
     }
 
     public Chirp() {
@@ -94,7 +97,7 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     @Override
     public void updateTest() {
-        List<String> selected = Robot.MUSIC_SELECTION.getSelected();
+        List<String> selected = MUSIC_SELECTION.getSelected();
         String songName = "";//Robot.songTab.getString("");
         if (selected != null && selected.size() > 0) {
             for (String str : selected) {

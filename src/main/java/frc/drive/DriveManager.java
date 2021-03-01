@@ -15,20 +15,16 @@ import frc.controllers.DrumTimeController;
 import frc.controllers.SixButtonGuitarController;
 import frc.controllers.WiiController;
 import frc.controllers.XBoxController;
-import frc.misc.Chirp;
-import frc.misc.ISubsystem;
-import frc.misc.InitializationFailureException;
-import frc.misc.PID;
+import frc.misc.*;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.motors.followers.AbstractFollowerMotorController;
 import frc.motors.followers.SparkFollowerMotorsController;
 import frc.motors.followers.TalonFollowerMotorController;
-import frc.robot.Robot;
 import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
-import frc.misc.ShuffleboardDisplay;
+import frc.misc.UserInterface;
 
 /**
  * Everything that has to do with driving is in here. There are a lot of auxilairy helpers and {@link RobotSettings}
@@ -39,14 +35,14 @@ import frc.misc.ShuffleboardDisplay;
 public class DriveManager implements ISubsystem {
     public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(RobotSettings.DRIVEBASE_DISTANCE_BETWEEN_WHEELS);
     private final boolean invert = true;
-    private final NetworkTableEntry driveRotMult = ShuffleboardDisplay.DRIVE_ROT_MULT.getEntry(),
-            driveScaleMult = ShuffleboardDisplay.DRIVE_SCALE_MULT.getEntry(),
-            P = ShuffleboardDisplay.DRIVE_P.getEntry(),
-            I = ShuffleboardDisplay.DRIVE_I.getEntry(),
-            D = ShuffleboardDisplay.DRIVE_D.getEntry(),
-            F = ShuffleboardDisplay.DRIVE_F.getEntry(),
-            calibratePid = ShuffleboardDisplay.DRIVE_CALIBRATE_PID.getEntry(),
-            coast = ShuffleboardDisplay.DRIVE_COAST.getEntry();
+    private final NetworkTableEntry driveRotMult = UserInterface.DRIVE_ROT_MULT.getEntry(),
+            driveScaleMult = UserInterface.DRIVE_SCALE_MULT.getEntry(),
+            P = UserInterface.DRIVE_P.getEntry(),
+            I = UserInterface.DRIVE_I.getEntry(),
+            D = UserInterface.DRIVE_D.getEntry(),
+            F = UserInterface.DRIVE_F.getEntry(),
+            calibratePid = UserInterface.DRIVE_CALIBRATE_PID.getEntry(),
+            coast = UserInterface.DRIVE_COAST.getEntry();
     public AbstractMotorController leaderL, leaderR;
     public RobotTelemetry guidance;
     public AbstractFollowerMotorController followerL, followerR;

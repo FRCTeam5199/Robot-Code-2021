@@ -1,6 +1,5 @@
 package frc.ballstuff.shooting;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
 import frc.controllers.ButtonPanelController;
@@ -9,7 +8,7 @@ import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
-import frc.misc.ShuffleboardDisplay;
+import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
@@ -139,19 +138,19 @@ public class Turret implements ISubsystem {
             }
         }
         if (RobotSettings.DEBUG) {
-            //ShuffleboardDisplay.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
-            ShuffleboardDisplay.putNumber("Turret Omega", omegaSetpoint);
-            ShuffleboardDisplay.putNumber("Turret Position", turretDegrees());
-            ShuffleboardDisplay.putNumber("Turret Speed", motor.getRotations());
-            ShuffleboardDisplay.putBoolean("Turret Safe", isSafe());
+            //UserInterface.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
+            UserInterface.putNumber("Turret Omega", omegaSetpoint);
+            UserInterface.putNumber("Turret Position", turretDegrees());
+            UserInterface.putNumber("Turret Speed", motor.getRotations());
+            UserInterface.putBoolean("Turret Safe", isSafe());
             if (RobotSettings.ENABLE_IMU && guidance != null) {
                 //no warranties
-                ShuffleboardDisplay.putNumber("YawWrap", guidance.imu.yawWraparoundAhead() - 360);
-                ShuffleboardDisplay.putNumber("Turret North", limitAngle(235 + guidance.imu.yawWraparoundAhead() - 360));
+                UserInterface.putNumber("YawWrap", guidance.imu.yawWraparoundAhead() - 360);
+                UserInterface.putNumber("Turret North", limitAngle(235 + guidance.imu.yawWraparoundAhead() - 360));
             }
-            ShuffleboardDisplay.putBoolean("Turret At Target", atTarget);
-            ShuffleboardDisplay.putBoolean("Turret Track", track);
-            ShuffleboardDisplay.putBoolean("Turret at Target", atTarget);
+            UserInterface.putBoolean("Turret At Target", atTarget);
+            UserInterface.putBoolean("Turret Track", track);
+            UserInterface.putBoolean("Turret at Target", atTarget);
         }
     }
 
