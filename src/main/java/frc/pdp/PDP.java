@@ -2,19 +2,17 @@ package frc.pdp;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.misc.ShuffleboardDisplay;
 
 /**
  * PDP (Power Distribution Panel) contains information about power, current, and voltage for the robot Is cosmetic for
  * now, but should become more useful in the future in diagnosing critical failures
  */
 public class PDP {
-    private static final ShuffleboardTab POWER_TAB = Shuffleboard.getTab("Lectricity");
-    private static final NetworkTableEntry allEnergy = POWER_TAB.add("Total energy on this boot", 0).getEntry(),
-            peakCurrent = POWER_TAB.add("Peak current", 0).getEntry(),
-    //otherEnergy = POWER_TAB.add("Energy on current enable", 0).getEntry(),
-    peakPower = POWER_TAB.add("Peak power", 0).getEntry();
+    private static final NetworkTableEntry allEnergy = ShuffleboardDisplay.PDP_TOTAL_ENERGY_ON_THIS_BOOT.getEntry(),
+            peakCurrent = ShuffleboardDisplay.PDP_PEAK_CURRENT.getEntry(),
+            //otherEnergy = ShuffleboardDisplay.PDP_OTHER_ENERGY.getEntry(),
+            peakPower = ShuffleboardDisplay.PDP_PEAK_POWER.getEntry();
     private final PowerDistributionPanel powerDistributionPanel;
     private double peakCurrentVal = 0, peakPowerVal = 0;
 

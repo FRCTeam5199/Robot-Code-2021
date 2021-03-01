@@ -9,6 +9,7 @@ import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
+import frc.misc.ShuffleboardDisplay;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
@@ -138,19 +139,19 @@ public class Turret implements ISubsystem {
             }
         }
         if (RobotSettings.DEBUG) {
-            //SmartDashboard.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
-            SmartDashboard.putNumber("Turret Omega", omegaSetpoint);
-            SmartDashboard.putNumber("Turret Position", turretDegrees());
-            SmartDashboard.putNumber("Turret Speed", motor.getRotations());
-            SmartDashboard.putBoolean("Turret Safe", isSafe());
+            //ShuffleboardDisplay.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
+            ShuffleboardDisplay.putNumber("Turret Omega", omegaSetpoint);
+            ShuffleboardDisplay.putNumber("Turret Position", turretDegrees());
+            ShuffleboardDisplay.putNumber("Turret Speed", motor.getRotations());
+            ShuffleboardDisplay.putBoolean("Turret Safe", isSafe());
             if (RobotSettings.ENABLE_IMU && guidance != null) {
                 //no warranties
-                SmartDashboard.putNumber("YawWrap", guidance.imu.yawWraparoundAhead() - 360);
-                SmartDashboard.putNumber("Turret North", limitAngle(235 + guidance.imu.yawWraparoundAhead() - 360));
+                ShuffleboardDisplay.putNumber("YawWrap", guidance.imu.yawWraparoundAhead() - 360);
+                ShuffleboardDisplay.putNumber("Turret North", limitAngle(235 + guidance.imu.yawWraparoundAhead() - 360));
             }
-            SmartDashboard.putBoolean("Turret At Target", atTarget);
-            SmartDashboard.putBoolean("Turret Track", track);
-            SmartDashboard.putBoolean("Turret at Target", atTarget);
+            ShuffleboardDisplay.putBoolean("Turret At Target", atTarget);
+            ShuffleboardDisplay.putBoolean("Turret Track", track);
+            ShuffleboardDisplay.putBoolean("Turret at Target", atTarget);
         }
     }
 

@@ -4,9 +4,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.ballstuff.intaking.Hopper;
 import frc.ballstuff.intaking.Intake;
@@ -25,6 +22,7 @@ import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
+import frc.misc.ShuffleboardDisplay;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,20 +38,15 @@ public class Robot extends TimedRobot {
      */
     public static final Preferences preferences = Preferences.getInstance();
     public static final ArrayList<ISubsystem> subsytems = new ArrayList<>();
-    public static final ShuffleboardTab MUSICK_TAB = Shuffleboard.getTab("musick"),
-            ROBOT_TAB = Shuffleboard.getTab("DANGER!"),
-            FAILURES_TAB = Shuffleboard.getTab("Warnings");
     public static final boolean songFound = false;
     public static final SendableChooser<List<String>> MUSIC_SELECTION;
-    public static final NetworkTableEntry //songTab,
-            disableSongTab = MUSICK_TAB.add("Stop Song", false).withWidget(BuiltInWidgets.kToggleButton).getEntry(),
-            foundSong = MUSICK_TAB.add("Found it", songFound).getEntry();
-
+    public static final NetworkTableEntry disableSongTab = ShuffleboardDisplay.MUSIC_DISABLE_SONG_TAB.getEntry(),
+            foundSong = ShuffleboardDisplay.MUSIC_FOUND_SONG.getEntry();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
-    private static final NetworkTableEntry remove = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", "").getEntry(),
-            printToggles = ROBOT_TAB.add("Reprint robot toggles", false).withWidget(BuiltInWidgets.kToggleButton).getEntry(),
-            printMappings = ROBOT_TAB.add("Reprint robot mappings", false).withWidget(BuiltInWidgets.kToggleButton).getEntry(),
-            printNumbers = ROBOT_TAB.add("Reprint robot numbers", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+    private static final NetworkTableEntry remove = ShuffleboardDisplay.DELETE_DEPLOY_DIRECTORY.getEntry(),
+            printToggles = ShuffleboardDisplay.PRINT_ROBOT_TOGGLES.getEntry(),
+            printMappings = ShuffleboardDisplay.PRINT_ROBOT_MAPPINGS.getEntry(),
+            printNumbers = ShuffleboardDisplay.PRINT_ROBOT_NUMBERS.getEntry();
     public static DefaultConfig settingsFile;
     public static DriveManager driver;
     public static Intake intake;
@@ -72,7 +65,7 @@ public class Robot extends TimedRobot {
     static {
         MUSIC_SELECTION = new SendableChooser<>();
         Chirp.getSongs(MUSIC_SELECTION);
-        MUSICK_TAB.add(MUSIC_SELECTION);
+        ShuffleboardDisplay.MUSICK_TAB.add(MUSIC_SELECTION);
     }
 
     /**

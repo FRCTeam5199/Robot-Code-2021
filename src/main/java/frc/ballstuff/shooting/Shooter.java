@@ -1,8 +1,6 @@
 package frc.ballstuff.shooting;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
@@ -20,6 +18,7 @@ import frc.motors.TalonMotorController;
 import frc.robot.RobotSettings;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
+import frc.misc.ShuffleboardDisplay;
 
 import static frc.robot.Robot.hopper;
 
@@ -27,15 +26,14 @@ import static frc.robot.Robot.hopper;
  * Shooter pertains to spinning the flywheel that actually makes the balls go really fast
  */
 public class Shooter implements ISubsystem {
-    private final ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-    private final NetworkTableEntry P = tab.add("P", RobotSettings.SHOOTER_PID.getP()).getEntry(),
-            I = tab.add("I", RobotSettings.SHOOTER_PID.getI()).getEntry(),
-            D = tab.add("D", RobotSettings.SHOOTER_PID.getD()).getEntry(),
-            F = tab.add("F", RobotSettings.SHOOTER_PID.getF()).getEntry(),
-            constSpeed = tab.add("Constant Speed", 0).getEntry(),
-            calibratePID = tab.add("Recalibrate PID", false).getEntry();
-    BaseController panel, joystickController;
+    private final NetworkTableEntry P = ShuffleboardDisplay.shooterP.getEntry(),
+            I = ShuffleboardDisplay.SHOOTER_I.getEntry(),
+            D = ShuffleboardDisplay.SHOOTER_D.getEntry(),
+            F = ShuffleboardDisplay.SHOOTER_F.getEntry(),
+            constSpeed = ShuffleboardDisplay.SHOOTER_CONST_SPEED.getEntry(),
+            calibratePID = ShuffleboardDisplay.SHOOTER_CALIBRATE_PID.getEntry();
     public double speed = 4200, shooting;
+    BaseController panel, joystickController;
     private AbstractMotorController leader, follower;
     private IVision goalPhoton;
     private PID lastPID = PID.EMPTY_PID;
@@ -160,9 +158,9 @@ public class Shooter implements ISubsystem {
                 }
             }
         }
-        SmartDashboard.putNumber("RPM", leader.getSpeed());
-        SmartDashboard.putNumber("Target RPM", speed);
-        SmartDashboard.putBoolean("atSpeed", isAtSpeed());
+        ShuffleboardDisplay.putNumber("RPM", leader.getSpeed());
+        ShuffleboardDisplay.putNumber("Target RPM", speed);
+        ShuffleboardDisplay.putBoolean("atSpeed", isAtSpeed());
     }
 
     @Override

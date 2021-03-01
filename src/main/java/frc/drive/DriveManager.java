@@ -4,8 +4,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
@@ -30,6 +28,7 @@ import frc.motors.followers.TalonFollowerMotorController;
 import frc.robot.Robot;
 import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
+import frc.misc.ShuffleboardDisplay;
 
 /**
  * Everything that has to do with driving is in here. There are a lot of auxilairy helpers and {@link RobotSettings}
@@ -39,16 +38,15 @@ import frc.telemetry.RobotTelemetry;
  */
 public class DriveManager implements ISubsystem {
     public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(RobotSettings.DRIVEBASE_DISTANCE_BETWEEN_WHEELS);
-    private final ShuffleboardTab tab2 = Shuffleboard.getTab("drive");
     private final boolean invert = true;
-    private final NetworkTableEntry driveRotMult = tab2.add("Rotation Factor", RobotSettings.TURN_SCALE).getEntry(),
-            driveScaleMult = tab2.add("Speed Factor", RobotSettings.DRIVE_SCALE).getEntry(),
-            P = tab2.add("P", RobotSettings.DRIVEBASE_PID.getP()).getEntry(),
-            I = tab2.add("I", RobotSettings.DRIVEBASE_PID.getI()).getEntry(),
-            D = tab2.add("D", RobotSettings.DRIVEBASE_PID.getD()).getEntry(),
-            F = tab2.add("F", RobotSettings.DRIVEBASE_PID.getF()).getEntry(),
-            calibratePid = tab2.add("Calibrate PID", false).getEntry();
-    private final NetworkTableEntry coast = tab2.add("Coast", true).getEntry();
+    private final NetworkTableEntry driveRotMult = ShuffleboardDisplay.DRIVE_ROT_MULT.getEntry(),
+            driveScaleMult = ShuffleboardDisplay.DRIVE_SCALE_MULT.getEntry(),
+            P = ShuffleboardDisplay.DRIVE_P.getEntry(),
+            I = ShuffleboardDisplay.DRIVE_I.getEntry(),
+            D = ShuffleboardDisplay.DRIVE_D.getEntry(),
+            F = ShuffleboardDisplay.DRIVE_F.getEntry(),
+            calibratePid = ShuffleboardDisplay.DRIVE_CALIBRATE_PID.getEntry(),
+            coast = ShuffleboardDisplay.DRIVE_COAST.getEntry();
     public AbstractMotorController leaderL, leaderR;
     public RobotTelemetry guidance;
     public AbstractFollowerMotorController followerL, followerR;

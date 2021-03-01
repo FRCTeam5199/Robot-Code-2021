@@ -6,6 +6,7 @@ import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.misc.ISubsystem;
+import frc.misc.ShuffleboardDisplay;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
 import frc.robot.RobotSettings;
@@ -66,9 +67,9 @@ public class Hopper implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (RobotSettings.DEBUG) {
-            SmartDashboard.putBoolean("indexer enable", indexerActive);
-            SmartDashboard.putBoolean("agitator enable", agitatorActive);
-            SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
+            ShuffleboardDisplay.putBoolean("indexer enable", indexerActive);
+            ShuffleboardDisplay.putBoolean("agitator enable", agitatorActive);
+            ShuffleboardDisplay.putNumber("indexer sensor", indexerSensorRange());
         }
         if (!indexerActive && !agitatorActive) {
             if (RobotSettings.ENABLE_INDEXER) {

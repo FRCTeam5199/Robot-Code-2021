@@ -9,6 +9,7 @@ import frc.controllers.JoystickController;
 import frc.drive.auton.AutonType;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
+import frc.misc.ShuffleboardDisplay;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
 import frc.robot.RobotSettings;
@@ -98,7 +99,7 @@ public class Intake implements ISubsystem {
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         if (RobotSettings.DEBUG) {
-            SmartDashboard.putNumber("Intake Speed", intakeMult);
+            ShuffleboardDisplay.putNumber("Intake Speed", intakeMult);
         }
     }
 
