@@ -131,7 +131,11 @@ public class Chirp extends Orchestra implements ISubsystem {
 
     @Override
     public boolean isPlaying() {
-        return super.isPlaying() && getCurrentTime() < Integer.parseInt(Robot.lastFoundSong.split("_")[2]);
+        try {
+            return super.isPlaying() && (!Robot.lastFoundSong.equals("") && getCurrentTime() < Integer.parseInt(Robot.lastFoundSong.split("_")[2]));
+        }catch (Exception e){
+            return false;
+        }
     }
 
     /**

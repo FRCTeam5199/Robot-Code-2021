@@ -26,7 +26,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         //Misc
         ENABLE_VISION = false;
         USE_PHOTONVISION = true;
-        ENABLE_IMU = false;
+        ENABLE_IMU = true;
         USE_PIGEON = false;
         USE_NAVX2 = true;
 

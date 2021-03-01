@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
+import frc.robot.Robot;
 import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 
@@ -21,7 +22,10 @@ public class AutonManager extends AbstractAutonManager {
 
     public AutonManager(DriveManager driveManager) {
         super(driveManager);
-        telem = DRIVING_CHILD.guidance;
+        if (RobotSettings.ENABLE_IMU)
+            telem = DRIVING_CHILD.guidance;
+        else
+            telem = null;
         init();
     }
 
@@ -45,6 +49,11 @@ public class AutonManager extends AbstractAutonManager {
             Trajectory.State goal = trajectory.sample(timer.get());
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
                 RobotSettings.autonComplete = true;
+                if (RobotSettings.ENABLE_MUSIC && !RobotSettings.AUTON_COMPLETE_NOISE.equals("")) {
+                    DRIVING_CHILD.setBrake(true);
+                    Robot.chirp.loadSound(RobotSettings.AUTON_COMPLETE_NOISE);
+                    Robot.chirp.play();
+                }
             }
             if (RobotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
@@ -73,10 +82,10 @@ public class AutonManager extends AbstractAutonManager {
     public void initAuton() {
         RobotSettings.autonComplete = false;
         trajectory = paths.get(GalacticSearchPaths.PATH_A_RED);
-        Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
-        trajectory = trajectory.transformBy(transform);
         if (RobotSettings.ENABLE_IMU) {
             telem.resetOdometry();
+            Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
+            trajectory = trajectory.transformBy(transform);
         }
         timer.stop();
         timer.reset();

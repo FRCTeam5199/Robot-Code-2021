@@ -30,8 +30,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class Robot extends TimedRobot {
     /**
@@ -79,7 +81,8 @@ public class Robot extends TimedRobot {
 
     private static void getSongs(SendableChooser<List<String>> listObject){
         songnames = new HashMap<>();
-        for (File file : Filesystem.getDeployDirectory().toPath().resolve("sounds").toFile().listFiles()) {
+        File[] files = Filesystem.getDeployDirectory().toPath().resolve("sounds").toFile().listFiles();
+        for (File file : files) {
             String filename = file.getName().split("\\.")[0];
             try {
                 Integer.parseInt(filename.split("_")[1]);
@@ -93,8 +96,14 @@ public class Robot extends TimedRobot {
                 songnames.get(filename.split("_")[0]).add(filename);
             }
         }
-        for (String key : songnames.keySet())
-            listObject.addOption(key, songnames.get(key));
+        List<String> filenames = new ArrayList<>();
+        for (int i = 0; i < songnames.keySet().size(); i++)
+            filenames.add((String)songnames.keySet().toArray()[i]);
+        filenames.sort(String::compareTo);
+        for (String key : filenames) {
+            System.out.println((String)key);
+            listObject.addOption((String)key, songnames.get((String) key));
+        }
     }
 
     /**

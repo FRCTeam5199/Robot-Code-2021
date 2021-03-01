@@ -136,6 +136,7 @@ public class RobotSettings {
     public static final SupportedMotors DRIVE_MOTOR_TYPE = settingsFile.DRIVE_MOTOR_TYPE;
     public static final SupportedMotors SHOOTER_MOTOR_TYPE = settingsFile.SHOOTER_MOTOR_TYPE;
     public static final SupportedMotors TURRET_MOTOR_TYPE = settingsFile.TURRET_MOTOR_TYPE;
+    public static final String AUTON_COMPLETE_NOISE = "LevelComplete_4_6000";
 
     public static boolean autonComplete = false;
 
