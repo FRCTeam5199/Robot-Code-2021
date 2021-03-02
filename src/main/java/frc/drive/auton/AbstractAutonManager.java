@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.drive.DriveManager;
+import frc.drive.auton.followtrajectory.Trajectories;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
 import frc.robot.Robot;
@@ -30,6 +31,14 @@ public abstract class AbstractAutonManager implements ISubsystem {
         paths = new HashMap<>();
         //TODO add barrel racing/other auton paths here
         for (GalacticSearchPaths path : GalacticSearchPaths.values()) {
+            try {
+                paths.put(path, TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("paths/" + path.getDeployLocation() + ".wpilib.json")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        for (Trajectories path : Trajectories.values()) {
             try {
                 paths.put(path, TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("paths/" + path.getDeployLocation() + ".wpilib.json")));
             } catch (IOException e) {

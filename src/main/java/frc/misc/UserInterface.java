@@ -1,5 +1,6 @@
 package frc.misc;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,12 +34,13 @@ public class UserInterface {
     //PDP_OTHER_ENERGY = POWER_TAB.add("Energy on current enable", 0),
     PDP_PEAK_POWER = pdpTab.add("Peak power", 0);
 
-    public static final ComplexWidget PDP_DISPLAY = pdpTab.add("PDPDisplay", new PowerDistributionPanel(RobotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
+    //public static final ComplexWidget PDP_DISPLAY = pdpTab.add("PDPDisplay", new PowerDistributionPanel(RobotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
 
     //MUSICK
     public static final ShuffleboardTab MUSICK_TAB = Shuffleboard.getTab("musick");
     public static final SimpleWidget MUSIC_DISABLE_SONG_TAB = MUSICK_TAB.add("Stop Song", false).withWidget(BuiltInWidgets.kToggleButton),
             MUSIC_FOUND_SONG = MUSICK_TAB.add("Found it", false);
+    public static ComplexWidget MUSIC_SELECTOR = MUSICK_TAB.add("SongSelector", Chirp.MUSIC_SELECTION).withWidget(BuiltInWidgets.kComboBoxChooser);
     //DANGER PANEL
     public static final ShuffleboardTab ROBOT_TAB = Shuffleboard.getTab("DANGER!");
     public static final SimpleWidget DELETE_DEPLOY_DIRECTORY = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", ""),
@@ -47,7 +49,14 @@ public class UserInterface {
             PRINT_ROBOT_NUMBERS = ROBOT_TAB.add("Reprint robot numbers", false).withWidget(BuiltInWidgets.kToggleButton);
     //WARNINGS PANEL
     public static final ShuffleboardTab FAILURES_TAB = Shuffleboard.getTab("Warnings");
-    public static ComplexWidget MUSIC_SELECTOR = MUSICK_TAB.add("SongSelector", Chirp.MUSIC_SELECTION).withWidget(BuiltInWidgets.kComboBoxChooser);
+
+    //ROBOT.JAVA
+    public static final NetworkTableEntry disableSongTab = UserInterface.MUSIC_DISABLE_SONG_TAB.getEntry(),
+            foundSong = UserInterface.MUSIC_FOUND_SONG.getEntry();
+    public static final NetworkTableEntry remove = UserInterface.DELETE_DEPLOY_DIRECTORY.getEntry(),
+            printToggles = UserInterface.PRINT_ROBOT_TOGGLES.getEntry(),
+            printMappings = UserInterface.PRINT_ROBOT_MAPPINGS.getEntry(),
+            printNumbers = UserInterface.PRINT_ROBOT_NUMBERS.getEntry();
 
     public static void putNumber(String key, double value) {
         SmartDashboard.putNumber(key, value);

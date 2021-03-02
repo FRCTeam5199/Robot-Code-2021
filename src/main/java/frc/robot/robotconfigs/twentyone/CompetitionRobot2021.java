@@ -12,7 +12,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
     //Subsystems
     public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
-        ENABLE_INTAKE = false;
+        ENABLE_INTAKE = true;
         ENABLE_SHOOTER = false;
         ENABLE_HOPPER = false;
         ENABLE_AGITATOR = false;

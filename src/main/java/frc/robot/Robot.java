@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -10,6 +9,8 @@ import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
+import frc.drive.auton.IAutonEnumPath;
+import frc.drive.auton.followtrajectory.Trajectories;
 import frc.misc.Chirp;
 import frc.misc.ISubsystem;
 import frc.misc.LEDs;
@@ -31,18 +32,12 @@ import java.util.ArrayList;
  */
 public class Robot extends TimedRobot {
     /**
-     * If you change this ONE SINGULAR VARIBLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
+     * If you change this ONE SINGULAR VARIABLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
      * using from the list under robotconfigs
      */
     public static final Preferences preferences = Preferences.getInstance();
     public static final ArrayList<ISubsystem> subsytems = new ArrayList<>();
-    public static final NetworkTableEntry disableSongTab = UserInterface.MUSIC_DISABLE_SONG_TAB.getEntry(),
-            foundSong = UserInterface.MUSIC_FOUND_SONG.getEntry();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
-    private static final NetworkTableEntry remove = UserInterface.DELETE_DEPLOY_DIRECTORY.getEntry(),
-            printToggles = UserInterface.PRINT_ROBOT_TOGGLES.getEntry(),
-            printMappings = UserInterface.PRINT_ROBOT_MAPPINGS.getEntry(),
-            printNumbers = UserInterface.PRINT_ROBOT_NUMBERS.getEntry();
     public static DefaultConfig settingsFile;
     public static DriveManager driver;
     public static Intake intake;
@@ -58,7 +53,7 @@ public class Robot extends TimedRobot {
     public static String lastFoundSong = "";
     private static long lastDisable = 0;
 
-    private static void getRestartProximety() {
+    private static void getRestartProximity() {
         long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
         long currentBoot = System.currentTimeMillis();
         preferences.putString("lastboot", "0" + currentBoot);
@@ -92,6 +87,9 @@ public class Robot extends TimedRobot {
                 settingsFile = new CompetitionRobot2021();
                 break;
             default:
+                //preferences.putString("hostname", "2021-Comp");
+                //settingsFile = new CompetitionRobot2021();
+                //break;
                 throw new IllegalStateException("You need to ID this robot.");
         }
     }
@@ -102,7 +100,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() throws IllegalStateException {
         //Yes, it has to be a string otherwise it truncates it after 6 digits
-        getRestartProximety();
+        getRestartProximity();
         getSettings();
         RobotSettings.printMappings();
         RobotSettings.printToggles();
@@ -137,7 +135,7 @@ public class Robot extends TimedRobot {
                     autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     break;
                 case FOLLOW_PATH:
-                    //autonManager = new frc.drive.auton.followtrajectory.AutonManager("RobotTestPath2", driver);
+                    autonManager = new frc.drive.auton.followtrajectory.AutonManager(Trajectories.TEST_PATH, driver);
                     break;
                 case GALACTIC_SCAM:
                     autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);
@@ -180,24 +178,24 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        if (printToggles.getBoolean(false)) {
+        if (UserInterface.printToggles.getBoolean(false)) {
             RobotSettings.printToggles();
-            printToggles.setBoolean(false);
+            UserInterface.printToggles.setBoolean(false);
         }
-        if (printMappings.getBoolean(false)) {
+        if (UserInterface.printMappings.getBoolean(false)) {
             RobotSettings.printMappings();
-            printMappings.setBoolean(false);
+            UserInterface.printMappings.setBoolean(false);
         }
-        if (printNumbers.getBoolean(false)) {
+        if (UserInterface.printNumbers.getBoolean(false)) {
             RobotSettings.printNumbers();
-            printNumbers.setBoolean(false);
+            UserInterface.printNumbers.setBoolean(false);
         }
-        if (disableSongTab.getBoolean(false)) {
+        if (UserInterface.disableSongTab.getBoolean(false)) {
             chirp.stop();
-            disableSongTab.setBoolean(false);
+            UserInterface.disableSongTab.setBoolean(false);
         }
-        if (remove.getString("").equals(DELETE_PASSWORD)) {
-            remove.setString("Correct password");
+        if (UserInterface.remove.getString("").equals(DELETE_PASSWORD)) {
+            UserInterface.remove.setString("Correct password");
             deleteFolder(Filesystem.getDeployDirectory());
             throw new RuntimeException("Deleted deploy dir contents");
         }

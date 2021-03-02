@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.IAutonEnumPath;
@@ -15,7 +16,7 @@ import frc.robot.RobotSettings;
 public class AutonManager extends AbstractAutonManager {
     private final RamseteController controller = new RamseteController();
     private final IAutonEnumPath autonPath;
-    private Trajectory Trajectory;
+    private Trajectory trajectory;
 
     public AutonManager(IAutonEnumPath autonEnumPath, DriveManager driveObject) { //Routine should be in the form of "YourPath" (paths/YourPath.wpilib.json)
         super(driveObject);
@@ -28,14 +29,7 @@ public class AutonManager extends AbstractAutonManager {
      */
     @Override
     public void init() {
-        Trajectory = paths.get(autonPath);
-        if (RobotSettings.ENABLE_IMU) {
-            Transform2d transform = telem.robotPose.minus(Trajectory.getInitialPose());
-            Trajectory = Trajectory.transformBy(transform);
-        }
-        timer.stop();
-        timer.reset();
-        timer.start();
+
     }
 
     @Override
@@ -48,11 +42,11 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void updateAuton() {
-        Trajectory.State goal = Trajectory.sample(timer.get());
+        Trajectory.State goal = trajectory.sample(timer.get());
         if (RobotSettings.ENABLE_IMU) {
             System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
             ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-            DRIVING_CHILD.drivePure(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+            DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
         }
     }
 
@@ -72,7 +66,15 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void initAuton() {
-
+        trajectory = paths.get(autonPath);
+        if (RobotSettings.ENABLE_IMU) {
+            telem.resetOdometry();
+            Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
+            trajectory = trajectory.transformBy(transform);
+        }
+        timer.stop();
+        timer.reset();
+        timer.start();
     }
 
     @Override

@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
@@ -42,6 +43,7 @@ public class AutonManager extends AbstractAutonManager {
     @Override
     public void updateAuton() {
         if (!RobotSettings.autonComplete) {
+            //TrajectoryUtil.serializeTrajectory();
             Trajectory.State goal = trajectory.sample(timer.get());
             if (RobotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
