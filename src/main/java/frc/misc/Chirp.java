@@ -107,7 +107,7 @@ public class Chirp extends Orchestra implements ISubsystem {
                     songName = str;
             }
         }
-        UserInterface.foundSong.setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
+        UserInterface.MUSIC_FOUND_SONG.getEntry().setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
         if (!songName.equals("") && new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(Robot.lastFoundSong)) {
             Robot.lastFoundSong = songName;
             loadMusic(songName);

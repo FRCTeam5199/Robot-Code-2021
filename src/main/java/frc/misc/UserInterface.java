@@ -1,63 +1,58 @@
 package frc.misc;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotSettings;
 
+import java.util.HashMap;
+
 public class UserInterface {
     //SHOOTER TODO make PID widget (kPIDController)
-    public static final ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
-    public static final SimpleWidget shooterP = shooterTab.add("P", RobotSettings.SHOOTER_PID.getP()),
-            SHOOTER_I = shooterTab.add("I", RobotSettings.SHOOTER_PID.getI()),
-            SHOOTER_D = shooterTab.add("D", RobotSettings.SHOOTER_PID.getD()),
-            SHOOTER_F = shooterTab.add("F", RobotSettings.SHOOTER_PID.getF()),
-            SHOOTER_CONST_SPEED = shooterTab.add("Constant Speed", 0),
-            SHOOTER_CALIBRATE_PID = shooterTab.add("Recalibrate PID", false);
+    public static final ShuffleboardTab SHOOTER_TAB = Shuffleboard.getTab("Shooter"),
+            DRIVE_TAB = Shuffleboard.getTab("drive"),
+            pdpTab = Shuffleboard.getTab("Lectricity"),
+            MUSICK_TAB = Shuffleboard.getTab("musick"),
+            ROBOT_TAB = Shuffleboard.getTab("DANGER!"),
+            FAILURES_TAB = Shuffleboard.getTab("Warnings");
+    public static final SimpleWidget SHOOTER_P = SHOOTER_TAB.add("P", RobotSettings.SHOOTER_PID.getP()),
+            SHOOTER_I = SHOOTER_TAB.add("I", RobotSettings.SHOOTER_PID.getI()),
+            SHOOTER_D = SHOOTER_TAB.add("D", RobotSettings.SHOOTER_PID.getD()),
+            SHOOTER_F = SHOOTER_TAB.add("F", RobotSettings.SHOOTER_PID.getF()),
+            SHOOTER_CONST_SPEED = SHOOTER_TAB.add("Constant Speed", 0),
+            SHOOTER_CALIBRATE_PID = SHOOTER_TAB.add("Recalibrate PID", false),
 
     //DRIVETRAIN TODO make PID widget (kPIDController)
-    public static final ShuffleboardTab driveTab = Shuffleboard.getTab("drive");
-    public static final SimpleWidget DRIVE_ROT_MULT = driveTab.add("Rotation Factor", RobotSettings.TURN_SCALE),
-            DRIVE_SCALE_MULT = driveTab.add("Speed Factor", RobotSettings.DRIVE_SCALE),
-            DRIVE_P = driveTab.add("P", RobotSettings.DRIVEBASE_PID.getP()),
-            DRIVE_I = driveTab.add("I", RobotSettings.DRIVEBASE_PID.getI()),
-            DRIVE_D = driveTab.add("D", RobotSettings.DRIVEBASE_PID.getD()),
-            DRIVE_F = driveTab.add("F", RobotSettings.DRIVEBASE_PID.getF()),
-            DRIVE_CALIBRATE_PID = driveTab.add("Calibrate PID", false),
-            DRIVE_COAST = driveTab.add("Coast", true);
+            DRIVE_ROT_MULT = DRIVE_TAB.add("Rotation Factor", RobotSettings.TURN_SCALE),
+            DRIVE_SCALE_MULT = DRIVE_TAB.add("Speed Factor", RobotSettings.DRIVE_SCALE),
+            DRIVE_P = DRIVE_TAB.add("P", RobotSettings.DRIVEBASE_PID.getP()),
+            DRIVE_I = DRIVE_TAB.add("I", RobotSettings.DRIVEBASE_PID.getI()),
+            DRIVE_D = DRIVE_TAB.add("D", RobotSettings.DRIVEBASE_PID.getD()),
+            DRIVE_F = DRIVE_TAB.add("F", RobotSettings.DRIVEBASE_PID.getF()),
+            DRIVE_CALIBRATE_PID = DRIVE_TAB.add("Calibrate PID", false),
+            DRIVE_COAST = DRIVE_TAB.add("Coast", true),
 
     //PDP TODO make pdp widget (kPowerDistributionPanel)
-    public static final ShuffleboardTab pdpTab = Shuffleboard.getTab("Lectricity");
-    public static final SimpleWidget PDP_TOTAL_ENERGY_ON_THIS_BOOT = pdpTab.add("Total energy on this boot", 0),
+            PDP_TOTAL_ENERGY_ON_THIS_BOOT = pdpTab.add("Total energy on this boot", 0),
             PDP_PEAK_CURRENT = pdpTab.add("Peak current", 0),
+            PDP_PEAK_POWER = pdpTab.add("Peak power", 0),
     //PDP_OTHER_ENERGY = POWER_TAB.add("Energy on current enable", 0),
-    PDP_PEAK_POWER = pdpTab.add("Peak power", 0);
 
-    //public static final ComplexWidget PDP_DISPLAY = pdpTab.add("PDPDisplay", new PowerDistributionPanel(RobotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
-
-    //MUSICK
-    public static final ShuffleboardTab MUSICK_TAB = Shuffleboard.getTab("musick");
-    public static final SimpleWidget MUSIC_DISABLE_SONG_TAB = MUSICK_TAB.add("Stop Song", false).withWidget(BuiltInWidgets.kToggleButton),
-            MUSIC_FOUND_SONG = MUSICK_TAB.add("Found it", false);
-    public static ComplexWidget MUSIC_SELECTOR = MUSICK_TAB.add("SongSelector", Chirp.MUSIC_SELECTION).withWidget(BuiltInWidgets.kComboBoxChooser);
-    //DANGER PANEL
-    public static final ShuffleboardTab ROBOT_TAB = Shuffleboard.getTab("DANGER!");
-    public static final SimpleWidget DELETE_DEPLOY_DIRECTORY = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", ""),
+            //MUSICK
+            MUSIC_DISABLE_SONG_TAB = MUSICK_TAB.add("Stop Song", false).withWidget(BuiltInWidgets.kToggleButton),
+            MUSIC_FOUND_SONG = MUSICK_TAB.add("Found it", false),
+            DELETE_DEPLOY_DIRECTORY = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", ""),
             PRINT_ROBOT_TOGGLES = ROBOT_TAB.add("Reprint robot toggles", false).withWidget(BuiltInWidgets.kToggleButton),
             PRINT_ROBOT_MAPPINGS = ROBOT_TAB.add("Reprint robot mappings", false).withWidget(BuiltInWidgets.kToggleButton),
             PRINT_ROBOT_NUMBERS = ROBOT_TAB.add("Reprint robot numbers", false).withWidget(BuiltInWidgets.kToggleButton);
-    //WARNINGS PANEL
-    public static final ShuffleboardTab FAILURES_TAB = Shuffleboard.getTab("Warnings");
 
-    //ROBOT.JAVA
-    public static final NetworkTableEntry disableSongTab = UserInterface.MUSIC_DISABLE_SONG_TAB.getEntry(),
-            foundSong = UserInterface.MUSIC_FOUND_SONG.getEntry();
-    public static final NetworkTableEntry remove = UserInterface.DELETE_DEPLOY_DIRECTORY.getEntry(),
-            printToggles = UserInterface.PRINT_ROBOT_TOGGLES.getEntry(),
-            printMappings = UserInterface.PRINT_ROBOT_MAPPINGS.getEntry(),
-            printNumbers = UserInterface.PRINT_ROBOT_NUMBERS.getEntry();
+    //public static final ComplexWidget PDP_DISPLAY = pdpTab.add("PDPDisplay", new PowerDistributionPanel(RobotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
+    public static ComplexWidget MUSIC_SELECTOR = MUSICK_TAB.add("SongSelector", Chirp.MUSIC_SELECTION).withWidget(BuiltInWidgets.kComboBoxChooser);
+    //DANGER PANEL
 
+    public static final HashMap<String, ? extends SimpleWidget> MISC_TABS = new HashMap<>();
+
+    //SmartDashboard
     public static void putNumber(String key, double value) {
         SmartDashboard.putNumber(key, value);
     }
