@@ -32,6 +32,7 @@ public class Hopper implements ISubsystem {
             indexSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighAccuracy);
             indexSensor.setEnabled(true);
             indexSensor.setAutomaticMode(true);
+            System.out.println("Enabling index sensor.");
         }
         if (RobotSettings.ENABLE_AGITATOR)
             agitator = new VictorMotorController(RobotSettings.AGITATOR_MOTOR_ID);
@@ -41,7 +42,6 @@ public class Hopper implements ISubsystem {
 
     @Override
     public void updateTest() {
-        //updateGeneric();
     }
 
     public double indexerSensorRange() {
@@ -58,6 +58,7 @@ public class Hopper implements ISubsystem {
 
     @Override
     public void updateAuton() {
+        updateTeleop();
     }
 
     /**
@@ -70,22 +71,28 @@ public class Hopper implements ISubsystem {
             UserInterface.putBoolean("agitator enable", agitatorActive);
             UserInterface.putNumber("indexer sensor", indexerSensorRange());
         }
+        if (indexed) {
+            indexer.moveAtPercent(0);
+            agitator.moveAtPercent(0);
+
+        }
         if (!indexerActive && !agitatorActive) {
+
             if (RobotSettings.ENABLE_INDEXER) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    indexer.moveAtPercent(indexerSensorRange() > 9 ? 0.4 : 0);
+                    indexer.moveAtPercent(indexerSensorRange() > 4 ? 0.4 : 0);
                 } else {
                     indexer.moveAtPercent(0);
                 }
-            }
+            } //2021 COMP 4 & 2020 COMP 9
             if (RobotSettings.ENABLE_AGITATOR) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    agitator.moveAtPercent(indexerSensorRange() > 9 ? 0.3 : 0);
+                    agitator.moveAtPercent(indexerSensorRange() > 4 ? 0.3 : 0);
                 } else {
                     agitator.moveAtPercent(0);
                 }
             }
-            indexed = (RobotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() > 9);
+            indexed = (RobotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() > 4);
         } else {
             if (RobotSettings.ENABLE_INDEXER) {
                 indexer.moveAtPercent(indexerActive ? 0.8 : 0);

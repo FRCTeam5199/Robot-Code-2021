@@ -23,7 +23,7 @@ public class RobotSettings {
     /**
      * Toggles debug print statements
      */
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     //Subsystems
 
     /**

@@ -1,5 +1,6 @@
 package frc.robot.robotconfigs.twentyone;
 
+import edu.wpi.first.wpilibj.I2C;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
@@ -14,9 +15,9 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
         ENABLE_SHOOTER = false;
-        ENABLE_HOPPER = false;
-        ENABLE_AGITATOR = false;
-        ENABLE_INDEXER = false;
+        ENABLE_HOPPER = true;
+        ENABLE_AGITATOR = true;
+        ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
 
         DRIVE_USE_6_MOTORS = false;
@@ -29,6 +30,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_IMU = true;
         USE_PIGEON = false;
         USE_NAVX2 = true;
+        IMU_NAVX_PORT = I2C.Port.kMXP;
 
         //SHOOTER
         SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;//SupportedMotors.TALON_FX;
@@ -36,7 +38,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         SHOOTER_INVERTED = true;
 
         //INTAKE
-        ENABLE_INDEXER_AUTO_INDEX = false;
+        ENABLE_INDEXER_AUTO_INDEX = true;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;

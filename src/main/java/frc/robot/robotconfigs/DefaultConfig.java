@@ -116,5 +116,5 @@ public abstract class DefaultConfig {
     public int FLIGHT_STICK_USB_SLOT = 1;
     public int BUTTON_PANEL_USB_SLOT = 2;
 
-    public I2C.Port IMU_NAVX_PORT = I2C.Port.kOnboard;
+    public I2C.Port IMU_NAVX_PORT = I2C.Port.kMXP;
 }

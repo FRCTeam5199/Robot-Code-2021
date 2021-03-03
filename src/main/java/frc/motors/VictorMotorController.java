@@ -78,9 +78,9 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtPercent(double percent) {
-        if (getMotorTemperature() > 100){
-            System.out.println("Im literally boiling chill out");
-        } else
+        //if (getMotorTemperature() > 100){
+            //System.out.println("Im literally boiling chill out");
+        //} else
             motor.set(PercentOutput, percent);
     }
 
