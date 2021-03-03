@@ -178,24 +178,24 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        if (UserInterface.printToggles.getBoolean(false)) {
+        if (UserInterface.PRINT_ROBOT_TOGGLES.getEntry().getBoolean(false)) {
             RobotSettings.printToggles();
-            UserInterface.printToggles.setBoolean(false);
+            UserInterface.PRINT_ROBOT_TOGGLES.getEntry().setBoolean(false);
         }
-        if (UserInterface.printMappings.getBoolean(false)) {
+        if (UserInterface.PRINT_ROBOT_MAPPINGS.getEntry().getBoolean(false)) {
             RobotSettings.printMappings();
-            UserInterface.printMappings.setBoolean(false);
+            UserInterface.PRINT_ROBOT_MAPPINGS.getEntry().setBoolean(false);
         }
-        if (UserInterface.printNumbers.getBoolean(false)) {
+        if (UserInterface.PRINT_ROBOT_NUMBERS.getEntry().getBoolean(false)) {
             RobotSettings.printNumbers();
-            UserInterface.printNumbers.setBoolean(false);
+            UserInterface.PRINT_ROBOT_NUMBERS.getEntry().setBoolean(false);
         }
-        if (UserInterface.disableSongTab.getBoolean(false)) {
+        if (UserInterface.MUSIC_DISABLE_SONG_TAB.getEntry().getBoolean(false)) {
             chirp.stop();
-            UserInterface.disableSongTab.setBoolean(false);
+            UserInterface.MUSIC_DISABLE_SONG_TAB.getEntry().setBoolean(false);
         }
-        if (UserInterface.remove.getString("").equals(DELETE_PASSWORD)) {
-            UserInterface.remove.setString("Correct password");
+        if (UserInterface.DELETE_DEPLOY_DIRECTORY.getEntry().getString("").equals(DELETE_PASSWORD)) {
+            UserInterface.DELETE_DEPLOY_DIRECTORY.getEntry().setString("Correct password");
             deleteFolder(Filesystem.getDeployDirectory());
             throw new RuntimeException("Deleted deploy dir contents");
         }

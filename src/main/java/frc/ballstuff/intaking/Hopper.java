@@ -44,16 +44,22 @@ public class Hopper implements ISubsystem {
     public void updateTest() {
     }
 
+    @Override
+    public void updateTeleop() {
+        updateGeneric();
+    }
+
+    /**
+     * Uses the distance sensor to determine if there is a ball in the indxer. Enable and disable the indexer using
+     * {@link RobotSettings#ENABLE_INDEXER_AUTO_INDEX}
+     *
+     * @return distance as read by {@link #indexSensor} assuming it is {@link RobotSettings#ENABLE_INDEXER_AUTO_INDEX enabled}
+     */
     public double indexerSensorRange() {
         if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
             return indexSensor.getRange();
         }
         return -2;
-    }
-
-    @Override
-    public void updateTeleop() {
-        updateGeneric();
     }
 
     @Override
