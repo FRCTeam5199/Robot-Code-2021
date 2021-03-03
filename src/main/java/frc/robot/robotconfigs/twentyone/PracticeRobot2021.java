@@ -36,7 +36,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         SHOOTER_INVERTED = true;
 
         //INTAKE
-        ENABLE_INDEXER_AUTO_INDEX = true;
+        ENABLE_INDEXER_AUTO_INDEX = false;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;
@@ -58,7 +58,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         WHEEL_DIAMETER = 4; //inches. update: now it's used once
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
-        DRIVE_GEARING = 10 / 60.0;
+        DRIVE_GEARING = 12 / 60.0;
 
         SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
         motorPulleySize = 0;//?;

@@ -349,7 +349,9 @@ public class DriveManager implements ISubsystem {
      */
     public void drivePure(double FPS, double omega) {
         omega *= driveRotMult.getDouble(RobotSettings.TURN_SCALE);
+        //System.out.print("FPS: " + FPS);
         FPS *= driveScaleMult.getDouble(RobotSettings.DRIVE_SCALE);
+        //System.out.println(" MULT: " + FPS);
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         driveMPS(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
@@ -365,9 +367,9 @@ public class DriveManager implements ISubsystem {
         if (leftFPS != 0)
             System.out.println(leftFPS + ", " + rightFPS);
         double mult = 3.8 * 2.16 * RobotSettings.DRIVE_SCALE;
-        //if (RobotSettings.DEBUG) {
-        System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
-        //}
+        if (RobotSettings.DEBUG) {
+            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
+        }
         leaderL.moveAtVelocity((leftFPS) * mult);
         leaderR.moveAtVelocity((rightFPS) * mult);
     }

@@ -67,11 +67,11 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtVelocity(double realAmount) {
-        if (getMotorTemperature() > 100) {
-            System.out.println("Im literally boiling chill out");
-            UserInterface.putBoolean("OVERHEAT " + motor.getDeviceID(), false);
-        } else
-            motor.set(Velocity, realAmount / sensorToRealDistanceFactor);/// sensorToRealDistanceFactor);
+        if (isTemperatureAcceptable(motor.getDeviceID()))
+            motor.set(Velocity, realAmount / sensorToRealDistanceFactor);
+        else
+            motor.set(Velocity, 0);
+        /// sensorToRealDistanceFactor);
         //System.out.println("I'm crying. RealAmount: " + realAmount + "\nSensortoDist: " + sensorToRealDistanceFactor + "\nSetting motors to " + realAmount / sensorToRealDistanceFactor);
     }
 
@@ -103,10 +103,10 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtPercent(double percent) {
-        if (getMotorTemperature() > 100) {
-            System.out.println("Im literally boiling chill out");
-        } else
+        if (isTemperatureAcceptable(motor.getDeviceID()))
             motor.set(PercentOutput, percent);
+        else
+            motor.set(PercentOutput, 0);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package frc.motors;
 
 import frc.misc.PID;
+import frc.misc.UserInterface;
 import frc.motors.followers.AbstractFollowerMotorController;
 
 /**
@@ -23,6 +24,8 @@ public abstract class AbstractMotorController {
      * dont want to actually fix the issue, just change to double
      */
     public Double sensorToRealDistanceFactor;
+
+    protected boolean isOverheated;
 
     /**
      * Inverts the motor rotation from default for that motor (varies motor to motor of course)
@@ -119,5 +122,18 @@ public abstract class AbstractMotorController {
      */
     public void setSensorToRealDistanceFactor(double s2rf) {
         sensorToRealDistanceFactor = s2rf;
+    }
+
+    protected boolean isTemperatureAcceptable(int myID) {
+        if (getMotorTemperature() > 100){
+            if (!isOverheated){
+                UserInterface.putBoolean("OVERHEAT " + myID, false);
+                isOverheated = true;
+            }
+        }else if (isOverheated){
+            isOverheated = false;
+            UserInterface.putBoolean("OVERHEAT " + myID, true);
+        }
+        return !isOverheated;
     }
 }
