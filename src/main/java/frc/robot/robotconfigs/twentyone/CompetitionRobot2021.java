@@ -39,6 +39,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
+        INDEXER_DETECTION_CUTOFF_DISTANCE = 4;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;

@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.ballstuff.intaking.Hopper;
 import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
@@ -15,6 +16,7 @@ import frc.misc.Chirp;
 import frc.misc.ISubsystem;
 import frc.misc.LEDs;
 import frc.misc.UserInterface;
+import frc.motors.AbstractMotorController;
 import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
@@ -26,6 +28,7 @@ import frc.vision.IVision;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Welcome. Please enjoy your stay here in programmer fun time land. And remember, IntelliJ is king
@@ -145,6 +148,10 @@ public class Robot extends TimedRobot {
         if (RobotSettings.ENABLE_PDP) {
             pdp = new PDP(RobotSettings.PDP_ID);
         }
+
+        for(AbstractMotorController motor : AbstractMotorController.motorList) {
+            UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", 100)));
+        }
     }
 
     @Override
@@ -202,6 +209,11 @@ public class Robot extends TimedRobot {
         if (RobotSettings.ENABLE_PDP) {
             pdp.update();
         }
+
+        for(AbstractMotorController motor : AbstractMotorController.motorList) {
+            UserInterface.motorTemperatureMonitors.get(motor).getEntry().setNumber(motor.getMotorTemperature());
+        }
+
     }
 
     @Override

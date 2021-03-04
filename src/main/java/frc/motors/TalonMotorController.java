@@ -21,8 +21,14 @@ public class TalonMotorController extends AbstractMotorController {
     public final WPI_TalonFX motor;
 
     public TalonMotorController(int id) {
+        super();
         motor = new WPI_TalonFX(id);
         Chirp.talonMotorArrayList.add(this);
+    }
+
+    @Override
+    public String getName(){
+      return motor.getName() + motor.getDeviceID();
     }
 
     /**
@@ -61,7 +67,7 @@ public class TalonMotorController extends AbstractMotorController {
             if (!Robot.SECOND_TRY)
                 throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " PIDF couldnt be set");
             else
-                UserInterface.putBoolean("Talon Motor " + motor.getDeviceID() + " failed", false);
+                UserInterface.smartDashboardPutBoolean("Talon Motor " + motor.getDeviceID() + " failed", false);
         return this;
     }
 

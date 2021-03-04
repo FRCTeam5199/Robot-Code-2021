@@ -1,8 +1,8 @@
 package frc.misc;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.motors.AbstractMotorController;
 import frc.robot.RobotSettings;
 
 import java.util.HashMap;
@@ -11,10 +11,10 @@ public class UserInterface {
     //SHOOTER TODO make PID widget (kPIDController)
     public static final ShuffleboardTab SHOOTER_TAB = Shuffleboard.getTab("Shooter"),
             DRIVE_TAB = Shuffleboard.getTab("drive"),
-            pdpTab = Shuffleboard.getTab("Lectricity"),
+            PDP_TAB = Shuffleboard.getTab("Lectricity"),
             MUSICK_TAB = Shuffleboard.getTab("musick"),
             ROBOT_TAB = Shuffleboard.getTab("DANGER!"),
-            FAILURES_TAB = Shuffleboard.getTab("Warnings");
+            WARNINGS_TAB = Shuffleboard.getTab("Warnings");
     public static final SimpleWidget SHOOTER_P = SHOOTER_TAB.add("P", RobotSettings.SHOOTER_PID.getP()),
             SHOOTER_I = SHOOTER_TAB.add("I", RobotSettings.SHOOTER_PID.getI()),
             SHOOTER_D = SHOOTER_TAB.add("D", RobotSettings.SHOOTER_PID.getD()),
@@ -33,12 +33,12 @@ public class UserInterface {
             DRIVE_COAST = DRIVE_TAB.add("Coast", true),
 
     //PDP TODO make pdp widget (kPowerDistributionPanel)
-            PDP_TOTAL_ENERGY_ON_THIS_BOOT = pdpTab.add("Total energy on this boot", 0),
-            PDP_PEAK_CURRENT = pdpTab.add("Peak current", 0),
-            PDP_PEAK_POWER = pdpTab.add("Peak power", 0),
+            PDP_TOTAL_ENERGY_ON_THIS_BOOT = PDP_TAB.add("Total energy on this boot", 0),
+            PDP_PEAK_CURRENT = PDP_TAB.add("Peak current", 0),
+            PDP_PEAK_POWER = PDP_TAB.add("Peak power", 0),
     //PDP_OTHER_ENERGY = POWER_TAB.add("Energy on current enable", 0),
 
-            //MUSICK
+    //MUSICK
             MUSIC_DISABLE_SONG_TAB = MUSICK_TAB.add("Stop Song", false).withWidget(BuiltInWidgets.kToggleButton),
             MUSIC_FOUND_SONG = MUSICK_TAB.add("Found it", false),
             DELETE_DEPLOY_DIRECTORY = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", ""),
@@ -46,18 +46,18 @@ public class UserInterface {
             PRINT_ROBOT_MAPPINGS = ROBOT_TAB.add("Reprint robot mappings", false).withWidget(BuiltInWidgets.kToggleButton),
             PRINT_ROBOT_NUMBERS = ROBOT_TAB.add("Reprint robot numbers", false).withWidget(BuiltInWidgets.kToggleButton);
 
-    //public static final ComplexWidget PDP_DISPLAY = pdpTab.add("PDPDisplay", new PowerDistributionPanel(RobotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
+    //public static final ComplexWidget PDP_DISPLAY = PDP_TAB.add("PDPDisplay", new PowerDistributionPanel(RobotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
     public static ComplexWidget MUSIC_SELECTOR = MUSICK_TAB.add("SongSelector", Chirp.MUSIC_SELECTION).withWidget(BuiltInWidgets.kComboBoxChooser);
     //DANGER PANEL
 
-    public static final HashMap<String, ? extends SimpleWidget> MISC_TABS = new HashMap<>();
+    public static final HashMap<AbstractMotorController, SimpleWidget> motorTemperatureMonitors = new HashMap<>();
 
     //SmartDashboard
-    public static void putNumber(String key, double value) {
+    public static void smartDashboardPutNumber(String key, double value) {
         SmartDashboard.putNumber(key, value);
     }
 
-    public static void putBoolean(String key, boolean value) {
+    public static void smartDashboardPutBoolean(String key, boolean value) {
         SmartDashboard.putBoolean(key, value);
     }
 }

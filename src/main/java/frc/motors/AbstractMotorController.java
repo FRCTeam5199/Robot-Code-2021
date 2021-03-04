@@ -4,6 +4,8 @@ import frc.misc.PID;
 import frc.misc.UserInterface;
 import frc.motors.followers.AbstractFollowerMotorController;
 
+import java.util.ArrayList;
+
 /**
  * This is the base class for any motor. It is not an interface because it has to have a {@link
  * #sensorToRealDistanceFactor nonstatic field} which is not doable in an interface. If you are to use a motor that we
@@ -25,6 +27,12 @@ public abstract class AbstractMotorController {
      */
     public Double sensorToRealDistanceFactor;
 
+    public static final ArrayList<AbstractMotorController> motorList = new ArrayList<>();
+
+    protected AbstractMotorController(){
+        motorList.add(this);
+    }
+
     protected boolean isOverheated;
 
     /**
@@ -34,6 +42,8 @@ public abstract class AbstractMotorController {
      * @return this object (factory style)
      */
     public abstract AbstractMotorController setInverted(boolean invert);
+
+    public abstract String getName();
 
     /**
      * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
@@ -127,12 +137,12 @@ public abstract class AbstractMotorController {
     protected boolean isTemperatureAcceptable(int myID) {
         if (getMotorTemperature() > 100){
             if (!isOverheated){
-                UserInterface.putBoolean("OVERHEAT " + myID, false);
+                UserInterface.smartDashboardPutBoolean("OVERHEAT " + myID, false);
                 isOverheated = true;
             }
         }else if (isOverheated){
             isOverheated = false;
-            UserInterface.putBoolean("OVERHEAT " + myID, true);
+            UserInterface.smartDashboardPutBoolean("OVERHEAT " + myID, true);
         }
         return !isOverheated;
     }

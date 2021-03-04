@@ -139,18 +139,18 @@ public class Turret implements ISubsystem {
         }
         if (RobotSettings.DEBUG) {
             //UserInterface.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
-            UserInterface.putNumber("Turret Omega", omegaSetpoint);
-            UserInterface.putNumber("Turret Position", turretDegrees());
-            UserInterface.putNumber("Turret Speed", motor.getRotations());
-            UserInterface.putBoolean("Turret Safe", isSafe());
+            UserInterface.smartDashboardPutNumber("Turret Omega", omegaSetpoint);
+            UserInterface.smartDashboardPutNumber("Turret Position", turretDegrees());
+            UserInterface.smartDashboardPutNumber("Turret Speed", motor.getRotations());
+            UserInterface.smartDashboardPutBoolean("Turret Safe", isSafe());
             if (RobotSettings.ENABLE_IMU && guidance != null) {
                 //no warranties
-                UserInterface.putNumber("YawWrap", guidance.imu.yawWraparoundAhead() - 360);
-                UserInterface.putNumber("Turret North", limitAngle(235 + guidance.imu.yawWraparoundAhead() - 360));
+                UserInterface.smartDashboardPutNumber("YawWrap", guidance.imu.yawWraparoundAhead() - 360);
+                UserInterface.smartDashboardPutNumber("Turret North", limitAngle(235 + guidance.imu.yawWraparoundAhead() - 360));
             }
-            UserInterface.putBoolean("Turret At Target", atTarget);
-            UserInterface.putBoolean("Turret Track", track);
-            UserInterface.putBoolean("Turret at Target", atTarget);
+            UserInterface.smartDashboardPutBoolean("Turret At Target", atTarget);
+            UserInterface.smartDashboardPutBoolean("Turret Track", track);
+            UserInterface.smartDashboardPutBoolean("Turret at Target", atTarget);
         }
     }
 

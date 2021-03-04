@@ -16,7 +16,13 @@ public class VictorMotorController extends AbstractMotorController {
     private final VictorSPX motor;
 
     public VictorMotorController(int id) {
+        super();
         motor = new VictorSPX(id);
+    }
+
+    @Override
+    public String getName(){
+        return motor.toString() + motor.getDeviceID();
     }
 
     @Override

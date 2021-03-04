@@ -22,7 +22,13 @@ public class SparkMotorController extends AbstractMotorController {
         this(channelID, kBrushless);
     }
 
+    @Override
+    public String getName(){
+        return motor.toString() + motor.getDeviceId();
+    }
+
     public SparkMotorController(int channelID, CANSparkMaxLowLevel.MotorType type) {
+        super();
         motor = new CANSparkMax(channelID, type);
         myPid = motor.getPIDController();
         //I dont know if talons do this or if we ever dont do this so here it is

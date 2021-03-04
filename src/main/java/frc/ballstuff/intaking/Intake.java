@@ -98,7 +98,7 @@ public class Intake implements ISubsystem {
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         if (RobotSettings.DEBUG) {
-            UserInterface.putNumber("Intake Speed", intakeMult);
+            UserInterface.smartDashboardPutNumber("Intake Speed", intakeMult);
         }
     }
 

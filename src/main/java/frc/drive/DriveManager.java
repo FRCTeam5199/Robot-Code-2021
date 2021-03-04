@@ -4,6 +4,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
@@ -25,6 +27,8 @@ import frc.motors.followers.TalonFollowerMotorController;
 import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 import frc.misc.UserInterface;
+
+import java.util.Map;
 
 /**
  * Everything that has to do with driving is in here. There are a lot of auxilairy helpers and {@link RobotSettings}
@@ -48,6 +52,7 @@ public class DriveManager implements ISubsystem {
     public AbstractFollowerMotorController followerL, followerR;
     private BaseController controller;
     private PID lastPID = PID.EMPTY_PID;
+    public SimpleWidget driveSpeed;
 
     public DriveManager() throws RuntimeException {
         addToMetaList();
@@ -158,6 +163,7 @@ public class DriveManager implements ISubsystem {
      * @throws IllegalStateException when there is no configuration for {@link RobotSettings#DRIVE_STYLE}
      */
     private void initMisc() throws IllegalStateException {
+        driveSpeed = UserInterface.DRIVE_TAB.add("Drivebase Speed", 0).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min", 0, "Max", 20));
         System.out.println("THE XBOX CONTROLLER IS ON " + RobotSettings.XBOX_CONTROLLER_USB_SLOT);
         switch (RobotSettings.DRIVE_STYLE) {
             case STANDARD:
@@ -284,6 +290,7 @@ public class DriveManager implements ISubsystem {
             default:
                 throw new IllegalStateException("Invalid drive type");
         }
+        driveSpeed.getEntry().setNumber(Math.abs((leaderL.getSpeed() + leaderR.getSpeed()) / 2));
         //System.out.println(guidance.imu.yawWraparoundAhead());
     }
 

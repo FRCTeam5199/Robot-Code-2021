@@ -48,6 +48,7 @@ public class RobotSettings {
      * Enables the distance sensor in the {@link #ENABLE_HOPPER indexer}
      */
     public static final boolean ENABLE_INDEXER_AUTO_INDEX = settingsFile.ENABLE_INDEXER_AUTO_INDEX;
+    public static final int INDEXER_DETECTION_CUTOFF_DISTANCE = settingsFile.INDEXER_DETECTION_CUTOFF_DISTANCE;
 
     public static final boolean ENABLE_AGITATOR = settingsFile.ENABLE_AGITATOR;
     public static final boolean ENABLE_INDEXER = settingsFile.ENABLE_INDEXER;

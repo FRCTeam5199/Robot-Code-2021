@@ -8,6 +8,8 @@ import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
 
+import static frc.robot.Robot.settingsFile;
+
 /**
  * Literally dont mind me I am simply vibing I am here because it means you only have to change one value to completely
  * change robot settings (Otherwise, you would have to make 5 changes instead of 1)
@@ -44,6 +46,7 @@ public abstract class DefaultConfig {
 
     //INTAKE
     public boolean ENABLE_INDEXER_AUTO_INDEX = true;
+    public int INDEXER_DETECTION_CUTOFF_DISTANCE = -2;
 
     //UI Styles
     public DriveTypes DRIVE_STYLE = DriveTypes.STANDARD;

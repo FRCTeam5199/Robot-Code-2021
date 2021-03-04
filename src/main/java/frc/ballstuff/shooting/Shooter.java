@@ -157,9 +157,9 @@ public class Shooter implements ISubsystem {
                 }
             }
         }
-        UserInterface.putNumber("RPM", leader.getSpeed());
-        UserInterface.putNumber("Target RPM", speed);
-        UserInterface.putBoolean("atSpeed", isAtSpeed());
+        UserInterface.smartDashboardPutNumber("RPM", leader.getSpeed());
+        UserInterface.smartDashboardPutNumber("Target RPM", speed);
+        UserInterface.smartDashboardPutBoolean("atSpeed", isAtSpeed());
     }
 
     @Override

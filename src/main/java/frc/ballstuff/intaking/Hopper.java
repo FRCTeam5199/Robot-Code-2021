@@ -73,9 +73,9 @@ public class Hopper implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (RobotSettings.DEBUG) {
-            UserInterface.putBoolean("indexer enable", indexerActive);
-            UserInterface.putBoolean("agitator enable", agitatorActive);
-            UserInterface.putNumber("indexer sensor", indexerSensorRange());
+            UserInterface.smartDashboardPutBoolean("indexer enable", indexerActive);
+            UserInterface.smartDashboardPutBoolean("agitator enable", agitatorActive);
+            UserInterface.smartDashboardPutNumber("indexer sensor", indexerSensorRange());
         }
         if (indexed) {
             indexer.moveAtPercent(0);
@@ -86,19 +86,19 @@ public class Hopper implements ISubsystem {
 
             if (RobotSettings.ENABLE_INDEXER) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    indexer.moveAtPercent(indexerSensorRange() > 4 ? 0.4 : 0);
+                    indexer.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.4 : 0);
                 } else {
                     indexer.moveAtPercent(0);
                 }
             } //2021 COMP 4 & 2020 COMP 9
             if (RobotSettings.ENABLE_AGITATOR) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    agitator.moveAtPercent(indexerSensorRange() > 4 ? 0.3 : 0);
+                    agitator.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.3 : 0);
                 } else {
                     agitator.moveAtPercent(0);
                 }
             }
-            indexed = (RobotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() > 4);
+            indexed = (RobotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE);
         } else {
             if (RobotSettings.ENABLE_INDEXER) {
                 indexer.moveAtPercent(indexerActive ? 0.8 : 0);
@@ -106,7 +106,7 @@ public class Hopper implements ISubsystem {
             if (RobotSettings.ENABLE_AGITATOR) {
                 agitator.moveAtPercent(agitatorActive ? 0.6 : 0);
             }
-            indexed = true;//indexerSensorRange() > 9;
+            indexed = true;//indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE;
         }
     }
 

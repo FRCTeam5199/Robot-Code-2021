@@ -36,6 +36,7 @@ public class Robot2020 extends DefaultConfig {
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
+        INDEXER_DETECTION_CUTOFF_DISTANCE = 9;
 
         //UI Style
         DRIVE_STYLE = DriveTypes.STANDARD;
