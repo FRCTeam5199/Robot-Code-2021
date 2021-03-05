@@ -290,7 +290,16 @@ public class DriveManager implements ISubsystem {
             default:
                 throw new IllegalStateException("Invalid drive type");
         }
-        driveSpeed.getEntry().setNumber(Math.abs((leaderL.getSpeed() + leaderR.getSpeed()) / 2));
+        double avgSpeedInFPS = Math.abs((leaderL.getSpeed() + leaderR.getSpeed()) / 2);
+        driveSpeed.getEntry().setNumber(avgSpeedInFPS);
+        if (avgSpeedInFPS >= (RobotSettings.MAX_SPEED - 6)){
+            System.out.println("RUMBLING @ " + (avgSpeedInFPS-(RobotSettings.MAX_SPEED-6))/6);
+            //controller.rumble(avgSpeedInFPS-(RobotSettings.MAX_SPEED-6)/6);
+            controller.rumble(0.5);
+        } else {
+            controller.rumble(0);
+        }
+
         //System.out.println(guidance.imu.yawWraparoundAhead());
     }
 

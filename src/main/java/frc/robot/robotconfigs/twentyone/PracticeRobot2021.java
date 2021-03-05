@@ -53,7 +53,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.524891;
-        MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
+        MAX_SPEED = 20; //max speed in fps
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
         WHEEL_DIAMETER = 4; //inches. update: now it's used once
         TURN_SCALE = 0.7;

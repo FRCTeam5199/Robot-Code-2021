@@ -54,6 +54,10 @@ public abstract class BaseController {
         throw new UnsupportedOperationException("This controller does not support getting an xbox button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
+    public void rumble(double percent) {
+        throw new UnsupportedOperationException("This controller does not support rumbling. If you believe this is a mistake, please override the overloaded rumble in the appropriate class");
+    }
+
     public double get(ControllerEnums.WiiAxis axis) {
         throw new UnsupportedOperationException("This controller does not support getting an wii remote tilt status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }

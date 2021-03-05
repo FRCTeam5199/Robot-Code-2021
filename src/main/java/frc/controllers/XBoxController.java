@@ -1,5 +1,6 @@
 package frc.controllers;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
@@ -35,6 +36,12 @@ public class XBoxController extends BaseController {
         if (Math.abs(stick.getRawAxis(axis.AXIS_VALUE)) > axis.DEADZONE) //makes sure axis is outside of the deadzone
             return stick.getRawAxis(axis.AXIS_VALUE);
         return 0;
+    }
+
+    @Override
+    public void rumble(double percent) {
+        stick.setRumble(GenericHID.RumbleType.kLeftRumble, percent);
+        stick.setRumble(GenericHID.RumbleType.kRightRumble, percent);
     }
 
     /**
