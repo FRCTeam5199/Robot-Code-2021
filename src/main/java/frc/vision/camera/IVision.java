@@ -1,4 +1,4 @@
-package frc.vision;
+package frc.vision.camera;
 
 import frc.misc.ISubsystem;
 

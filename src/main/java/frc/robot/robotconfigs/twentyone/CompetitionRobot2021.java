@@ -8,6 +8,7 @@ import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
+import frc.telemetry.imu.SupportedIMU;
 
 public class CompetitionRobot2021 extends DefaultConfig {
     //Subsystems
@@ -28,8 +29,6 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_VISION = false;
         USE_PHOTONVISION = true;
         ENABLE_IMU = true;
-        USE_PIGEON = false;
-        USE_NAVX2 = true;
         IMU_NAVX_PORT = I2C.Port.kMXP;
 
         //SHOOTER
@@ -46,6 +45,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
+        IMU_TYPE = SupportedIMU.NAVX2;
 
         AUTON_TYPE = AutonType.GALACTIC_SCAM;
 

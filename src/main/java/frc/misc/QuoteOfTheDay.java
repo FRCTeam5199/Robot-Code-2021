@@ -1,8 +1,14 @@
-package frc.selfdiagnostics;
+package frc.misc;
 
 import frc.robot.Robot;
 
+/**
+ * Lets keep things fun and fresh by providing some of our best quotes.
+ */
 public class QuoteOfTheDay {
+    /**
+     * Hey these docs are cool but you wanna read the names from time to time? Please and thank you
+     */
     public static final String[] quotes = {
             "Haha I'm simply vibing here.",
             "Joeys first time being cancelled, colorized, 2021.",
@@ -47,6 +53,11 @@ public class QuoteOfTheDay {
             "Only 00:12? The night is still young."
     };
 
+    /**
+     * Uh its not supposed to do that
+     *
+     * @return a baller quote
+     */
     public static String getRandomQuote() {
         return quotes[Robot.RANDOM.nextInt(quotes.length)];
     }

@@ -56,4 +56,11 @@ public abstract class AbstractFollowerMotorController {
         for (AbstractMotorController motor : motors)
             motor.setCurrentLimit(limit);
     }
+
+    public boolean failureFlag(){
+        for (AbstractMotorController motor : motors)
+            if (motor.failureFlag)
+                return true;
+            return false;
+    }
 }

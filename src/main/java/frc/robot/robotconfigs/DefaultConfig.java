@@ -1,12 +1,15 @@
 package frc.robot.robotconfigs;
 
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
+import frc.telemetry.imu.SupportedIMU;
 
 /**
  * Literally dont mind me I am simply vibing I am here because it means you only have to change one value to completely
@@ -35,8 +38,6 @@ public abstract class DefaultConfig {
     public boolean ENABLE_VISION = false;
     public boolean USE_PHOTONVISION = true;
     public boolean ENABLE_IMU = false;
-    public boolean USE_PIGEON = false;
-    public boolean USE_NAVX2 = false;
 
     //SHOOTER
     public boolean SHOOTER_USE_TWO_MOTORS = true;
@@ -54,7 +55,7 @@ public abstract class DefaultConfig {
     public SupportedMotors SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
     public SupportedMotors DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
     public SupportedMotors TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
-
+    public SupportedIMU IMU_TYPE = SupportedIMU.PIGEON;
     public AutonType AUTON_TYPE = AutonType.FOLLOW_PATH;
 
     public int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
@@ -118,5 +119,8 @@ public abstract class DefaultConfig {
     public int FLIGHT_STICK_USB_SLOT = 1;
     public int BUTTON_PANEL_USB_SLOT = 2;
 
-    public I2C.Port IMU_NAVX_PORT = I2C.Port.kMXP;
+    /**
+     * Must be one of the following: {@link I2C.Port} {@link SerialPort.Port} {@link SPI.Port}
+     */
+    public Object IMU_NAVX_PORT = I2C.Port.kMXP;
 }

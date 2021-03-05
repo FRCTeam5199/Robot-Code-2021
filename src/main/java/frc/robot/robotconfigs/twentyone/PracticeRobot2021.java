@@ -7,6 +7,7 @@ import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
+import frc.telemetry.imu.SupportedIMU;
 
 public class PracticeRobot2021 extends DefaultConfig {
     //Subsystems
@@ -27,8 +28,6 @@ public class PracticeRobot2021 extends DefaultConfig {
         ENABLE_VISION = false;
         USE_PHOTONVISION = true;
         ENABLE_IMU = false;
-        USE_PIGEON = true;
-        USE_NAVX2 = false;
 
         //SHOOTER
         SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
@@ -43,6 +42,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
+        IMU_TYPE = SupportedIMU.PIGEON;
 
         AUTON_TYPE = AutonType.FOLLOW_PATH;
 

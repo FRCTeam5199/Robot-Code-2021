@@ -10,6 +10,9 @@ import frc.drive.DriveManager;
 import frc.misc.ISubsystem;
 import frc.misc.UtilFunctions;
 import frc.robot.RobotSettings;
+import frc.telemetry.imu.AbstractIMU;
+import frc.telemetry.imu.WrappedNavX2IMU;
+import frc.telemetry.imu.WrappedPigeonIMU;
 
 public class RobotTelemetry implements ISubsystem {
     private final DriveManager driver;

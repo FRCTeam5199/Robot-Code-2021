@@ -2,11 +2,17 @@ package frc.drive.auton.followtrajectory;
 
 import frc.drive.auton.IAutonEnumPath;
 
+/**
+ * Simply vibing here. This is for non-galactic search
+ */
 public enum Trajectories implements IAutonEnumPath {
     TEST_PATH("OutlineField"),
     FORWARD("ForwardTinyBit"),
     BACKWARD("BackwardTinyBit");
 
+    /**
+     * The file name that holds this trajectory. Leave off the generic file extension stuff
+     */
     public final String PATH_FILE_LOCATION;
 
     Trajectories(String pathloc) {

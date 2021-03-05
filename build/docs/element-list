@@ -16,4 +16,6 @@ frc.robot.robotconfigs.twentyone
 frc.robot.robotconfigs.twentytwenty
 frc.selfdiagnostics
 frc.telemetry
-frc.vision
+frc.telemetry.imu
+frc.vision.camera
+frc.vision.distancesensor

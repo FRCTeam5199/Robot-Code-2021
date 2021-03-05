@@ -58,7 +58,7 @@ public class Intake implements ISubsystem {
      */
     @Override
     public void updateTest() {
-        //updateGeneric();
+        
     }
 
     /**
@@ -118,6 +118,7 @@ public class Intake implements ISubsystem {
 
     @Override
     public void initAuton() {
+        
     }
 
     @Override

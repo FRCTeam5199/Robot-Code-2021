@@ -14,6 +14,7 @@ import frc.drive.auton.followtrajectory.Trajectories;
 import frc.misc.Chirp;
 import frc.misc.ISubsystem;
 import frc.misc.LEDs;
+import frc.misc.QuoteOfTheDay;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.pdp.PDP;
@@ -21,11 +22,10 @@ import frc.robot.robotconfigs.DefaultConfig;
 import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 import frc.robot.robotconfigs.twentyone.PracticeRobot2021;
 import frc.robot.robotconfigs.twentytwenty.Robot2020;
-import frc.selfdiagnostics.QuoteOfTheDay;
-import frc.selfdiagnostics.SimpleIssue;
-import frc.vision.BallPhoton;
-import frc.vision.GoalPhoton;
-import frc.vision.IVision;
+import frc.selfdiagnostics.ISimpleIssue;
+import frc.vision.camera.BallPhoton;
+import frc.vision.camera.GoalPhoton;
+import frc.vision.camera.IVision;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,7 +68,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() throws IllegalStateException {
-        //Yes, it has to be a string otherwise it truncates it after 6 digits
         getRestartProximity();
         getSettings();
         RobotSettings.printMappings();
@@ -100,7 +99,6 @@ public class Robot extends TimedRobot {
         if (RobotSettings.ENABLE_DRIVE) {
             switch (RobotSettings.AUTON_MODE) {
                 case GALACTIC_SEARCH:
-                    //autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     break;
                 case FOLLOW_PATH:
@@ -123,6 +121,11 @@ public class Robot extends TimedRobot {
         UserInterface.smartDashboardPutString("Quote", quote);
     }
 
+    /**
+     * Reads from the preferences what the last boot time is. Depending on current system time, sets the {@link
+     * #SECOND_TRY} flag to either restart on error or to persist as best as possible. If you leave the robot on for
+     * half a century then it might not work right so plaese refrain from that
+     */
     private static void getRestartProximity() {
         long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
         long currentBoot = System.currentTimeMillis();
@@ -224,7 +227,7 @@ public class Robot extends TimedRobot {
             UserInterface.motorTemperatureMonitors.get(motor).getEntry().setNumber(motor.getMotorTemperature());
         }
 
-        SimpleIssue.robotPeriodic();
+        ISimpleIssue.robotPeriodic();
     }
 
     @Override
@@ -254,8 +257,13 @@ public class Robot extends TimedRobot {
         }
     }
 
-    private void deleteFolder(File parentfolder) {
-        for (File file : parentfolder.listFiles()) {
+    /**
+     * Uses {@link #deleteFolder(File) deadly recursion} in order to maybe delete ghost files
+     *
+     * @param parentFolder The deploy folder/subfolders within deploy folder
+     */
+    private void deleteFolder(File parentFolder) {
+        for (File file : parentFolder.listFiles()) {
             if (file.isDirectory()) {
                 deleteFolder(file);
             }

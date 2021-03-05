@@ -17,8 +17,8 @@ import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.RobotSettings;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
-import frc.vision.GoalPhoton;
-import frc.vision.IVision;
+import frc.vision.camera.GoalPhoton;
+import frc.vision.camera.IVision;
 
 import static frc.robot.Robot.hopper;
 
@@ -102,7 +102,7 @@ public class Shooter implements ISubsystem {
      */
     @Override
     public void updateTest() {
-        //updateGeneric();
+
     }
 
     /**
@@ -125,6 +125,8 @@ public class Shooter implements ISubsystem {
     public void updateGeneric() {
         if (leader.failureFlag)
             MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_LEADER_ID);
+        if (follower != null && follower.failureFlag)
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_FOLLOWER_ID);
         updateShuffleboard();
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD: {
@@ -135,7 +137,6 @@ public class Shooter implements ISubsystem {
                 } else {
                     hopper.setAll(false);
                     leader.moveAtPercent(0);
-                    //setSpeed(constSpeed.getDouble(0));
                 }
                 break;
             }
@@ -224,6 +225,5 @@ public class Shooter implements ISubsystem {
             System.out.println("set shooter speed to " + rpm);
         }
         leader.moveAtVelocity(rpm);
-        //leader.moveAtPercent(rpm == 0 ? 0 : rpm > 0 ? .75 : 0);
     }
 }

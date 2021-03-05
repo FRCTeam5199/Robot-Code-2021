@@ -1,7 +1,8 @@
-package frc.vision;
+package frc.vision.camera;
 
 import edu.wpi.first.wpilibj.LinearFilter;
 import frc.robot.RobotSettings;
+import frc.vision.camera.IVision;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPipelineResult;
 import org.photonvision.PhotonTrackedTarget;

@@ -42,7 +42,6 @@ import java.util.Map;
 public class DriveManager implements ISubsystem {
     private static final boolean DEBUG = false;
     public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(RobotSettings.DRIVEBASE_DISTANCE_BETWEEN_WHEELS);
-    private final boolean invert = true;
     private final NetworkTableEntry driveRotMult = UserInterface.DRIVE_ROT_MULT.getEntry(),
             driveScaleMult = UserInterface.DRIVE_SCALE_MULT.getEntry(),
             P = UserInterface.DRIVE_P.getEntry(),
@@ -200,7 +199,7 @@ public class DriveManager implements ISubsystem {
      */
     @Override
     public void updateTest() {
-        //updateTeleop();
+
     }
 
     /**
@@ -217,11 +216,8 @@ public class DriveManager implements ISubsystem {
         driveSpeed.getEntry().setNumber(avgSpeedInFPS);
         switch (RobotSettings.DRIVE_STYLE) {
             case EXPERIMENTAL: {
-                /*setBrake(controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN);
-                double precision = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-                double invertedDrive = invert ? -1 : 1;
-                drive(invertedDrive * controller.get(XboxAxes.LEFT_JOY_Y) * precision, -controller.get(XboxAxes.RIGHT_JOY_X) * precision);*/
-                double invertedDrive = invert ? -1 : 1;
+
+                double invertedDrive = RobotSettings.DRIVE_INVERT_LEFT ? -1 : 1;
                 if (Math.abs(controller.get(XboxAxes.LEFT_JOY_Y)) > 0.9) {
                     double dir = controller.get(XboxAxes.LEFT_JOY_Y) > 0 ? 1 : -1;
                     driveFPS(100 * dir * invertedDrive * driveScaleMult.getDouble(RobotSettings.DRIVE_SCALE), 100 * dir * invertedDrive * driveScaleMult.getDouble(RobotSettings.DRIVE_SCALE));
@@ -238,7 +234,7 @@ public class DriveManager implements ISubsystem {
             }
             break;
             case STANDARD: {
-                double invertedDrive = invert ? -1 : 1;
+                double invertedDrive = RobotSettings.DRIVE_INVERT_LEFT ? -1 : 1;
                 double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 if (RobotSettings.DEBUG && DEBUG) {
@@ -293,6 +289,8 @@ public class DriveManager implements ISubsystem {
             MotorDisconnectedIssue.reportIssue(this, RobotSettings.DRIVE_LEADER_L_ID);
         if (leaderR.failureFlag)
             MotorDisconnectedIssue.reportIssue(this, RobotSettings.DRIVE_LEADER_R_ID);
+        if (followerL.failureFlag() || followerR.failureFlag())
+            MotorDisconnectedIssue.reportIssue(this, -1);
         setBrake(!coast.getBoolean(false));
         if (calibratePid.getBoolean(false)) {
             PID readPid = new PID(P.getDouble(RobotSettings.DRIVEBASE_PID.getP()), I.getDouble(RobotSettings.DRIVEBASE_PID.getI()), D.getDouble(RobotSettings.DRIVEBASE_PID.getD()), F.getDouble(RobotSettings.DRIVEBASE_PID.getF()));
@@ -331,7 +329,6 @@ public class DriveManager implements ISubsystem {
     @Override
     public void initGeneric() {
         setBrake(true);
-        //Robot.chirp.stop();
     }
 
     @Override
@@ -346,8 +343,6 @@ public class DriveManager implements ISubsystem {
      * @param rightFPS Right drivetrain speed in feet per second
      */
     public void driveFPS(double leftFPS, double rightFPS) {
-        if (leftFPS != 0)
-            System.out.println(leftFPS + ", " + rightFPS);
         double mult = 3.8 * 2.16 * RobotSettings.DRIVE_SCALE;
         if (RobotSettings.DEBUG && DEBUG) {
             System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
@@ -383,9 +378,7 @@ public class DriveManager implements ISubsystem {
      */
     public void drivePure(double FPS, double omega) {
         omega *= driveRotMult.getDouble(RobotSettings.TURN_SCALE);
-        //System.out.print("FPS: " + FPS);
         FPS *= driveScaleMult.getDouble(RobotSettings.DRIVE_SCALE);
-        //System.out.println(" MULT: " + FPS);
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
         driveMPS(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);

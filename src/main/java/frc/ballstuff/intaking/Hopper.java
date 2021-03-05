@@ -1,6 +1,5 @@
 package frc.ballstuff.intaking;
 
-import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
@@ -10,6 +9,8 @@ import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
 import frc.robot.RobotSettings;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
+import frc.vision.distancesensor.IDistanceSensor;
+import frc.vision.distancesensor.RevDistanceSensor;
 
 /**
  * The Hopper subsystem effectively takes a ball from the front (where the {@link frc.ballstuff.intaking.Intake intake}
@@ -18,10 +19,9 @@ import frc.selfdiagnostics.MotorDisconnectedIssue;
 public class Hopper implements ISubsystem {
     private static final boolean DEBUG = false;
     public AbstractMotorController agitator, indexer;
-    public Rev2mDistanceSensor indexSensor;
+    public IDistanceSensor indexSensor;
     public boolean indexed = false;
-    private boolean agitatorActive = false;
-    private boolean indexerActive = false;
+    private boolean agitatorActive = false, indexerActive = false;
 
     public Hopper() {
         addToMetaList();
@@ -31,9 +31,7 @@ public class Hopper implements ISubsystem {
     @Override
     public void init() {
         if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-            indexSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighAccuracy);
-            indexSensor.setEnabled(true);
-            indexSensor.setAutomaticMode(true);
+            indexSensor = new RevDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighAccuracy);
             System.out.println("Enabling index sensor.");
         }
         if (RobotSettings.ENABLE_AGITATOR)
@@ -65,7 +63,7 @@ public class Hopper implements ISubsystem {
      */
     public double indexerSensorRange() {
         if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-            return indexSensor.getRange();
+            return indexSensor.getDistance();
         }
         return -2;
     }

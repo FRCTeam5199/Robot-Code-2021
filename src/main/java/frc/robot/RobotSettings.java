@@ -8,6 +8,7 @@ import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
+import frc.telemetry.imu.SupportedIMU;
 
 import static frc.robot.Robot.settingsFile;
 
@@ -93,10 +94,7 @@ public class RobotSettings {
     public static final boolean ENABLE_VISION = settingsFile.ENABLE_VISION;
     public static final boolean USE_PHOTONVISION = settingsFile.USE_PHOTONVISION;
     public static final boolean ENABLE_IMU = settingsFile.ENABLE_IMU;
-    public static final boolean USE_PIGEON = settingsFile.USE_PIGEON;
-    //TODO make this a supported imu's enum
-    public static final boolean USE_NAVX2 = settingsFile.USE_NAVX2;
-    public static final I2C.Port IMU_NAVX_PORT = settingsFile.IMU_NAVX_PORT;
+    public static final Object IMU_NAVX_PORT = settingsFile.IMU_NAVX_PORT;
 
     //SHOOTER
     /**
@@ -137,6 +135,7 @@ public class RobotSettings {
     public static final SupportedMotors DRIVE_MOTOR_TYPE = settingsFile.DRIVE_MOTOR_TYPE;
     public static final SupportedMotors SHOOTER_MOTOR_TYPE = settingsFile.SHOOTER_MOTOR_TYPE;
     public static final SupportedMotors TURRET_MOTOR_TYPE = settingsFile.TURRET_MOTOR_TYPE;
+    public static final SupportedIMU IMU_TYPE = settingsFile.IMU_TYPE;
     public static final String AUTON_COMPLETE_NOISE = "LevelComplete_4_6000";
     public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = settingsFile.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
     public static final double MAX_SPEED = settingsFile.MAX_SPEED;
@@ -186,9 +185,6 @@ public class RobotSettings {
      * The id for the {@link #ENABLE_INTAKE intake motor}
      */
     public static final int INTAKE_MOTOR_ID = settingsFile.INTAKE_MOTOR_ID;
-    /**
-     * The id of the {@link #ENABLE_IMU IMU} which should be independent of the {@link #USE_PIGEON IMU type}
-     */
     public static final int IMU_ID = settingsFile.IMU_ID;
     /**
      * The id for the {@link #ENABLE_PDP PDP}
@@ -210,7 +206,7 @@ public class RobotSettings {
         System.out.println("          Hopping " + ENABLE_HOPPER);
         System.out.println("           Vision " + ENABLE_VISION);
         System.out.println("              IMU " + ENABLE_IMU);
-        System.out.println("      Pigeon/NavX " + USE_PIGEON + "/" + USE_NAVX2);
+        System.out.println("              IMU " + IMU_TYPE.name());
         System.out.println("     Drive motors " + DRIVE_MOTOR_TYPE.name());
         System.out.println("   Drive 6 motors " + DRIVE_USE_6_MOTORS);
         System.out.println("   Shooter motors " + SHOOTER_MOTOR_TYPE.name());

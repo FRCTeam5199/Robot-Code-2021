@@ -15,8 +15,8 @@ import frc.motors.TalonMotorController;
 import frc.robot.RobotSettings;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
-import frc.vision.GoalPhoton;
-import frc.vision.IVision;
+import frc.vision.camera.GoalPhoton;
+import frc.vision.camera.IVision;
 
 /**
  * Turret refers to the shooty thing that spinny spinny in the yaw direction

@@ -1,4 +1,4 @@
-package frc.telemetry;
+package frc.telemetry.imu;
 
 import frc.misc.ISubsystem;
 import frc.misc.UtilFunctions;
@@ -38,6 +38,8 @@ public abstract class AbstractIMU implements ISubsystem {
     public void updateGeneric() {
         if (ypr[0] == 0)
             IMUNonOpIssue.reportIssue(this, getSubsystemName());
+        else
+            IMUNonOpIssue.resolveIssue(this);
     }
 
     @Override
