@@ -1,6 +1,10 @@
 package frc.misc;
 
-import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.motors.AbstractMotorController;
 import frc.robot.RobotSettings;
@@ -23,7 +27,7 @@ public class UserInterface {
             SHOOTER_CALIBRATE_PID = SHOOTER_TAB.add("Recalibrate PID", false),
 
     //DRIVETRAIN TODO make PID widget (kPIDController)
-            DRIVE_ROT_MULT = DRIVE_TAB.add("Rotation Factor", RobotSettings.TURN_SCALE),
+    DRIVE_ROT_MULT = DRIVE_TAB.add("Rotation Factor", RobotSettings.TURN_SCALE),
             DRIVE_SCALE_MULT = DRIVE_TAB.add("Speed Factor", RobotSettings.DRIVE_SCALE),
             DRIVE_P = DRIVE_TAB.add("P", RobotSettings.DRIVEBASE_PID.getP()),
             DRIVE_I = DRIVE_TAB.add("I", RobotSettings.DRIVEBASE_PID.getI()),
@@ -33,24 +37,26 @@ public class UserInterface {
             DRIVE_COAST = DRIVE_TAB.add("Coast", true),
 
     //PDP TODO make pdp widget (kPowerDistributionPanel)
-            PDP_TOTAL_ENERGY_ON_THIS_BOOT = PDP_TAB.add("Total energy on this boot", 0),
+    PDP_TOTAL_ENERGY_ON_THIS_BOOT = PDP_TAB.add("Total energy on this boot", 0),
             PDP_PEAK_CURRENT = PDP_TAB.add("Peak current", 0),
             PDP_PEAK_POWER = PDP_TAB.add("Peak power", 0),
     //PDP_OTHER_ENERGY = POWER_TAB.add("Energy on current enable", 0),
 
     //MUSICK
-            MUSIC_DISABLE_SONG_TAB = MUSICK_TAB.add("Stop Song", false).withWidget(BuiltInWidgets.kToggleButton),
+    MUSIC_DISABLE_SONG_TAB = MUSICK_TAB.add("Stop Song", false).withWidget(BuiltInWidgets.kToggleButton),
             MUSIC_FOUND_SONG = MUSICK_TAB.add("Found it", false),
             DELETE_DEPLOY_DIRECTORY = ROBOT_TAB.add("DELETE DEPLOY DIRECTORY", ""),
             PRINT_ROBOT_TOGGLES = ROBOT_TAB.add("Reprint robot toggles", false).withWidget(BuiltInWidgets.kToggleButton),
             PRINT_ROBOT_MAPPINGS = ROBOT_TAB.add("Reprint robot mappings", false).withWidget(BuiltInWidgets.kToggleButton),
-            PRINT_ROBOT_NUMBERS = ROBOT_TAB.add("Reprint robot numbers", false).withWidget(BuiltInWidgets.kToggleButton);
+            PRINT_ROBOT_NUMBERS = ROBOT_TAB.add("Reprint robot numbers", false).withWidget(BuiltInWidgets.kToggleButton),
 
-    //public static final ComplexWidget PDP_DISPLAY = PDP_TAB.add("PDPDisplay", new PowerDistributionPanel(RobotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
-    public static ComplexWidget MUSIC_SELECTOR = MUSICK_TAB.add("SongSelector", Chirp.MUSIC_SELECTION).withWidget(BuiltInWidgets.kComboBoxChooser);
     //DANGER PANEL
+    GET_RANDOM_FIX = ROBOT_TAB.add("Get random fix", false).withWidget(BuiltInWidgets.kToggleButton);
 
+    //COMPLEX WIDGETS
     public static final HashMap<AbstractMotorController, SimpleWidget> motorTemperatureMonitors = new HashMap<>();
+    //public static final ComplexWidget PDP_DISPLAY = PDP_TAB.add("PDPDisplay", new PowerDistributionPanel(RobotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel),
+    public static ComplexWidget MUSIC_SELECTOR = MUSICK_TAB.add("SongSelector", Chirp.MUSIC_SELECTION).withWidget(BuiltInWidgets.kComboBoxChooser);
 
     //SmartDashboard
     public static void smartDashboardPutNumber(String key, double value) {
@@ -59,5 +65,9 @@ public class UserInterface {
 
     public static void smartDashboardPutBoolean(String key, boolean value) {
         SmartDashboard.putBoolean(key, value);
+    }
+
+    public static void smartDashboardPutString(String key, String value) {
+        SmartDashboard.putString(key, value);
     }
 }

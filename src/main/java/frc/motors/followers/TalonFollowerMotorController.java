@@ -1,6 +1,5 @@
 package frc.motors.followers;
 
-import frc.misc.Chirp;
 import frc.motors.AbstractMotorController;
 import frc.motors.TalonMotorController;
 

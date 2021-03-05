@@ -5,6 +5,7 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import frc.misc.PID;
+import frc.robot.Robot;
 
 import static com.revrobotics.CANSparkMax.IdleMode.kBrake;
 import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
@@ -22,17 +23,16 @@ public class SparkMotorController extends AbstractMotorController {
         this(channelID, kBrushless);
     }
 
-    @Override
-    public String getName(){
-        return motor.toString() + motor.getDeviceId();
-    }
-
     public SparkMotorController(int channelID, CANSparkMaxLowLevel.MotorType type) {
         super();
         motor = new CANSparkMax(channelID, type);
         myPid = motor.getPIDController();
         //I dont know if talons do this or if we ever dont do this so here it is
-        myPid.setOutputRange(-1, 1);
+        if (myPid.setOutputRange(-1, 1) != CANError.kOk)
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not set its output range");
+            else
+                failureFlag = true;
     }
 
     @Override
@@ -42,28 +42,38 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
+    public String getName() {
+        return motor.toString() + motor.getDeviceId();
+    }
+
+    @Override
     public AbstractMotorController follow(AbstractMotorController leader) {
-        if (leader instanceof SparkMotorController)
-            motor.follow(((SparkMotorController) leader).motor);
+        if (!(leader instanceof SparkMotorController))
+            throw new IllegalArgumentException("I cant follow that!!");
+        if (motor.follow(((SparkMotorController) leader).motor) != CANError.kOk)
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not follow the leader");
+            else
+                failureFlag = true;
         return this;
     }
 
     @Override
     public void resetEncoder() {
         if (motor.getEncoder().setPosition(0) != CANError.kOk)
-            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not reset its encoder");
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not reset its encoder");
+            else
+                failureFlag = true;
     }
 
     @Override
     public AbstractMotorController setPid(PID pid) {
-        if (myPid.setP(pid.getP()) != CANError.kOk)
-            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " P in PIDF couldnt be reset");
-        if (myPid.setI(pid.getI()) != CANError.kOk)
-            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " I in PIDF couldnt be reset");
-        if (myPid.setD(pid.getD()) != CANError.kOk)
-            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " D in PIDF couldnt be reset");
-        if (myPid.setFF(pid.getF()) != CANError.kOk)
-            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " F in PIDF couldnt be reset");
+        if (myPid.setP(pid.getP()) != CANError.kOk || myPid.setI(pid.getI()) != CANError.kOk || myPid.setD(pid.getD()) != CANError.kOk || myPid.setFF(pid.getF()) != CANError.kOk)
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " F in PIDF couldnt be reset");
+            else
+                failureFlag = true;
         return this;
     }
 
@@ -93,7 +103,10 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public AbstractMotorController setCurrentLimit(int limit) {
         if (motor.setSmartCurrentLimit(limit) != CANError.kOk)
-            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not set current limit");
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not set current limit");
+            else
+                failureFlag = true;
         return this;
     }
 
@@ -105,7 +118,10 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
         if (motor.setOpenLoopRampRate(timeToMax) != CANError.kOk)
-            throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not set open loop ramp");
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not set open loop ramp");
+            else
+                failureFlag = true;
         return this;
     }
 

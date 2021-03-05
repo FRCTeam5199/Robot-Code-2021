@@ -77,6 +77,14 @@ public interface ISubsystem {
     void initGeneric();
 
     /**
+     * Used in {@link frc.selfdiagnostics.SimpleIssue} to provide a user friendly explanation as to why their jank isnt
+     * working. This could be static but that doesnt make sense since you should be querying an object anyway.
+     *
+     * @return the hardcoded name of the subsystem
+     */
+    String getSubsystemName();
+
+    /**
      * In devlopment, adds this object to {@link Robot#subsytems a master registry} for later use
      */
     default void addToMetaList() {

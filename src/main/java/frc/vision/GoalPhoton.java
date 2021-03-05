@@ -91,6 +91,11 @@ public class GoalPhoton implements IVision {
 
     }
 
+    @Override
+    public String getSubsystemName() {
+        return "Goal Camera";
+    }
+
     /**
      * Get angle between crosshair and goal left/right with filter calculation.
      *

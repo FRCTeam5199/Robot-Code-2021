@@ -1,7 +1,6 @@
 package frc.telemetry;
 
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.RobotSettings;
 
 /**
@@ -25,17 +24,6 @@ public class WrappedNavX2IMU extends AbstractIMU {
         navX2IMU = new AHRS(RobotSettings.IMU_NAVX_PORT);
         navX2IMU.calibrate();
         resetOdometry();
-    }
-
-    /**
-     * Update the values for the IMU
-     */
-    @Override
-    public void updateGeneric() {
-        ypr[0] = -navX2IMU.getYaw();
-        ypr[1] = navX2IMU.getPitch();
-        ypr[2] = navX2IMU.getRoll();
-        //System.out.println("Yaw: " + ypr[0]);
     }
 
     @Override
@@ -64,17 +52,6 @@ public class WrappedNavX2IMU extends AbstractIMU {
     }
 
     /**
-     * Returns the yaw in relativity to the last zeroing
-     *
-     * @return relative yaw
-     */
-    @Override
-    public double relativeYaw() {
-        updateGeneric();
-        return (ypr[0] - startYaw);
-    }
-
-    /**
      * Returns the yaw
      *
      * @return yaw of robot in degrees
@@ -94,5 +71,33 @@ public class WrappedNavX2IMU extends AbstractIMU {
         navX2IMU.zeroYaw();
         startypr = ypr;
         startYaw = absoluteYaw();
+    }
+
+    /**
+     * Update the values for the IMU
+     */
+    @Override
+    public void updateGeneric() {
+        ypr[0] = -navX2IMU.getYaw();
+        ypr[1] = navX2IMU.getPitch();
+        ypr[2] = navX2IMU.getRoll();
+        super.updateGeneric();
+        //System.out.println("Yaw: " + ypr[0]);
+    }
+
+    @Override
+    public String getSubsystemName() {
+        return "NavX2";
+    }
+
+    /**
+     * Returns the yaw in relativity to the last zeroing
+     *
+     * @return relative yaw
+     */
+    @Override
+    public double relativeYaw() {
+        updateGeneric();
+        return (ypr[0] - startYaw);
     }
 }

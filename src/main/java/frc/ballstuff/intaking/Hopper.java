@@ -9,12 +9,14 @@ import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
 import frc.robot.RobotSettings;
+import frc.selfdiagnostics.MotorDisconnectedIssue;
 
 /**
  * The Hopper subsystem effectively takes a ball from the front (where the {@link frc.ballstuff.intaking.Intake intake}
  * is ) to the {@link frc.ballstuff.shooting.Shooter}
  */
 public class Hopper implements ISubsystem {
+    private static final boolean DEBUG = false;
     public AbstractMotorController agitator, indexer;
     public Rev2mDistanceSensor indexSensor;
     public boolean indexed = false;
@@ -49,11 +51,17 @@ public class Hopper implements ISubsystem {
         updateGeneric();
     }
 
+    @Override
+    public void updateAuton() {
+        updateTeleop();
+    }
+
     /**
      * Uses the distance sensor to determine if there is a ball in the indxer. Enable and disable the indexer using
      * {@link RobotSettings#ENABLE_INDEXER_AUTO_INDEX}
      *
-     * @return distance as read by {@link #indexSensor} assuming it is {@link RobotSettings#ENABLE_INDEXER_AUTO_INDEX enabled}
+     * @return distance as read by {@link #indexSensor} assuming it is {@link RobotSettings#ENABLE_INDEXER_AUTO_INDEX
+     * enabled}
      */
     public double indexerSensorRange() {
         if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
@@ -62,28 +70,21 @@ public class Hopper implements ISubsystem {
         return -2;
     }
 
-    @Override
-    public void updateAuton() {
-        updateTeleop();
-    }
-
     /**
      * Runs every tick. Runs the indexer and agitator motors.
      */
     @Override
     public void updateGeneric() {
-        if (RobotSettings.DEBUG) {
+        if (indexer.failureFlag)
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.INDEXER_MOTOR_ID);
+        if (agitator.failureFlag)
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.AGITATOR_MOTOR_ID);
+        if (RobotSettings.DEBUG && DEBUG) {
             UserInterface.smartDashboardPutBoolean("indexer enable", indexerActive);
             UserInterface.smartDashboardPutBoolean("agitator enable", agitatorActive);
             UserInterface.smartDashboardPutNumber("indexer sensor", indexerSensorRange());
         }
-        if (indexed) {
-            indexer.moveAtPercent(0);
-            agitator.moveAtPercent(0);
-
-        }
         if (!indexerActive && !agitatorActive) {
-
             if (RobotSettings.ENABLE_INDEXER) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
                     indexer.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.4 : 0);
@@ -135,6 +136,11 @@ public class Hopper implements ISubsystem {
 
     }
 
+    @Override
+    public String getSubsystemName() {
+        return "Hopper";
+    }
+
     /**
      * applies settings/toggles Agitator and Indexer on/off
      *
@@ -152,7 +158,7 @@ public class Hopper implements ISubsystem {
      */
     public void setAgitator(boolean set) {
         agitatorActive = set;
-        if (RobotSettings.DEBUG) {
+        if (RobotSettings.DEBUG && DEBUG) {
             System.out.println("Agitator set to " + set);
         }
     }
@@ -163,7 +169,7 @@ public class Hopper implements ISubsystem {
      * @param set a boolean to determine wether or not Indexer is turned on/off
      */
     public void setIndexer(boolean set) {
-        if (RobotSettings.DEBUG) {
+        if (RobotSettings.DEBUG && DEBUG) {
             System.out.println("Indexer set to " + set);
         }
         indexerActive = set;

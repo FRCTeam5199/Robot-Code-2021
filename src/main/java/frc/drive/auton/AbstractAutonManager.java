@@ -73,4 +73,9 @@ public abstract class AbstractAutonManager implements ISubsystem {
             Robot.chirp.play();
         }
     }
+
+    @Override
+    public String getSubsystemName() {
+        return "Auton manager";
+    }
 }

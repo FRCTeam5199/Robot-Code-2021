@@ -138,8 +138,66 @@ public class RobotSettings {
     public static final SupportedMotors SHOOTER_MOTOR_TYPE = settingsFile.SHOOTER_MOTOR_TYPE;
     public static final SupportedMotors TURRET_MOTOR_TYPE = settingsFile.TURRET_MOTOR_TYPE;
     public static final String AUTON_COMPLETE_NOISE = "LevelComplete_4_6000";
-
+    public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = settingsFile.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
+    public static final double MAX_SPEED = settingsFile.MAX_SPEED;
+    public static final double RUMBLE_TOLERANCE_FPS = settingsFile.RUMBLE_TOLERANCE_FPS;
+    public static final double MAX_ROTATION = settingsFile.MAX_ROTATION;
+    public static final double WHEEL_DIAMETER = settingsFile.WHEEL_DIAMETER;
+    public static final double TURN_SCALE = settingsFile.TURN_SCALE;
+    public static final double DRIVE_SCALE = settingsFile.DRIVE_SCALE;
+    public static final double DRIVE_GEARING = settingsFile.DRIVE_GEARING;
+    public static final PID SHOOTER_PID = settingsFile.SHOOTER_PID;
+    public static final PID SHOOTER_RECOVERY_PID = settingsFile.SHOOTER_RECOVERY_PID;
+    public static final PID HEADING_PID = settingsFile.HEADING_PID;
+    public static final PID DRIVEBASE_PID = settingsFile.DRIVEBASE_PID;
+    public static final PID TURRET_PID = settingsFile.TURRET_PID;
+    public static final double DRIVEBASE_DISTANCE_BETWEEN_WHEELS = settingsFile.DRIVEBASE_DISTANCE_BETWEEN_WHEELS; //in Meters
+    public static final double SHOOTER_SENSOR_UNITS_PER_ROTATION = settingsFile.SHOOTER_SENSOR_UNITS_PER_ROTATION;
+    public static final double motorPulleySize = settingsFile.motorPulleySize;
+    public static final double driverPulleySize = settingsFile.driverPulleySize;
+    public static final double CAMERA_HEIGHT = settingsFile.CAMERA_HEIGHT;
+    public static final double CAMERA_PITCH = settingsFile.CAMERA_PITCH;
+    public static final double TARGET_HEIGHT = settingsFile.TARGET_HEIGHT;
+    public static final double XBOX_CONTROLLER_DEADZONE = settingsFile.XBOX_CONTROLLER_DEADZONE;
+    public static final double MOTOR_SPROCKET_SIZE = settingsFile.MOTOR_SPROCKET_SIZE;
+    public static final double TURRET_SPROCKET_SIZE = settingsFile.TURRET_SPROCKET_SIZE;
+    public static final double TURRET_GEAR_RATIO = settingsFile.TURRET_GEAR_RATIO;
+    public static final double TURRET_MAX_POS = settingsFile.TURRET_MAX_POS;
+    public static final double TURRET_MIN_POS = settingsFile.TURRET_MIN_POS;
+    public static final double AUTON_TOLERANCE = settingsFile.AUTON_TOLERANCE;
+    public static final double AUTO_SPEED = settingsFile.AUTO_SPEED;
+    public static final double AUTO_ROTATION_SPEED = settingsFile.AUTO_ROTATION_SPEED;
+    public static final String GOAL_CAM_NAME = settingsFile.GOAL_CAM_NAME;
+    public static final String BALL_CAM_NAME = settingsFile.BALL_CAM_NAME;
+    //Drive Motors
+    public static final int DRIVE_LEADER_L_ID = settingsFile.DRIVE_LEADER_L_ID;
+    public static final int[] DRIVE_FOLLOWERS_L_IDS = settingsFile.DRIVE_FOLLOWERS_L_IDS;
+    public static final int DRIVE_LEADER_R_ID = settingsFile.DRIVE_LEADER_R_ID;
+    public static final int[] DRIVE_FOLLOWERS_R_IDS = settingsFile.DRIVE_FOLLOWERS_R_IDS;
+    //Shooter Motors
+    public static final int SHOOTER_LEADER_ID = settingsFile.SHOOTER_LEADER_ID;
+    public static final int SHOOTER_FOLLOWER_ID = settingsFile.SHOOTER_FOLLOWER_ID;
+    //turret
+    public static final int TURRET_YAW_ID = settingsFile.TURRET_YAW_ID;
+    //hopper
+    public static final int AGITATOR_MOTOR_ID = settingsFile.AGITATOR_MOTOR_ID;
+    public static final int INDEXER_MOTOR_ID = settingsFile.INDEXER_MOTOR_ID;
+    /**
+     * The id for the {@link #ENABLE_INTAKE intake motor}
+     */
+    public static final int INTAKE_MOTOR_ID = settingsFile.INTAKE_MOTOR_ID;
+    /**
+     * The id of the {@link #ENABLE_IMU IMU} which should be independent of the {@link #USE_PIGEON IMU type}
+     */
+    public static final int IMU_ID = settingsFile.IMU_ID;
+    /**
+     * The id for the {@link #ENABLE_PDP PDP}
+     */
+    public static final int PDP_ID = settingsFile.PDP_ID;
     public static boolean autonComplete = false;
+    public static int XBOX_CONTROLLER_USB_SLOT = settingsFile.XBOX_CONTROLLER_USB_SLOT;
+    public static int FLIGHT_STICK_USB_SLOT = settingsFile.FLIGHT_STICK_USB_SLOT;
+    public static int BUTTON_PANEL_USB_SLOT = settingsFile.BUTTON_PANEL_USB_SLOT;
 
     /**
      * Prints the enabled toggles for the loaded settings
@@ -164,40 +222,6 @@ public class RobotSettings {
         System.out.println("-------------------</RobotSettings>-----------------");
     }
 
-    public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = settingsFile.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
-    public static final double MAX_SPEED = settingsFile.MAX_SPEED;
-    public static final double MAX_ROTATION = settingsFile.MAX_ROTATION;
-    public static final double WHEEL_DIAMETER = settingsFile.WHEEL_DIAMETER;
-    public static final double TURN_SCALE = settingsFile.TURN_SCALE;
-    public static final double DRIVE_SCALE = settingsFile.DRIVE_SCALE;
-    public static final double DRIVE_GEARING = settingsFile.DRIVE_GEARING;
-
-    public static final PID SHOOTER_PID = settingsFile.SHOOTER_PID;
-    public static final PID SHOOTER_RECOVERY_PID = settingsFile.SHOOTER_RECOVERY_PID;
-    public static final PID HEADING_PID = settingsFile.HEADING_PID;
-    public static final PID DRIVEBASE_PID = settingsFile.DRIVEBASE_PID;
-    public static final PID TURRET_PID = settingsFile.TURRET_PID;
-    public static final double DRIVEBASE_DISTANCE_BETWEEN_WHEELS = settingsFile.DRIVEBASE_DISTANCE_BETWEEN_WHEELS; //in Meters
-    public static final double SHOOTER_SENSOR_UNITS_PER_ROTATION = settingsFile.SHOOTER_SENSOR_UNITS_PER_ROTATION;
-    public static final double motorPulleySize = settingsFile.motorPulleySize;
-    public static final double driverPulleySize = settingsFile.driverPulleySize;
-    public static final double CAMERA_HEIGHT = settingsFile.CAMERA_HEIGHT;
-    public static final double CAMERA_PITCH = settingsFile.CAMERA_PITCH;
-    public static final double TARGET_HEIGHT = settingsFile.TARGET_HEIGHT;
-
-    public static final double XBOX_CONTROLLER_DEADZONE = settingsFile.XBOX_CONTROLLER_DEADZONE;
-    public static final double MOTOR_SPROCKET_SIZE = settingsFile.MOTOR_SPROCKET_SIZE;
-    public static final double TURRET_SPROCKET_SIZE = settingsFile.TURRET_SPROCKET_SIZE;
-    public static final double TURRET_GEAR_RATIO = settingsFile.TURRET_GEAR_RATIO;
-    public static final double TURRET_MAX_POS = settingsFile.TURRET_MAX_POS;
-    public static final double TURRET_MIN_POS = settingsFile.TURRET_MIN_POS;
-    public static final double AUTON_TOLERANCE = settingsFile.AUTON_TOLERANCE;
-    public static final double AUTO_SPEED = settingsFile.AUTO_SPEED;
-    public static final double AUTO_ROTATION_SPEED = settingsFile.AUTO_ROTATION_SPEED;
-    public static int XBOX_CONTROLLER_USB_SLOT = settingsFile.XBOX_CONTROLLER_USB_SLOT;
-    public static int FLIGHT_STICK_USB_SLOT = settingsFile.FLIGHT_STICK_USB_SLOT;
-    public static int BUTTON_PANEL_USB_SLOT = settingsFile.BUTTON_PANEL_USB_SLOT;
-
     /**
      * Prints out "Numbers" which pertain to constants regarding the robot such as gearings, wheel sizes, etc. Not to be
      * confused with {@link #printMappings()} which prints numbers associated witd ID's and software. this is hardware
@@ -210,43 +234,6 @@ public class RobotSettings {
         //System.out.println("");
         System.out.println("-------------------</RobotSettings>----------------");
     }
-
-    public static final String GOAL_CAM_NAME = settingsFile.GOAL_CAM_NAME;
-    public static final String BALL_CAM_NAME = settingsFile.BALL_CAM_NAME;
-
-
-    //Drive Motors
-    public static final int DRIVE_LEADER_L_ID = settingsFile.DRIVE_LEADER_L_ID;
-    public static final int[] DRIVE_FOLLOWERS_L_IDS = settingsFile.DRIVE_FOLLOWERS_L_IDS;
-
-    public static final int DRIVE_LEADER_R_ID = settingsFile.DRIVE_LEADER_R_ID;
-    public static final int[] DRIVE_FOLLOWERS_R_IDS = settingsFile.DRIVE_FOLLOWERS_R_IDS;
-
-    //Shooter Motors
-    public static final int SHOOTER_LEADER_ID = settingsFile.SHOOTER_LEADER_ID;
-    public static final int SHOOTER_FOLLOWER_ID = settingsFile.SHOOTER_FOLLOWER_ID;
-
-    //turret
-    public static final int TURRET_YAW_ID = settingsFile.TURRET_YAW_ID;
-
-    //hopper
-    public static final int AGITATOR_MOTOR_ID = settingsFile.AGITATOR_MOTOR_ID;
-    public static final int INDEXER_MOTOR_ID = settingsFile.INDEXER_MOTOR_ID;
-
-    /**
-     * The id for the {@link #ENABLE_INTAKE intake motor}
-     */
-    public static final int INTAKE_MOTOR_ID = settingsFile.INTAKE_MOTOR_ID;
-
-    /**
-     * The id of the {@link #ENABLE_IMU IMU} which should be independent of the {@link #USE_PIGEON IMU type}
-     */
-    public static final int IMU_ID = settingsFile.IMU_ID;
-
-    /**
-     * The id for the {@link #ENABLE_PDP PDP}
-     */
-    public static final int PDP_ID = settingsFile.PDP_ID;
 
     /**
      * Prints out all of the id's for anything that needs an id

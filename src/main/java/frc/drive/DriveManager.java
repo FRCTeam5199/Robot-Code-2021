@@ -17,7 +17,10 @@ import frc.controllers.DrumTimeController;
 import frc.controllers.SixButtonGuitarController;
 import frc.controllers.WiiController;
 import frc.controllers.XBoxController;
-import frc.misc.*;
+import frc.misc.ISubsystem;
+import frc.misc.InitializationFailureException;
+import frc.misc.PID;
+import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
@@ -25,8 +28,8 @@ import frc.motors.followers.AbstractFollowerMotorController;
 import frc.motors.followers.SparkFollowerMotorsController;
 import frc.motors.followers.TalonFollowerMotorController;
 import frc.robot.RobotSettings;
+import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
-import frc.misc.UserInterface;
 
 import java.util.Map;
 
@@ -37,6 +40,7 @@ import java.util.Map;
  * @see RobotTelemetry
  */
 public class DriveManager implements ISubsystem {
+    private static final boolean DEBUG = false;
     public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(RobotSettings.DRIVEBASE_DISTANCE_BETWEEN_WHEELS);
     private final boolean invert = true;
     private final NetworkTableEntry driveRotMult = UserInterface.DRIVE_ROT_MULT.getEntry(),
@@ -50,33 +54,13 @@ public class DriveManager implements ISubsystem {
     public AbstractMotorController leaderL, leaderR;
     public RobotTelemetry guidance;
     public AbstractFollowerMotorController followerL, followerR;
+    public SimpleWidget driveSpeed;
     private BaseController controller;
     private PID lastPID = PID.EMPTY_PID;
-    public SimpleWidget driveSpeed;
 
     public DriveManager() throws RuntimeException {
         addToMetaList();
         init();
-    }
-
-    /**
-     * Takes a -1 to 1 scaled value and returns it scaled based on the max sped
-     *
-     * @param input -1 to 1 drive amount
-     * @return input scaled based on the bot's max speed
-     */
-    private static double adjustedDrive(double input) {
-        return input * RobotSettings.MAX_SPEED;
-    }
-
-    /**
-     * Takes a -1 to 1 scaled value and returns it scaled based on the max turning
-     *
-     * @param input -1 to 1 drive amount
-     * @return input scaled based on max turning
-     */
-    private static double adjustedRotation(double input) {
-        return input * RobotSettings.MAX_ROTATION;
     }
 
     /**
@@ -185,7 +169,7 @@ public class DriveManager implements ISubsystem {
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");
         }
-        if (RobotSettings.DEBUG)
+        if (RobotSettings.DEBUG && DEBUG)
             System.out.println("Created a " + controller.toString());
     }
 
@@ -229,7 +213,8 @@ public class DriveManager implements ISubsystem {
     @Override
     public void updateTeleop() throws IllegalArgumentException {
         updateGeneric();
-
+        double avgSpeedInFPS = Math.abs((leaderL.getSpeed() + leaderR.getSpeed()) / 2);
+        driveSpeed.getEntry().setNumber(avgSpeedInFPS);
         switch (RobotSettings.DRIVE_STYLE) {
             case EXPERIMENTAL: {
                 /*setBrake(controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN);
@@ -244,10 +229,11 @@ public class DriveManager implements ISubsystem {
                 }
                 double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-                if (RobotSettings.DEBUG) {
+                if (RobotSettings.DEBUG && DEBUG) {
                     System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                     //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                 }
+                controller.rumble(Math.max(0, Math.min(1, (avgSpeedInFPS - RobotSettings.RUMBLE_TOLERANCE_FPS) / (RobotSettings.MAX_SPEED - RobotSettings.RUMBLE_TOLERANCE_FPS))));
                 drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
             }
             break;
@@ -255,10 +241,12 @@ public class DriveManager implements ISubsystem {
                 double invertedDrive = invert ? -1 : 1;
                 double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
                 double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
-                if (RobotSettings.DEBUG) {
+                if (RobotSettings.DEBUG && DEBUG) {
                     System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                     //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                 }
+                controller.rumble(Math.max(0, Math.min(1, (avgSpeedInFPS - RobotSettings.RUMBLE_TOLERANCE_FPS) / (RobotSettings.MAX_SPEED - RobotSettings.RUMBLE_TOLERANCE_FPS))));
+
                 drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
             }
             break;
@@ -290,17 +278,6 @@ public class DriveManager implements ISubsystem {
             default:
                 throw new IllegalStateException("Invalid drive type");
         }
-        double avgSpeedInFPS = Math.abs((leaderL.getSpeed() + leaderR.getSpeed()) / 2);
-        driveSpeed.getEntry().setNumber(avgSpeedInFPS);
-        if (avgSpeedInFPS >= (RobotSettings.MAX_SPEED - 6)){
-            System.out.println("RUMBLING @ " + (avgSpeedInFPS-(RobotSettings.MAX_SPEED-6))/6);
-            //controller.rumble(avgSpeedInFPS-(RobotSettings.MAX_SPEED-6)/6);
-            controller.rumble(0.5);
-        } else {
-            controller.rumble(0);
-        }
-
-        //System.out.println(guidance.imu.yawWraparoundAhead());
     }
 
     @Override
@@ -312,13 +289,17 @@ public class DriveManager implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
+        if (leaderL.failureFlag)
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.DRIVE_LEADER_L_ID);
+        if (leaderR.failureFlag)
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.DRIVE_LEADER_R_ID);
         setBrake(!coast.getBoolean(false));
         if (calibratePid.getBoolean(false)) {
             PID readPid = new PID(P.getDouble(RobotSettings.DRIVEBASE_PID.getP()), I.getDouble(RobotSettings.DRIVEBASE_PID.getI()), D.getDouble(RobotSettings.DRIVEBASE_PID.getD()), F.getDouble(RobotSettings.DRIVEBASE_PID.getF()));
             if (!lastPID.equals(readPid)) {
                 lastPID = readPid;
                 setPID(lastPID);
-                if (RobotSettings.DEBUG) {
+                if (RobotSettings.DEBUG && DEBUG) {
                     System.out.println("Set drive pid to " + lastPID);
                 }
             }
@@ -347,6 +328,34 @@ public class DriveManager implements ISubsystem {
         setBrake(true);
     }
 
+    @Override
+    public void initGeneric() {
+        setBrake(true);
+        //Robot.chirp.stop();
+    }
+
+    @Override
+    public String getSubsystemName() {
+        return "Drivetrain";
+    }
+
+    /**
+     * Drives the bot based on the requested left and right speed
+     *
+     * @param leftFPS  Left drivetrain speed in feet per second
+     * @param rightFPS Right drivetrain speed in feet per second
+     */
+    public void driveFPS(double leftFPS, double rightFPS) {
+        if (leftFPS != 0)
+            System.out.println(leftFPS + ", " + rightFPS);
+        double mult = 3.8 * 2.16 * RobotSettings.DRIVE_SCALE;
+        if (RobotSettings.DEBUG && DEBUG) {
+            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
+        }
+        leaderL.moveAtVelocity((leftFPS) * mult);
+        leaderR.moveAtVelocity((rightFPS) * mult);
+    }
+
     /**
      * drives the robot based on -1 / 1 inputs (ie 100% forward and 100% turning)
      *
@@ -355,6 +364,15 @@ public class DriveManager implements ISubsystem {
      */
     public void drive(double forward, double rotation) {
         drivePure(adjustedDrive(forward), adjustedRotation(rotation));
+    }
+
+    public void setBrake(boolean braking) {
+        coast.setBoolean(!braking);
+        leaderL.setBrake(braking);
+        leaderR.setBrake(braking);
+        followerL.setBrake(braking);
+        followerR.setBrake(braking);
+        //System.out.println("Set brake: " + braking + " at " + System.currentTimeMillis() + " \r");
     }
 
     /**
@@ -374,35 +392,23 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     * Drives the bot based on the requested left and right speed
+     * Takes a -1 to 1 scaled value and returns it scaled based on the max sped
      *
-     * @param leftFPS  Left drivetrain speed in feet per second
-     * @param rightFPS Right drivetrain speed in feet per second
+     * @param input -1 to 1 drive amount
+     * @return input scaled based on the bot's max speed
      */
-    public void driveFPS(double leftFPS, double rightFPS) {
-        if (leftFPS != 0)
-            System.out.println(leftFPS + ", " + rightFPS);
-        double mult = 3.8 * 2.16 * RobotSettings.DRIVE_SCALE;
-        if (RobotSettings.DEBUG) {
-            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
-        }
-        leaderL.moveAtVelocity((leftFPS) * mult);
-        leaderR.moveAtVelocity((rightFPS) * mult);
+    private static double adjustedDrive(double input) {
+        return input * RobotSettings.MAX_SPEED;
     }
 
-    @Override
-    public void initGeneric() {
-        setBrake(true);
-        //Robot.chirp.stop();
-    }
-
-    public void setBrake(boolean braking) {
-        coast.setBoolean(!braking);
-        leaderL.setBrake(braking);
-        leaderR.setBrake(braking);
-        followerL.setBrake(braking);
-        followerR.setBrake(braking);
-        //System.out.println("Set brake: " + braking + " at " + System.currentTimeMillis() + " \r");
+    /**
+     * Takes a -1 to 1 scaled value and returns it scaled based on the max turning
+     *
+     * @param input -1 to 1 drive amount
+     * @return input scaled based on max turning
+     */
+    private static double adjustedRotation(double input) {
+        return input * RobotSettings.MAX_ROTATION;
     }
 
     /**

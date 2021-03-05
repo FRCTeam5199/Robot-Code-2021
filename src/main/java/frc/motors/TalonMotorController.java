@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 import frc.misc.Chirp;
 import frc.misc.PID;
-import frc.misc.UserInterface;
 import frc.robot.Robot;
 
 import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
@@ -18,17 +17,12 @@ import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
  * This is the wrapper for falcon 500's and maybe some other stuff
  */
 public class TalonMotorController extends AbstractMotorController {
-    public final WPI_TalonFX motor;
+    private final WPI_TalonFX motor;
 
     public TalonMotorController(int id) {
         super();
         motor = new WPI_TalonFX(id);
         Chirp.talonMotorArrayList.add(this);
-    }
-
-    @Override
-    public String getName(){
-      return motor.getName() + motor.getDeviceID();
     }
 
     /**
@@ -39,7 +33,11 @@ public class TalonMotorController extends AbstractMotorController {
      * @see Chirp
      */
     public void addToOrchestra(Orchestra orchestra) {
-        orchestra.addInstrument(motor);
+        if (orchestra.addInstrument(motor) != ErrorCode.OK)
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Talon " + motor.getDeviceID() + " could not join the orchestra");
+            else
+                failureFlag = true;
     }
 
     @Override
@@ -49,16 +47,26 @@ public class TalonMotorController extends AbstractMotorController {
     }
 
     @Override
+    public String getName() {
+        return motor.getName() + motor.getDeviceID();
+    }
+
+    @Override
     public AbstractMotorController follow(AbstractMotorController leader) {
         if (leader instanceof TalonMotorController)
             motor.follow(((TalonMotorController) leader).motor);
+        else
+            throw new IllegalArgumentException("I cant follow that");
         return this;
     }
 
     @Override
     public void resetEncoder() {
         if (motor.setSelectedSensorPosition(0) != ErrorCode.OK)
-            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not be reset");
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not be reset");
+            else
+                failureFlag = true;
     }
 
     @Override
@@ -67,7 +75,7 @@ public class TalonMotorController extends AbstractMotorController {
             if (!Robot.SECOND_TRY)
                 throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " PIDF couldnt be set");
             else
-                UserInterface.smartDashboardPutBoolean("Talon Motor " + motor.getDeviceID() + " failed", false);
+                failureFlag = true;
         return this;
     }
 
@@ -103,7 +111,10 @@ public class TalonMotorController extends AbstractMotorController {
         config.currentLimit = limit;
         config.enable = true;
         if (motor.configSupplyCurrentLimit(config) != ErrorCode.OK)
-            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " current limit could not be set");
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " current limit could not be set");
+            else
+                failureFlag = true;
         return this;
     }
 
@@ -118,7 +129,10 @@ public class TalonMotorController extends AbstractMotorController {
     @Override
     public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
         if (motor.configOpenloopRamp(timeToMax) != ErrorCode.OK)
-            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not set open ramp rate");
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not set open ramp rate");
+            else
+                failureFlag = true;
         return this;
     }
 

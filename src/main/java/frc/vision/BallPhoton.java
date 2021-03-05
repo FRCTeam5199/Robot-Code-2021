@@ -9,6 +9,7 @@ import org.photonvision.PhotonTrackedTarget;
 import java.util.List;
 
 public class BallPhoton implements IVision {
+    private static final boolean DEBUG = false;
     private PhotonCamera ballCamera;
     private List<PhotonTrackedTarget> targets;
     private PhotonPipelineResult cameraResult;
@@ -62,7 +63,7 @@ public class BallPhoton implements IVision {
     @Override
     public void updateGeneric() {
         cameraResult = ballCamera.getLatestResult();
-        if (RobotSettings.DEBUG) {
+        if (RobotSettings.DEBUG && DEBUG) {
             System.out.println("Found " + cameraResult.targets.size() + " targets");
         }
         //if (validTarget()) {
@@ -93,6 +94,11 @@ public class BallPhoton implements IVision {
     @Override
     public void initGeneric() {
 
+    }
+
+    @Override
+    public String getSubsystemName() {
+        return "Ball Photon";
     }
 
     /**

@@ -2,6 +2,7 @@ package frc.telemetry;
 
 import frc.misc.ISubsystem;
 import frc.misc.UtilFunctions;
+import frc.selfdiagnostics.IMUNonOpIssue;
 
 /**
  * Bro chill out im literally just vibing here
@@ -13,6 +14,10 @@ public abstract class AbstractIMU implements ISubsystem {
 
     protected double[] ypr = new double[3];
     protected double[] startypr = new double[3];
+
+    public abstract double absoluteYaw();
+
+    public abstract void resetOdometry();
 
     @Override
     public void updateTest() {
@@ -29,9 +34,16 @@ public abstract class AbstractIMU implements ISubsystem {
         updateGeneric();
     }
 
-    public abstract double relativeYaw();
+    @Override
+    public void updateGeneric() {
+        if (ypr[0] == 0)
+            IMUNonOpIssue.reportIssue(this, getSubsystemName());
+    }
 
-    public abstract double absoluteYaw();
+    @Override
+    public String getSubsystemName() {
+        return "IMU";
+    }
 
     /**
      * Gets the yaw of the bot and wraps it on the bound -180 to 180
@@ -42,5 +54,5 @@ public abstract class AbstractIMU implements ISubsystem {
         return UtilFunctions.mathematicalMod(relativeYaw() + 180, 360) - 180;
     }
 
-    public abstract void resetOdometry();
+    public abstract double relativeYaw();
 }

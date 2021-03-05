@@ -8,8 +8,6 @@ import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
 
-import static frc.robot.Robot.settingsFile;
-
 /**
  * Literally dont mind me I am simply vibing I am here because it means you only have to change one value to completely
  * change robot settings (Otherwise, you would have to make 5 changes instead of 1)
@@ -62,6 +60,7 @@ public abstract class DefaultConfig {
     public int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
     public double DRIVEBASE_DISTANCE_BETWEEN_WHEELS = -2; //Distance in meters between wheels
     public double MAX_SPEED = 0; //max speed in fps - REAL IS 10(for 4in wheels)
+    public double RUMBLE_TOLERANCE_FPS = 0; //The minimum value in which the controller will begin rumbling
     public double MAX_ROTATION = 0; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
     public double WHEEL_DIAMETER = 0;
     public double TURN_SCALE = 1;

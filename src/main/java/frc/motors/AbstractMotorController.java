@@ -18,6 +18,8 @@ import java.util.ArrayList;
  * @see VictorMotorController
  */
 public abstract class AbstractMotorController {
+    public static final ArrayList<AbstractMotorController> motorList = new ArrayList<>();
+    public boolean failureFlag = false;
     /**
      * Value to convert from sensor position to real units (this will vary between motors so know your units!)
      * Destination units are RPM that include the gearing on the motor
@@ -26,13 +28,6 @@ public abstract class AbstractMotorController {
      * dont want to actually fix the issue, just change to double
      */
     public Double sensorToRealDistanceFactor;
-
-    public static final ArrayList<AbstractMotorController> motorList = new ArrayList<>();
-
-    protected AbstractMotorController(){
-        motorList.add(this);
-    }
-
     protected boolean isOverheated;
 
     /**
@@ -118,12 +113,9 @@ public abstract class AbstractMotorController {
      */
     public abstract AbstractMotorController setOpenLoopRampRate(double timeToMax);
 
-    /**
-     * Gets the temperature of the motor
-     *
-     * @return the temperature in celcius
-     */
-    public abstract double getMotorTemperature();
+    protected AbstractMotorController() {
+        motorList.add(this);
+    }
 
     /**
      * see docs for {@link #sensorToRealDistanceFactor} for full explanation
@@ -135,15 +127,22 @@ public abstract class AbstractMotorController {
     }
 
     protected boolean isTemperatureAcceptable(int myID) {
-        if (getMotorTemperature() > 100){
-            if (!isOverheated){
+        if (getMotorTemperature() > 100) {
+            if (!isOverheated) {
                 UserInterface.smartDashboardPutBoolean("OVERHEAT " + myID, false);
                 isOverheated = true;
             }
-        }else if (isOverheated){
+        } else if (isOverheated) {
             isOverheated = false;
             UserInterface.smartDashboardPutBoolean("OVERHEAT " + myID, true);
         }
         return !isOverheated;
     }
+
+    /**
+     * Gets the temperature of the motor
+     *
+     * @return the temperature in celcius
+     */
+    public abstract double getMotorTemperature();
 }

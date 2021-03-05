@@ -80,6 +80,11 @@ public class GoalLimelight implements IVision {
     }
 
     @Override
+    public String getSubsystemName() {
+        return "Goal Camera";
+    }
+
+    @Override
     public double getAngle(int channelIgnored) {
         if (hasValidTarget()) {
             return yaw.getDouble(0);

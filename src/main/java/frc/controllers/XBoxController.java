@@ -38,12 +38,6 @@ public class XBoxController extends BaseController {
         return 0;
     }
 
-    @Override
-    public void rumble(double percent) {
-        stick.setRumble(GenericHID.RumbleType.kLeftRumble, percent);
-        stick.setRumble(GenericHID.RumbleType.kRightRumble, percent);
-    }
-
     /**
      * Gets the status of a button on the xbox controller
      *
@@ -54,5 +48,11 @@ public class XBoxController extends BaseController {
     @Override
     public ButtonStatus get(XBoxButtons button) {
         return ButtonStatus.get(stick.getRawButton(button.AXIS_VALUE));
+    }
+
+    @Override
+    public void rumble(double percent) {
+        stick.setRumble(GenericHID.RumbleType.kLeftRumble, percent);
+        stick.setRumble(GenericHID.RumbleType.kRightRumble, percent);
     }
 }

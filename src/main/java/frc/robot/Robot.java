@@ -10,7 +10,6 @@ import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
-import frc.drive.auton.IAutonEnumPath;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.misc.Chirp;
 import frc.misc.ISubsystem;
@@ -22,6 +21,8 @@ import frc.robot.robotconfigs.DefaultConfig;
 import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 import frc.robot.robotconfigs.twentyone.PracticeRobot2021;
 import frc.robot.robotconfigs.twentytwenty.Robot2020;
+import frc.selfdiagnostics.QuoteOfTheDay;
+import frc.selfdiagnostics.SimpleIssue;
 import frc.vision.BallPhoton;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
@@ -29,11 +30,17 @@ import frc.vision.IVision;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Welcome. Please enjoy your stay here in programmer fun time land. And remember, IntelliJ is king
  */
 public class Robot extends TimedRobot {
+    /**
+     * No son, I refuse to make a new, unseeded random everytime we want a new song. Besides, we have a random at home
+     * already so you don't need another one
+     */
+    public static final Random RANDOM = new Random(System.currentTimeMillis());
     /**
      * If you change this ONE SINGULAR VARIABLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
      * using from the list under robotconfigs
@@ -55,47 +62,6 @@ public class Robot extends TimedRobot {
     public static boolean SECOND_TRY;
     public static String lastFoundSong = "";
     private static long lastDisable = 0;
-
-    private static void getRestartProximity() {
-        long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
-        long currentBoot = System.currentTimeMillis();
-        preferences.putString("lastboot", "0" + currentBoot);
-        if (lastBoot > currentBoot) {
-            SECOND_TRY = false;
-        } else if (lastBoot > 1614461266977L) {
-            SECOND_TRY = currentBoot - lastBoot < 30000;
-        } else if (lastBoot < 1614461266977L && currentBoot < 1614461266977L) {
-            SECOND_TRY = currentBoot - lastBoot < 30000;
-        } else {
-            SECOND_TRY = false;
-        }
-    }
-
-    /**
-     * Loads settings based on the id of the robot.
-     *
-     * @see DefaultConfig
-     */
-    private static void getSettings() {
-        String hostName = preferences.getString("hostname", "Default");
-        System.out.println("I am " + hostName);
-        switch (hostName) {
-            case "2020-Comp":
-                settingsFile = new Robot2020();
-                break;
-            case "2021-Prac":
-                settingsFile = new PracticeRobot2021();
-                break;
-            case "2021-Comp":
-                settingsFile = new CompetitionRobot2021();
-                break;
-            default:
-                //preferences.putString("hostname", "2021-Comp");
-                //settingsFile = new CompetitionRobot2021();
-                //break;
-                throw new IllegalStateException("You need to ID this robot.");
-        }
-    }
 
     /**
      * Init everything
@@ -149,8 +115,52 @@ public class Robot extends TimedRobot {
             pdp = new PDP(RobotSettings.PDP_ID);
         }
 
-        for(AbstractMotorController motor : AbstractMotorController.motorList) {
+        for (AbstractMotorController motor : AbstractMotorController.motorList) {
             UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", 100)));
+        }
+        String quote = QuoteOfTheDay.getRandomQuote();
+        System.out.println("\n\n" + quote);
+        UserInterface.smartDashboardPutString("Quote", quote);
+    }
+
+    private static void getRestartProximity() {
+        long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
+        long currentBoot = System.currentTimeMillis();
+        preferences.putString("lastboot", "0" + currentBoot);
+        if (lastBoot > currentBoot) {
+            SECOND_TRY = false;
+        } else if (lastBoot > 1614461266977L) {
+            SECOND_TRY = currentBoot - lastBoot < 30000;
+        } else if (lastBoot < 1614461266977L && currentBoot < 1614461266977L) {
+            SECOND_TRY = currentBoot - lastBoot < 30000;
+        } else {
+            SECOND_TRY = false;
+        }
+    }
+
+    /**
+     * Loads settings based on the id of the robot.
+     *
+     * @see DefaultConfig
+     */
+    private static void getSettings() {
+        String hostName = preferences.getString("hostname", "Default");
+        System.out.println("I am " + hostName);
+        switch (hostName) {
+            case "2020-Comp":
+                settingsFile = new Robot2020();
+                break;
+            case "2021-Prac":
+                settingsFile = new PracticeRobot2021();
+                break;
+            case "2021-Comp":
+                settingsFile = new CompetitionRobot2021();
+                break;
+            default:
+                //preferences.putString("hostname", "2021-Comp");
+                //settingsFile = new CompetitionRobot2021();
+                //break;
+                throw new IllegalStateException("You need to ID this robot.");
         }
     }
 
@@ -210,10 +220,11 @@ public class Robot extends TimedRobot {
             pdp.update();
         }
 
-        for(AbstractMotorController motor : AbstractMotorController.motorList) {
+        for (AbstractMotorController motor : AbstractMotorController.motorList) {
             UserInterface.motorTemperatureMonitors.get(motor).getEntry().setNumber(motor.getMotorTemperature());
         }
 
+        SimpleIssue.robotPeriodic();
     }
 
     @Override

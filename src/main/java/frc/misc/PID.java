@@ -1,37 +1,29 @@
 package frc.misc;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
+
 /**
  * A wrapper to hold PID values. Use this in lieu of 4 different variables for cleanness, the {@link #toString() print}
  * method, the {@link #equals(Object) equals method} and general concoeness
  */
-public class PID {
+public class PID extends PIDController {
     /**
      * Do not instanitate a zeroed PID object. Instead use this static reference.
      */
     public static final PID EMPTY_PID = new PID(0, 0, 0, 0);
-    public final double P, I, D, F;
+    public final double F;
+
+    public static PID getPIDfromController(PIDController controller) {
+        return new PID(controller.getP(), controller.getI(), controller.getD());
+    }
 
     public PID(double p, double i, double d) {
         this(p, i, d, 0);
     }
 
     public PID(double p, double i, double d, double f) {
-        P = p;
-        I = i;
-        D = d;
+        super(p, i, d);
         F = f;
-    }
-
-    public double getP() {
-        return P;
-    }
-
-    public double getI() {
-        return I;
-    }
-
-    public double getD() {
-        return D;
     }
 
     public double getF() {
@@ -47,7 +39,7 @@ public class PID {
     @Override
     public boolean equals(Object other) {
         if (other instanceof PID)
-            return ((PID) other).P == P && ((PID) other).I == I && ((PID) other).D == D && ((PID) other).F == F;
+            return getP() == ((PID) other).getP() && getI() == ((PID) other).getI() && getD() == ((PID) other).getD() && F == ((PID) other).F;
         throw new IllegalArgumentException("We are better than this. Do not pass a bad object into and equals method");
     }
 
@@ -58,6 +50,6 @@ public class PID {
      */
     @Override
     public String toString() {
-        return "PIDF (P: " + P + ", I: " + I + ", D: " + D + ", F: " + F + ")";
+        return "PIDF (P: " + getP() + ", I: " + getI() + ", D: " + getD() + ", F: " + F + ")";
     }
 }

@@ -13,6 +13,7 @@ import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.RobotSettings;
+import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
@@ -21,6 +22,7 @@ import frc.vision.IVision;
  * Turret refers to the shooty thing that spinny spinny in the yaw direction
  */
 public class Turret implements ISubsystem {
+    private static final boolean DEBUG = false;
     public boolean track, atTarget;
     private BaseController joy, panel;
     private AbstractMotorController motor;
@@ -91,7 +93,9 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (RobotSettings.DEBUG) {
+        if (motor.failureFlag)
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.TURRET_YAW_ID);
+        if (RobotSettings.DEBUG && DEBUG) {
             System.out.println("Turret degrees:" + turretDegrees());
         }
         double omegaSetpoint = 0;
@@ -99,7 +103,7 @@ public class Turret implements ISubsystem {
             case STANDARD:
                 if (RobotSettings.ENABLE_VISION) {
                     if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) {
-                        if (RobotSettings.DEBUG) {
+                        if (RobotSettings.DEBUG && DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + goalPhoton.hasValidTarget());
                         }
                         if (goalPhoton.hasValidTarget()) {
@@ -111,7 +115,7 @@ public class Turret implements ISubsystem {
                 }
                 //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.
                 if (joy.get(ControllerEnums.JoystickButtons.TWO) == ControllerEnums.ButtonStatus.DOWN) {
-                    if (RobotSettings.DEBUG) {
+                    if (RobotSettings.DEBUG && DEBUG) {
                         System.out.println("Joystick is at " + joy.get(ControllerEnums.JoystickAxis.Z_ROTATE));
                     }
                     omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * -2;
@@ -125,7 +129,7 @@ public class Turret implements ISubsystem {
 
         if (isSafe()) {
             rotateTurret(omegaSetpoint);
-            if (RobotSettings.DEBUG) {
+            if (RobotSettings.DEBUG && DEBUG) {
                 System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
             }
         } else {
@@ -137,7 +141,7 @@ public class Turret implements ISubsystem {
                 rotateTurret(0);
             }
         }
-        if (RobotSettings.DEBUG) {
+        if (RobotSettings.DEBUG && DEBUG) {
             //UserInterface.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
             UserInterface.smartDashboardPutNumber("Turret Omega", omegaSetpoint);
             UserInterface.smartDashboardPutNumber("Turret Position", turretDegrees());
@@ -185,6 +189,11 @@ public class Turret implements ISubsystem {
 
     }
 
+    @Override
+    public String getSubsystemName() {
+        return "Turret";
+    }
+
     /**
      * @return position of turret in degrees
      */
@@ -222,7 +231,7 @@ public class Turret implements ISubsystem {
      * @param speed - % max speed to rotate at (too fast and the gremlins gonna eat u)
      */
     private void rotateTurret(double speed) {
-        if (RobotSettings.DEBUG) {
+        if (RobotSettings.DEBUG && DEBUG) {
             System.out.println("Set to " + (speed * (RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30)) + " from " + speed);
         }
         //Dont overcook it pls

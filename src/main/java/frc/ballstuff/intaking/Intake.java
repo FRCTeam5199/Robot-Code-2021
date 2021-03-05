@@ -12,12 +12,14 @@ import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
 import frc.robot.RobotSettings;
+import frc.selfdiagnostics.MotorDisconnectedIssue;
 
 /**
  * The "Intake" is referring to the part that picks up power cells from the floor
  */
 public class Intake implements ISubsystem {
-    private AbstractMotorController victor;
+    private static final boolean DEBUG = false;
+    private AbstractMotorController intakeMotor;
     private BaseController joystick;
     private int intakeMult;
 
@@ -45,7 +47,7 @@ public class Intake implements ISubsystem {
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         try {
-            victor = new VictorMotorController(RobotSettings.INTAKE_MOTOR_ID);
+            intakeMotor = new VictorMotorController(RobotSettings.INTAKE_MOTOR_ID);
         } catch (Exception e) {
             throw new InitializationFailureException("Intake motor failed to be created", "Disable the intake or investigate your motor mappings");
         }
@@ -77,7 +79,9 @@ public class Intake implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        victor.moveAtPercent(0.8 * intakeMult);
+        if (intakeMotor.failureFlag)
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.INTAKE_MOTOR_ID);
+        intakeMotor.moveAtPercent(0.8 * intakeMult);
         switch (RobotSettings.INTAKE_CONTROL_STYLE) {
             case STANDARD:
                 if (joystick.hatIs(JoystickHatDirection.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
@@ -97,7 +101,7 @@ public class Intake implements ISubsystem {
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
-        if (RobotSettings.DEBUG) {
+        if (RobotSettings.DEBUG && DEBUG) {
             UserInterface.smartDashboardPutNumber("Intake Speed", intakeMult);
         }
     }
@@ -124,6 +128,11 @@ public class Intake implements ISubsystem {
     @Override
     public void initGeneric() {
 
+    }
+
+    @Override
+    public String getSubsystemName() {
+        return "Intake";
     }
 
     /**

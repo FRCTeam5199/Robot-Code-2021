@@ -57,6 +57,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.435991;
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
+        RUMBLE_TOLERANCE_FPS = 8;
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
         WHEEL_DIAMETER = 4; //update: now it's used once
         TURN_SCALE = 0.7;

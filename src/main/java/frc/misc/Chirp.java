@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 /**
  * This is where we play our gnarly tunez. Although it cant be seen from here, there is a delete deploy directory method
@@ -25,16 +24,10 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     public static final ArrayList<TalonMotorController> talonMotorArrayList = new ArrayList<>();
     /**
-     * No son, I refuse to make a new, unseeded random everytime we want a new song. Besides, we have a random at home
-     * already so you don't need another one
-     */
-    private static final Random musicRand = new Random(System.currentTimeMillis());
-    public static final SendableChooser<List<String>> MUSIC_SELECTION = getSongs();
-
-    /**
      * K: Title. V: All files matching (differs in motors required)
      */
     private static HashMap<String, List<String>> songnames;
+    public static final SendableChooser<List<String>> MUSIC_SELECTION = getSongs();
 
     /**
      * Loads up songs for {@link #songnames} and {@link UserInterface#MUSIC_SELECTOR}
@@ -64,8 +57,8 @@ public class Chirp extends Orchestra implements ISubsystem {
             filenames.add((String) songnames.keySet().toArray()[i]);
         filenames.sort(String::compareTo);
         for (String key : filenames) {
-            System.out.println((String) key);
-            listObject.addOption((String) key, songnames.get((String) key));
+            System.out.println(key);
+            listObject.setDefaultOption(key, songnames.get(key)); //WORKING: listObject.addOption(key, songnames.get(key));
         }
         return listObject;
     }
@@ -166,6 +159,11 @@ public class Chirp extends Orchestra implements ISubsystem {
 
     }
 
+    @Override
+    public String getSubsystemName() {
+        return "Music";
+    }
+
     /**
      * Loads a song from the provided name assuming it is in the sounds deploy directory (deploy/sounds). Songs must be
      * in format {@code <name>_<instruments>_<playtime in millis>.chrp}
@@ -204,7 +202,7 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     public String getRandomSong() {
         String songName = "";
-        for (String str : songnames.get(songnames.keySet().toArray()[musicRand.nextInt(songnames.keySet().toArray().length)])) {
+        for (String str : songnames.get(songnames.keySet().toArray()[Robot.RANDOM.nextInt(songnames.keySet().toArray().length)])) {
             if (songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size())
                 songName = str;
             else if (!songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size() && Integer.parseInt(songName.split("_")[1]) < Integer.parseInt(str.split("_")[1]))

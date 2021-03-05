@@ -16,6 +16,7 @@ import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.RobotSettings;
+import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.vision.GoalPhoton;
 import frc.vision.IVision;
 
@@ -25,6 +26,7 @@ import static frc.robot.Robot.hopper;
  * Shooter pertains to spinning the flywheel that actually makes the balls go really fast
  */
 public class Shooter implements ISubsystem {
+    private static final boolean DEBUG = false;
     private final NetworkTableEntry P = UserInterface.SHOOTER_P.getEntry(),
             I = UserInterface.SHOOTER_I.getEntry(),
             D = UserInterface.SHOOTER_D.getEntry(),
@@ -121,6 +123,8 @@ public class Shooter implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
+        if (leader.failureFlag)
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_LEADER_ID);
         updateShuffleboard();
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD: {
@@ -144,22 +148,6 @@ public class Shooter implements ISubsystem {
             default:
                 throw new IllegalStateException("This UI not implemented for this controller");
         }
-    }
-
-    private void updateShuffleboard() {
-        if (calibratePID.getBoolean(false)) {
-            PID readPid = new PID(P.getDouble(RobotSettings.DRIVEBASE_PID.getP()), I.getDouble(RobotSettings.DRIVEBASE_PID.getI()), D.getDouble(RobotSettings.DRIVEBASE_PID.getD()), F.getDouble(RobotSettings.DRIVEBASE_PID.getF()));
-            if (!lastPID.equals(readPid)) {
-                lastPID = readPid;
-                leader.setPid(lastPID);
-                if (RobotSettings.DEBUG) {
-                    System.out.println("Set shooter pid to " + lastPID);
-                }
-            }
-        }
-        UserInterface.smartDashboardPutNumber("RPM", leader.getSpeed());
-        UserInterface.smartDashboardPutNumber("Target RPM", speed);
-        UserInterface.smartDashboardPutBoolean("atSpeed", isAtSpeed());
     }
 
     @Override
@@ -187,17 +175,34 @@ public class Shooter implements ISubsystem {
 
     }
 
-    /**
-     * Set drive wheel RPM
-     *
-     * @param rpm speed to set
-     */
-    public void setSpeed(double rpm) {
-        if (RobotSettings.DEBUG) {
-            System.out.println("set shooter speed to " + rpm);
+    @Override
+    public String getSubsystemName() {
+        return "Shooter";
+    }
+
+    private void updateShuffleboard() {
+        if (calibratePID.getBoolean(false)) {
+            PID readPid = new PID(P.getDouble(RobotSettings.DRIVEBASE_PID.getP()), I.getDouble(RobotSettings.DRIVEBASE_PID.getI()), D.getDouble(RobotSettings.DRIVEBASE_PID.getD()), F.getDouble(RobotSettings.DRIVEBASE_PID.getF()));
+            if (!lastPID.equals(readPid)) {
+                lastPID = readPid;
+                leader.setPid(lastPID);
+                if (RobotSettings.DEBUG && DEBUG) {
+                    System.out.println("Set shooter pid to " + lastPID);
+                }
+            }
         }
-        leader.moveAtVelocity(rpm);
-        //leader.moveAtPercent(rpm == 0 ? 0 : rpm > 0 ? .75 : 0);
+        UserInterface.smartDashboardPutNumber("RPM", leader.getSpeed());
+        UserInterface.smartDashboardPutNumber("Target RPM", speed);
+        UserInterface.smartDashboardPutBoolean("atSpeed", isAtSpeed());
+    }
+
+    /**
+     * if the goal photon is in use and has a valid target in its sights
+     *
+     * @return if the goal photon is in use and has a valid target in its sights
+     */
+    public boolean isValidTarget() {
+        return RobotSettings.ENABLE_VISION && goalPhoton.hasValidTarget();
     }
 
     /**
@@ -210,11 +215,15 @@ public class Shooter implements ISubsystem {
     }
 
     /**
-     * if the goal photon is in use and has a valid target in its sights
+     * Set drive wheel RPM
      *
-     * @return if the goal photon is in use and has a valid target in its sights
+     * @param rpm speed to set
      */
-    public boolean isValidTarget() {
-        return RobotSettings.ENABLE_VISION && goalPhoton.hasValidTarget();
+    public void setSpeed(double rpm) {
+        if (RobotSettings.DEBUG && DEBUG) {
+            System.out.println("set shooter speed to " + rpm);
+        }
+        leader.moveAtVelocity(rpm);
+        //leader.moveAtPercent(rpm == 0 ? 0 : rpm > 0 ? .75 : 0);
     }
 }

@@ -9,6 +9,8 @@ import frc.misc.ISubsystem;
  */
 public interface IVision extends ISubsystem {
 
+    boolean hasValidTarget();
+
     /**
      * Returns the angle between the camera and the object
      *
@@ -17,6 +19,8 @@ public interface IVision extends ISubsystem {
     default double getAngle() {
         return getAngle(0);
     }
+
+    double getAngle(int targetId);
 
     /**
      * Returns the pitch between the camera and the object
@@ -27,6 +31,8 @@ public interface IVision extends ISubsystem {
         return getPitch(0);
     }
 
+    double getPitch(int targetId);
+
     /**
      * Returns the pitch between the camera and the object, but filtered
      *
@@ -35,6 +41,8 @@ public interface IVision extends ISubsystem {
     default double getAngleSmoothed() {
         return getAngleSmoothed(0);
     }
+
+    double getAngleSmoothed(int targetId);
 
     /**
      * Returns the size of the object as visible from the camera
@@ -45,14 +53,6 @@ public interface IVision extends ISubsystem {
         return getSize(0);
     }
 
-    double getAngle(int targetId);
-
-    double getPitch(int targetId);
-
-    double getAngleSmoothed(int targetId);
-
     double getSize(int targetId);
-
-    boolean hasValidTarget();
 
 }

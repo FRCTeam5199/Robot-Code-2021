@@ -4,8 +4,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import frc.misc.UserInterface;
 
-import java.util.Map;
-
 /**
  * PDP (Power Distribution Panel) contains information about power, current, and voltage for the robot Is cosmetic for
  * now, but should become more useful in the future in diagnosing critical failures
@@ -13,8 +11,8 @@ import java.util.Map;
 public class PDP {
     private static final NetworkTableEntry allEnergy = UserInterface.PDP_TOTAL_ENERGY_ON_THIS_BOOT.getEntry(),
             peakCurrent = UserInterface.PDP_PEAK_CURRENT.getEntry(),
-            //otherEnergy = UserInterface.PDP_OTHER_ENERGY.getEntry(),
-            peakPower = UserInterface.PDP_PEAK_POWER.getEntry();
+    //otherEnergy = UserInterface.PDP_OTHER_ENERGY.getEntry(),
+    peakPower = UserInterface.PDP_PEAK_POWER.getEntry();
     private final PowerDistributionPanel powerDistributionPanel;
     private double peakCurrentVal = 0, peakPowerVal = 0;
 
