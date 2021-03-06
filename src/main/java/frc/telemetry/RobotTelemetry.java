@@ -37,10 +37,12 @@ public class RobotTelemetry implements ISubsystem {
         resetEncoders();
         if (!RobotSettings.ENABLE_IMU)
             return;
-        if (RobotSettings.USE_PIGEON) {
-            imu = new WrappedPigeonIMU();
-        } else {
-            imu = new WrappedNavX2IMU();
+        switch (RobotSettings.IMU_TYPE) {
+            case PIGEON:
+                imu = new WrappedPigeonIMU();
+                break;
+            case NAVX2:
+                imu = new WrappedNavX2IMU();
         }
         headingPID = new PIDController(RobotSettings.HEADING_PID.getP(), RobotSettings.HEADING_PID.getI(), RobotSettings.HEADING_PID.getD());
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));

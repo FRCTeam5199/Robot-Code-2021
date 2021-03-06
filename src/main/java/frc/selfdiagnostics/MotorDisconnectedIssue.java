@@ -8,6 +8,7 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
     private final int faultedMotor;
 
     public static void reportIssue(ISubsystem owner, int id) {
+        System.out.println("Issue reported!");
         IssueHandler.issues.put(owner, new MotorDisconnectedIssue(id));
     }
 

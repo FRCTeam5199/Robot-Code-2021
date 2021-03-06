@@ -21,8 +21,11 @@ public interface ISimpleIssue {
     static void robotPeriodic() {
         if (UserInterface.GET_RANDOM_FIX.getEntry().getBoolean(false)) {
             UserInterface.GET_RANDOM_FIX.getEntry().setBoolean(false);
+            System.out.println("Issues reported: " + IssueHandler.issues.keySet().size());
             for (ISubsystem iSubsystem : IssueHandler.issues.keySet()) {
-                UserInterface.smartDashboardPutString(iSubsystem.getSubsystemName(), IssueHandler.issues.get(iSubsystem).getRandomFix());
+                String fix = IssueHandler.issues.get(iSubsystem).getRandomFix();
+                System.out.println("Heres an idea: " + fix);
+                UserInterface.smartDashboardPutString(iSubsystem.getSubsystemName(), fix);
             }
         }
     }
