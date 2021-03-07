@@ -15,8 +15,8 @@ import frc.misc.UserInterface;
 public interface ISimpleIssue {
     /**
      * This should run every tick to detect a user's request for a random fix and then provides it upon request
-     * 
-     * @see #getRandomFix() 
+     *
+     * @see #getRandomFix()
      */
     static void robotPeriodic() {
         if (UserInterface.GET_RANDOM_FIX.getEntry().getBoolean(false)) {

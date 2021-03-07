@@ -286,9 +286,13 @@ public class DriveManager implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (leaderL.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.DRIVE_LEADER_L_ID);
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.DRIVE_LEADER_L_ID, leaderL.getSuggestedFix());
+        else
+            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.DRIVE_LEADER_L_ID);
         if (leaderR.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.DRIVE_LEADER_R_ID);
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.DRIVE_LEADER_R_ID, leaderR.getSuggestedFix());
+        else
+            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.DRIVE_LEADER_L_ID);
         if (followerL.failureFlag() || followerR.failureFlag())
             MotorDisconnectedIssue.reportIssue(this, -1);
         setBrake(!coast.getBoolean(false));

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.RobotSettings;
-import frc.telemetry.imu.AbstractIMU;
 
 /**
  * This is a class to interface the Navx2 Inertial Measurement Unit (IMU) but allowing versatility in swapping between
@@ -25,14 +24,14 @@ public class WrappedNavX2IMU extends AbstractIMU {
     //TODO make this a setting
     public void init() {
         if (RobotSettings.IMU_NAVX_PORT instanceof I2C.Port)
-            navX2IMU = new AHRS((I2C.Port)RobotSettings.IMU_NAVX_PORT);
+            navX2IMU = new AHRS((I2C.Port) RobotSettings.IMU_NAVX_PORT);
         else if (RobotSettings.IMU_NAVX_PORT instanceof SerialPort.Port)
-            navX2IMU = new AHRS((SerialPort.Port)RobotSettings.IMU_NAVX_PORT);
+            navX2IMU = new AHRS((SerialPort.Port) RobotSettings.IMU_NAVX_PORT);
         else if (RobotSettings.IMU_NAVX_PORT instanceof SPI.Port)
-            navX2IMU = new AHRS((SPI.Port)RobotSettings.IMU_NAVX_PORT);
+            navX2IMU = new AHRS((SPI.Port) RobotSettings.IMU_NAVX_PORT);
         else if (RobotSettings.IMU_NAVX_PORT == null)
             throw new NullPointerException("RobotSettings.IMU_NAVX_PORT was unexpectedly null");
-        else 
+        else
             throw new IllegalStateException("Port for NAVX not a valid object");
         navX2IMU.calibrate();
         resetOdometry();

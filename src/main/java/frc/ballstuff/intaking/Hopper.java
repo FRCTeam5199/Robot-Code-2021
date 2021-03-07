@@ -74,9 +74,13 @@ public class Hopper implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (indexer.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.INDEXER_MOTOR_ID);
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.INDEXER_MOTOR_ID, indexer.getSuggestedFix());
+        else
+            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.INDEXER_MOTOR_ID);
         if (agitator.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.AGITATOR_MOTOR_ID);
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.AGITATOR_MOTOR_ID, indexer.getSuggestedFix());
+        else
+            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.AGITATOR_MOTOR_ID);
         if (RobotSettings.DEBUG && DEBUG) {
             UserInterface.smartDashboardPutBoolean("indexer enable", indexerActive);
             UserInterface.smartDashboardPutBoolean("agitator enable", agitatorActive);

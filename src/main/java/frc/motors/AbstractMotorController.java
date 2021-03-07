@@ -28,6 +28,7 @@ public abstract class AbstractMotorController {
      * dont want to actually fix the issue, just change to double
      */
     public Double sensorToRealDistanceFactor;
+    protected String potentialFix;
     protected boolean isOverheated;
 
     /**
@@ -125,6 +126,8 @@ public abstract class AbstractMotorController {
      * @return this object for factory style construction
      */
     public abstract AbstractMotorController setOpenLoopRampRate(double timeToMax);
+
+    public abstract String getSuggestedFix();
 
     protected AbstractMotorController() {
         motorList.add(this);

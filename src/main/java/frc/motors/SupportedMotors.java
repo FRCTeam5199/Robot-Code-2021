@@ -9,7 +9,7 @@ public enum SupportedMotors {
 
     public final int MAX_SPEED_RPM;
 
-    SupportedMotors(int speed){
+    SupportedMotors(int speed) {
         MAX_SPEED_RPM = speed;
     }
 }

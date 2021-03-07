@@ -78,8 +78,8 @@ public interface ISubsystem {
     void initGeneric();
 
     /**
-     * Used in {@link ISimpleIssue} to provide a user friendly explanation as to why their jank isnt
-     * working. This could be static but that doesnt make sense since you should be querying an object anyway.
+     * Used in {@link ISimpleIssue} to provide a user friendly explanation as to why their jank isnt working. This could
+     * be static but that doesnt make sense since you should be querying an object anyway.
      *
      * @return the hardcoded name of the subsystem
      */

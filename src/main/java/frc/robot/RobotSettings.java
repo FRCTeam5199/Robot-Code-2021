@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.I2C;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;

@@ -1,10 +1,15 @@
 package frc.ballstuff.shooting;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import frc.controllers.*;
+import frc.controllers.BaseController;
+import frc.controllers.BopItBasicController;
+import frc.controllers.ButtonPanelController;
+import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickButtons;
+import frc.controllers.JoystickController;
+import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.misc.UserInterface;
@@ -123,9 +128,13 @@ public class Shooter implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (leader.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_LEADER_ID);
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_LEADER_ID, leader.getSuggestedFix());
+        else
+            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.SHOOTER_LEADER_ID);
         if (follower != null && follower.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_FOLLOWER_ID);
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_FOLLOWER_ID, follower.getSuggestedFix());
+        else
+            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.SHOOTER_FOLLOWER_ID);
         updateShuffleboard();
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD: {
@@ -148,7 +157,7 @@ public class Shooter implements ISubsystem {
                 break;
             }
             case XBOX_CONTROLLER: {
-                if (joystickController.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1){
+                if (joystickController.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1) {
                     ShootingEnums.FIRE_TEST_SPEED.shoot(this);
                 } else {
                     leader.moveAtPercent(0);
@@ -236,7 +245,7 @@ public class Shooter implements ISubsystem {
         leader.moveAtVelocity(rpm);
     }
 
-    public void setPercentSpeed(double percentSpeed){
+    public void setPercentSpeed(double percentSpeed) {
         leader.moveAtPercent(percentSpeed);
     }
 }
