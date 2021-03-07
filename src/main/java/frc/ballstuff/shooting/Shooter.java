@@ -27,7 +27,7 @@ import static frc.robot.Robot.hopper;
  * Shooter pertains to spinning the flywheel that actually makes the balls go really fast
  */
 public class Shooter implements ISubsystem {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private final NetworkTableEntry P = UserInterface.SHOOTER_P.getEntry(),
             I = UserInterface.SHOOTER_I.getEntry(),
             D = UserInterface.SHOOTER_D.getEntry(),
@@ -146,7 +146,7 @@ public class Shooter implements ISubsystem {
                     if (RobotSettings.ENABLE_HOPPER) {
                         hopper.setAll(false);
                     }
-                    leader.moveAtPercent(0.1);
+                    leader.moveAtPercent(0);
                 }
                 break;
             }
@@ -201,7 +201,7 @@ public class Shooter implements ISubsystem {
 
     private void updateShuffleboard() {
         if (calibratePID.getBoolean(false)) {
-            PID readPid = new PID(P.getDouble(RobotSettings.DRIVEBASE_PID.getP()), I.getDouble(RobotSettings.DRIVEBASE_PID.getI()), D.getDouble(RobotSettings.DRIVEBASE_PID.getD()), F.getDouble(RobotSettings.DRIVEBASE_PID.getF()));
+            PID readPid = new PID(P.getDouble(RobotSettings.SHOOTER_PID.getP()), I.getDouble(RobotSettings.SHOOTER_PID.getI()), D.getDouble(RobotSettings.SHOOTER_PID.getD()), F.getDouble(RobotSettings.SHOOTER_PID.getF()));
             if (!lastPID.equals(readPid)) {
                 lastPID = readPid;
                 leader.setPid(lastPID);

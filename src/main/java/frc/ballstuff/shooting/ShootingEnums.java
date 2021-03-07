@@ -21,9 +21,10 @@ public enum ShootingEnums {
     }),
 
     FIRE_TEST_SPEED(shooter -> {
-        shooter.setPercentSpeed(1);
+        //shooter.setPercentSpeed(1);
+        shooter.setSpeed(4200);
         if (RobotSettings.ENABLE_HOPPER) {
-            hopper.setAll(shooter.isAtSpeed());
+            //hopper.setAll(shooter.isAtSpeed());
         }
     }),
 

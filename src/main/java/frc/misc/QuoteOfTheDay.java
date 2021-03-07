@@ -50,7 +50,10 @@ public class QuoteOfTheDay {
             "You said you would install it at the beginning of class. It's almost the end and it's still not on there.",
             "If you want someone to blame, talk to Teddy.",
             "Yo, Bougie Arouji",
-            "Only 00:12? The night is still young."
+            "Only 00:12? The night is still young.",
+            "It's not working, and I don't know why.\nIt's working, and I don't know why.",
+            "I did it! I plugged in the magic numbers.",
+            "It may or may not work."
     };
 
     /**
