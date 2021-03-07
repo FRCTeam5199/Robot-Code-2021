@@ -1,14 +1,10 @@
 package frc.ballstuff.shooting;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import frc.controllers.BaseController;
-import frc.controllers.BopItBasicController;
-import frc.controllers.ButtonPanelController;
-import frc.controllers.ControllerEnums;
+import frc.controllers.*;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickButtons;
-import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.misc.UserInterface;
@@ -57,6 +53,9 @@ public class Shooter implements ISubsystem {
             case BOP_IT:
                 joystickController = new BopItBasicController(1);
                 break;
+            case XBOX_CONTROLLER:
+                joystickController = new XBoxController(1);
+                break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
@@ -91,7 +90,7 @@ public class Shooter implements ISubsystem {
 
         leader.setInverted(RobotSettings.SHOOTER_INVERTED).setPid(RobotSettings.SHOOTER_PID);
         if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
-            follower.follow(leader).setInverted(!RobotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
+            follower.follow(leader, true).setInverted(!RobotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
             //TODO test if braking leader brakes follower
         }
         leader.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
@@ -135,14 +134,24 @@ public class Shooter implements ISubsystem {
                 } else if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else {
-                    hopper.setAll(false);
-                    leader.moveAtPercent(0);
+                    if (RobotSettings.ENABLE_HOPPER) {
+                        hopper.setAll(false);
+                    }
+                    leader.moveAtPercent(0.1);
                 }
                 break;
             }
             case BOP_IT: {
                 if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                }
+                break;
+            }
+            case XBOX_CONTROLLER: {
+                if (joystickController.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1){
+                    ShootingEnums.FIRE_TEST_SPEED.shoot(this);
+                } else {
+                    leader.moveAtPercent(0);
                 }
                 break;
             }
@@ -225,5 +234,9 @@ public class Shooter implements ISubsystem {
             System.out.println("set shooter speed to " + rpm);
         }
         leader.moveAtVelocity(rpm);
+    }
+
+    public void setPercentSpeed(double percentSpeed){
+        leader.moveAtPercent(percentSpeed);
     }
 }

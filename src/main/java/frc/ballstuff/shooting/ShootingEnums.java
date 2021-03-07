@@ -20,6 +20,13 @@ public enum ShootingEnums {
         }
     }),
 
+    FIRE_TEST_SPEED(shooter -> {
+        shooter.setPercentSpeed(1);
+        if (RobotSettings.ENABLE_HOPPER) {
+            hopper.setAll(shooter.isAtSpeed());
+        }
+    }),
+
     //Used by our current vision tracking
     FIRE_HIGH_SPEED(shooter -> {
         shooter.setSpeed(4200); //* (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1)

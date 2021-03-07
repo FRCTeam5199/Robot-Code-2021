@@ -34,15 +34,15 @@ public class CompetitionRobot2021 extends DefaultConfig {
         //SHOOTER
         SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;//SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
-        SHOOTER_INVERTED = true;
+        SHOOTER_INVERTED = false;
 
         //INTAKE
-        ENABLE_INDEXER_AUTO_INDEX = true;
+        ENABLE_INDEXER_AUTO_INDEX = false;
         INDEXER_DETECTION_CUTOFF_DISTANCE = 4;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;
-        SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
+        SHOOTER_CONTROL_STYLE = ShootingControlStyles.XBOX_CONTROLLER;//ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
         IMU_TYPE = SupportedIMU.NAVX2;

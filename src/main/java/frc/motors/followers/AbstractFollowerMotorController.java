@@ -30,8 +30,12 @@ public abstract class AbstractFollowerMotorController {
      * @see AbstractMotorController#follow(AbstractMotorController)
      */
     public void follow(AbstractMotorController leader) {
+        follow(leader, false);
+    }
+
+    public void follow(AbstractMotorController leader, boolean invert) {
         for (AbstractMotorController follower : motors)
-            follower.follow(leader);
+            follower.follow(leader, invert);
     }
 
     /**

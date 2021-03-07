@@ -38,19 +38,25 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
+        System.out.println("INVERTING MOTOR " + motor.getDeviceId() + "!" + invert);
         return this;
     }
 
     @Override
     public String getName() {
-        return motor.toString() + motor.getDeviceId();
+        return "Spark: " + motor.getDeviceId();
     }
 
     @Override
     public AbstractMotorController follow(AbstractMotorController leader) {
+        return follow(leader, false);
+    }
+
+    @Override
+    public AbstractMotorController follow(AbstractMotorController leader, boolean invert){
         if (!(leader instanceof SparkMotorController))
             throw new IllegalArgumentException("I cant follow that!!");
-        if (motor.follow(((SparkMotorController) leader).motor) != CANError.kOk)
+        if (motor.follow(((SparkMotorController) leader).motor, invert) != CANError.kOk)
             if (!Robot.SECOND_TRY)
                 throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not follow the leader");
             else

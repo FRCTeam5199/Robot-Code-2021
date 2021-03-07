@@ -48,16 +48,22 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public String getName() {
-        return motor.getName() + motor.getDeviceID();
+        return "Talon: " + motor.getDeviceID();
     }
 
     @Override
-    public AbstractMotorController follow(AbstractMotorController leader) {
+    public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
         if (leader instanceof TalonMotorController)
             motor.follow(((TalonMotorController) leader).motor);
         else
             throw new IllegalArgumentException("I cant follow that");
+        setInverted(invert);
         return this;
+    }
+
+    @Override
+    public AbstractMotorController follow(AbstractMotorController leader) {
+        return follow(leader, false);
     }
 
     @Override

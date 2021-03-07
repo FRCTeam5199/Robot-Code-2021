@@ -5,5 +5,11 @@ package frc.motors;
  * settings to switch between motor implementations
  */
 public enum SupportedMotors {
-    CAN_SPARK_MAX, TALON_FX, VICTOR
+    CAN_SPARK_MAX(5676), TALON_FX(6380), VICTOR(0);
+
+    public final int MAX_SPEED_RPM;
+
+    SupportedMotors(int speed){
+        MAX_SPEED_RPM = speed;
+    }
 }

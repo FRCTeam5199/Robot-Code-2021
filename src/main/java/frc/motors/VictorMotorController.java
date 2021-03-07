@@ -29,7 +29,7 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public String getName() {
-        return motor.toString() + motor.getDeviceID();
+        return "Victor: " + motor.getDeviceID();
     }
 
     @Override
@@ -38,6 +38,13 @@ public class VictorMotorController extends AbstractMotorController {
             motor.follow(((VictorMotorController) leader).motor);
         }else
             throw new IllegalArgumentException("I cant follow that!");
+        return this;
+    }
+
+    @Override
+    public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
+        follow(leader);
+        setInverted(invert);
         return this;
     }
 
