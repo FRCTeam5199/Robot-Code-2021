@@ -13,10 +13,6 @@ public class PID extends PIDController {
     public static final PID EMPTY_PID = new PID(0, 0, 0, 0);
     public final double F;
 
-    public static PID getPIDfromController(PIDController controller) {
-        return new PID(controller.getP(), controller.getI(), controller.getD());
-    }
-
     public PID(double p, double i, double d) {
         this(p, i, d, 0);
     }

@@ -20,6 +20,7 @@ public enum ShootingEnums {
         }
     }),
 
+
     //Used by our current vision tracking
     FIRE_HIGH_SPEED(shooter -> {
         shooter.setSpeed(4200); //* (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1)

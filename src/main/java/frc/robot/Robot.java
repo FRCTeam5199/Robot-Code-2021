@@ -73,6 +73,7 @@ public class Robot extends TimedRobot {
         RobotSettings.printMappings();
         RobotSettings.printToggles();
         RobotSettings.printNumbers();
+        UserInterface.initRobot();
         if (RobotSettings.ENABLE_VISION) {
             goalPhoton = new GoalPhoton();
             ballPhoton = new BallPhoton();
