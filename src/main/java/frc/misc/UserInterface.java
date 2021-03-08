@@ -1,16 +1,13 @@
 package frc.misc;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.motors.AbstractMotorController;
 import frc.robot.RobotSettings;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class UserInterface {
     //TABS
@@ -21,22 +18,26 @@ public class UserInterface {
             ROBOT_TAB = Shuffleboard.getTab("DANGER!"),
             WARNINGS_TAB = Shuffleboard.getTab("Warnings");
 
+    //LAYOUTS
+    public static final ShuffleboardLayout SHOOTER_PID_LAYOUT = SHOOTER_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")),
+            DRIVE_PID_LAYOUT = DRIVE_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT"));
+
     //SHOOTER TODO make PID widget (kPIDController)
-    public static final SimpleWidget SHOOTER_P = SHOOTER_TAB.add("P", RobotSettings.SHOOTER_PID.getP()),
-            SHOOTER_I = SHOOTER_TAB.add("I", RobotSettings.SHOOTER_PID.getI()),
-            SHOOTER_D = SHOOTER_TAB.add("D", RobotSettings.SHOOTER_PID.getD()),
-            SHOOTER_F = SHOOTER_TAB.add("F", RobotSettings.SHOOTER_PID.getF()),
+    public static final SimpleWidget SHOOTER_P = SHOOTER_PID_LAYOUT.add("P", RobotSettings.SHOOTER_PID.getP()),
+            SHOOTER_I = SHOOTER_PID_LAYOUT.add("I", RobotSettings.SHOOTER_PID.getI()),
+            SHOOTER_D = SHOOTER_PID_LAYOUT.add("D", RobotSettings.SHOOTER_PID.getD()),
+            SHOOTER_F = SHOOTER_PID_LAYOUT.add("F", RobotSettings.SHOOTER_PID.getF()),
             SHOOTER_CONST_SPEED = SHOOTER_TAB.add("Constant Speed", 0),
-            SHOOTER_CALIBRATE_PID = SHOOTER_TAB.add("Calibrate PID", false).withWidget(BuiltInWidgets.kToggleSwitch),
+            SHOOTER_CALIBRATE_PID = SHOOTER_PID_LAYOUT.add("Tune PID", false).withWidget(BuiltInWidgets.kToggleSwitch),
 
     //DRIVETRAIN TODO make PID widget (kPIDController)
     DRIVE_ROT_MULT = DRIVE_TAB.add("Rotation Factor", RobotSettings.TURN_SCALE),
             DRIVE_SCALE_MULT = DRIVE_TAB.add("Speed Factor", RobotSettings.DRIVE_SCALE),
-            DRIVE_P = DRIVE_TAB.add("P", RobotSettings.DRIVEBASE_PID.getP()),
-            DRIVE_I = DRIVE_TAB.add("I", RobotSettings.DRIVEBASE_PID.getI()),
-            DRIVE_D = DRIVE_TAB.add("D", RobotSettings.DRIVEBASE_PID.getD()),
-            DRIVE_F = DRIVE_TAB.add("F", RobotSettings.DRIVEBASE_PID.getF()),
-            DRIVE_CALIBRATE_PID = DRIVE_TAB.add("Calibrate PID", false).withWidget(BuiltInWidgets.kToggleSwitch),
+            DRIVE_P = DRIVE_PID_LAYOUT.add("P", RobotSettings.DRIVEBASE_PID.getP()),
+            DRIVE_I = DRIVE_PID_LAYOUT.add("I", RobotSettings.DRIVEBASE_PID.getI()),
+            DRIVE_D = DRIVE_PID_LAYOUT.add("D", RobotSettings.DRIVEBASE_PID.getD()),
+            DRIVE_F = DRIVE_PID_LAYOUT.add("F", RobotSettings.DRIVEBASE_PID.getF()),
+            DRIVE_CALIBRATE_PID = DRIVE_PID_LAYOUT.add("Tune PID", false).withWidget(BuiltInWidgets.kToggleSwitch),
             DRIVE_COAST = DRIVE_TAB.add("Coast", true),
             DRIVE_RUMBLE_NEAR_MAX = DRIVE_TAB.add("Rumble Near Max", false).withWidget(BuiltInWidgets.kBooleanBox),
     /*
@@ -81,12 +82,8 @@ public class UserInterface {
         if (RobotSettings.ENABLE_PDP) {
             PDP_DISPLAY = PDP_TAB.add("PDPDisplay", new PowerDistributionPanel(RobotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
         }
-        if (RobotSettings.ENABLE_DRIVE){
-            DRIVEBASE_PID = DRIVE_TAB.add("Drivebase PID", RobotSettings.DRIVEBASE_PID).withWidget(BuiltInWidgets.kPIDController);
-        }
         if (RobotSettings.ENABLE_SHOOTER){
-            SHOOTER_PID = SHOOTER_TAB.add("Drivebase PID", RobotSettings.SHOOTER_PID).withWidget(BuiltInWidgets.kPIDController);
-            SHOOTER_RPM = SHOOTER_TAB.add("RPM", 0);
+           SHOOTER_RPM = SHOOTER_TAB.add("RPM", 0); //TODO Edit shooter line 195
         }
     }
 }
