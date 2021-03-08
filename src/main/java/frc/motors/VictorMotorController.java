@@ -1,6 +1,7 @@
 package frc.motors;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.misc.PID;
 import frc.robot.Robot;
@@ -29,15 +30,22 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public String getName() {
-        return motor.toString() + motor.getDeviceID();
+        return "Victor: " + motor.getDeviceID();
     }
 
     @Override
     public AbstractMotorController follow(AbstractMotorController leader) {
         if (leader instanceof VictorMotorController) {
             motor.follow(((VictorMotorController) leader).motor);
-        }else
+        } else
             throw new IllegalArgumentException("I cant follow that!");
+        return this;
+    }
+
+    @Override
+    public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
+        follow(leader);
+        setInverted(invert);
         return this;
     }
 
@@ -111,5 +119,23 @@ public class VictorMotorController extends AbstractMotorController {
     @Override
     public double getMotorTemperature() {
         return motor.getTemperature();
+    }
+
+    @Override
+    public String getSuggestedFix() {
+        Faults foundFaults = new Faults();
+        motor.getFaults(foundFaults);
+        failureFlag = foundFaults.hasAnyFault();
+        if (foundFaults.UnderVoltage) ;
+            //report to PDP
+        else if (foundFaults.RemoteLossOfSignal)
+            potentialFix = "Ensure that motor %d is plugged into can AND power";
+        else if (foundFaults.APIError)
+            potentialFix = "Update the software for motor %d";
+        else if (foundFaults.hasAnyFault())
+            potentialFix = "Idk youre probably screwed";
+        else
+            potentialFix = "";
+        return potentialFix;
     }
 }

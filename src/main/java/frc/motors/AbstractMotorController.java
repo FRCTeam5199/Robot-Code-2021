@@ -28,6 +28,7 @@ public abstract class AbstractMotorController {
      * dont want to actually fix the issue, just change to double
      */
     public Double sensorToRealDistanceFactor;
+    protected String potentialFix;
     protected boolean isOverheated;
 
     /**
@@ -48,7 +49,20 @@ public abstract class AbstractMotorController {
      * @return this object for factory style construction
      * @see AbstractFollowerMotorController
      */
+    @Deprecated
     public abstract AbstractMotorController follow(AbstractMotorController leader);
+
+    /**
+     * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
+     * the passed motor will be the leader
+     *
+     * @param leader motor to follow
+     * @param invert whether to invert this follower
+     * @return this object for factory style construction
+     * @see AbstractFollowerMotorController
+     */
+    public abstract AbstractMotorController follow(AbstractMotorController leader, boolean invert);
+
 
     /**
      * Sets current encoder position to be the zero position. If you are absolutely crazy and want to set the encoder to
@@ -112,6 +126,8 @@ public abstract class AbstractMotorController {
      * @return this object for factory style construction
      */
     public abstract AbstractMotorController setOpenLoopRampRate(double timeToMax);
+
+    public abstract String getSuggestedFix();
 
     protected AbstractMotorController() {
         motorList.add(this);

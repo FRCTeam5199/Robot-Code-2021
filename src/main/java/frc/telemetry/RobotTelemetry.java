@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.misc.ISubsystem;
+import frc.misc.UserInterface;
 import frc.misc.UtilFunctions;
 import frc.robot.RobotSettings;
 import frc.telemetry.imu.AbstractIMU;
@@ -47,6 +48,7 @@ public class RobotTelemetry implements ISubsystem {
         headingPID = new PIDController(RobotSettings.HEADING_PID.getP(), RobotSettings.HEADING_PID.getI(), RobotSettings.HEADING_PID.getD());
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
         robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
+        UserInterface.smartDashboardPutNumber("Yaw", imu.absoluteYaw());
     }
 
     /**

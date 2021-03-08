@@ -58,7 +58,7 @@ public class Intake implements ISubsystem {
      */
     @Override
     public void updateTest() {
-        
+
     }
 
     /**
@@ -80,7 +80,9 @@ public class Intake implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (intakeMotor.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.INTAKE_MOTOR_ID);
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.INTAKE_MOTOR_ID, intakeMotor.getSuggestedFix());
+        else
+            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.INTAKE_MOTOR_ID);
         intakeMotor.moveAtPercent(0.8 * intakeMult);
         switch (RobotSettings.INTAKE_CONTROL_STYLE) {
             case STANDARD:
@@ -118,7 +120,7 @@ public class Intake implements ISubsystem {
 
     @Override
     public void initAuton() {
-        
+
     }
 
     @Override

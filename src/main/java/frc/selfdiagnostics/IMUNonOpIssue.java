@@ -11,7 +11,7 @@ public class IMUNonOpIssue implements ISimpleIssue {
         IssueHandler.issues.put(owner, new IMUNonOpIssue(imuName));
     }
 
-    public static void resolveIssue(ISubsystem owner){
+    public static void resolveIssue(ISubsystem owner) {
         IssueHandler.issues.remove(owner);
     }
 

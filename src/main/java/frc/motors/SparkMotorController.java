@@ -38,19 +38,25 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
+        System.out.println("INVERTING MOTOR " + motor.getDeviceId() + "!" + invert);
         return this;
     }
 
     @Override
     public String getName() {
-        return motor.toString() + motor.getDeviceId();
+        return "Spark: " + motor.getDeviceId();
     }
 
     @Override
     public AbstractMotorController follow(AbstractMotorController leader) {
+        return follow(leader, false);
+    }
+
+    @Override
+    public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
         if (!(leader instanceof SparkMotorController))
             throw new IllegalArgumentException("I cant follow that!!");
-        if (motor.follow(((SparkMotorController) leader).motor) != CANError.kOk)
+        if (motor.follow(((SparkMotorController) leader).motor, invert) != CANError.kOk)
             if (!Robot.SECOND_TRY)
                 throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not follow the leader");
             else
@@ -128,5 +134,44 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public double getMotorTemperature() {
         return motor.getMotorTemperature();
+    }
+
+    @Override
+    public String getSuggestedFix() {
+        short failmap = motor.getFaults();
+        failureFlag = failmap != 0;
+        if (failmap == 0)
+            return "";
+        //brownout
+        if (((failmap) & 0x1) != 0)
+            potentialFix = "Replace the battery";
+            //overcurrent?
+        else if (((failmap >> 1) & 0x1) != 0)
+            potentialFix = "Unstall motor %d";
+            //kIWDTReset???
+        else if (((failmap >> 2) & 0x1) != 0)
+            potentialFix = "¯\\_(ツ)_/¯";
+            //kMotorFault
+        else if (((failmap >> 3) & 0x1) != 0)
+            potentialFix = "Motor fault";
+        else if (((failmap >> 4) & 0x1) != 0)
+            potentialFix = "Sensor fault";
+        else if (((failmap >> 5) & 0x1) != 0)
+            potentialFix = "Whoop whoop. Stall! Dont burn. Dont burn";
+            //kEEPROMCRC
+        else if (((failmap >> 6) & 0x1) != 0)
+            potentialFix = "¯\\_(ツ)_/¯";
+        else if (((failmap >> 7) & 0x3) != 0)
+            potentialFix = "Check CAN connection";
+            //kHasReset
+        else if (((failmap >> 9) & 0x1) != 0)
+            potentialFix = "Restart robocode";
+            //kDRVFault
+        else if (((failmap >> 10) & 0x3) != 0)
+            potentialFix = "¯\\_(ツ)_/¯";
+            //kDRVFault
+        else
+            potentialFix = "¯\\_(ツ)_/¯";
+        return potentialFix;
     }
 }

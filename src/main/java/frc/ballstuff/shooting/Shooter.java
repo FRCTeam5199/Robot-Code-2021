@@ -9,6 +9,7 @@ import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickButtons;
 import frc.controllers.JoystickController;
+import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.misc.UserInterface;
@@ -26,7 +27,7 @@ import static frc.robot.Robot.hopper;
  * Shooter pertains to spinning the flywheel that actually makes the balls go really fast
  */
 public class Shooter implements ISubsystem {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private final NetworkTableEntry P = UserInterface.SHOOTER_P.getEntry(),
             I = UserInterface.SHOOTER_I.getEntry(),
             D = UserInterface.SHOOTER_D.getEntry(),
@@ -56,6 +57,9 @@ public class Shooter implements ISubsystem {
                 break;
             case BOP_IT:
                 joystickController = new BopItBasicController(1);
+                break;
+            case XBOX_CONTROLLER:
+                joystickController = new XBoxController(1);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
@@ -91,7 +95,7 @@ public class Shooter implements ISubsystem {
 
         leader.setInverted(RobotSettings.SHOOTER_INVERTED).setPid(RobotSettings.SHOOTER_PID);
         if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
-            follower.follow(leader).setInverted(!RobotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
+            follower.follow(leader, true).setInverted(!RobotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
             //TODO test if braking leader brakes follower
         }
         leader.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
@@ -124,9 +128,13 @@ public class Shooter implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (leader.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_LEADER_ID);
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_LEADER_ID, leader.getSuggestedFix());
+        else
+            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.SHOOTER_LEADER_ID);
         if (follower != null && follower.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_FOLLOWER_ID);
+            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_FOLLOWER_ID, follower.getSuggestedFix());
+        else
+            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.SHOOTER_FOLLOWER_ID);
         updateShuffleboard();
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD: {
@@ -135,7 +143,9 @@ public class Shooter implements ISubsystem {
                 } else if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else {
-                    hopper.setAll(false);
+                    if (RobotSettings.ENABLE_HOPPER) {
+                        hopper.setAll(false);
+                    }
                     leader.moveAtPercent(0);
                 }
                 break;
@@ -143,6 +153,14 @@ public class Shooter implements ISubsystem {
             case BOP_IT: {
                 if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                }
+                break;
+            }
+            case XBOX_CONTROLLER: {
+                if (joystickController.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1) {
+                    ShootingEnums.FIRE_TEST_SPEED.shoot(this);
+                } else {
+                    leader.moveAtPercent(0);
                 }
                 break;
             }
@@ -183,7 +201,7 @@ public class Shooter implements ISubsystem {
 
     private void updateShuffleboard() {
         if (calibratePID.getBoolean(false)) {
-            PID readPid = new PID(P.getDouble(RobotSettings.DRIVEBASE_PID.getP()), I.getDouble(RobotSettings.DRIVEBASE_PID.getI()), D.getDouble(RobotSettings.DRIVEBASE_PID.getD()), F.getDouble(RobotSettings.DRIVEBASE_PID.getF()));
+            PID readPid = new PID(P.getDouble(RobotSettings.SHOOTER_PID.getP()), I.getDouble(RobotSettings.SHOOTER_PID.getI()), D.getDouble(RobotSettings.SHOOTER_PID.getD()), F.getDouble(RobotSettings.SHOOTER_PID.getF()));
             if (!lastPID.equals(readPid)) {
                 lastPID = readPid;
                 leader.setPid(lastPID);
@@ -225,5 +243,9 @@ public class Shooter implements ISubsystem {
             System.out.println("set shooter speed to " + rpm);
         }
         leader.moveAtVelocity(rpm);
+    }
+
+    public void setPercentSpeed(double percentSpeed) {
+        leader.moveAtPercent(percentSpeed);
     }
 }

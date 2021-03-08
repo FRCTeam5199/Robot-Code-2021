@@ -1,6 +1,7 @@
 package frc.motors;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
@@ -48,16 +49,22 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public String getName() {
-        return motor.getName() + motor.getDeviceID();
+        return "Talon: " + motor.getDeviceID();
     }
 
     @Override
-    public AbstractMotorController follow(AbstractMotorController leader) {
+    public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
         if (leader instanceof TalonMotorController)
             motor.follow(((TalonMotorController) leader).motor);
         else
             throw new IllegalArgumentException("I cant follow that");
+        setInverted(invert);
         return this;
+    }
+
+    @Override
+    public AbstractMotorController follow(AbstractMotorController leader) {
+        return follow(leader, false);
     }
 
     @Override
@@ -139,5 +146,23 @@ public class TalonMotorController extends AbstractMotorController {
     @Override
     public double getMotorTemperature() {
         return motor.getTemperature();
+    }
+
+    @Override
+    public String getSuggestedFix() {
+        Faults foundFaults = new Faults();
+        motor.getFaults(foundFaults);
+        failureFlag = foundFaults.hasAnyFault();
+        if (foundFaults.UnderVoltage) ;
+            //report to PDP
+        else if (foundFaults.RemoteLossOfSignal)
+            potentialFix = "Ensure that motor %d is plugged into can AND power";
+        else if (foundFaults.APIError)
+            potentialFix = "Update the software for motor %d";
+        else if (foundFaults.hasAnyFault())
+            potentialFix = "Idk youre probably screwed";
+        else
+            potentialFix = "";
+        return potentialFix;
     }
 }

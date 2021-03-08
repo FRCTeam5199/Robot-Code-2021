@@ -2,7 +2,6 @@ package frc.telemetry.imu;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import frc.robot.RobotSettings;
-import frc.telemetry.imu.AbstractIMU;
 
 public class WrappedPigeonIMU extends AbstractIMU {
     private PigeonIMU pigeon;
@@ -15,6 +14,11 @@ public class WrappedPigeonIMU extends AbstractIMU {
     @Override
     public void init() {
         pigeon = new PigeonIMU(RobotSettings.IMU_ID);
+    }
+
+    @Override
+    public void initTest() {
+
     }    /**
      * Yaw since last restart
      *
@@ -27,12 +31,17 @@ public class WrappedPigeonIMU extends AbstractIMU {
     }
 
     @Override
-    public void initTest() {
+    public void initTeleop() {
 
     }
 
     @Override
-    public void initTeleop() {
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
 
     }    /**
      * Updates the Pigeon IMU data
@@ -44,19 +53,10 @@ public class WrappedPigeonIMU extends AbstractIMU {
     }
 
     @Override
-    public void initAuton() {
-
-    }
-
-    @Override
-    public void initDisabled() {
-
-    }
-
-    @Override
     public void initGeneric() {
 
     }
+
 
 
 

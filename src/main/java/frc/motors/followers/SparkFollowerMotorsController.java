@@ -15,6 +15,7 @@ public class SparkFollowerMotorsController extends AbstractFollowerMotorControll
 
     @Override
     public void invert(boolean invert) {
-        //do nothing because we are too cool
+        for (AbstractMotorController motor : motors)
+            motor.setInverted(invert);
     }
 }
