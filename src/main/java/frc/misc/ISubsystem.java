@@ -86,9 +86,9 @@ public interface ISubsystem {
     String getSubsystemName();
 
     /**
-     * In devlopment, adds this object to {@link Robot#subsytems a master registry} for later use
+     * In devlopment, adds this object to {@link Robot#subsystems a master registry} for later use
      */
     default void addToMetaList() {
-        Robot.subsytems.add(this);
+        Robot.subsystems.add(this);
     }
 }

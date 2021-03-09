@@ -19,8 +19,8 @@ public class UserInterface {
             WARNINGS_TAB = Shuffleboard.getTab("Warnings");
 
     //LAYOUTS
-    public static final ShuffleboardLayout SHOOTER_PID_LAYOUT = SHOOTER_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")),
-            DRIVE_PID_LAYOUT = DRIVE_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT"));
+    public static final ShuffleboardLayout SHOOTER_PID_LAYOUT = SHOOTER_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2,3),
+            DRIVE_PID_LAYOUT = DRIVE_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2,3);
 
     //SHOOTER TODO make PID widget (kPIDController)
     public static final SimpleWidget SHOOTER_P = SHOOTER_PID_LAYOUT.add("P", RobotSettings.SHOOTER_PID.getP()),
@@ -39,7 +39,7 @@ public class UserInterface {
             DRIVE_F = DRIVE_PID_LAYOUT.add("F", RobotSettings.DRIVEBASE_PID.getF()),
             DRIVE_CALIBRATE_PID = DRIVE_PID_LAYOUT.add("Tune PID", false).withWidget(BuiltInWidgets.kToggleSwitch),
             DRIVE_COAST = DRIVE_TAB.add("Coast", true),
-            DRIVE_RUMBLE_NEAR_MAX = DRIVE_TAB.add("Rumble Near Max", false).withWidget(BuiltInWidgets.kBooleanBox),
+            DRIVE_RUMBLE_NEAR_MAX = DRIVE_TAB.add("Rumble Near Max", false).withWidget(BuiltInWidgets.kToggleSwitch),
     /*
     //PDP TODO make pdp widget (kPowerDistributionPanel)
     PDP_TOTAL_ENERGY_ON_THIS_BOOT = PDP_TAB.add("Total energy on this boot", 0),

@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
      * using from the list under robotconfigs
      */
     public static final Preferences preferences = Preferences.getInstance();
-    public static final ArrayList<ISubsystem> subsytems = new ArrayList<>();
+    public static final ArrayList<ISubsystem> subsystems = new ArrayList<>();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
     public static DefaultConfig settingsFile;
     public static DriveManager driver;
@@ -115,7 +115,9 @@ public class Robot extends TimedRobot {
         }
 
         for (AbstractMotorController motor : AbstractMotorController.motorList) {
-            UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", 100)));
+            if (motor.getMotorTemperature() > 5) {
+                UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", 100)));
+            }
         }
         String quote = QuoteOfTheDay.getRandomQuote();
         System.out.println("\n\n" + quote);
@@ -125,7 +127,7 @@ public class Robot extends TimedRobot {
     /**
      * Reads from the preferences what the last boot time is. Depending on current system time, sets the {@link
      * #SECOND_TRY} flag to either restart on error or to persist as best as possible. If you leave the robot on for
-     * half a century then it might not work right so plaese refrain from that
+     * half a century then it might not work right so please refrain from that
      */
     private static void getRestartProximity() {
         long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
@@ -170,7 +172,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        for (ISubsystem system : subsytems) {
+        for (ISubsystem system : subsystems) {
             system.initDisabled();
         }
         lastDisable = System.currentTimeMillis();
@@ -178,21 +180,21 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        for (ISubsystem system : subsytems) {
+        for (ISubsystem system : subsystems) {
             system.initAuton();
         }
     }
 
     @Override
     public void teleopInit() {
-        for (ISubsystem system : subsytems) {
+        for (ISubsystem system : subsystems) {
             system.initTeleop();
         }
     }
 
     @Override
     public void testInit() {
-        for (ISubsystem system : subsytems) {
+        for (ISubsystem system : subsystems) {
             system.initTest();
         }
     }
@@ -225,7 +227,9 @@ public class Robot extends TimedRobot {
         }
 
         for (AbstractMotorController motor : AbstractMotorController.motorList) {
-            UserInterface.motorTemperatureMonitors.get(motor).getEntry().setNumber(motor.getMotorTemperature());
+            if (motor.getMotorTemperature() > 5) {
+                UserInterface.motorTemperatureMonitors.get(motor).getEntry().setNumber(motor.getMotorTemperature());
+            }
         }
 
         ISimpleIssue.robotPeriodic();
@@ -239,21 +243,21 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        for (ISubsystem system : subsytems) {
+        for (ISubsystem system : subsystems) {
             system.updateAuton();
         }
     }
 
     @Override
     public void teleopPeriodic() {
-        for (ISubsystem system : subsytems) {
+        for (ISubsystem system : subsystems) {
             system.updateTeleop();
         }
     }
 
     @Override
     public void testPeriodic() {
-        for (ISubsystem system : subsytems) {
+        for (ISubsystem system : subsystems) {
             system.updateTest();
         }
     }
