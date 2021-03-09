@@ -14,9 +14,9 @@ public class PracticeRobot2021 extends DefaultConfig {
     public PracticeRobot2021() {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = false;
-        ENABLE_SHOOTER = false;
-        ENABLE_HOPPER = false;
-        ENABLE_AGITATOR = true;
+        ENABLE_SHOOTER = true;
+        ENABLE_HOPPER = true;
+        ENABLE_AGITATOR = false;
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
 
@@ -30,9 +30,9 @@ public class PracticeRobot2021 extends DefaultConfig {
         ENABLE_IMU = false;
 
         //SHOOTER
-        SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
+        SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
         SHOOTER_USE_TWO_MOTORS = true;
-        SHOOTER_INVERTED = true;
+        SHOOTER_INVERTED = false;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = false;
@@ -47,7 +47,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         AUTON_TYPE = AutonType.FOLLOW_PATH;
 
         DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
-        SHOOTER_PID = new PID(0.001, 0.00003, 0.0001, 0.001);
+        SHOOTER_PID = new PID(0.001, 0.0000005, 0.03, 0);
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
         TURRET_PID = new PID(0.006, 0.00001, 0.001);
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
@@ -60,7 +60,6 @@ public class PracticeRobot2021 extends DefaultConfig {
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
         DRIVE_GEARING = 12 / 60.0;
-
         SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
         motorPulleySize = 0;//?;
         driverPulleySize = 0;//?;
