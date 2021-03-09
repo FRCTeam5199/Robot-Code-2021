@@ -15,7 +15,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
     public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
-        ENABLE_SHOOTER = true;
+        ENABLE_SHOOTER = false;
         ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
@@ -42,7 +42,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;
-        SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;//ShootingControlStyles.STANDARD;
+        SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
         IMU_TYPE = SupportedIMU.NAVX2;

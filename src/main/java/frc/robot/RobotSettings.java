@@ -137,7 +137,7 @@ public class RobotSettings {
     public static final SupportedIMU IMU_TYPE = settingsFile.IMU_TYPE;
     public static final String AUTON_COMPLETE_NOISE = "LevelComplete_4_6000";
     public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = settingsFile.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
-    public static final double MAX_SPEED = settingsFile.DRIVE_MOTOR_TYPE.MAX_SPEED_RPM * settingsFile.DRIVE_GEARING / (settingsFile.WHEEL_DIAMETER * Math.PI / 12);
+    public static final double MAX_SPEED = (settingsFile.DRIVE_MOTOR_TYPE.MAX_SPEED_RPM * settingsFile.DRIVE_GEARING / (settingsFile.WHEEL_DIAMETER * Math.PI / 12))/60;
     public static final double RUMBLE_TOLERANCE_FPS = settingsFile.RUMBLE_TOLERANCE_FPS;
     public static final double MAX_ROTATION = settingsFile.MAX_ROTATION;
     public static final double WHEEL_DIAMETER = settingsFile.WHEEL_DIAMETER;
