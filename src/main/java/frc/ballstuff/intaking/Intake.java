@@ -72,7 +72,7 @@ public class Intake implements ISubsystem {
     @Override
     public void updateAuton() {
         if (RobotSettings.AUTON_MODE == AutonType.GALACTIC_SEARCH || RobotSettings.AUTON_MODE == AutonType.GALACTIC_SCAM) {
-            setIntake(RobotSettings.autonComplete ? 0 : 1);
+            setIntake(RobotSettings.autonComplete ? IntakeDirection.OFF : IntakeDirection.IN);
         }
         updateGeneric();
     }
@@ -87,18 +87,18 @@ public class Intake implements ISubsystem {
         switch (RobotSettings.INTAKE_CONTROL_STYLE) {
             case STANDARD:
                 if (joystick.hatIs(JoystickHatDirection.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
-                    setIntake(1);
+                    setIntake(IntakeDirection.IN);
                 } else if (joystick.hatIs(JoystickHatDirection.UP)) {
-                    setIntake(-1);
+                    setIntake(IntakeDirection.OUT);
                 } else {
-                    setIntake(0);
+                    setIntake(IntakeDirection.OFF);
                 }
                 break;
             case BOPIT:
                 if (joystick.get(ControllerEnums.DrumButton.PEDAL) == ControllerEnums.ButtonStatus.DOWN)
-                    setIntake(1);
+                    setIntake(IntakeDirection.IN);
                 else
-                    setIntake(0);
+                    setIntake(IntakeDirection.OFF);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
@@ -143,7 +143,11 @@ public class Intake implements ISubsystem {
      *
      * @param input -1 for out, 1 for in, 0 for off
      */
-    public void setIntake(int input) {
-        intakeMult = input;
+    public void setIntake(IntakeDirection input) {
+        intakeMult = input.ordinal() - 1;
+    }
+
+    public enum IntakeDirection {
+        OUT, OFF, IN
     }
 }
