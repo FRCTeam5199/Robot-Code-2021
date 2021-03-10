@@ -73,7 +73,7 @@ public class AutonManager extends AbstractAutonManager {
     @Override
     public void initAuton() {
         RobotSettings.autonComplete = false;
-        trajectory = paths.get(GalacticSearchPaths.PATH_B_RED);
+        trajectory = paths.get(GalacticSearchPaths.PATH_B_BLUE);
         if (RobotSettings.ENABLE_IMU) {
             telem.resetOdometry();
             Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
