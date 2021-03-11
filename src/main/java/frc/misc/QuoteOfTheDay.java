@@ -44,7 +44,6 @@ public class QuoteOfTheDay {
             "Did you delete it? \nYeah, I did. \nSo we both deleted it.. \nOh no. \nOh no..",
             "I can't believe it's butter.",
             "Boy, have I got the solution for you. I call it Accidental Dental.",
-            "Conor: Can we have a robot gore channel? \nJoey: No. \nSterling: haha channel go brrrrr",
             "It shooby dooby do be like that.",
             "Why is it being criiiiinge???",
             "You said you would install it at the beginning of class. It's almost the end and it's still not on there.",

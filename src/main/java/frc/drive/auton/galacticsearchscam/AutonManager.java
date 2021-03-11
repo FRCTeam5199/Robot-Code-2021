@@ -47,7 +47,7 @@ public class AutonManager extends AbstractAutonManager {
             if (RobotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
                 ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-                DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
+                DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond*2);
             }
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
                 onFinish();
@@ -73,7 +73,7 @@ public class AutonManager extends AbstractAutonManager {
     @Override
     public void initAuton() {
         RobotSettings.autonComplete = false;
-        trajectory = paths.get(GalacticSearchPaths.PATH_B_BLUE);
+        trajectory = paths.get(GalacticSearchPaths.PATH_A_BLUE);
         if (RobotSettings.ENABLE_IMU) {
             telem.resetOdometry();
             Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
