@@ -247,4 +247,6 @@ public class RobotSettings {
         System.out.println("                           IMU id: " + IMU_ID);
         System.out.println("-------------------</RobotSettingspings>-----------------");
     }
+
+    public static final String DISCORD_BOT_TOKEN = Robot.preferences.getString("botkey", "none");
 }

@@ -37,6 +37,10 @@ deploy {
     }
 }
 
+repositories {
+    jcenter()
+}
+
 // Set this to true to enable desktop support.
 def includeDesktopSupport = true
 
@@ -62,6 +66,8 @@ dependencies {
     // Websocket extensions require additional configuration.
     // simulation wpi.deps.sim.ws_server(wpi.platforms.desktop, false)
     // simulation wpi.deps.sim.ws_client(wpi.platforms.desktop, false)
+
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.8.1_457'
 }
 
 // Simulation configuration (e.g. environment variables).

@@ -68,6 +68,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() throws IllegalStateException {
+
         getRestartProximity();
         getSettings();
         RobotSettings.printMappings();
