@@ -34,6 +34,33 @@ public enum ShootingEnums {
         if (RobotSettings.ENABLE_HOPPER) {
             hopper.setAll((shooter.isAtSpeed() && shooter.isValidTarget()));
         }
+    }),
+    FIRE_NUM_BALLS(shooter -> {
+        if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX && RobotSettings.ENABLE_HOPPER && RobotSettings.ENABLE_INDEXER) {
+            shooter.setSpeed(shooter.shootRPM);
+            if (shooter.ballsShot < shooter.shootBallCount) {
+                if (shooter.isAtSpeed()) {
+                    if (!shooter.isShooting) {
+                        if (hopper.indexed) {
+                            shooter.isShooting = true;
+                            hopper.setIndexer(true);
+                        }
+                    } else {
+                        if (!hopper.indexed) {
+                            shooter.isShooting = false;
+                            hopper.setIndexer(false);
+                            shooter.ballsShot++;
+                        }
+                    }
+                }
+            } else {
+                shooter.fireNumBallsLoop = false;
+                shooter.hasShotNumBalls = true;
+                shooter.shootRPM = 4200;
+                shooter.isShooting = false;
+                shooter.shootBallCount = 0;
+            }
+        }
     });
 
     public final Consumer<Shooter> function;

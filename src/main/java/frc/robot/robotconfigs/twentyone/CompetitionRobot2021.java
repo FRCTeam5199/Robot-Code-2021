@@ -63,6 +63,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
         DRIVE_GEARING = 10 / 60.0;
+        HOPPER_BALL_COUNT = 3;
 
         SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
         motorPulleySize = 0;//?;

@@ -180,6 +180,7 @@ public class RobotSettings {
     //hopper
     public static final int AGITATOR_MOTOR_ID = settingsFile.AGITATOR_MOTOR_ID;
     public static final int INDEXER_MOTOR_ID = settingsFile.INDEXER_MOTOR_ID;
+    public static final int HOPPER_BALL_COUNT = settingsFile.HOPPER_BALL_COUNT;
     /**
      * The id for the {@link #ENABLE_INTAKE intake motor}
      */

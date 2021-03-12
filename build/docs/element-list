@@ -1,6 +1,8 @@
 frc.ballstuff.intaking
 frc.ballstuff.shooting
 frc.controllers
+frc.discordbot
+frc.discordbot.commands
 frc.drive
 frc.drive.auton
 frc.drive.auton.followtrajectory

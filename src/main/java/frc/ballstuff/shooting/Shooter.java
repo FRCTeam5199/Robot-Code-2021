@@ -34,6 +34,9 @@ public class Shooter implements ISubsystem {
             F = UserInterface.SHOOTER_F.getEntry(),
             constSpeed = UserInterface.SHOOTER_CONST_SPEED.getEntry(),
             calibratePID = UserInterface.SHOOTER_CALIBRATE_PID.getEntry();
+    public int shootBallCount = 0, ballsShot = 0;
+    public double shootRPM = 0;
+    public boolean isShooting = false, fireNumBallsLoop = false, hasShotNumBalls = false;
     public double speed = 4200, shooting;
     BaseController panel, joystickController;
     private AbstractMotorController leader, follower;
@@ -243,6 +246,18 @@ public class Shooter implements ISubsystem {
             System.out.println("set shooter speed to " + rpm);
         }
         leader.moveAtVelocity(rpm);
+    }
+
+    public void fireNumBalls(double rpm, int balls){
+        if (!fireNumBallsLoop) {
+            shootBallCount = Math.min(balls, RobotSettings.HOPPER_BALL_COUNT);
+            shootRPM = rpm;
+            fireNumBallsLoop = true;
+            hasShotNumBalls = false;
+        }
+        if (!hasShotNumBalls) {
+            ShootingEnums.FIRE_NUM_BALLS.shoot(this);
+        }
     }
 
     public void setPercentSpeed(double percentSpeed) {
