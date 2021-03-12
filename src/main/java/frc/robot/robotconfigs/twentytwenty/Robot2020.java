@@ -8,6 +8,7 @@ import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.telemetry.imu.SupportedIMU;
+import frc.vision.camera.SupportedVision;
 
 public class Robot2020 extends DefaultConfig {
     public Robot2020() {
@@ -32,6 +33,8 @@ public class Robot2020 extends DefaultConfig {
         SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
+        GOAL_CAMERA_TYPE = SupportedVision.PHOTON;
+        ENABLE_HOOD_ARTICULATION = false;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
