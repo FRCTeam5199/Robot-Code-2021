@@ -18,7 +18,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         ENABLE_SHOOTER = true;
         ENABLE_TURRET = true;
         ENABLE_HOPPER = true;
-        ENABLE_AGITATOR = false;
+        ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
 
@@ -37,9 +37,10 @@ public class PracticeRobot2021 extends DefaultConfig {
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
         ENABLE_HOOD_ARTICULATION = true;
+        INDEXER_DETECTION_CUTOFF_DISTANCE = 4;
 
         //INTAKE
-        ENABLE_INDEXER_AUTO_INDEX = false;
+        ENABLE_INDEXER_AUTO_INDEX = true;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;

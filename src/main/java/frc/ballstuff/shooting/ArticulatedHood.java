@@ -53,6 +53,7 @@ public class ArticulatedHood implements ISubsystem {
                 throw new IllegalStateException("No such supported hood config for " + RobotSettings.HOOD_MOTOR_TYPE.name());
         }
         hoodMotor.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
+        hoodMotor.setBrake(true);
     }
 
     @Override
@@ -77,6 +78,8 @@ public class ArticulatedHood implements ISubsystem {
                 hoodMotor.moveAtPercent(0.3);
             } else if (joystickController.get(ControllerEnums.JoystickButtons.THREE) == ControllerEnums.ButtonStatus.DOWN) {
                 hoodMotor.moveAtPercent(-0.3);
+            } else {
+                hoodMotor.moveAtPercent(0);
             }
         } else {
             throw new IllegalStateException("You can't articulate the hood without the panel.");

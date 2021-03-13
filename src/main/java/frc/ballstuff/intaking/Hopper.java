@@ -17,7 +17,7 @@ import frc.vision.distancesensor.RevDistanceSensor;
  * is ) to the {@link frc.ballstuff.shooting.Shooter}
  */
 public class Hopper implements ISubsystem {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     public AbstractMotorController agitator, indexer;
     public IDistanceSensor indexSensor;
     public boolean indexed = false;
@@ -101,7 +101,7 @@ public class Hopper implements ISubsystem {
         if (!indexerActive && !agitatorActive) {
             if (RobotSettings.ENABLE_INDEXER) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    indexer.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.4 : 0);
+                    indexer.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.2 : 0);
                 } else {
                     indexer.moveAtPercent(0);
                 }
