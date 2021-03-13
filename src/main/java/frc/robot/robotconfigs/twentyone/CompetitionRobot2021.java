@@ -28,7 +28,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = false;
+        ENABLE_VISION = true;
         USE_PHOTONVISION = true;
         ENABLE_IMU = true;
         IMU_NAVX_PORT = I2C.Port.kMXP;

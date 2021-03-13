@@ -22,9 +22,9 @@ public enum GalacticSearchPaths implements IAutonEnumPath {
     ),
     PATH_B_RED(
             new Point[]{
-                    new Point(-20.25, .7),
-                    new Point(8.6, .11),
-                    new Point(-7.89, 0.04)
+                    new Point(-21.2, 1.09),
+                    new Point(12.46, .14),
+                    new Point(-6.88, 0.04)
             }
             , "PathBRed"
     ),

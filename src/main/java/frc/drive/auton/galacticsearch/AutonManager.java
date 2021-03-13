@@ -1,12 +1,14 @@
 package frc.drive.auton.galacticsearch;
 
 import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
+import frc.misc.UserInterface;
 import frc.robot.Robot;
 import frc.robot.RobotSettings;
 
@@ -52,7 +54,7 @@ public class AutonManager extends AbstractAutonManager {
             if (RobotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
                 ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-                DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
+                DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond * 2);
             }
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
                 onFinish();
@@ -92,7 +94,13 @@ public class AutonManager extends AbstractAutonManager {
             System.out.println("Heres what they told me: " + point);
         GalacticSearchPaths path = getPath(cringePoints);
         System.out.println("I chose" + path.name());
+        UserInterface.smartDashboardPutString("Auton Path", path.name());
         trajectory = paths.get(path);
+        if (RobotSettings.ENABLE_IMU) {
+            telem.resetOdometry();
+            Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
+            trajectory = trajectory.transformBy(transform);
+        }
         timer.stop();
         timer.reset();
         timer.start();
@@ -131,7 +139,7 @@ public class AutonManager extends AbstractAutonManager {
                 bestPath = path;
             }
         }
-        if (bestOption > 50)
+        if (bestOption > 5000)
             throw new IllegalStateException("I dont see a path. For safety, I will not run " + bestPath);
         return bestPath;
     }
