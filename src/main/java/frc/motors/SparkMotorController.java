@@ -132,11 +132,6 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
-    public double getMotorTemperature() {
-        return motor.getMotorTemperature();
-    }
-
-    @Override
     public String getSuggestedFix() {
         short failmap = motor.getFaults();
         failureFlag = failmap != 0;
@@ -173,5 +168,10 @@ public class SparkMotorController extends AbstractMotorController {
         else
             potentialFix = "¯\\_(ツ)_/¯";
         return potentialFix;
+    }
+
+    @Override
+    public double getMotorTemperature() {
+        return motor.getMotorTemperature();
     }
 }

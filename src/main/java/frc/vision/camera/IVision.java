@@ -1,6 +1,7 @@
 package frc.vision.camera;
 
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 
 /**
  * I'm just simply vibing here, calm down bro. Anyone that can SEE would use me
@@ -8,8 +9,6 @@ import frc.misc.ISubsystem;
  * @author Smaltin
  */
 public interface IVision extends ISubsystem {
-
-    boolean hasValidTarget();
 
     /**
      * Returns the angle between the camera and the object
@@ -55,4 +54,10 @@ public interface IVision extends ISubsystem {
 
     double getSize(int targetId);
 
+    @Override
+    default SubsystemStatus getSubsystemStatus() {
+        return hasValidTarget() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+    }
+
+    boolean hasValidTarget();
 }

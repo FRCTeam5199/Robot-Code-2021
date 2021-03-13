@@ -8,6 +8,7 @@ import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
@@ -194,6 +195,11 @@ public class Turret implements ISubsystem {
     @Override
     public String getSubsystemName() {
         return "Turret";
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return motor.failureFlag ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
     }
 
     /**

@@ -118,6 +118,12 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public double getMotorTemperature() {
+        Faults faults = new Faults();
+        if (motor.getFaults(faults) != ErrorCode.OK){
+            failureFlag = true;
+            return 0;
+        }
+        failureFlag = faults.hasAnyFault();
         return motor.getTemperature();
     }
 

@@ -8,6 +8,7 @@ import frc.ballstuff.intaking.Hopper;
 import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
+import frc.discordbot.DiscordBot;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.followtrajectory.Trajectories;
@@ -68,7 +69,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() throws IllegalStateException {
-
         getRestartProximity();
         getSettings();
         RobotSettings.printMappings();
@@ -123,6 +123,7 @@ public class Robot extends TimedRobot {
         String quote = QuoteOfTheDay.getRandomQuote();
         System.out.println("\n\n" + quote);
         UserInterface.smartDashboardPutString("Quote", quote);
+        DiscordBot.newInstance();
     }
 
     /**

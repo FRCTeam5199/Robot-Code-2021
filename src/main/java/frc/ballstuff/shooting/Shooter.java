@@ -12,6 +12,7 @@ import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.PID;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
@@ -202,6 +203,11 @@ public class Shooter implements ISubsystem {
         return "Shooter";
     }
 
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return !leader.failureFlag && !follower.failureFlag ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+    }
+
     private void updateShuffleboard() {
         if (calibratePID.getBoolean(false)) {
             PID readPid = new PID(P.getDouble(RobotSettings.SHOOTER_PID.getP()), I.getDouble(RobotSettings.SHOOTER_PID.getI()), D.getDouble(RobotSettings.SHOOTER_PID.getD()), F.getDouble(RobotSettings.SHOOTER_PID.getF()));
@@ -248,7 +254,7 @@ public class Shooter implements ISubsystem {
         leader.moveAtVelocity(rpm);
     }
 
-    public void fireNumBalls(double rpm, int balls){
+    public void fireNumBalls(double rpm, int balls) {
         if (!fireNumBallsLoop) {
             shootBallCount = Math.min(balls, RobotSettings.HOPPER_BALL_COUNT);
             shootRPM = rpm;

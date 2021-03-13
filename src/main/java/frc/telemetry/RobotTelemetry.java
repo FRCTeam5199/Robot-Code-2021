@@ -1,6 +1,5 @@
 package frc.telemetry;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -8,6 +7,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.misc.UtilFunctions;
 import frc.robot.RobotSettings;
@@ -20,7 +20,6 @@ public class RobotTelemetry implements ISubsystem {
     public Pose2d robotPose;
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
-    public PIDController headingPID;
     public DifferentialDriveOdometry odometer;
     public AbstractIMU imu;
 
@@ -45,7 +44,6 @@ public class RobotTelemetry implements ISubsystem {
             case NAVX2:
                 imu = new WrappedNavX2IMU();
         }
-        headingPID = new PIDController(RobotSettings.HEADING_PID.getP(), RobotSettings.HEADING_PID.getI(), RobotSettings.HEADING_PID.getD());
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
         robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
         UserInterface.smartDashboardPutNumber("Yaw", imu.absoluteYaw());
@@ -141,6 +139,11 @@ public class RobotTelemetry implements ISubsystem {
     @Override
     public String getSubsystemName() {
         return "Guidance";
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return imu.getSubsystemStatus();
     }
 
     /**

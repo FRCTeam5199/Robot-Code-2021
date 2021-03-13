@@ -137,7 +137,7 @@ public class RobotSettings {
     public static final SupportedIMU IMU_TYPE = settingsFile.IMU_TYPE;
     public static final String AUTON_COMPLETE_NOISE = "LevelComplete_4_6000";
     public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = settingsFile.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
-    public static final double MAX_SPEED = (settingsFile.DRIVE_MOTOR_TYPE.MAX_SPEED_RPM * settingsFile.DRIVE_GEARING / (settingsFile.WHEEL_DIAMETER * Math.PI / 12))/60;
+    public static final double MAX_SPEED = (settingsFile.DRIVE_MOTOR_TYPE.MAX_SPEED_RPM * settingsFile.DRIVE_GEARING / (settingsFile.WHEEL_DIAMETER * Math.PI / 12)) / 60;
     public static final double RUMBLE_TOLERANCE_FPS = settingsFile.RUMBLE_TOLERANCE_FPS;
     public static final double MAX_ROTATION = settingsFile.MAX_ROTATION;
     public static final double WHEEL_DIAMETER = settingsFile.WHEEL_DIAMETER;
@@ -190,6 +190,7 @@ public class RobotSettings {
      * The id for the {@link #ENABLE_PDP PDP}
      */
     public static final int PDP_ID = settingsFile.PDP_ID;
+    public static final String DISCORD_BOT_TOKEN = Robot.preferences.getString("botkey", "none");
     public static boolean autonComplete = false;
     public static int XBOX_CONTROLLER_USB_SLOT = settingsFile.XBOX_CONTROLLER_USB_SLOT;
     public static int FLIGHT_STICK_USB_SLOT = settingsFile.FLIGHT_STICK_USB_SLOT;
@@ -248,6 +249,4 @@ public class RobotSettings {
         System.out.println("                           IMU id: " + IMU_ID);
         System.out.println("-------------------</RobotSettingspings>-----------------");
     }
-
-    public static final String DISCORD_BOT_TOKEN = Robot.preferences.getString("botkey", "none");
 }

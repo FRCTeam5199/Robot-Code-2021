@@ -20,6 +20,7 @@ import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.misc.PID;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
@@ -343,6 +344,11 @@ public class DriveManager implements ISubsystem {
     @Override
     public String getSubsystemName() {
         return "Drivetrain";
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return !leaderL.failureFlag && !leaderR.failureFlag && !followerL.failureFlag() && !followerR.failureFlag() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     /**

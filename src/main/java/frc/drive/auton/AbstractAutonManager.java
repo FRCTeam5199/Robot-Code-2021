@@ -8,6 +8,7 @@ import frc.drive.DriveManager;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.robot.Robot;
 import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
@@ -77,5 +78,10 @@ public abstract class AbstractAutonManager implements ISubsystem {
     @Override
     public String getSubsystemName() {
         return "Auton manager";
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return !RobotSettings.autonComplete && telem.getSubsystemStatus() == SubsystemStatus.NOMINAL ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 }

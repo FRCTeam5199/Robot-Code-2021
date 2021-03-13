@@ -1,6 +1,7 @@
 package frc.vision.distancesensor;
 
 import com.revrobotics.Rev2mDistanceSensor;
+import frc.misc.SubsystemStatus;
 import frc.selfdiagnostics.DistanceSensorNonOpIssue;
 
 public class RevDistanceSensor extends Rev2mDistanceSensor implements IDistanceSensor {
@@ -68,9 +69,9 @@ public class RevDistanceSensor extends Rev2mDistanceSensor implements IDistanceS
 
     }
 
-    public RevDistanceSensor(Rev2mDistanceSensor.Port port, Rev2mDistanceSensor.Unit units, Rev2mDistanceSensor.RangeProfile profile) {
-        super(port, units, profile);
-        init();
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return getDistance() <= 0 ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
     }
 
     @Override
@@ -81,5 +82,10 @@ public class RevDistanceSensor extends Rev2mDistanceSensor implements IDistanceS
     @Override
     public String getSubsystemName() {
         return "Rev 2m distance sensor";
+    }
+
+    public RevDistanceSensor(Rev2mDistanceSensor.Port port, Rev2mDistanceSensor.Unit units, Rev2mDistanceSensor.RangeProfile profile) {
+        super(port, units, profile);
+        init();
     }
 }

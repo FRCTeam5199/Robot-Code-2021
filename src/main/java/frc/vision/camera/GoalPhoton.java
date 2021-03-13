@@ -97,30 +97,6 @@ public class GoalPhoton implements IVision {
     }
 
     /**
-     * Get angle between crosshair and goal left/right with filter calculation.
-     *
-     * @return angle between crosshair and goal, left negative, 29.8 degrees in both directions.
-     */
-    @Override
-    public double getAngleSmoothed(int channelIgnored) {
-        double angle = yaw.getDouble(0);
-        if (hasValidTarget()) {
-            return filter.calculate(angle);
-        }
-        return 0;
-    }
-
-    /**
-     * Check for a valid target in the camera's view.
-     *
-     * @return whether or not there is a valid target in view.
-     */
-    @Override
-    public boolean hasValidTarget() {
-        return hasTarget.getBoolean(false);
-    }
-
-    /**
      * Get angle between crosshair and goal left/right.
      *
      * @return angle between crosshair and goal, left negative, 29.8 degrees in both directions.
@@ -149,6 +125,20 @@ public class GoalPhoton implements IVision {
     }
 
     /**
+     * Get angle between crosshair and goal left/right with filter calculation.
+     *
+     * @return angle between crosshair and goal, left negative, 29.8 degrees in both directions.
+     */
+    @Override
+    public double getAngleSmoothed(int channelIgnored) {
+        double angle = yaw.getDouble(0);
+        if (hasValidTarget()) {
+            return filter.calculate(angle);
+        }
+        return 0;
+    }
+
+    /**
      * Get the size of the goal onscreen.
      *
      * @return size of the goal in % of the screen, 0-100.
@@ -160,5 +150,15 @@ public class GoalPhoton implements IVision {
             return goalSize;
         }
         return 0;
+    }
+
+    /**
+     * Check for a valid target in the camera's view.
+     *
+     * @return whether or not there is a valid target in view.
+     */
+    @Override
+    public boolean hasValidTarget() {
+        return hasTarget.getBoolean(false);
     }
 }

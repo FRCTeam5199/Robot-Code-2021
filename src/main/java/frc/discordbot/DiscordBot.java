@@ -1,39 +1,41 @@
 package frc.discordbot;
 
-import frc.robot.RobotSettings;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 
-import java.io.IOException;
 import java.net.InetAddress;
 
 public class DiscordBot {
     public static DiscordBot bot = null;
     private final JDA botObject;
 
-    private DiscordBot(){
-        JDA holder = null;
+    public static DiscordBot newInstance() {
         try {
-            holder = new JDABuilder(AccountType.BOT).setToken(RobotSettings.DISCORD_BOT_TOKEN).build();
-        }catch (Exception e){
-            System.err.println("Discord bot failed to init");
-            e.printStackTrace();
-        }
-        botObject = holder;
-    }
-
-    public static DiscordBot newInstance(){
-        try {
-            if (!InetAddress.getByName("discord.com").isReachable(1000)) {
+            if (!InetAddress.getByName("google.com").isReachable(1000)) {
                 System.out.println("NO INTERNET DETECTED");
-                return null;
+                //return null;
+            } else {
+                System.out.println("Internet detected !!!!!!!");
             }
-        } catch (IOException ignored){
-
+        } catch (Exception ignored) {
+            System.out.println("NO INTERNET?");
         }
         if (bot == null)
             return bot = new DiscordBot();
         return bot;
+    }
+
+    private DiscordBot() {
+        MessageHandler.loadCommands();
+        JDA holder = null;
+        try {
+            System.out.println();
+            holder = new JDABuilder(AccountType.BOT).addEventListener(new MessageHandler()).setToken("ODE5OTY0NzI2NDUyMjg5NTQ2.YEuRqA.3LP49vx5BxxibxYVpwEE9gCYSEo").build();
+        } catch (Exception e) {
+            System.err.println("Discord bot failed to init");
+            e.printStackTrace();
+        }
+        botObject = holder;
     }
 }

@@ -8,6 +8,7 @@ import frc.controllers.JoystickController;
 import frc.drive.auton.AutonType;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
@@ -136,6 +137,11 @@ public class Intake implements ISubsystem {
     @Override
     public String getSubsystemName() {
         return "Intake";
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return intakeMotor.failureFlag ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
     }
 
     /**

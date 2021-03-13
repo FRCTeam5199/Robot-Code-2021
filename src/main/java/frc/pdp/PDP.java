@@ -1,8 +1,6 @@
 package frc.pdp;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import frc.misc.UserInterface;
 
 /**
  * PDP (Power Distribution Panel) contains information about power, current, and voltage for the robot Is cosmetic for
@@ -16,7 +14,9 @@ public class PDP {
     peakPower = UserInterface.PDP_PEAK_POWER.getEntry();
 */
     private final PowerDistributionPanel powerDistributionPanel;
-    private double peakCurrentVal = 0, peakPowerVal = 0;
+    private final double peakCurrentVal = 0;
+    private final double peakPowerVal = 0;
+
     public PDP(int channelID) {
         powerDistributionPanel = new PowerDistributionPanel(channelID);
     }
