@@ -1,5 +1,6 @@
 package frc.ballstuff.shooting;
 
+import com.revrobotics.CANSparkMaxLowLevel;
 import frc.controllers.*;
 import frc.misc.ISubsystem;
 import frc.motors.AbstractMotorController;
@@ -7,11 +8,9 @@ import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.RobotSettings;
 
-import static frc.robot.Robot.hopper;
-
 public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = false;
-    BaseController panel, joystickController;
+    BaseController joystickController;
     private AbstractMotorController hoodMotor;
 
     public ArticulatedHood() {
@@ -24,7 +23,6 @@ public class ArticulatedHood implements ISubsystem {
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD:
                 joystickController = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
-                panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);
                 break;
             case BOP_IT:
                 joystickController = new BopItBasicController(1);
@@ -44,7 +42,7 @@ public class ArticulatedHood implements ISubsystem {
     private void createAndInitMotors() {
         switch (RobotSettings.HOOD_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
-                hoodMotor = new SparkMotorController(RobotSettings.SHOOTER_HOOD_ID);
+                hoodMotor = new SparkMotorController(RobotSettings.SHOOTER_HOOD_ID, CANSparkMaxLowLevel.MotorType.kBrushed);
                 hoodMotor.setSensorToRealDistanceFactor(1);
                 break;
             case TALON_FX:
@@ -59,26 +57,26 @@ public class ArticulatedHood implements ISubsystem {
 
     @Override
     public void updateTest() {
-
+        //updateGeneric();
     }
 
     @Override
     public void updateTeleop() {
-
+        updateGeneric();
     }
 
     @Override
     public void updateAuton() {
-
+        //updateGeneric();
     }
 
     @Override
-    public void updateGeneric() {
+    public void updateGeneric() { //FIVE UP THREE DOWN
         if (RobotSettings.SHOOTER_CONTROL_STYLE == ShootingControlStyles.STANDARD) {
-            if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_TOP) == ControllerEnums.ButtonStatus.DOWN) {
-                hoodMotor.moveAtPercent(0.1);
-            } else if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN) {
-                hoodMotor.moveAtPercent(-0.1);
+            if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
+                hoodMotor.moveAtPercent(0.3);
+            } else if (joystickController.get(ControllerEnums.JoystickButtons.THREE) == ControllerEnums.ButtonStatus.DOWN) {
+                hoodMotor.moveAtPercent(-0.3);
             }
         } else {
             throw new IllegalStateException("You can't articulate the hood without the panel.");
@@ -112,6 +110,6 @@ public class ArticulatedHood implements ISubsystem {
 
     @Override
     public String getSubsystemName() {
-        return null;
+        return "ShooterHood";
     }
 }
