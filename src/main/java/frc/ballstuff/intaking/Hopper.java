@@ -53,6 +53,7 @@ public class Hopper implements ISubsystem {
     public void updateAuton() {
         if (!RobotSettings.autonComplete) {
             updateTeleop();
+            agitator.moveAtPercent(0.3);
         } else {
             agitator.moveAtPercent(0);
             indexer.moveAtPercent(0);
