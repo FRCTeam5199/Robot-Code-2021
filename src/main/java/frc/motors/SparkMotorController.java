@@ -1,9 +1,6 @@
 package frc.motors;
 
-import com.revrobotics.CANError;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.*;
 import frc.misc.PID;
 import frc.robot.Robot;
 
@@ -18,6 +15,7 @@ import static com.revrobotics.ControlType.kVelocity;
 public class SparkMotorController extends AbstractMotorController {
     public final CANSparkMax motor;
     private final CANPIDController myPid;
+    private final CANEncoder encoder;
 
     public SparkMotorController(int channelID) {
         this(channelID, kBrushless);
@@ -26,6 +24,11 @@ public class SparkMotorController extends AbstractMotorController {
     public SparkMotorController(int channelID, CANSparkMaxLowLevel.MotorType type) {
         super();
         motor = new CANSparkMax(channelID, type);
+        if (type == CANSparkMaxLowLevel.MotorType.kBrushed) {
+            encoder = motor.getEncoder(EncoderType.kQuadrature, 560);
+        } else {
+            encoder = motor.getEncoder();
+        }
         myPid = motor.getPIDController();
         //I dont know if talons do this or if we ever dont do this so here it is
         if (myPid.setOutputRange(-1, 1) != CANError.kOk)
@@ -66,7 +69,7 @@ public class SparkMotorController extends AbstractMotorController {
 
     @Override
     public void resetEncoder() {
-        if (motor.getEncoder().setPosition(0) != CANError.kOk)
+        if (encoder.setPosition(0) != CANError.kOk)
             if (!Robot.SECOND_TRY)
                 throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not reset its encoder");
             else
@@ -97,13 +100,13 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public double getRotations() {
         //why 9? i dunno
-        return motor.getEncoder().getPosition() * sensorToRealDistanceFactor;
-        //return motor.getEncoder().getVelocity() * sensorToRevolutionFactor;
+        return encoder.getPosition() * sensorToRealDistanceFactor;
+        //return encoder.getVelocity() * sensorToRevolutionFactor;
     }
 
     @Override
     public double getSpeed() {
-        return motor.getEncoder().getVelocity() * sensorToRealDistanceFactor;
+        return encoder.getVelocity() * sensorToRealDistanceFactor;
     }
 
     @Override
