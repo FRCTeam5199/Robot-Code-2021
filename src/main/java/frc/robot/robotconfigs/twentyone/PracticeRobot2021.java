@@ -89,6 +89,9 @@ public class PracticeRobot2021 extends DefaultConfig {
         GOAL_CAM_NAME = "GoalCamera";
         BALL_CAM_NAME = "BallCamera";
 
+        //PDP
+        PDP_ID = 0;
+
         //Drive Motors
         DRIVE_LEADER_L_ID = 1; //talon
         DRIVE_FOLLOWERS_L_IDS = new int[]{2}; //talon

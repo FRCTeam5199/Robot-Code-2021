@@ -37,7 +37,7 @@ public class Shooter implements ISubsystem {
     public double speed = 4200, shooting;
     BaseController panel, joystickController;
     private AbstractMotorController leader, follower;
-    private IVision goalPhoton;
+    public IVision goalCamera;
     private PID lastPID = PID.EMPTY_PID;
 
     public Shooter() {
@@ -66,7 +66,7 @@ public class Shooter implements ISubsystem {
         }
         createAndInitMotors();
         if (RobotSettings.ENABLE_VISION) {
-            goalPhoton = new GoalPhoton();
+            goalCamera = new GoalPhoton();
         }
     }
 
@@ -221,7 +221,7 @@ public class Shooter implements ISubsystem {
      * @return if the goal photon is in use and has a valid target in its sights
      */
     public boolean isValidTarget() {
-        return RobotSettings.ENABLE_VISION && goalPhoton.hasValidTarget();
+        return RobotSettings.ENABLE_VISION && goalCamera.hasValidTarget();
     }
 
     /**
