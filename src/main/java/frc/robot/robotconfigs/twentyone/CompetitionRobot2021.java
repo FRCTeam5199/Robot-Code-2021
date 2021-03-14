@@ -9,13 +9,15 @@ import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.telemetry.imu.SupportedIMU;
+import frc.vision.camera.SupportedVision;
 
 public class CompetitionRobot2021 extends DefaultConfig {
     //Subsystems
     public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
-        ENABLE_SHOOTER = true;
+        ENABLE_TURRET = true;
+        ENABLE_SHOOTER = false;
         ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
@@ -26,7 +28,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = false;
+        ENABLE_VISION = true;
         USE_PHOTONVISION = true;
         ENABLE_IMU = true;
         IMU_NAVX_PORT = I2C.Port.kMXP;
@@ -35,6 +37,8 @@ public class CompetitionRobot2021 extends DefaultConfig {
         SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;//SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
+        GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
+        ENABLE_HOOD_ARTICULATION = false;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
@@ -63,7 +67,6 @@ public class CompetitionRobot2021 extends DefaultConfig {
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
         DRIVE_GEARING = 10 / 60.0;
-        HOPPER_BALL_COUNT = 3;
 
         SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
         motorPulleySize = 0;//?;

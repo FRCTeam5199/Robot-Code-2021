@@ -10,6 +10,7 @@ import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.telemetry.imu.SupportedIMU;
+import frc.vision.camera.SupportedVision;
 
 /**
  * Literally dont mind me I am simply vibing I am here because it means you only have to change one value to completely
@@ -22,6 +23,7 @@ public abstract class DefaultConfig {
     public boolean ENABLE_DRIVE = false;
     public boolean ENABLE_INTAKE = false;
     public boolean ENABLE_SHOOTER = false;
+    public boolean ENABLE_HOOD_ARTICULATION = false;
     public boolean ENABLE_HOPPER = false;
     public boolean ENABLE_AGITATOR = false;
     public boolean ENABLE_INDEXER = false;
@@ -42,6 +44,7 @@ public abstract class DefaultConfig {
     //SHOOTER
     public boolean SHOOTER_USE_TWO_MOTORS = true;
     public boolean SHOOTER_INVERTED = true;
+    public SupportedVision GOAL_CAMERA_TYPE = SupportedVision.PHOTON;
 
     //INTAKE
     public boolean ENABLE_INDEXER_AUTO_INDEX = true;
@@ -53,6 +56,7 @@ public abstract class DefaultConfig {
     public IntakeControlStyles INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
 
     public SupportedMotors SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
+    public SupportedMotors HOOD_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
     public SupportedMotors DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
     public SupportedMotors TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
     public SupportedIMU IMU_TYPE = SupportedIMU.PIGEON;
@@ -102,6 +106,8 @@ public abstract class DefaultConfig {
     //Shooter Motors
     public int SHOOTER_LEADER_ID = 7; //talon
     public int SHOOTER_FOLLOWER_ID = 8; //talon
+    //hood
+    public int SHOOTER_HOOD_ID = 32; //HD HEX motor via spark max
     //turret
     public int TURRET_YAW_ID = 33; //550
     //hopper

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.ballstuff.intaking.Hopper;
 import frc.ballstuff.intaking.Intake;
+import frc.ballstuff.shooting.ArticulatedHood;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.discordbot.DiscordBot;
@@ -54,6 +55,7 @@ public class Robot extends TimedRobot {
     public static Intake intake;
     public static Hopper hopper;
     public static Shooter shooter;
+    public static ArticulatedHood articulatedHood;
     public static Turret turret;
     public static Chirp chirp;
     public static PDP pdp;
@@ -90,6 +92,9 @@ public class Robot extends TimedRobot {
         }
         if (RobotSettings.ENABLE_SHOOTER) {
             shooter = new Shooter();
+        }
+        if (RobotSettings.ENABLE_HOOD_ARTICULATION){
+            articulatedHood = new ArticulatedHood();
         }
         if (RobotSettings.ENABLE_TURRET) {
             turret = new Turret();

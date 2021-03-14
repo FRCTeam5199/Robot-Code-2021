@@ -8,15 +8,17 @@ import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.telemetry.imu.SupportedIMU;
+import frc.vision.camera.SupportedVision;
 
 public class PracticeRobot2021 extends DefaultConfig {
     //Subsystems
     public PracticeRobot2021() {
-        ENABLE_DRIVE = true;
+        ENABLE_DRIVE = false;
         ENABLE_INTAKE = false;
         ENABLE_SHOOTER = true;
+        ENABLE_TURRET = true;
         ENABLE_HOPPER = true;
-        ENABLE_AGITATOR = false;
+        ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
 
@@ -25,17 +27,20 @@ public class PracticeRobot2021 extends DefaultConfig {
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = false;
-        USE_PHOTONVISION = true;
+        ENABLE_VISION = true;
+        USE_PHOTONVISION = false;
         ENABLE_IMU = false;
 
         //SHOOTER
         SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
+        GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
+        ENABLE_HOOD_ARTICULATION = true;
+        INDEXER_DETECTION_CUTOFF_DISTANCE = 4;
 
         //INTAKE
-        ENABLE_INDEXER_AUTO_INDEX = false;
+        ENABLE_INDEXER_AUTO_INDEX = true;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;
@@ -43,6 +48,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
         IMU_TYPE = SupportedIMU.PIGEON;
+        TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
 
         AUTON_TYPE = AutonType.FOLLOW_PATH;
 
@@ -94,9 +100,10 @@ public class PracticeRobot2021 extends DefaultConfig {
         //Shooter Motors
         SHOOTER_LEADER_ID = 7; //talon
         SHOOTER_FOLLOWER_ID = 8; //talon
+        SHOOTER_HOOD_ID = 32;
 
         //turret
-        TURRET_YAW_ID = 33; //550
+        TURRET_YAW_ID = 33;
 
         //hopper
         AGITATOR_MOTOR_ID = 10; //victor

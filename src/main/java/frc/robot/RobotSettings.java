@@ -8,6 +8,7 @@ import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.telemetry.imu.SupportedIMU;
+import frc.vision.camera.SupportedVision;
 
 import static frc.robot.Robot.settingsFile;
 
@@ -105,6 +106,11 @@ public class RobotSettings {
      */
     public static final boolean SHOOTER_INVERTED = settingsFile.SHOOTER_INVERTED;
 
+    /**
+     * Should the hood be able to be articulated?
+     */
+    public static final boolean ENABLE_HOOD_ARTICULATION = settingsFile.ENABLE_HOOD_ARTICULATION;
+
     //UI Style
     /**
      * The {@link #ENABLE_DRIVE drivetrain} control style to use. Should be used firstly for changing controllers and
@@ -134,6 +140,7 @@ public class RobotSettings {
     public static final SupportedMotors DRIVE_MOTOR_TYPE = settingsFile.DRIVE_MOTOR_TYPE;
     public static final SupportedMotors SHOOTER_MOTOR_TYPE = settingsFile.SHOOTER_MOTOR_TYPE;
     public static final SupportedMotors TURRET_MOTOR_TYPE = settingsFile.TURRET_MOTOR_TYPE;
+    public static final SupportedMotors HOOD_MOTOR_TYPE = settingsFile.HOOD_MOTOR_TYPE;
     public static final SupportedIMU IMU_TYPE = settingsFile.IMU_TYPE;
     public static final String AUTON_COMPLETE_NOISE = "LevelComplete_4_6000";
     public static final int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = settingsFile.DRIVEBASE_SENSOR_UNITS_PER_ROTATION;
@@ -155,6 +162,7 @@ public class RobotSettings {
     public static final double driverPulleySize = settingsFile.driverPulleySize;
     public static final double CAMERA_HEIGHT = settingsFile.CAMERA_HEIGHT;
     public static final double CAMERA_PITCH = settingsFile.CAMERA_PITCH;
+    public static final SupportedVision GOAL_CAMERA_TYPE = settingsFile.GOAL_CAMERA_TYPE;
     public static final double TARGET_HEIGHT = settingsFile.TARGET_HEIGHT;
     public static final double XBOX_CONTROLLER_DEADZONE = settingsFile.XBOX_CONTROLLER_DEADZONE;
     public static final double MOTOR_SPROCKET_SIZE = settingsFile.MOTOR_SPROCKET_SIZE;
@@ -175,6 +183,8 @@ public class RobotSettings {
     //Shooter Motors
     public static final int SHOOTER_LEADER_ID = settingsFile.SHOOTER_LEADER_ID;
     public static final int SHOOTER_FOLLOWER_ID = settingsFile.SHOOTER_FOLLOWER_ID;
+    //hood
+    public static final int SHOOTER_HOOD_ID = settingsFile.SHOOTER_HOOD_ID;
     //turret
     public static final int TURRET_YAW_ID = settingsFile.TURRET_YAW_ID;
     //hopper

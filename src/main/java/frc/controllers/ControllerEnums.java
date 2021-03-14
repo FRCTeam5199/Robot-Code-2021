@@ -165,7 +165,7 @@ public class ControllerEnums {
      * @see JoystickController
      */
     public enum JoystickButtons {
-        ONE(1), TWO(2), EIGHT(8), ELEVEN(11);
+        ONE(1), TWO(2), THREE(3), FIVE(5), EIGHT(8), ELEVEN(11);
 
         public final int AXIS_VALUE;
 

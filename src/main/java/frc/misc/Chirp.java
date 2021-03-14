@@ -57,7 +57,7 @@ public class Chirp extends Orchestra implements ISubsystem {
             filenames.add((String) songnames.keySet().toArray()[i]);
         filenames.sort(String::compareTo);
         for (String key : filenames) {
-            System.out.println(key);
+            //System.out.println(key);
             listObject.setDefaultOption(key, songnames.get(key)); //WORKING: listObject.addOption(key, songnames.get(key));
         }
         return listObject;

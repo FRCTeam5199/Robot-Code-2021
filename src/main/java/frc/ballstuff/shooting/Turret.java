@@ -16,6 +16,7 @@ import frc.motors.TalonMotorController;
 import frc.robot.RobotSettings;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
+import frc.vision.camera.GoalLimelight;
 import frc.vision.camera.GoalPhoton;
 import frc.vision.camera.IVision;
 
@@ -28,7 +29,7 @@ public class Turret implements ISubsystem {
     private BaseController joy, panel;
     private AbstractMotorController motor;
     private RobotTelemetry guidance;
-    private IVision goalPhoton;
+    private IVision visionCamera;
     private int scanDirection = -1;
 
     public Turret() {
@@ -50,10 +51,7 @@ public class Turret implements ISubsystem {
                 joy = new BopItBasicController(1);
                 break;
         }
-        if (RobotSettings.ENABLE_VISION) {
-            goalPhoton = new GoalPhoton();
-            goalPhoton.init();
-        }
+
         switch (RobotSettings.TURRET_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
                 motor = new SparkMotorController(RobotSettings.TURRET_YAW_ID);
@@ -63,6 +61,20 @@ public class Turret implements ISubsystem {
                 motor = new TalonMotorController(RobotSettings.TURRET_YAW_ID);
                 //TODO make a setting maybe
                 motor.setSensorToRealDistanceFactor(RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30 * 600 / 2048);
+        }
+        if (RobotSettings.ENABLE_VISION) {
+            switch (RobotSettings.GOAL_CAMERA_TYPE) {
+                case LIMELIGHT:
+                    visionCamera = new GoalLimelight();
+                    visionCamera.init();
+                    break;
+                case PHOTON:
+                    visionCamera = new GoalPhoton();
+                    visionCamera.init();
+                    break;
+                default:
+                    throw new IllegalStateException("You must have a camera type set.");
+            }
         }
         motor.setInverted(false).setPid(RobotSettings.TURRET_PID).setBrake(true);
 
@@ -107,10 +119,10 @@ public class Turret implements ISubsystem {
                 if (RobotSettings.ENABLE_VISION) {
                     if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) {
                         if (RobotSettings.DEBUG && DEBUG) {
-                            System.out.println("I'm looking. Target is valid? " + goalPhoton.hasValidTarget());
+                            System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
                         }
-                        if (goalPhoton.hasValidTarget()) {
-                            omegaSetpoint = -goalPhoton.getAngle() / 30;
+                        if (visionCamera.hasValidTarget()) {
+                            omegaSetpoint = -visionCamera.getAngle() / 30;
                         } else {
                             omegaSetpoint = scan();
                         }
