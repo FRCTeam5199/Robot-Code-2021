@@ -164,4 +164,9 @@ public class BallPhoton implements IVision {
     public boolean hasValidTarget() {
         return cameraResult.hasTargets();
     }
+
+    @Override
+    public void setLedMode(VisionLEDMode ledMode) {
+        throw new UnsupportedOperationException("Cannot set LED mode " + ledMode.name() + " on " + getSubsystemName());
+    }
 }

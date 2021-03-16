@@ -5,10 +5,13 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
 
+import static frc.vision.camera.VisionLEDMode.ON;
+
 /**
  * This is for the limelight looking at the goal that the shooter is shooting at
  */
 public class GoalLimelight implements IVision {
+    private NetworkTable limelight;
     private NetworkTableEntry yaw;
     private NetworkTableEntry size;
     private NetworkTableEntry hasTarget;
@@ -26,7 +29,7 @@ public class GoalLimelight implements IVision {
      */
     @Override
     public void init() {
-        NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
+        limelight = NetworkTableInstance.getDefault().getTable("limelight");
         filter = LinearFilter.movingAverage(5);
         yaw = limelight.getEntry("tx");
         size = limelight.getEntry("ta");
@@ -118,6 +121,25 @@ public class GoalLimelight implements IVision {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public void setLedMode(VisionLEDMode ledMode){
+        int setTo;
+        switch(ledMode){
+            case ON:
+                setTo = 3;
+                break;
+            case OFF:
+                setTo = 1;
+                break;
+            case BLINK:
+                setTo = 2;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + ledMode);
+        }
+        limelight.getEntry("ledMode").setNumber(setTo);
     }
 
     @Override

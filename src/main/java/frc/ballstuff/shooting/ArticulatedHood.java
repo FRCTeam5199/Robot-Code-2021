@@ -17,12 +17,11 @@ public class ArticulatedHood implements ISubsystem {
     BaseController joystickController, panel;
     private AbstractMotorController hoodMotor;
 
-    private double[][] sizeEncoderPositionArray = {
+    private final double[][] sizeEncoderPositionArray = {
             {0, 0},
             {45, 4100},
             {55, 4150},
             {65, 4170},
-            {75, 4150},
             {85, 4500},
     };
 
