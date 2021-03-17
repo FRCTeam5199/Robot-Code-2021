@@ -159,6 +159,7 @@ public class ArticulatedHood implements ISubsystem {
                 return weightedAverage(size, sizeEncoderPositionArray[i + 1], sizeEncoderPositionArray[i]);
             }
         }
-        throw new IllegalStateException("The only way to get here is to not have sizeEncoderPositionArray sorted in ascending order based on the first value of each entry. Please ensure that it is sorted as such and try again.");
+        return -2;
+        //throw new IllegalStateException("The only way to get here is to not have sizeEncoderPositionArray sorted in ascending order based on the first value of each entry. Please ensure that it is sorted as such and try again.");
     }
 }

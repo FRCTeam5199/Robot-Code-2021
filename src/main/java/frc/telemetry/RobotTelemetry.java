@@ -201,6 +201,7 @@ public class RobotTelemetry implements ISubsystem {
     public void resetOdometry() {
         if (RobotSettings.ENABLE_IMU)
             imu.resetOdometry();
+        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
         resetEncoders();
     }
 }

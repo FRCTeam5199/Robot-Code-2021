@@ -14,12 +14,12 @@ import frc.vision.camera.SupportedVision;
 public class CompetitionRobot2021 extends DefaultConfig {
     //Subsystems
     public CompetitionRobot2021() {
-        ENABLE_DRIVE = false;
-        ENABLE_INTAKE = false;
+        ENABLE_DRIVE = true;
+        ENABLE_INTAKE = true;
         ENABLE_TURRET = true;
-        ENABLE_SHOOTER = true;
+        ENABLE_SHOOTER = false;
         ENABLE_HOPPER = true;
-        ENABLE_AGITATOR = false;
+        ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = false;
 
@@ -49,9 +49,9 @@ public class CompetitionRobot2021 extends DefaultConfig {
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
-        IMU_TYPE = SupportedIMU.NAVX2;
+        IMU_TYPE = SupportedIMU.PIGEON;
 
-        AUTON_TYPE = AutonType.GALACTIC_SCAM;
+        AUTON_TYPE = AutonType.GALACTIC_SEARCH;
 
         DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
         SHOOTER_PID = new PID(0.001, 0.0000005, 0.03, 0);
