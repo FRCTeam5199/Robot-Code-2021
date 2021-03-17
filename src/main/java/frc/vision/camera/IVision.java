@@ -55,4 +55,10 @@ public interface IVision extends ISubsystem {
 
     double getSize(int targetId);
 
+    /**
+     * Changes the mode of the vision (on, off, blink)
+     * @param ledMode the mode (on, off, blink) from enum {@link VisionLEDMode}
+     */
+    void setLedMode(VisionLEDMode ledMode);
+
 }

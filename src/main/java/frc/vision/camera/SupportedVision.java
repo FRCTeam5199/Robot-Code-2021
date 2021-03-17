@@ -6,3 +6,5 @@ package frc.vision.camera;
 public enum SupportedVision {
     PHOTON, LIMELIGHT
 }
+
+;

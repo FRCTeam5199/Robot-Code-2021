@@ -18,6 +18,7 @@ import frc.telemetry.RobotTelemetry;
 import frc.vision.camera.GoalLimelight;
 import frc.vision.camera.GoalPhoton;
 import frc.vision.camera.IVision;
+import frc.vision.camera.VisionLEDMode;
 
 /**
  * Turret refers to the shooty thing that spinny spinny in the yaw direction
@@ -125,6 +126,7 @@ public class Turret implements ISubsystem {
                         } else {
                             omegaSetpoint = scan();
                         }
+                        visionCamera.setLedMode(VisionLEDMode.ON); //If targeting, then use the LL
                     }
                 }
                 //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.
