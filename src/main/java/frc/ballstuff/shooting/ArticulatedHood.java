@@ -15,11 +15,10 @@ import static frc.misc.UtilFunctions.weightedAverage;
 public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = true;
     private final double[][] sizeEncoderPositionArray = {
-            {0, 0},
-            {45, 4100},
-            {55, 4150},
-            {65, 4170},
-            {85, 4500},
+            {2.792, 0},
+            {1.292, 0.58},
+            {0.849, 1},
+            {0.451, 1.05},
     };
     BaseController joystickController, panel;
     private AbstractMotorController hoodMotor;
@@ -98,7 +97,7 @@ public class ArticulatedHood implements ISubsystem {
             } else {
                 if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
                     //Adjust based on distance
-                    double moveTo = fetchEncoderPos(Robot.shooter.goalCamera.getSize());
+                    double moveTo = requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize());
                     double distanceNeededToTravel = currentPos - moveTo;
                     hoodMotor.moveAtPercent(-distanceNeededToTravel);
 
@@ -148,16 +147,16 @@ public class ArticulatedHood implements ISubsystem {
         return "ShooterHood";
     }
 
-    public double fetchEncoderPos(double size) {
-        if (size > sizeEncoderPositionArray[sizeEncoderPositionArray.length - 1][0]) {
+    public double requiredArticulationForTargetSize(double size) {
+        if (size <= sizeEncoderPositionArray[sizeEncoderPositionArray.length - 1][0]) {
             return sizeEncoderPositionArray[sizeEncoderPositionArray.length - 1][1];
         }
-        if (size < sizeEncoderPositionArray[0][0]) {
+        if (size >= sizeEncoderPositionArray[0][0]) {
             return sizeEncoderPositionArray[0][1];
         }
-        for (int i = sizeEncoderPositionArray.length - 2; i >= 0; i--) {
+        for (int i = 1; i < sizeEncoderPositionArray.length - 1; i++) {
             if (size > sizeEncoderPositionArray[i][0]) {
-                return weightedAverage(size, sizeEncoderPositionArray[i + 1], sizeEncoderPositionArray[i]);
+                return weightedAverage(size, sizeEncoderPositionArray[i - 1], sizeEncoderPositionArray[i]);
             }
         }
         throw new IllegalStateException("The only way to get here is to not have sizeEncoderPositionArray sorted in ascending order based on the first value of each entry. Please ensure that it is sorted as such and try again.");
