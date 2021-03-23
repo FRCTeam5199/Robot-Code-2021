@@ -48,7 +48,6 @@ public class RobotTelemetry implements ISubsystem {
         headingPID = new PIDController(RobotSettings.HEADING_PID.getP(), RobotSettings.HEADING_PID.getI(), RobotSettings.HEADING_PID.getD());
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
         robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
-        UserInterface.smartDashboardPutNumber("Yaw", imu.absoluteYaw());
     }
 
     /**
@@ -110,6 +109,7 @@ public class RobotTelemetry implements ISubsystem {
             robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
             robotTranslation = robotPose.getTranslation();
             robotRotation = robotPose.getRotation();
+            UserInterface.smartDashboardPutNumber("Yaw", imu.absoluteYaw());
         }
     }
 

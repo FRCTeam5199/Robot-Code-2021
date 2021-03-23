@@ -94,6 +94,8 @@ public class ArticulatedHood implements ISubsystem {
             hoodMotor.moveAtPercent(-0.1);
         } else if (currentPos < 0){
             hoodMotor.moveAtPercent(0.1);
+        } else {
+            
         }
 
         if (RobotSettings.SHOOTER_CONTROL_STYLE == ShootingControlStyles.STANDARD) {
