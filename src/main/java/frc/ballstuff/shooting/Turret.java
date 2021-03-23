@@ -128,6 +128,7 @@ public class Turret implements ISubsystem {
                         }
                         visionCamera.setLedMode(VisionLEDMode.ON); //If targeting, then use the LL
                     }
+                    visionCamera.setLedMode(VisionLEDMode.OFF); //If not targeting, then stop using the LL
                 }
                 //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.
                 if (joy.get(ControllerEnums.JoystickButtons.TWO) == ControllerEnums.ButtonStatus.DOWN) {

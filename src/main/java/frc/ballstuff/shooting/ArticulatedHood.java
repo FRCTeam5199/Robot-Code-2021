@@ -14,9 +14,6 @@ import static frc.misc.UtilFunctions.weightedAverage;
 
 public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = true;
-    BaseController joystickController, panel;
-    private AbstractMotorController hoodMotor;
-
     private final double[][] sizeEncoderPositionArray = {
             {0, 0},
             {45, 4100},
@@ -24,6 +21,8 @@ public class ArticulatedHood implements ISubsystem {
             {65, 4170},
             {85, 4500},
     };
+    BaseController joystickController, panel;
+    private AbstractMotorController hoodMotor;
 
     public ArticulatedHood() {
         addToMetaList();
@@ -90,28 +89,29 @@ public class ArticulatedHood implements ISubsystem {
             UserInterface.smartDashboardPutNumber("Hood Pos", hoodMotor.getRotations());
         }
         double currentPos = hoodMotor.getRotations();
-        if (currentPos > 0.9){
-            hoodMotor.moveAtPercent(-0.1);
-        } else if (currentPos < 0){
-            hoodMotor.moveAtPercent(0.1);
-        } else {
-            
-        }
 
         if (RobotSettings.SHOOTER_CONTROL_STYLE == ShootingControlStyles.STANDARD) {
-            if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
-                //Adjust based on distance
-                double moveTo = fetchEncoderPos(Robot.shooter.goalCamera.getSize());
-
-                if (DEBUG && RobotSettings.DEBUG) {
-                    UserInterface.smartDashboardPutNumber("Moving to", moveTo);
-                }
-            } else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
-                hoodMotor.moveAtPercent(0.3);
-            } else if (joystickController.get(ControllerEnums.JoystickButtons.THREE) == ControllerEnums.ButtonStatus.DOWN) {
-                hoodMotor.moveAtPercent(-0.3);
+            if (currentPos > 1.2) {
+                hoodMotor.moveAtPercent(0.1);
+            } else if (currentPos < 0) {
+                hoodMotor.moveAtPercent(-0.1);
             } else {
-                hoodMotor.moveAtPercent(0);
+                if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
+                    //Adjust based on distance
+                    double moveTo = fetchEncoderPos(Robot.shooter.goalCamera.getSize());
+                    double distanceNeededToTravel = currentPos - moveTo;
+                    hoodMotor.moveAtPercent(-distanceNeededToTravel);
+
+                    if (DEBUG && RobotSettings.DEBUG) {
+                        UserInterface.smartDashboardPutNumber("Moving to", moveTo);
+                    }
+                } else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
+                    hoodMotor.moveAtPercent(-0.3);
+                } else if (joystickController.get(ControllerEnums.JoystickButtons.THREE) == ControllerEnums.ButtonStatus.DOWN) {
+                    hoodMotor.moveAtPercent(0.3);
+                } else {
+                    hoodMotor.moveAtPercent(0);
+                }
             }
         } else {
             throw new IllegalStateException("You can't articulate the hood without the panel.");
@@ -160,7 +160,7 @@ public class ArticulatedHood implements ISubsystem {
                 return weightedAverage(size, sizeEncoderPositionArray[i + 1], sizeEncoderPositionArray[i]);
             }
         }
-        return -2;
-        //throw new IllegalStateException("The only way to get here is to not have sizeEncoderPositionArray sorted in ascending order based on the first value of each entry. Please ensure that it is sorted as such and try again.");
+        throw new IllegalStateException("The only way to get here is to not have sizeEncoderPositionArray sorted in ascending order based on the first value of each entry. Please ensure that it is sorted as such and try again.");
+        //return -2;
     }
 }

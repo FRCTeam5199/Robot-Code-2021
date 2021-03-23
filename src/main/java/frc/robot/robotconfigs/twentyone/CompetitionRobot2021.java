@@ -17,11 +17,11 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
         ENABLE_TURRET = true;
-        ENABLE_SHOOTER = false;
+        ENABLE_SHOOTER = true;
         ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
-        ENABLE_MUSIC = false;
+        ENABLE_MUSIC = true;
 
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
@@ -39,7 +39,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
         ENABLE_HOOD_ARTICULATION = true;
-        INDEXER_DETECTION_CUTOFF_DISTANCE = 4;
+        INDEXER_DETECTION_CUTOFF_DISTANCE = 6;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
