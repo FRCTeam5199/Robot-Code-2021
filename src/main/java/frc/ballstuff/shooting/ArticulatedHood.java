@@ -95,14 +95,19 @@ public class ArticulatedHood implements ISubsystem {
             } else if (currentPos < 0) {
                 hoodMotor.moveAtPercent(-0.1);
             } else {
-                if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
+                if ((panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) && Robot.shooter.goalCamera.hasValidTarget()) {
                     //Adjust based on distance
                     double moveTo = requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize());
                     double distanceNeededToTravel = currentPos - moveTo;
-                    hoodMotor.moveAtPercent(-distanceNeededToTravel);
+                    double hoodPercent = distanceNeededToTravel > 0 ? 0.3 : -0.3;
+                    if (Math.abs(distanceNeededToTravel) < 0.05) {
+                        hoodPercent = 0;
+                    }
+                    hoodMotor.moveAtPercent(hoodPercent);
 
                     if (DEBUG && RobotSettings.DEBUG) {
                         UserInterface.smartDashboardPutNumber("Moving to", moveTo);
+                        UserInterface.smartDashboardPutNumber("Distance from target", distanceNeededToTravel);
                     }
                 } else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
                     hoodMotor.moveAtPercent(-0.3);
