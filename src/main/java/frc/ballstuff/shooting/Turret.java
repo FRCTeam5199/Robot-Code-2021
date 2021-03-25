@@ -1,5 +1,6 @@
 package frc.ballstuff.shooting;
 
+import com.revrobotics.CANSparkMaxLowLevel;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
 import frc.controllers.ButtonPanelController;
@@ -24,7 +25,7 @@ import frc.vision.camera.VisionLEDMode;
  * Turret refers to the shooty thing that spinny spinny in the yaw direction
  */
 public class Turret implements ISubsystem {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     public boolean track, atTarget;
     private BaseController joy, panel;
     private AbstractMotorController motor;
@@ -61,6 +62,9 @@ public class Turret implements ISubsystem {
                 motor = new TalonMotorController(RobotSettings.TURRET_YAW_ID);
                 //TODO make a setting maybe
                 motor.setSensorToRealDistanceFactor(RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30 * 600 / 2048);
+                break;
+            default:
+                throw new IllegalStateException("cringe.");
         }
         if (RobotSettings.ENABLE_VISION) {
             switch (RobotSettings.GOAL_CAMERA_TYPE) {
@@ -152,9 +156,9 @@ public class Turret implements ISubsystem {
             }
         } else {
             if (turretDegrees() > RobotSettings.TURRET_MAX_POS) {
-                rotateTurret(0.25);
+                rotateTurret(-1);
             } else if (turretDegrees() < RobotSettings.TURRET_MIN_POS) {
-                rotateTurret(-0.25);
+                rotateTurret(1);
             } else {
                 rotateTurret(0);
             }
@@ -226,9 +230,9 @@ public class Turret implements ISubsystem {
      */
     private double scan() {
         if (turretDegrees() >= 260) {
-            scanDirection = 1;
-        } else if (turretDegrees() <= 100) {
             scanDirection = -1;
+        } else if (turretDegrees() <= 10) {
+            scanDirection = 1;
         }
         return scanDirection;
     }
@@ -253,7 +257,7 @@ public class Turret implements ISubsystem {
             System.out.println("Set to " + (speed * (RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30)) + " from " + speed);
         }
         //Dont overcook it pls
-        motor.moveAtPercent(speed * 0.1);
+        motor.moveAtPercent(speed * 0.3);
     }
 
     /**

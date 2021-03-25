@@ -13,7 +13,7 @@ import frc.robot.RobotSettings;
 import static frc.misc.UtilFunctions.weightedAverage;
 
 public class ArticulatedHood implements ISubsystem {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private final double[][] sizeEncoderPositionArray = {
             {2.792, 0},
             {1.292, 0.58},

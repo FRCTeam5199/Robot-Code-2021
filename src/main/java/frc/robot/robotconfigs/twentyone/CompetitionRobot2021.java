@@ -14,13 +14,13 @@ import frc.vision.camera.SupportedVision;
 public class CompetitionRobot2021 extends DefaultConfig {
     //Subsystems
     public CompetitionRobot2021() {
-        ENABLE_DRIVE = true;
-        ENABLE_INTAKE = true;
+        ENABLE_DRIVE = false;
+        ENABLE_INTAKE = false;
         ENABLE_TURRET = true;
         ENABLE_SHOOTER = true;
-        ENABLE_HOPPER = true;
-        ENABLE_AGITATOR = true;
-        ENABLE_INDEXER = true;
+        ENABLE_HOPPER = false;
+        ENABLE_AGITATOR = false;
+        ENABLE_INDEXER = false;
         ENABLE_MUSIC = true;
 
         DRIVE_USE_6_MOTORS = false;
@@ -79,8 +79,9 @@ public class CompetitionRobot2021 extends DefaultConfig {
         MOTOR_SPROCKET_SIZE = 1;
         TURRET_SPROCKET_SIZE = 11.1;
         TURRET_GEAR_RATIO = 7;
-        TURRET_MAX_POS = 270;
-        TURRET_MIN_POS = 0;
+        TURRET_MAX_POS = 275;
+        TURRET_MIN_POS = -2;
+        TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
         AUTON_TOLERANCE = 0.1;
         AUTO_SPEED = 3;
         AUTO_ROTATION_SPEED = 1;
