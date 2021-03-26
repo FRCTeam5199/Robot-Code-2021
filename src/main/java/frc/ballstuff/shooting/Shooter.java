@@ -150,6 +150,19 @@ public class Shooter implements ISubsystem {
                 }
                 break;
             }
+            case COMP_2021: {
+                if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                } else if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                } else {
+                    if (RobotSettings.ENABLE_HOPPER) {
+                        hopper.setAll(false);
+                    }
+                    leader.moveAtPercent(0);
+                }
+                break;
+            }
             case BOP_IT: {
                 if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
