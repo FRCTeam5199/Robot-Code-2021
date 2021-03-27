@@ -29,7 +29,7 @@ public class UserInterface {
             SHOOTER_F = SHOOTER_PID_LAYOUT.add("F", RobotSettings.SHOOTER_PID.getF()),
             SHOOTER_CONST_SPEED = SHOOTER_TAB.add("Constant Speed", 0),
             SHOOTER_CALIBRATE_PID = SHOOTER_PID_LAYOUT.add("Tune PID", false).withWidget(BuiltInWidgets.kToggleSwitch),
-
+            SHOOTER_OVERRIDE_LED = SHOOTER_TAB.add("Override LED", false).withWidget(BuiltInWidgets.kToggleSwitch),
     //DRIVETRAIN TODO make PID widget (kPIDController)
     DRIVE_ROT_MULT = DRIVE_TAB.add("Rotation Factor", RobotSettings.TURN_SCALE),
             DRIVE_SCALE_MULT = DRIVE_TAB.add("Speed Factor", RobotSettings.DRIVE_SCALE),

@@ -124,7 +124,7 @@ public class Turret implements ISubsystem {
             case COMP_2021:
             case STANDARD:
                 if (RobotSettings.ENABLE_VISION) {
-                    double camoffset = 0.00017;
+                    double camoffset = -3;//0;//0.00017;
                     if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) {
                         if (RobotSettings.DEBUG && DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
@@ -136,6 +136,7 @@ public class Turret implements ISubsystem {
                             } else if (angle < -0.005){
                                 omegaSetpoint = -0.3;
                             }
+                            omegaSetpoint *= Math.min(Math.abs(angle*2), 1);
                             //omegaSetpoint *= angle / 30;
                             //omegaSetpoint = -visionCamera.getAngle() / 30;
                         } else {
@@ -146,7 +147,8 @@ public class Turret implements ISubsystem {
                         }
                         visionCamera.setLedMode(VisionLEDMode.ON); //If targeting, then use the LL
                     } else {
-                        visionCamera.setLedMode(VisionLEDMode.ON); //If not targeting, then stop using the LL
+
+                        visionCamera.setLedMode(VisionLEDMode.OFF); //If not targeting, then stop using the LL
                     }
                 }
                 //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.

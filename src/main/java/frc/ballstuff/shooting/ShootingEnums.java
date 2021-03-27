@@ -1,6 +1,7 @@
 package frc.ballstuff.shooting;
 
 import frc.controllers.ControllerEnums;
+import frc.robot.Robot;
 import frc.robot.RobotSettings;
 
 import java.util.function.Consumer;
@@ -33,6 +34,20 @@ public enum ShootingEnums {
         shooter.setSpeed(4200); //* (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1)
         if (RobotSettings.ENABLE_HOPPER) {
             hopper.setAll((shooter.isAtSpeed() && shooter.isValidTarget()));
+        }
+    }),
+    FIRE_SINGLE_SHOT(shooter -> {
+        shooter.setSpeed(4200);
+        if (RobotSettings.ENABLE_HOPPER){
+            shooter.ticksPassed = (shooter.isAtSpeed() ? Robot.shooter.ticksPassed + 1 : 0);
+            if (shooter.ticksPassed >= 50) {
+                hopper.setAgitator(true);
+            }
+            if (!hopper.indexed){
+                shooter.singleShot = false;
+                hopper.setAgitator(false);
+                shooter.ticksPassed = 0;
+            }
         }
     });
 

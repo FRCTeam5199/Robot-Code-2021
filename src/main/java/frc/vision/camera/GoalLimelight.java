@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
+import frc.misc.UserInterface;
 
 import static frc.vision.camera.VisionLEDMode.ON;
 
@@ -138,6 +139,9 @@ public class GoalLimelight implements IVision {
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + ledMode);
+        }
+        if (UserInterface.SHOOTER_OVERRIDE_LED.getEntry().getBoolean(false)){
+            setTo = 3;
         }
         limelight.getEntry("ledMode").setNumber(setTo);
     }
