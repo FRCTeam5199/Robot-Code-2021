@@ -16,33 +16,33 @@ public class CompetitionRobot2021 extends DefaultConfig {
     public CompetitionRobot2021() {
         ENABLE_DRIVE = false;
         ENABLE_INTAKE = false;
-        ENABLE_TURRET = true;
-        ENABLE_SHOOTER = true;
-        ENABLE_HOPPER = true;
+        ENABLE_TURRET = false;
+        ENABLE_SHOOTER = false;
+        ENABLE_HOPPER = false;
         ENABLE_AGITATOR = false;
-        ENABLE_INDEXER = true;
+        ENABLE_INDEXER = false;
         ENABLE_MUSIC = false;
 
         DRIVE_USE_6_MOTORS = false;
-        DRIVE_INVERT_LEFT = true;
+        DRIVE_INVERT_LEFT = false;
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = true;
-        USE_PHOTONVISION = true;
-        ENABLE_IMU = true;
+        ENABLE_VISION = false;
+        USE_PHOTONVISION = false;
+        ENABLE_IMU = false;
         IMU_NAVX_PORT = I2C.Port.kMXP;
 
         //SHOOTER
         SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;//SupportedMotors.TALON_FX;
-        SHOOTER_USE_TWO_MOTORS = true;
+        SHOOTER_USE_TWO_MOTORS = false;
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
-        ENABLE_HOOD_ARTICULATION = true;
+        ENABLE_HOOD_ARTICULATION = false;
         INDEXER_DETECTION_CUTOFF_DISTANCE = 4;
 
         //INTAKE
-        ENABLE_INDEXER_AUTO_INDEX = true;
+        ENABLE_INDEXER_AUTO_INDEX = false;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;

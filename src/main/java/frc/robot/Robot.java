@@ -10,6 +10,7 @@ import frc.ballstuff.shooting.ArticulatedHood;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
+import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.misc.Chirp;
@@ -59,6 +60,9 @@ public class Robot extends TimedRobot {
     public static Chirp chirp;
     public static PDP pdp;
     public static LEDs leds;
+
+    public static DriveManagerSwerve swerve;
+
     public static IVision goalPhoton, ballPhoton;
     public static AbstractAutonManager autonManager;
     public static boolean SECOND_TRY;
@@ -70,6 +74,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() throws IllegalStateException {
+        swerve = new DriveManagerSwerve();
         getRestartProximity();
         getSettings();
         RobotSettings.printMappings();
