@@ -13,8 +13,8 @@ import frc.robot.RobotSettings;
 import static frc.misc.UtilFunctions.weightedAverage;
 
 public class ArticulatedHood implements ISubsystem {
-    private static final boolean DEBUG = false;
-    private double moveTo = 0.0;
+    private static final boolean DEBUG = true;
+    public double moveTo = 0.0;
     private final double[][] sizeEncoderPositionArray = {
             {2.792, 0},
             {1.292, 0.58},
@@ -32,6 +32,7 @@ public class ArticulatedHood implements ISubsystem {
     @Override
     public void init() {
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
+            case COMP_2021:
             case STANDARD:
                 joystickController = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
                 panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);
@@ -86,33 +87,35 @@ public class ArticulatedHood implements ISubsystem {
     @Override
     public void updateGeneric() { //FIVE UP THREE DOWN
         double currentPos = hoodMotor.getRotations();
-        if (DEBUG && RobotSettings.DEBUG) {
-            UserInterface.smartDashboardPutNumber("Hood Pos", hoodMotor.getRotations());
-        }
+
         if (RobotSettings.SHOOTER_CONTROL_STYLE == ShootingControlStyles.COMP_2021){
-            if (currentPos > 1.2) {
+            if (currentPos > 1.75) {
+                moveTo = -1;
                 hoodMotor.moveAtPercent(0.1);
             } else if (currentPos < 0) {
+                moveTo = -1;
                 hoodMotor.moveAtPercent(-0.1);
             }else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
-                moveTo = -2;
+                moveTo = -1;
                 hoodMotor.moveAtPercent(-0.3);
             } else if (joystickController.get(ControllerEnums.JoystickButtons.THREE) == ControllerEnums.ButtonStatus.DOWN) {
-                moveTo = -2;
+                moveTo = -1;
                 hoodMotor.moveAtPercent(0.3);
             } else if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN){
-                moveTo = 0.0; //POS 1
+                moveTo = 0.05; //POS 1
             } else if (panel.get(ControllerEnums.ButtonPanelButtons.INTAKE_DOWN) == ControllerEnums.ButtonStatus.DOWN){
                 moveTo = 0.58; //POS 2
             } else if (panel.get(ControllerEnums.ButtonPanelButtons.HOPPER_OUT) == ControllerEnums.ButtonStatus.DOWN){
                 moveTo = 1; //POS 3
             } else if (panel.get(ControllerEnums.ButtonPanelButtons.SOLID_SPEED) == ControllerEnums.ButtonStatus.DOWN){
-                moveTo = 1.05; //POS 4
+                moveTo = 1.15; //POS 4
+            } else {
+                hoodMotor.moveAtPercent(0);
             }
         }
 
         if (RobotSettings.SHOOTER_CONTROL_STYLE == ShootingControlStyles.STANDARD) {
-            if (currentPos > 1.2) {
+            if (currentPos > 1.75) {
                 moveTo = -2;
                 hoodMotor.moveAtPercent(0.1);
             } else if (currentPos < 0) {
@@ -132,17 +135,24 @@ public class ArticulatedHood implements ISubsystem {
                     hoodMotor.moveAtPercent(0);
                 }
             }
-        } else {
-            throw new IllegalStateException("You can't articulate the hood without the panel.");
+        //} else {
+            //throw new IllegalStateException("You can't articulate the hood without the panel.");
+        }
+        if (DEBUG && RobotSettings.DEBUG) {
+            UserInterface.smartDashboardPutNumber("Hood Pos", hoodMotor.getRotations());
+            UserInterface.smartDashboardPutNumber("Moving to pos", moveTo);
         }
         moveToPos(moveTo, currentPos);
     }
 
     private void moveToPos(double moveTo, double currentPos){
-        if (moveTo != -2) {
+        if (DEBUG && RobotSettings.DEBUG) {
+            UserInterface.smartDashboardPutNumber("Moving to", moveTo);
+        }
+        if (moveTo != -2 && moveTo != -1) {
             double distanceNeededToTravel = currentPos - moveTo;
             double hoodPercent = distanceNeededToTravel > 0 ? 0.3 : -0.3;
-            if (Math.abs(distanceNeededToTravel) < 0.05) {
+            if (Math.abs(distanceNeededToTravel) < 0.035) {
                 hoodPercent = 0;
             }
             hoodMotor.moveAtPercent(hoodPercent);
@@ -150,10 +160,14 @@ public class ArticulatedHood implements ISubsystem {
                 UserInterface.smartDashboardPutNumber("Moving to", moveTo);
                 UserInterface.smartDashboardPutNumber("Distance from target", distanceNeededToTravel);
             }
+        } else if (moveTo == -2) {
+            if (DEBUG && RobotSettings.DEBUG) {
+                UserInterface.smartDashboardPutNumber("Distance from target", 0);
+            }
+            hoodMotor.moveAtPercent(0);
         } else {
             if (DEBUG && RobotSettings.DEBUG) {
-                UserInterface.smartDashboardPutNumber("Moving to", -2);
-                UserInterface.smartDashboardPutNumber("Distance from target", -2);
+                UserInterface.smartDashboardPutNumber("Distance from target", 0);
             }
         }
     }

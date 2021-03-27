@@ -13,6 +13,7 @@ import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
+import frc.robot.Robot;
 import frc.robot.RobotSettings;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
@@ -44,6 +45,7 @@ public class Turret implements ISubsystem {
     @Override
     public void init() {
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
+            case COMP_2021:
             case STANDARD:
                 joy = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
                 panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);
@@ -119,20 +121,32 @@ public class Turret implements ISubsystem {
         }
         double omegaSetpoint = 0;
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
+            case COMP_2021:
             case STANDARD:
                 if (RobotSettings.ENABLE_VISION) {
+                    double camoffset = 0.00017;
                     if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) {
                         if (RobotSettings.DEBUG && DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
                         }
                         if (visionCamera.hasValidTarget()) {
-                            omegaSetpoint = -visionCamera.getAngle() / 30;
+                            double angle = -visionCamera.getAngle() + camoffset;
+                            if (angle > 0.005){
+                                omegaSetpoint = 0.3;
+                            } else if (angle < -0.005){
+                                omegaSetpoint = -0.3;
+                            }
+                            //omegaSetpoint *= angle / 30;
+                            //omegaSetpoint = -visionCamera.getAngle() / 30;
                         } else {
+                            if (RobotSettings.ENABLE_HOOD_ARTICULATION){
+                                Robot.articulatedHood.moveTo = 1.5;
+                            }
                             omegaSetpoint = scan();
                         }
                         visionCamera.setLedMode(VisionLEDMode.ON); //If targeting, then use the LL
                     } else {
-                        visionCamera.setLedMode(VisionLEDMode.OFF); //If not targeting, then stop using the LL
+                        visionCamera.setLedMode(VisionLEDMode.ON); //If not targeting, then stop using the LL
                     }
                 }
                 //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.
@@ -229,9 +243,9 @@ public class Turret implements ISubsystem {
      * @return an integer to determine the direction of turret scan
      */
     private double scan() {
-        if (turretDegrees() >= 260) {
+        if (turretDegrees() >= 240) {
             scanDirection = -1;
-        } else if (turretDegrees() <= 10) {
+        } else if (turretDegrees() <= 40) {
             scanDirection = 1;
         }
         return scanDirection;
@@ -257,7 +271,7 @@ public class Turret implements ISubsystem {
             System.out.println("Set to " + (speed * (RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30)) + " from " + speed);
         }
         //Dont overcook it pls
-        motor.moveAtPercent(speed * 0.3);
+        motor.moveAtPercent(speed * 0.15);
     }
 
     /**

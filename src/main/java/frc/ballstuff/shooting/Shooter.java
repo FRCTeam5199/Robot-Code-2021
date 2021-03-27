@@ -51,6 +51,7 @@ public class Shooter implements ISubsystem {
     @Override
     public void init() throws IllegalStateException {
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
+            case COMP_2021:
             case STANDARD:
                 joystickController = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
                 panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);

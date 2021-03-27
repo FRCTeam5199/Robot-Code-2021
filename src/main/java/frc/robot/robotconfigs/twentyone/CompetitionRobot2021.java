@@ -14,13 +14,13 @@ import frc.vision.camera.SupportedVision;
 public class CompetitionRobot2021 extends DefaultConfig {
     //Subsystems
     public CompetitionRobot2021() {
-        ENABLE_DRIVE = false;
-        ENABLE_INTAKE = false;
+        ENABLE_DRIVE = true;
+        ENABLE_INTAKE = true;
         ENABLE_TURRET = true;
         ENABLE_SHOOTER = true;
-        ENABLE_HOPPER = false;
-        ENABLE_AGITATOR = false;
-        ENABLE_INDEXER = false;
+        ENABLE_HOPPER = true;
+        ENABLE_AGITATOR = true;
+        ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
 
         DRIVE_USE_6_MOTORS = false;
@@ -39,14 +39,14 @@ public class CompetitionRobot2021 extends DefaultConfig {
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
         ENABLE_HOOD_ARTICULATION = true;
-        INDEXER_DETECTION_CUTOFF_DISTANCE = 6;
+        INDEXER_DETECTION_CUTOFF_DISTANCE = 5;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;
-        SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
+        SHOOTER_CONTROL_STYLE = ShootingControlStyles.COMP_2021;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
         IMU_TYPE = SupportedIMU.PIGEON;
