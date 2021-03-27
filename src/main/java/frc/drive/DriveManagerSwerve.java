@@ -32,7 +32,7 @@ public class DriveManagerSwerve implements ISubsystem {
     private CANSparkMax driverFR, driverBR, driverBL, driverFL;
     private CANSparkMax steeringFR, steeringBR, steeringBL, steeringFL;
     private BaseController xbox;
-    private CANCoder RFCoder, RRCoder, LRCoder, LFCoder;
+    private CANCoder FRcoder, BRcoder, BLcoder, FLcoder;
 
 //    private Translation2d frontLeftLocation = new Translation2d(0.2794, 0.1778);
 //    private Translation2d frontRightLocation = new Translation2d(0.2794, -0.1778);
@@ -99,10 +99,10 @@ public class DriveManagerSwerve implements ISubsystem {
 
         setSteeringPIDS(0.006, 0.0000, 0.01);
 
-        RFCoder = new CANCoder(11);
-        RRCoder = new CANCoder(12);
-        LFCoder = new CANCoder(13);
-        LRCoder = new CANCoder(14);
+        FRcoder = new CANCoder(11);
+        BRcoder = new CANCoder(12);
+        FLcoder = new CANCoder(13);
+        BLcoder = new CANCoder(14);
     }
 
     @Override
@@ -265,8 +265,8 @@ public class DriveManagerSwerve implements ISubsystem {
 
     private void printEncoderPositions(){
         System.out.println(" ");
-        System.out.println("LF: " + LFCoder.getPosition() + " | RF: " + RFCoder.getPosition());
-        System.out.println("LR: " + LRCoder.getPosition() + " | RR: " + RRCoder.getPosition());
+        System.out.println("LF: " + FLcoder.getPosition() + " | RF: " + FRcoder.getPosition());
+        System.out.println("LR: " + BLcoder.getPosition() + " | RR: " + BRcoder.getPosition());
     }
 
     private void driveSwerve(){
@@ -301,6 +301,19 @@ public class DriveManagerSwerve implements ISubsystem {
         steeringBR.getPIDController().setReference(BR, ControlType.kPosition);
         steeringFL.getPIDController().setReference(FL, ControlType.kPosition);
         steeringBL.getPIDController().setReference(BL, ControlType.kPosition);
+    }
+
+    private void setSteeringContinuous(double FL, double FR, double BL, double BR){
+        //will this work? good question
+        FLpid.setSetpoint(FL);
+        FRpid.setSetpoint(FR);
+        BRpid.setSetpoint(BR);
+        BLpid.setSetpoint(BL);
+
+        steeringFL.set(FLpid.calculate(FLcoder.getPosition()));
+        steeringFR.set(FRpid.calculate(FRcoder.getPosition()));
+        steeringBL.set(BLpid.calculate(BLcoder.getPosition()));
+        steeringBR.set(BRpid.calculate(BRcoder.getPosition()));
     }
 
     private void setDrive(double FL, double FR, double BL, double BR){
