@@ -85,6 +85,11 @@ public abstract class AbstractMotorController {
     public abstract void moveAtVelocity(double amount);
 
     /**
+     * @param pos requested position
+     */
+    public abstract void moveAtPosition(double pos);
+
+    /**
      * Sets the idle mode to either be (brake = false) minimally resistive or (brake = true) to resist all motion/use
      * ERF to slow motor (actual implemetation varies between motors)
      *
@@ -114,7 +119,7 @@ public abstract class AbstractMotorController {
     /**
      * Sets the motor output on a percent output basis
      *
-     * @param percent 0 to 1 output requested
+     * @param percent -1 to 1 output requested
      */
     public abstract void moveAtPercent(double percent);
 

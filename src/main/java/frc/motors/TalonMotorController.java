@@ -9,8 +9,7 @@ import frc.misc.Chirp;
 import frc.misc.PID;
 import frc.robot.Robot;
 
-import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
-import static com.ctre.phoenix.motorcontrol.ControlMode.Velocity;
+import static com.ctre.phoenix.motorcontrol.ControlMode.*;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Brake;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
 
@@ -94,6 +93,11 @@ public class TalonMotorController extends AbstractMotorController {
             motor.set(Velocity, 0);
         /// sensorToRealDistanceFactor);
         //System.out.println("I'm crying. RealAmount: " + realAmount + "\nSensortoDist: " + sensorToRealDistanceFactor + "\nSetting motors to " + realAmount / sensorToRealDistanceFactor);
+    }
+
+    @Override
+    public void moveAtPosition(double pos) {
+        motor.set(Position, pos);
     }
 
     @Override
