@@ -129,6 +129,7 @@ public class Turret implements ISubsystem {
                         if (RobotSettings.DEBUG && DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
                         }
+                        Robot.articulatedHood.unTargeted = true;
                         if (visionCamera.hasValidTarget()) {
                             double angle = -visionCamera.getAngle() + camoffset;
                             if (angle > 0.005){

@@ -37,7 +37,6 @@ public enum ShootingEnums {
         }
     }),
     FIRE_SINGLE_SHOT(shooter -> {
-        shooter.setSpeed(4200);
         if (RobotSettings.ENABLE_HOPPER){
             shooter.ticksPassed = (shooter.isAtSpeed() ? Robot.shooter.ticksPassed + 1 : 0);
             if (shooter.ticksPassed >= 50) {
@@ -49,6 +48,7 @@ public enum ShootingEnums {
                 shooter.ticksPassed = 0;
             }
         }
+        shooter.setSpeed(4200);
     });
 
     public final Consumer<Shooter> function;

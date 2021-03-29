@@ -96,14 +96,14 @@ public class Hopper implements ISubsystem {
         if (!indexerActive && !agitatorActive) {
             if (RobotSettings.ENABLE_INDEXER) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    indexer.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.1 : 0);
+                    indexer.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.4 : 0);
                 } else {
                     indexer.moveAtPercent(0);
                 }
             } //2021 COMP 4 & 2020 COMP 9
             if (RobotSettings.ENABLE_AGITATOR) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    agitator.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.3 : 0);
+                    agitator.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.2 : 0);
                 } else {
                     agitator.moveAtPercent(0);
                 }

@@ -38,7 +38,7 @@ public class UserInterface {
             DRIVE_D = DRIVE_PID_LAYOUT.add("D", RobotSettings.DRIVEBASE_PID.getD()),
             DRIVE_F = DRIVE_PID_LAYOUT.add("F", RobotSettings.DRIVEBASE_PID.getF()),
             DRIVE_CALIBRATE_PID = DRIVE_PID_LAYOUT.add("Tune PID", false).withWidget(BuiltInWidgets.kToggleSwitch),
-            DRIVE_COAST = DRIVE_TAB.add("Coast", true),
+            DRIVE_COAST = DRIVE_TAB.add("Coast", false).withWidget(BuiltInWidgets.kToggleSwitch),
             DRIVE_RUMBLE_NEAR_MAX = DRIVE_TAB.add("Rumble Near Max", false).withWidget(BuiltInWidgets.kToggleSwitch),
     /*
     //PDP TODO make pdp widget (kPowerDistributionPanel)

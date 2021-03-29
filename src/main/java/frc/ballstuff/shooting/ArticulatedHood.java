@@ -14,13 +14,20 @@ import static frc.misc.UtilFunctions.weightedAverage;
 
 public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = true;
-    public double moveTo = 0.0;
     private final double[][] sizeEncoderPositionArray = {
+            {2.792, 0.05},
+            {1.292, 0.77},
+            {0.849, 1.05},
+            {0.451, 1.135},
+    };
+    public double moveTo = 0.0;
+    public boolean unTargeted = true;
+    /*private final double[][] sizeEncoderPositionArray = {
             {2.792, 0},
             {1.292, 0.58},
             {0.849, 1},
             {0.451, 1.05},
-    };
+    };*/
     BaseController joystickController, panel;
     private AbstractMotorController hoodMotor;
 
@@ -95,20 +102,24 @@ public class ArticulatedHood implements ISubsystem {
                 } else if (currentPos < 0) {
                     moveTo = -1;
                     hoodMotor.moveAtPercent(-0.1);
-                }else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
+                } else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
                     moveTo = -1;
                     hoodMotor.moveAtPercent(-0.3);
                 } else if (joystickController.get(ControllerEnums.JoystickButtons.THREE) == ControllerEnums.ButtonStatus.DOWN) {
                     moveTo = -1;
                     hoodMotor.moveAtPercent(0.3);
-                } else if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN){
+                } else if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN) {
                     moveTo = 0.05; //POS 1
-                } else if (panel.get(ControllerEnums.ButtonPanelButtons.INTAKE_DOWN) == ControllerEnums.ButtonStatus.DOWN){
+                    unTargeted = false;
+                } else if (panel.get(ControllerEnums.ButtonPanelButtons.INTAKE_DOWN) == ControllerEnums.ButtonStatus.DOWN) {
                     moveTo = 0.77; //POS 2
-                } else if (panel.get(ControllerEnums.ButtonPanelButtons.HOPPER_OUT) == ControllerEnums.ButtonStatus.DOWN){
+                    unTargeted = false;
+                } else if (panel.get(ControllerEnums.ButtonPanelButtons.HOPPER_OUT) == ControllerEnums.ButtonStatus.DOWN) {
                     moveTo = 1.05; //POS 3
-                } else if (panel.get(ControllerEnums.ButtonPanelButtons.SOLID_SPEED) == ControllerEnums.ButtonStatus.DOWN){
-                    moveTo = 1.125; //POS 4
+                    unTargeted = false;
+                } else if (panel.get(ControllerEnums.ButtonPanelButtons.SOLID_SPEED) == ControllerEnums.ButtonStatus.DOWN) {
+                    moveTo = 1.135; //POS 4
+                    unTargeted = false;
                 } else {
                     hoodMotor.moveAtPercent(0);
                 }
@@ -145,7 +156,7 @@ public class ArticulatedHood implements ISubsystem {
         moveToPos(moveTo, currentPos);
     }
 
-    private void moveToPos(double moveTo, double currentPos){
+    private void moveToPos(double moveTo, double currentPos) {
         if (DEBUG && RobotSettings.DEBUG) {
             UserInterface.smartDashboardPutNumber("Moving to", moveTo);
         }
@@ -173,6 +184,7 @@ public class ArticulatedHood implements ISubsystem {
             }
         }
     }
+
     @Override
     public void initTest() {
 
