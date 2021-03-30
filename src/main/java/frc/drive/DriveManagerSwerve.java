@@ -5,6 +5,8 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
 import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.util.Units;
 import frc.controllers.BaseController;
 import frc.controllers.ControllerEnums;
 import frc.controllers.XBoxController;
@@ -14,12 +16,17 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
+
 
 import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
+import frc.telemetry.imu.AbstractIMU;
+import frc.telemetry.imu.WrappedNavX2IMU;
 
 /*
 notes n stuff
@@ -31,6 +38,8 @@ max speed 3.6 m/s
  */
 public class DriveManagerSwerve implements ISubsystem {
 
+    private AbstractIMU ahrs;
+
     private PIDController FRpid, BRpid, BLpid, FLpid;
 
     private AbstractMotorController driverFR, driverBR, driverBL, driverFL;
@@ -38,14 +47,20 @@ public class DriveManagerSwerve implements ISubsystem {
     private BaseController xbox;
     private CANCoder FRcoder, BRcoder, BLcoder, FLcoder;
 
-//    private Translation2d frontLeftLocation = new Translation2d(0.2794, 0.1778);
+    //    private Translation2d frontLeftLocation = new Translation2d(0.2794, 0.1778);
 //    private Translation2d frontRightLocation = new Translation2d(0.2794, -0.1778);
 //    private Translation2d backLeftLocation = new Translation2d(-0.2794, 0.1778);
 //    private Translation2d backRightLocation = new Translation2d(-0.2794, -0.1778);
-    private final Translation2d frontLeftLocation = new Translation2d(-0.2794, 0.1778);
-    private final Translation2d frontRightLocation = new Translation2d(-0.2794, -0.1778);
-    private final Translation2d backLeftLocation = new Translation2d(0.2794, 0.1778);
-    private final Translation2d backRightLocation = new Translation2d(0.2794, -0.1778);
+
+    private final Translation2d driftOffset = new Translation2d(-0.6, 0);
+
+    private final double trackWidth = 13.25;
+    private final double trackLength = 21.5;
+
+    private final Translation2d frontLeftLocation = new Translation2d(-trackLength/2/39.3701, trackWidth/2/39.3701);
+    private final Translation2d frontRightLocation = new Translation2d(-trackLength/2/39.3701, -trackWidth/2/39.3701);
+    private final Translation2d backLeftLocation = new Translation2d(trackLength/2/39.3701, trackWidth/2/39.3701);
+    private final Translation2d backRightLocation = new Translation2d(trackLength/2/39.3701, -trackWidth/2/39.3701);
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation
@@ -103,24 +118,29 @@ public class DriveManagerSwerve implements ISubsystem {
         driverBR.setSensorToRealDistanceFactor(1/5000);
         driverFL.setSensorToRealDistanceFactor(1/5000);
         driverBL.setSensorToRealDistanceFactor(1/5000);
+        ahrs = new WrappedNavX2IMU();
     }
 
     @Override
     public void updateTest() {
-//        driveSwerve();
         System.out.println(FRcoder.getAbsolutePosition() + " FR " + steeringFR.getRotations());
         System.out.println(FLcoder.getAbsolutePosition() + " FL " + steeringFL.getRotations());
         System.out.println(BRcoder.getAbsolutePosition() + " BR " + steeringBR.getRotations());
         System.out.println(BLcoder.getAbsolutePosition() + " BL " + steeringBL.getRotations());
         System.out.println();
         //setSteeringContinuous(0,0,0,0);
+
+        System.out.println(ahrs.relativeYaw());
     }
 
     double val;
+
     @Override
     public void updateTeleop() {
-
         driveSwerve();
+        if(xbox.get(ControllerEnums.XBoxButtons.LEFT_BUMPER) == ControllerEnums.ButtonStatus.DOWN){
+            ahrs.resetOdometry();
+        }
 //        printSPositions();
 //        val+= 3;
 //        System.out.println(val);
@@ -233,7 +253,7 @@ public class DriveManagerSwerve implements ISubsystem {
     /**
      * ???
      */
-    private void jank(){
+    private void jank() {
         driverFR.follow(driverFR);
         driverBR.follow(driverBR);
         driverBL.follow(driverBL);
@@ -245,20 +265,35 @@ public class DriveManagerSwerve implements ISubsystem {
         steeringFL.follow(steeringFL);
     }
 
-    private void printEncoderPositions(){
+    private void printEncoderPositions() {
         System.out.println(" ");
         System.out.println("LF: " + FLcoder.getPosition() + " | RF: " + FRcoder.getPosition());
         System.out.println("LR: " + BLcoder.getPosition() + " | RR: " + BRcoder.getPosition());
     }
 
-    private void driveSwerve(){
-        double forwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y)*(-2);
-        double leftwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_X)*(2);
-        double rotation = xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X)*(-3);
+    private void driveSwerve() {
+        double forwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y) * (-2);
+        double leftwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_X) * (2);
+        double rotation = xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X) * (-3);
 
         //x+ m/s forwards, y+ m/s left, omega+ rad/sec ccw
         ChassisSpeeds speeds = new ChassisSpeeds(forwards, leftwards, rotation);
+
+        boolean useFieldOriented = xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER) > 0.1;
+        if(useFieldOriented){
+            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forwards, leftwards, rotation, Rotation2d.fromDegrees(ahrs.relativeYaw()));
+        }
+
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
+
+        boolean dorifto = xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
+        if(dorifto){
+            moduleStates = kinematics.toSwerveModuleStates(speeds, driftOffset);
+        }
+
+        if(xbox.get(ControllerEnums.XBoxButtons.RIGHT_BUMPER) == ControllerEnums.ButtonStatus.DOWN){
+            moduleStates = kinematics.toSwerveModuleStates(speeds, frontRightLocation);
+        }
 
         // Front left module state
         SwerveModuleState frontLeft = moduleStates[0];
@@ -286,7 +321,7 @@ public class DriveManagerSwerve implements ISubsystem {
         steeringBL.moveAtPosition(BL);
     }
 
-    private void setSteeringContinuous(double FL, double FR, double BL, double BR){
+    private void setSteeringContinuous(double FL, double FR, double BL, double BR) {
         //will this work? good question
         FLpid.setSetpoint(FL);
         FRpid.setSetpoint(FR);
@@ -308,7 +343,7 @@ public class DriveManagerSwerve implements ISubsystem {
         //System.out.println("error: " + FLpid.getPositionError());
     }
 
-    private void setDrive(double FL, double FR, double BL, double BR){
+    private void setDrive(double FL, double FR, double BL, double BR) {
         /*
         DriverRF.getPIDController().setReference(FR, ControlType.kVelocity);
         DriverRR.getPIDController().setReference(BR, ControlType.kVelocity);
