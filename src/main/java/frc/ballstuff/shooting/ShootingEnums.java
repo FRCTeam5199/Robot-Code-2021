@@ -37,18 +37,51 @@ public enum ShootingEnums {
         }
     }),
     FIRE_SINGLE_SHOT(shooter -> {
-        if (RobotSettings.ENABLE_HOPPER){
+        if (RobotSettings.ENABLE_HOPPER) {
             shooter.ticksPassed = (shooter.isAtSpeed() ? Robot.shooter.ticksPassed + 1 : 0);
             if (shooter.ticksPassed >= 50) {
                 hopper.setAgitator(true);
             }
-            if (!hopper.indexed){
+            if (!hopper.indexed) {
                 shooter.singleShot = false;
                 hopper.setAgitator(false);
                 shooter.ticksPassed = 0;
             }
         }
         shooter.setSpeed(4200);
+    }),
+
+    FIRE_TIMED(shooter -> {
+        shooter.setSpeed(4400);
+        if (Shooter.DEBUG) {
+            System.out.println("Balls shot: " + shooter.ballsShot);
+            System.out.println("Ticks passed: " + shooter.ticksPassed);
+        }
+        if (shooter.ballsShot == 0 && shooter.getSpeed() >= 4200) {
+            if (shooter.ticksPassed >= 33) {
+                hopper.setAgitator(true);
+                if (!hopper.indexed) {
+                    hopper.setAgitator(false);
+                    shooter.ballsShot++;
+                    shooter.ticksPassed = 0;
+                }
+            } else {
+                shooter.ticksPassed++;
+            }
+        } else if (shooter.ballsShot >= 1) {
+            if (shooter.ticksPassed >= 1){//33) {
+                hopper.setAgitator(true);
+                if (!hopper.indexed) {
+                    hopper.setAgitator(false);
+                    shooter.ticksPassed = 0;
+                    shooter.ballsShot++;
+                }
+            } else {
+                shooter.ticksPassed++;
+            }
+        } else {
+            shooter.ticksPassed = 0;
+        }
     });
 
     public final Consumer<Shooter> function;
@@ -60,5 +93,6 @@ public enum ShootingEnums {
     public void shoot(Shooter shooter) {
         //System.out.println("Shooting " + this.name());
         this.function.accept(shooter);
+        shooter.isShooting = true;
     }
 }

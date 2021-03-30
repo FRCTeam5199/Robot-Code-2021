@@ -17,7 +17,7 @@ import frc.vision.distancesensor.RevDistanceSensor;
  * is ) to the {@link frc.ballstuff.shooting.Shooter}
  */
 public class Hopper implements ISubsystem {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     public AbstractMotorController agitator, indexer;
     public IDistanceSensor indexSensor;
     public boolean indexed = false;

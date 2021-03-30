@@ -19,6 +19,7 @@ import frc.motors.TalonMotorController;
 import frc.robot.Robot;
 import frc.robot.RobotSettings;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
+import frc.vision.camera.GoalLimelight;
 import frc.vision.camera.GoalPhoton;
 import frc.vision.camera.IVision;
 
@@ -28,7 +29,7 @@ import static frc.robot.Robot.hopper;
  * Shooter pertains to spinning the flywheel that actually makes the balls go really fast
  */
 public class Shooter implements ISubsystem {
-    private static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     private final NetworkTableEntry P = UserInterface.SHOOTER_P.getEntry(),
             I = UserInterface.SHOOTER_I.getEntry(),
             D = UserInterface.SHOOTER_D.getEntry(),
@@ -36,12 +37,14 @@ public class Shooter implements ISubsystem {
             constSpeed = UserInterface.SHOOTER_CONST_SPEED.getEntry(),
             calibratePID = UserInterface.SHOOTER_CALIBRATE_PID.getEntry();
     public double speed = 4200, shooting;
+    public IVision goalCamera;
+    public boolean singleShot = false;
+    public boolean isShooting = false;
+    public int ballsShot = 0;
+    public int ticksPassed = 0;
     BaseController panel, joystickController;
     private AbstractMotorController leader, follower;
-    public IVision goalCamera;
     private PID lastPID = PID.EMPTY_PID;
-    public boolean singleShot = false;
-    public int ticksPassed = 0;
 
     public Shooter() {
         addToMetaList();
@@ -70,7 +73,18 @@ public class Shooter implements ISubsystem {
         }
         createAndInitMotors();
         if (RobotSettings.ENABLE_VISION) {
-            goalCamera = new GoalPhoton();
+            switch(RobotSettings.GOAL_CAMERA_TYPE){
+            case LIMELIGHT:
+                goalCamera = new GoalLimelight();
+                goalCamera.init();
+                break;
+            case PHOTON:
+                goalCamera = new GoalPhoton();
+                goalCamera.init();
+                break;
+            default:
+                throw new IllegalStateException("You must have a camera type set.");
+            }
         }
     }
 
@@ -151,31 +165,36 @@ public class Shooter implements ISubsystem {
                         hopper.setAll(false);
                     }
                     leader.moveAtPercent(0);
+                    isShooting = false;
+                    ballsShot = 0;
                 }
                 break;
             }
             case COMP_2021: {
-                if (Robot.articulatedHood.unTargeted){
+                System.out.println("I can see " + isValidTarget());
+                if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                    //ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                    ShootingEnums.FIRE_TIMED.shoot(this);
+                    //System.out.println("I'm firing!!!");
+                } else if (Robot.articulatedHood.unTargeted) {
                     if (RobotSettings.ENABLE_HOPPER) {
                         hopper.setAll(false);
                     }
                     double speedYouWant = constSpeed.getDouble(0);
                     if (speedYouWant > 0) {
                         leader.moveAtVelocity(speedYouWant);
-                    } else{
+                    } else {
                         leader.moveAtPercent(0);
                     }
-                }
-                else
-                if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
+                    isShooting = false;
+                    ballsShot = 0;
+                    
+                } else if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
-                } else if (singleShot){
+                } else if (singleShot) {
                     ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
                 } else if (panel.get(ButtonPanelButtons.INTAKE_UP) == ButtonStatus.DOWN) {
                     singleShot = true;
-
-                } else if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
-                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else {
                     if (RobotSettings.ENABLE_HOPPER) {
                         hopper.setAll(false);
@@ -183,15 +202,20 @@ public class Shooter implements ISubsystem {
                     double speedYouWant = constSpeed.getDouble(0);
                     if (speedYouWant > 0) {
                         leader.moveAtVelocity(speedYouWant);
-                    } else{
+                    } else {
                         leader.moveAtPercent(0);
                     }
+                    isShooting = false;
+                    ballsShot = 0;
                 }
                 break;
             }
             case BOP_IT: {
                 if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                } else {
+                    isShooting = false;
+                    ballsShot = 0;
                 }
                 break;
             }
@@ -200,6 +224,8 @@ public class Shooter implements ISubsystem {
                     ShootingEnums.FIRE_TEST_SPEED.shoot(this);
                 } else {
                     leader.moveAtPercent(0);
+                    isShooting = false;
+                    ballsShot = 0;
                 }
                 break;
             }
@@ -270,6 +296,10 @@ public class Shooter implements ISubsystem {
      */
     public boolean isAtSpeed() {
         return Math.abs(leader.getSpeed() - speed) < 50;
+    }
+
+    public double getSpeed() {
+        return leader.getSpeed();
     }
 
     /**

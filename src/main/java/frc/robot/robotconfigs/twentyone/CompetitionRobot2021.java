@@ -79,7 +79,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         MOTOR_SPROCKET_SIZE = 1;
         TURRET_SPROCKET_SIZE = 11.1;
         TURRET_GEAR_RATIO = 7;
-        TURRET_MAX_POS = 275;
+        TURRET_MAX_POS = 520;
         TURRET_MIN_POS = -2;
         TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
         AUTON_TOLERANCE = 0.1;

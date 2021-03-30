@@ -26,7 +26,7 @@ import frc.vision.camera.VisionLEDMode;
  * Turret refers to the shooty thing that spinny spinny in the yaw direction
  */
 public class Turret implements ISubsystem {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     public boolean track, atTarget;
     private BaseController joy, panel;
     private AbstractMotorController motor;
@@ -124,32 +124,35 @@ public class Turret implements ISubsystem {
             case COMP_2021:
             case STANDARD:
                 if (RobotSettings.ENABLE_VISION) {
-                    double camoffset = -3;//0;//0.00017;
-                    if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) {
+                    double camoffset = 0.75;//-3; for straight forward.
+                    if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && !Robot.shooter.isShooting) {
                         if (RobotSettings.DEBUG && DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
                         }
                         Robot.articulatedHood.unTargeted = true;
                         if (visionCamera.hasValidTarget()) {
                             double angle = -visionCamera.getAngle() + camoffset;
-                            if (angle > 0.005){
+                            if (angle > 0.005) {
                                 omegaSetpoint = 0.3;
-                            } else if (angle < -0.005){
+                            } else if (angle < -0.005) {
                                 omegaSetpoint = -0.3;
                             }
-                            omegaSetpoint *= Math.min(Math.abs(angle*2), 1);
+                            omegaSetpoint *= Math.min(Math.abs(angle * 2), 1);
                             //omegaSetpoint *= angle / 30;
                             //omegaSetpoint = -visionCamera.getAngle() / 30;
                         } else {
-                            if (RobotSettings.ENABLE_HOOD_ARTICULATION){
-                                Robot.articulatedHood.moveTo = 1.5;
+                            if (RobotSettings.ENABLE_HOOD_ARTICULATION) {
+                                //Robot.articulatedHood.moveTo = 1.5;
                             }
                             omegaSetpoint = scan();
                         }
                         visionCamera.setLedMode(VisionLEDMode.ON); //If targeting, then use the LL
                     } else {
-
-                        visionCamera.setLedMode(VisionLEDMode.OFF); //If not targeting, then stop using the LL
+                        if (Robot.shooter.isShooting) {
+                            visionCamera.setLedMode(VisionLEDMode.ON);
+                        } else {
+                            visionCamera.setLedMode(VisionLEDMode.OFF); //If not targeting, then stop using the LL
+                        }
                     }
                 }
                 //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.
@@ -246,9 +249,9 @@ public class Turret implements ISubsystem {
      * @return an integer to determine the direction of turret scan
      */
     private double scan() {
-        if (turretDegrees() >= 240) {
+        if (turretDegrees() >= RobotSettings.TURRET_MAX_POS - 40) {
             scanDirection = -1;
-        } else if (turretDegrees() <= 40) {
+        } else if (turretDegrees() <= RobotSettings.TURRET_MAX_POS + 40) {
             scanDirection = 1;
         }
         return scanDirection;
