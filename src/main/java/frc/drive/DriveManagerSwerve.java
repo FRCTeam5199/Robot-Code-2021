@@ -6,6 +6,7 @@ import com.revrobotics.ControlType;
 import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.util.Units;
 import frc.controllers.BaseController;
 import frc.controllers.ControllerEnums;
 import frc.controllers.XBoxController;
@@ -45,10 +46,16 @@ public class DriveManagerSwerve implements ISubsystem {
 //    private Translation2d frontRightLocation = new Translation2d(0.2794, -0.1778);
 //    private Translation2d backLeftLocation = new Translation2d(-0.2794, 0.1778);
 //    private Translation2d backRightLocation = new Translation2d(-0.2794, -0.1778);
-    private final Translation2d frontLeftLocation = new Translation2d(-0.2794, 0.1778);
-    private final Translation2d frontRightLocation = new Translation2d(-0.2794, -0.1778);
-    private final Translation2d backLeftLocation = new Translation2d(0.2794, 0.1778);
-    private final Translation2d backRightLocation = new Translation2d(0.2794, -0.1778);
+
+    private final Translation2d driftOffset = new Translation2d(-0.6, 0);
+
+    private final double trackWidth = 13.25;
+    private final double trackLength = 21.5;
+
+    private final Translation2d frontLeftLocation = new Translation2d(-trackLength/2/39.3701, trackWidth/2/39.3701);
+    private final Translation2d frontRightLocation = new Translation2d(-trackLength/2/39.3701, -trackWidth/2/39.3701);
+    private final Translation2d backLeftLocation = new Translation2d(trackLength/2/39.3701, trackWidth/2/39.3701);
+    private final Translation2d backRightLocation = new Translation2d(trackLength/2/39.3701, -trackWidth/2/39.3701);
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation
@@ -318,12 +325,21 @@ public class DriveManagerSwerve implements ISubsystem {
         //x+ m/s forwards, y+ m/s left, omega+ rad/sec ccw
         ChassisSpeeds speeds = new ChassisSpeeds(forwards, leftwards, rotation);
 
-        boolean useFieldOriented = xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
+        boolean useFieldOriented = xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER) > 0.1;
         if(useFieldOriented){
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forwards, leftwards, rotation, Rotation2d.fromDegrees(compassHeading()));
         }
 
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
+
+        boolean dorifto = xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
+        if(dorifto){
+            moduleStates = kinematics.toSwerveModuleStates(speeds, driftOffset);
+        }
+
+        if(xbox.get(ControllerEnums.XBoxButtons.RIGHT_BUMPER) == ControllerEnums.ButtonStatus.DOWN){
+            moduleStates = kinematics.toSwerveModuleStates(speeds, frontRightLocation);
+        }
 
         // Front left module state
         SwerveModuleState frontLeft = moduleStates[0];
