@@ -43,7 +43,7 @@ public class DriveManagerSwerve implements ISubsystem {
     private final Translation2d backLeftLocation = new Translation2d(0.2794, 0.1778);
     private final Translation2d backRightLocation = new Translation2d(0.2794, -0.1778);
 
-    private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation
     );
 
@@ -54,18 +54,19 @@ public class DriveManagerSwerve implements ISubsystem {
 
     @Override
     public void init() {
-        double steeringP = 0;
-        double steeringI = 0;
+        double steeringP = 0.004;
+        double steeringI = 0.000001;
         double steeringD = 0;
         //https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/controller/PIDController.html
         FLpid = new PIDController(steeringP,steeringI,steeringD);
-        FLpid.enableContinuousInput(0, 360);
+        FLpid.enableContinuousInput(-180, 180);
+        //FLpid.disableContinuousInput();
         FRpid = new PIDController(steeringP,steeringI,steeringD);
-        FRpid.enableContinuousInput(0, 360);
+        FRpid.enableContinuousInput(-180, 180);
         BLpid = new PIDController(steeringP,steeringI,steeringD);
-        BLpid.enableContinuousInput(0, 360);
+        BLpid.enableContinuousInput(-180, 180);
         BRpid = new PIDController(steeringP,steeringI,steeringD);
-        BRpid.enableContinuousInput(0, 360);
+        BRpid.enableContinuousInput(-180, 180);
 
         xbox = new XBoxController(0);
 
@@ -76,11 +77,17 @@ public class DriveManagerSwerve implements ISubsystem {
         driverFL = new CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless);
         driverFL.setInverted(true);
 
+        driverFR.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        driverFL.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        driverBR.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        driverBL.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
         steeringFR = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
         steeringFR.setInverted(true);
         steeringBR = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
         steeringBR.setInverted(true);
         steeringBL = new CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless);
+        steeringBL.setInverted(true);
 
         steeringFL = new CANSparkMax(8, CANSparkMaxLowLevel.MotorType.kBrushless);
         steeringFL.setInverted(true);
@@ -107,12 +114,20 @@ public class DriveManagerSwerve implements ISubsystem {
 
     @Override
     public void updateTest() {
-        driveSwerve();
+//        driveSwerve();
+        System.out.println(FRcoder.getAbsolutePosition() + " FR " + steeringFR.getEncoder().getPosition());
+        System.out.println(FLcoder.getAbsolutePosition() + " FL " + steeringFL.getEncoder().getPosition());
+        System.out.println(BRcoder.getAbsolutePosition() + " BR " + steeringBR.getEncoder().getPosition());
+        System.out.println(BLcoder.getAbsolutePosition() + " BL " + steeringBL.getEncoder().getPosition());
+        System.out.println();
+        //setSteeringContinuous(0,0,0,0);
     }
 
     double val;
     @Override
     public void updateTeleop() {
+
+        driveSwerve();
 //        printSPositions();
 //        val+= 3;
 //        System.out.println(val);
@@ -120,18 +135,18 @@ public class DriveManagerSwerve implements ISubsystem {
 //        SteeringRR.getPIDController().setReference(val, ControlType.kPosition);
 //        SteeringLF.getPIDController().setReference(val, ControlType.kPosition);
 //        SteeringLR.getPIDController().setReference(val, ControlType.kPosition);
-        steeringFR.getPIDController().setReference(xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X)*180, ControlType.kPosition);
-        steeringBR.getPIDController().setReference(xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X)*180, ControlType.kPosition);
-        steeringFL.getPIDController().setReference(xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X)*180, ControlType.kPosition);
-        steeringBL.getPIDController().setReference(xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X)*180, ControlType.kPosition);
+//        steeringFR.getPIDController().setReference(xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X)*180, ControlType.kPosition);
+//        steeringBR.getPIDController().setReference(xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X)*180, ControlType.kPosition);
+//        steeringFL.getPIDController().setReference(xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X)*180, ControlType.kPosition);
+//        steeringBL.getPIDController().setReference(xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X)*180, ControlType.kPosition);
 
-        double triggerbal = xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER)-xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER);
-        System.out.println(triggerbal);
-        //triggerbal = 0;
-        driverFR.set(xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y)/2 + triggerbal/4);
-        driverBR.set(xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y)/2 + triggerbal/4);
-        driverFL.set(xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y)/2 - triggerbal/4);
-        driverBL.set(xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y)/2 - triggerbal/4);
+//        double triggerbal = xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER)-xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER);
+//        System.out.println(triggerbal);
+//        //triggerbal = 0;
+//        driverFR.set(xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y)/2 + triggerbal/4);
+//        driverBR.set(xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y)/2 + triggerbal/4);
+//        driverFL.set(xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y)/2 - triggerbal/4);
+//        driverBL.set(xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y)/2 - triggerbal/4);
     }
 
     @Override
@@ -280,7 +295,7 @@ public class DriveManagerSwerve implements ISubsystem {
 
         // Front left module state
         SwerveModuleState frontLeft = moduleStates[0];
-        System.out.println(frontLeft.speedMetersPerSecond + "  |  " + frontLeft.angle.getDegrees());
+        //System.out.println(frontLeft.speedMetersPerSecond + "  |  " + frontLeft.angle.getDegrees());
 
         // Front right module state
         SwerveModuleState frontRight = moduleStates[1];
@@ -291,7 +306,8 @@ public class DriveManagerSwerve implements ISubsystem {
         // Back right module state
         SwerveModuleState backRight = moduleStates[3];
 
-        setSteering(frontLeft.angle.getDegrees(), frontRight.angle.getDegrees(), backLeft.angle.getDegrees(), backRight.angle.getDegrees());
+        //try continuous here
+        setSteeringContinuous(frontLeft.angle.getDegrees(), frontRight.angle.getDegrees(), backLeft.angle.getDegrees(), backRight.angle.getDegrees());
         setDrive(frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
 
     }
@@ -310,10 +326,19 @@ public class DriveManagerSwerve implements ISubsystem {
         BRpid.setSetpoint(BR);
         BLpid.setSetpoint(BL);
 
-        steeringFL.set(FLpid.calculate(FLcoder.getPosition()));
-        steeringFR.set(FRpid.calculate(FRcoder.getPosition()));
-        steeringBL.set(BLpid.calculate(BLcoder.getPosition()));
-        steeringBR.set(BRpid.calculate(BRcoder.getPosition()));
+        steeringFL.set(FLpid.calculate(FLcoder.getAbsolutePosition()));
+        steeringFR.set(FRpid.calculate(FRcoder.getAbsolutePosition()));
+        steeringBL.set(BLpid.calculate(BLcoder.getAbsolutePosition()));
+        steeringBR.set(BRpid.calculate(BRcoder.getAbsolutePosition()));
+
+        //System.out.println("FL pid out: " + FLpid.calculate(FLcoder.getAbsolutePosition()));
+        System.out.println("FL position: " + FLcoder.getAbsolutePosition());
+        System.out.println("FL setpoint: " + (FL));
+//        System.out.println("FR: " + FRpid.calculate(FRcoder.getAbsolutePosition()));
+//        System.out.println("BR: " + BRpid.calculate(BRcoder.getAbsolutePosition()));
+//        System.out.println("BL: " + BLpid.calculate(BLcoder.getAbsolutePosition()));
+        System.out.println();
+        //System.out.println("error: " + FLpid.getPositionError());
     }
 
     private void setDrive(double FL, double FR, double BL, double BR){
