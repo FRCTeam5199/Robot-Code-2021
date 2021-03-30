@@ -98,6 +98,11 @@ public class DriveManagerSwerve implements ISubsystem {
         BRcoder = new CANCoder(12);
         FLcoder = new CANCoder(13);
         BLcoder = new CANCoder(14);
+
+        driverFR.setSensorToRealDistanceFactor(1/5000);
+        driverBR.setSensorToRealDistanceFactor(1/5000);
+        driverFL.setSensorToRealDistanceFactor(1/5000);
+        driverBL.setSensorToRealDistanceFactor(1/5000);
     }
 
     @Override
