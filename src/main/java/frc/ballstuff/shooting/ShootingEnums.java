@@ -8,10 +8,12 @@ import java.util.function.Consumer;
 
 import static frc.robot.Robot.hopper;
 
+
 /**
  * Contains Multiple different firing modes for the shooter
  */
 public enum ShootingEnums {
+
     //Used when solid speed button is held down
     //TODO make controller dynamic
     FIRE_SOLID_SPEED(shooter -> {
@@ -36,6 +38,7 @@ public enum ShootingEnums {
             hopper.setAll((shooter.isAtSpeed() && shooter.isValidTarget()));
         }
     }),
+
     FIRE_SINGLE_SHOT(shooter -> {
         if (RobotSettings.ENABLE_HOPPER) {
             shooter.ticksPassed = (shooter.isAtSpeed() ? Robot.shooter.ticksPassed + 1 : 0);
@@ -69,7 +72,7 @@ public enum ShootingEnums {
                 shooter.ticksPassed++;
             }
         } else if (shooter.ballsShot >= 1) {
-            if (shooter.ticksPassed >= 1){//33) {
+            if (shooter.ticksPassed >= 1) {//33) {
                 hopper.setAgitator(true);
                 if (!hopper.indexed) {
                     hopper.setAgitator(false);
@@ -82,16 +85,25 @@ public enum ShootingEnums {
         } else {
             shooter.ticksPassed = 0;
         }
+    }),
+    FIRE_WITH_NO_REGARD_TO_ACCURACY(shooter -> {
+        shooter.setSpeed(4500);
+        if (RobotSettings.ENABLE_HOPPER) {
+            hopper.setAll(shooter.isAtSpeed()); //atSpeed is 4200 +- 50, so 4500 should overdo it maybe and rapid fire, untested.
+        }
     });
-
     public final Consumer<Shooter> function;
+    boolean DEBUG = false;
 
     ShootingEnums(Consumer<Shooter> f) {
         function = f;
     }
 
     public void shoot(Shooter shooter) {
-        //System.out.println("Shooting " + this.name());
+
+        if (RobotSettings.DEBUG && DEBUG) {
+            System.out.println("Shooting " + this.name());
+        }
         this.function.accept(shooter);
         shooter.isShooting = true;
     }

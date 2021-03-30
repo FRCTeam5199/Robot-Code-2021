@@ -46,7 +46,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;
-        SHOOTER_CONTROL_STYLE = ShootingControlStyles.COMP_2021;
+        SHOOTER_CONTROL_STYLE = ShootingControlStyles.SPEED_2021;//ShootingControlStyles.ACCURACY_2021;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
         IMU_TYPE = SupportedIMU.PIGEON;

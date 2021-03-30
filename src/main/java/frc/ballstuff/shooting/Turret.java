@@ -1,6 +1,5 @@
 package frc.ballstuff.shooting;
 
-import com.revrobotics.CANSparkMaxLowLevel;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
 import frc.controllers.ButtonPanelController;
@@ -45,7 +44,8 @@ public class Turret implements ISubsystem {
     @Override
     public void init() {
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
-            case COMP_2021:
+            case ACCURACY_2021:
+            case SPEED_2021:
             case STANDARD:
                 joy = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
                 panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);
@@ -121,7 +121,8 @@ public class Turret implements ISubsystem {
         }
         double omegaSetpoint = 0;
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
-            case COMP_2021:
+            case ACCURACY_2021:
+            case SPEED_2021:
             case STANDARD:
                 if (RobotSettings.ENABLE_VISION) {
                     double camoffset = 0.75;//-3; for straight forward.
@@ -138,12 +139,7 @@ public class Turret implements ISubsystem {
                                 omegaSetpoint = -0.3;
                             }
                             omegaSetpoint *= Math.min(Math.abs(angle * 2), 1);
-                            //omegaSetpoint *= angle / 30;
-                            //omegaSetpoint = -visionCamera.getAngle() / 30;
                         } else {
-                            if (RobotSettings.ENABLE_HOOD_ARTICULATION) {
-                                //Robot.articulatedHood.moveTo = 1.5;
-                            }
                             omegaSetpoint = scan();
                         }
                         visionCamera.setLedMode(VisionLEDMode.ON); //If targeting, then use the LL

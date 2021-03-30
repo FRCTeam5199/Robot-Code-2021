@@ -12,11 +12,7 @@ import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.followtrajectory.Trajectories;
-import frc.misc.Chirp;
-import frc.misc.ISubsystem;
-import frc.misc.LEDs;
-import frc.misc.QuoteOfTheDay;
-import frc.misc.UserInterface;
+import frc.misc.*;
 import frc.motors.AbstractMotorController;
 import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
@@ -92,7 +88,7 @@ public class Robot extends TimedRobot {
         if (RobotSettings.ENABLE_SHOOTER) {
             shooter = new Shooter();
         }
-        if (RobotSettings.ENABLE_HOOD_ARTICULATION){
+        if (RobotSettings.ENABLE_HOOD_ARTICULATION) {
             articulatedHood = new ArticulatedHood();
         }
         if (RobotSettings.ENABLE_TURRET) {

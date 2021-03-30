@@ -57,7 +57,8 @@ public class Shooter implements ISubsystem {
     @Override
     public void init() throws IllegalStateException {
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
-            case COMP_2021:
+            case ACCURACY_2021:
+            case SPEED_2021:
             case STANDARD:
                 joystickController = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
                 panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);
@@ -170,25 +171,11 @@ public class Shooter implements ISubsystem {
                 }
                 break;
             }
-            case COMP_2021: {
-                System.out.println("I can see " + isValidTarget());
+            case ACCURACY_2021: {
                 if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
-                    //ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
-                    ShootingEnums.FIRE_TIMED.shoot(this);
-                    //System.out.println("I'm firing!!!");
+                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else if (Robot.articulatedHood.unTargeted) {
-                    if (RobotSettings.ENABLE_HOPPER) {
-                        hopper.setAll(false);
-                    }
-                    double speedYouWant = constSpeed.getDouble(0);
-                    if (speedYouWant > 0) {
-                        leader.moveAtVelocity(speedYouWant);
-                    } else {
-                        leader.moveAtPercent(0);
-                    }
-                    isShooting = false;
-                    ballsShot = 0;
-                    
+                    shooterDefault();
                 } else if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
                 } else if (singleShot) {
@@ -196,17 +183,17 @@ public class Shooter implements ISubsystem {
                 } else if (panel.get(ButtonPanelButtons.INTAKE_UP) == ButtonStatus.DOWN) {
                     singleShot = true;
                 } else {
-                    if (RobotSettings.ENABLE_HOPPER) {
-                        hopper.setAll(false);
-                    }
-                    double speedYouWant = constSpeed.getDouble(0);
-                    if (speedYouWant > 0) {
-                        leader.moveAtVelocity(speedYouWant);
-                    } else {
-                        leader.moveAtPercent(0);
-                    }
-                    isShooting = false;
-                    ballsShot = 0;
+                    shooterDefault();
+                }
+                break;
+            }
+            case SPEED_2021: {
+                if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_WITH_NO_REGARD_TO_ACCURACY.shoot(this);
+                } else if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                } else {
+                    shooterDefault();
                 }
                 break;
             }
@@ -232,6 +219,20 @@ public class Shooter implements ISubsystem {
             default:
                 throw new IllegalStateException("This UI not implemented for this controller");
         }
+    }
+
+    private void shooterDefault() {
+        if (RobotSettings.ENABLE_HOPPER) {
+            hopper.setAll(false);
+        }
+        double speedYouWant = constSpeed.getDouble(0);
+        if (speedYouWant > 0) {
+            leader.moveAtVelocity(speedYouWant);
+        } else {
+            leader.moveAtPercent(0);
+        }
+        isShooting = false;
+        ballsShot = 0;
     }
 
     @Override

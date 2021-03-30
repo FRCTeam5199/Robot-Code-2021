@@ -19,8 +19,8 @@ public class UserInterface {
             WARNINGS_TAB = Shuffleboard.getTab("Warnings");
 
     //LAYOUTS
-    public static final ShuffleboardLayout SHOOTER_PID_LAYOUT = SHOOTER_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2,3),
-            DRIVE_PID_LAYOUT = DRIVE_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2,3);
+    public static final ShuffleboardLayout SHOOTER_PID_LAYOUT = SHOOTER_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2, 3),
+            DRIVE_PID_LAYOUT = DRIVE_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2, 3);
 
     //SHOOTER TODO make PID widget (kPIDController)
     public static final SimpleWidget SHOOTER_P = SHOOTER_PID_LAYOUT.add("P", RobotSettings.SHOOTER_PID.getP()),
@@ -67,9 +67,11 @@ public class UserInterface {
     public static void smartDashboardPutNumber(String key, double value) {
         SmartDashboard.putNumber(key, value);
     }
+
     public static void smartDashboardPutBoolean(String key, boolean value) {
         SmartDashboard.putBoolean(key, value);
     }
+
     public static void smartDashboardPutString(String key, String value) {
         SmartDashboard.putString(key, value);
     }
@@ -82,8 +84,8 @@ public class UserInterface {
         if (RobotSettings.ENABLE_PDP) {
             PDP_DISPLAY = PDP_TAB.add("PDPDisplay", new PowerDistributionPanel(RobotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
         }
-        if (RobotSettings.ENABLE_SHOOTER){
-           SHOOTER_RPM = SHOOTER_TAB.add("RPM", 0); //TODO Edit shooter line 195
+        if (RobotSettings.ENABLE_SHOOTER) {
+            SHOOTER_RPM = SHOOTER_TAB.add("RPM", 0); //TODO Edit shooter line 195
         }
     }
 }

@@ -14,6 +14,7 @@ import static frc.misc.UtilFunctions.weightedAverage;
 
 public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = true;
+    /*
     private final double[][] sizeEncoderPositionArray = {
             {2.415, 0.05},
             {1.466, 0.77},
@@ -26,14 +27,9 @@ public class ArticulatedHood implements ISubsystem {
             {0.925, 1.05},
             {0.481, 1.135},
     };
+     */
     public double moveTo = 0.0;
     public boolean unTargeted = true;
-    /*private final double[][] sizeEncoderPositionArray = {
-            {2.792, 0},
-            {1.292, 0.58},
-            {0.849, 1},
-            {0.451, 1.05},
-    };*/
     BaseController joystickController, panel;
     private AbstractMotorController hoodMotor;
 
@@ -45,7 +41,8 @@ public class ArticulatedHood implements ISubsystem {
     @Override
     public void init() {
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
-            case COMP_2021:
+            case ACCURACY_2021:
+            case SPEED_2021:
             case STANDARD:
                 joystickController = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
                 panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);
@@ -101,7 +98,7 @@ public class ArticulatedHood implements ISubsystem {
     public void updateGeneric() { //FIVE UP THREE DOWN
         double currentPos = hoodMotor.getRotations();
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
-            case COMP_2021:
+            case ACCURACY_2021:
                 if (currentPos > 1.75) {
                     moveTo = -1;
                     hoodMotor.moveAtPercent(0.1);
@@ -119,24 +116,47 @@ public class ArticulatedHood implements ISubsystem {
                         moveTo = 1.4;
                         unTargeted = true;
                     } else {
-                        moveTo = requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize());
+                        double[][] sizeEncoderPositionArrayStraight = {
+                                {2.415, 0.05},
+                                {1.466, 0.77},
+                                {0.925, 1.05},
+                                {0.481, 1.135},
+                        };
+                        moveTo = requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize(), sizeEncoderPositionArrayStraight);
                         unTargeted = false;
                     }
-                } else if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN) {
-                    moveTo = 0.05; //POS 1
-                    unTargeted = false;
-                } else if (panel.get(ControllerEnums.ButtonPanelButtons.INTAKE_DOWN) == ControllerEnums.ButtonStatus.DOWN) {
-                    moveTo = 0.77; //POS 2
-                    unTargeted = false;
-                } else if (panel.get(ControllerEnums.ButtonPanelButtons.HOPPER_OUT) == ControllerEnums.ButtonStatus.DOWN) {
-                    moveTo = 1.05; //POS 3
-                    unTargeted = false;
-                } else if (panel.get(ControllerEnums.ButtonPanelButtons.SOLID_SPEED) == ControllerEnums.ButtonStatus.DOWN) {
-                    moveTo = 1.135; //POS 4
-                    unTargeted = false;
                 } else {
-                    hoodMotor.moveAtPercent(0);
+                    moveToPosFromButtons();
                 }
+                break;
+            case SPEED_2021:
+                if (currentPos > 1.75) {
+                    moveTo = -1;
+                    hoodMotor.moveAtPercent(0.1);
+                } else if (currentPos < 0) {
+                    moveTo = -1;
+                    hoodMotor.moveAtPercent(-0.1);
+                } else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
+                    moveTo = -1;
+                    hoodMotor.moveAtPercent(-0.3);
+                } else if (joystickController.get(ControllerEnums.JoystickButtons.THREE) == ControllerEnums.ButtonStatus.DOWN) {
+                    moveTo = -1;
+                    hoodMotor.moveAtPercent(0.3);
+                } else if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
+                    if (!Robot.shooter.isValidTarget()){
+                        moveTo = 1.4;
+                        unTargeted = true;
+                    } else {
+                        double[][] sizeEncoderPositionArrayAngled = {
+                                {2.415, 0.05},
+                                {1.466, 0.77},
+                                {0.793, 0.95},
+                                {0.481, 1.235},
+                        };
+                        moveTo = requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize(), sizeEncoderPositionArrayAngled);
+                        unTargeted = false;
+                    }
+                } else moveToPosFromButtons();
                 break;
             case STANDARD:
                 if (currentPos > 1.75) {
@@ -148,7 +168,13 @@ public class ArticulatedHood implements ISubsystem {
                 } else {
                     if ((panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) && Robot.shooter.goalCamera.hasValidTarget()) {
                         if (!Robot.shooter.isShooting) {
-                            moveTo = requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize());
+                            double[][] sizeEncoderPositionArrayStraight = {
+                                    {2.415, 0.05},
+                                    {1.466, 0.77},
+                                    {0.925, 1.05},
+                                    {0.481, 1.135},
+                            };
+                            moveTo = requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize(), sizeEncoderPositionArrayStraight);
                         }
                     } else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
                         moveTo = -2;
@@ -170,6 +196,24 @@ public class ArticulatedHood implements ISubsystem {
             UserInterface.smartDashboardPutNumber("Moving to pos", moveTo);
         }
         moveToPos(moveTo, currentPos);
+    }
+
+    private void moveToPosFromButtons() {
+        if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN) {
+            moveTo = 0.05; //POS 1
+            unTargeted = false;
+        } else if (panel.get(ControllerEnums.ButtonPanelButtons.INTAKE_DOWN) == ControllerEnums.ButtonStatus.DOWN) {
+            moveTo = 0.77; //POS 2
+            unTargeted = false;
+        } else if (panel.get(ControllerEnums.ButtonPanelButtons.HOPPER_OUT) == ControllerEnums.ButtonStatus.DOWN) {
+            moveTo = 1.05; //POS 3
+            unTargeted = false;
+        } else if (panel.get(ControllerEnums.ButtonPanelButtons.SOLID_SPEED) == ControllerEnums.ButtonStatus.DOWN) {
+            moveTo = 1.135; //POS 4
+            unTargeted = false;
+        } else {
+            hoodMotor.moveAtPercent(0);
+        }
     }
 
     private void moveToPos(double moveTo, double currentPos) {
@@ -231,20 +275,20 @@ public class ArticulatedHood implements ISubsystem {
         return "ShooterHood";
     }
 
-    public double requiredArticulationForTargetSize(double size) {
+    public double requiredArticulationForTargetSize(double size, double[][] articulationArray) {
         System.out.println("SIZE:" + size);
-        if (size <= sizeEncoderPositionArray[sizeEncoderPositionArray.length - 1][0]) {
-            System.out.println("A " + sizeEncoderPositionArray[sizeEncoderPositionArray.length - 1][1]);
-            return sizeEncoderPositionArray[sizeEncoderPositionArray.length - 1][1];
+        if (size <= articulationArray[articulationArray.length - 1][0]) {
+            System.out.println("A " + articulationArray[articulationArray.length - 1][1]);
+            return articulationArray[articulationArray.length - 1][1];
         }
-        if (size >= sizeEncoderPositionArray[0][0]) {
-            System.out.println("B " + sizeEncoderPositionArray[0][1]);
-            return sizeEncoderPositionArray[0][1];
+        if (size >= articulationArray[0][0]) {
+            System.out.println("B " + articulationArray[0][1]);
+            return articulationArray[0][1];
         }
-        for (int i = 1; i < sizeEncoderPositionArray.length; i++) {
-            if (size > sizeEncoderPositionArray[i][0]) {
-                System.out.println("C " + weightedAverage(size, sizeEncoderPositionArray[i - 1], sizeEncoderPositionArray[i]));
-                return weightedAverage(size, sizeEncoderPositionArray[i - 1], sizeEncoderPositionArray[i]);
+        for (int i = 1; i < articulationArray.length; i++) {
+            if (size > articulationArray[i][0]) {
+                System.out.println("C " + weightedAverage(size, articulationArray[i - 1], articulationArray[i]));
+                return weightedAverage(size, articulationArray[i - 1], articulationArray[i]);
             }
         }
         throw new IllegalStateException("The only way to get here is to not have sizeEncoderPositionArray sorted in ascending order based on the first value of each entry. Please ensure that it is sorted as such and try again.");
