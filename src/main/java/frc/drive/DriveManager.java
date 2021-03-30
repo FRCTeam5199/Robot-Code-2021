@@ -217,7 +217,6 @@ public class DriveManager implements ISubsystem {
         driveSpeed.getEntry().setNumber(avgSpeedInFPS);
         switch (RobotSettings.DRIVE_STYLE) {
             case EXPERIMENTAL: {
-
                 double invertedDrive = RobotSettings.DRIVE_INVERT_LEFT ? -1 : 1;
                 if (Math.abs(controller.get(XboxAxes.LEFT_JOY_Y)) > 0.9) {
                     double dir = controller.get(XboxAxes.LEFT_JOY_Y) > 0 ? 1 : -1;
