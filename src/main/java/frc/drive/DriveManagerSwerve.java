@@ -334,7 +334,10 @@ public class DriveManagerSwerve implements ISubsystem {
 
         boolean dorifto = xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
         if(dorifto){
-            moduleStates = kinematics.toSwerveModuleStates(speeds, driftOffset);
+            double offset = trackLength/2/39.3701;
+            offset -= forwards/3;
+            System.out.println("forwards: " + forwards);
+            moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(offset,0));
         }
 
         if(xbox.get(ControllerEnums.XBoxButtons.RIGHT_BUMPER) == ControllerEnums.ButtonStatus.DOWN){
