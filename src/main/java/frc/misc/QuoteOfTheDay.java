@@ -54,7 +54,8 @@ public class QuoteOfTheDay {
             "It's not working, and I don't know why.\nIt's working, and I don't know why.",
             "I did it! I plugged in the magic numbers.",
             "It may or may not work.",
-            "Africa, Default Pi.. \nWhere's Africa? \n... Amica.."
+            "Africa, Default Pi.. \nWhere's Africa? \n... Amica..",
+            "Fix your software!!"
     };
 
     /**

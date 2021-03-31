@@ -87,9 +87,9 @@ public enum ShootingEnums {
         }
     }),
     FIRE_WITH_NO_REGARD_TO_ACCURACY(shooter -> {
-        shooter.setSpeed(4500);
+        shooter.setSpeed(4400);
         if (RobotSettings.ENABLE_HOPPER) {
-            hopper.setAll(shooter.isAtSpeed()); //atSpeed is 4200 +- 50, so 4500 should overdo it maybe and rapid fire, untested.
+            hopper.setAll(shooter.getSpeed() >= 4200); //atSpeed is 4200 +- 50, so 4500 should overdo it maybe and rapid fire, untested.
         }
     });
     public final Consumer<Shooter> function;

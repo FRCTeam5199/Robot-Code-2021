@@ -1,12 +1,8 @@
 package frc.ballstuff.shooting;
 
-import frc.controllers.BaseController;
-import frc.controllers.BopItBasicController;
-import frc.controllers.ButtonPanelController;
-import frc.controllers.ControllerEnums;
+import frc.controllers.*;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
-import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
@@ -120,13 +116,26 @@ public class Turret implements ISubsystem {
             System.out.println("Turret degrees:" + turretDegrees());
         }
         double omegaSetpoint = 0;
+        double camoffset = 0;
+        switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
+            case ACCURACY_2021:
+                camoffset = -3;
+                break;
+            case SPEED_2021:
+                camoffset = 0.75;
+                break;
+            default:
+                camoffset = 0;
+                break;
+        }
         switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
                 if (RobotSettings.ENABLE_VISION) {
-                    double camoffset = 0.75;//-3; for straight forward.
-                    if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && !Robot.shooter.isShooting) {
+                    if (panel.get(ButtonPanelButtons.BUDDY_CLIMB) == ButtonStatus.DOWN) {
+                        visionCamera.setLedMode(VisionLEDMode.BLINK); //haha suffer
+                    } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && !Robot.shooter.isShooting) {
                         if (RobotSettings.DEBUG && DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
                         }
@@ -144,11 +153,7 @@ public class Turret implements ISubsystem {
                         }
                         visionCamera.setLedMode(VisionLEDMode.ON); //If targeting, then use the LL
                     } else {
-                        if (Robot.shooter.isShooting) {
-                            visionCamera.setLedMode(VisionLEDMode.ON);
-                        } else {
-                            visionCamera.setLedMode(VisionLEDMode.OFF); //If not targeting, then stop using the LL
-                        }
+                        visionCamera.setLedMode(VisionLEDMode.OFF); //If not targeting, then stop using the LL
                     }
                 }
                 //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.
@@ -165,7 +170,7 @@ public class Turret implements ISubsystem {
                 break;
         }
 
-        if (isSafe()) {
+        if (isSafe() && !Robot.shooter.isShooting) {
             rotateTurret(omegaSetpoint);
             if (RobotSettings.DEBUG && DEBUG) {
                 System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
@@ -207,6 +212,7 @@ public class Turret implements ISubsystem {
     @Override
     public void initTeleop() {
         motor.resetEncoder();
+        motor.setBrake(true);
     }
 
     @Override
@@ -273,7 +279,9 @@ public class Turret implements ISubsystem {
             System.out.println("Set to " + (speed * (RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30)) + " from " + speed);
         }
         //Dont overcook it pls
-        motor.moveAtPercent(speed * 0.15);
+        if (!Robot.shooter.isShooting) {
+            motor.moveAtPercent(speed * 0.15);
+        }
     }
 
     /**

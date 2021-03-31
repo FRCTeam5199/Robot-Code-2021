@@ -112,7 +112,7 @@ public class Shooter implements ISubsystem {
                 throw new IllegalStateException("No such supported shooter motor config for " + RobotSettings.SHOOTER_MOTOR_TYPE.name());
         }
 
-        leader.setInverted(RobotSettings.SHOOTER_INVERTED).setPid(RobotSettings.SHOOTER_PID);
+        leader.setInverted(RobotSettings.SHOOTER_INVERTED);
         if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
             follower.follow(leader, true).setInverted(!RobotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
             //TODO test if braking leader brakes follower
@@ -146,6 +146,7 @@ public class Shooter implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
+
         if (leader.failureFlag)
             MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_LEADER_ID, leader.getSuggestedFix());
         else
@@ -159,7 +160,7 @@ public class Shooter implements ISubsystem {
             case STANDARD: {
                 if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
-                } else if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else {
                     if (RobotSettings.ENABLE_HOPPER) {
@@ -172,7 +173,7 @@ public class Shooter implements ISubsystem {
                 break;
             }
             case ACCURACY_2021: {
-                if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else if (Robot.articulatedHood.unTargeted) {
                     shooterDefault();
@@ -188,7 +189,7 @@ public class Shooter implements ISubsystem {
                 break;
             }
             case SPEED_2021: {
-                if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_WITH_NO_REGARD_TO_ACCURACY.shoot(this);
                 } else if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
@@ -226,7 +227,7 @@ public class Shooter implements ISubsystem {
             hopper.setAll(false);
         }
         double speedYouWant = constSpeed.getDouble(0);
-        if (speedYouWant > 0) {
+        if (speedYouWant != 0) {
             leader.moveAtVelocity(speedYouWant);
         } else {
             leader.moveAtPercent(0);
@@ -258,6 +259,11 @@ public class Shooter implements ISubsystem {
     @Override
     public void initGeneric() {
         singleShot = false;
+        if (RobotSettings.SHOOTER_CONTROL_STYLE == ShootingControlStyles.SPEED_2021) {
+            leader.setPid(new PID(0.0025, 0.0000007, 0.03, 0));
+        } else {
+            leader.setPid(RobotSettings.SHOOTER_PID);
+        }
     }
 
     @Override
@@ -279,6 +285,7 @@ public class Shooter implements ISubsystem {
         UserInterface.smartDashboardPutNumber("RPM", leader.getSpeed());
         UserInterface.smartDashboardPutNumber("Target RPM", speed);
         UserInterface.smartDashboardPutBoolean("atSpeed", isAtSpeed());
+        UserInterface.smartDashboardPutBoolean("IS SHOOTING?", isShooting);
     }
 
     /**
