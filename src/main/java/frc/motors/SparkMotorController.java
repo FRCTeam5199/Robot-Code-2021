@@ -41,7 +41,6 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
-        System.out.println("INVERTING MOTOR " + motor.getDeviceId() + "!" + invert);
         return this;
     }
 
