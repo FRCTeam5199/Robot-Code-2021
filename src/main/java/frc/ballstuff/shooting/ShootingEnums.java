@@ -91,6 +91,13 @@ public enum ShootingEnums {
         if (RobotSettings.ENABLE_HOPPER) {
             hopper.setAll(shooter.getSpeed() >= 4200); //atSpeed is 4200 +- 50, so 4500 should overdo it maybe and rapid fire, untested.
         }
+    }),
+    FIRE_WITH_HOPPER_CONTROLLED(shooter -> {
+        shooter.setSpeed(4400);
+        if (RobotSettings.ENABLE_HOPPER) {
+            hopper.setIndexer(shooter.getSpeed() >= 4200);
+            hopper.setAgitator(!hopper.indexed && shooter.getSpeed() >= 4200);
+        }
     });
     public final Consumer<Shooter> function;
     boolean DEBUG = false;
