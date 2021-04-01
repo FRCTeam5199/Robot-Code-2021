@@ -4,7 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
-import frc.robot.RobotSettings;
+import static frc.robot.Robot.RobotSettings;
 
 /**
  * This is a class to interface the Navx2 Inertial Measurement Unit (IMU) but allowing versatility in swapping between

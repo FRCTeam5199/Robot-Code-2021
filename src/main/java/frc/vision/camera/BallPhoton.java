@@ -1,12 +1,13 @@
 package frc.vision.camera;
 
 import edu.wpi.first.wpilibj.LinearFilter;
-import frc.robot.RobotSettings;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPipelineResult;
 import org.photonvision.PhotonTrackedTarget;
 
 import java.util.List;
+
+import static frc.robot.Robot.RobotSettings;
 
 public class BallPhoton implements IVision {
     private static final boolean DEBUG = false;

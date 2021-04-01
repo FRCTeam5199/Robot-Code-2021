@@ -4,7 +4,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
-import frc.robot.RobotSettings;
+
+import static frc.robot.Robot.RobotSettings;
 
 public class GoalPhoton implements IVision {
     private NetworkTableEntry yaw;

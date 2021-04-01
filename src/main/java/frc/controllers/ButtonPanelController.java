@@ -11,7 +11,7 @@ import frc.controllers.ControllerEnums.ButtonPanelButtons;
  * @see ControllerEnums.ButtonStatus
  */
 public class ButtonPanelController extends BaseController {
-    public ButtonPanelController(int n) {
+    private ButtonPanelController(int n) {
         super(n);
     }
 
@@ -21,5 +21,15 @@ public class ButtonPanelController extends BaseController {
     @Override
     public ControllerEnums.ButtonStatus get(ButtonPanelButtons n) {
         return ControllerEnums.ButtonStatus.get(stick.getRawButton(n.AXIS_VALUE));
+    }
+
+    public static BaseController createOrGet(int channel){
+        if (channel < 0 || channel >= 6)
+            throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
+        if (BaseController.allControllers[channel] == null)
+            return BaseController.allControllers[channel] = new ButtonPanelController(channel);
+        if (BaseController.allControllers[channel] instanceof ButtonPanelController)
+            return BaseController.allControllers[channel];
+        throw new ArrayStoreException("A different controller has already been made for channel " + channel);
     }
 }

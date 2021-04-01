@@ -3,10 +3,11 @@ package frc.misc;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.Robot;
-import frc.robot.RobotSettings;
 
 import java.util.Random;
 import java.util.function.Consumer;
+
+import static frc.robot.Robot.RobotSettings;
 
 public class LEDs {
     private static final Random random = new Random(System.currentTimeMillis());

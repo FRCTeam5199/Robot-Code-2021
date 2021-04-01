@@ -8,7 +8,7 @@ import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.Robot;
-import frc.robot.RobotSettings;
+import static frc.robot.Robot.RobotSettings;
 
 import static frc.misc.UtilFunctions.weightedAverage;
 
@@ -44,14 +44,14 @@ public class ArticulatedHood implements ISubsystem {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
-                joystickController = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
-                panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);
+                joystickController = JoystickController.createOrGet(RobotSettings.FLIGHT_STICK_USB_SLOT);
+                panel = ButtonPanelController.createOrGet(RobotSettings.BUTTON_PANEL_USB_SLOT);
                 break;
             case BOP_IT:
-                joystickController = new BopItBasicController(1);
+                joystickController = BopItBasicController.createOrGet(1);
                 break;
             case XBOX_CONTROLLER:
-                joystickController = new XBoxController(1);
+                joystickController = XBoxController.createOrGet(1);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the articulated hood. Please implement me");

@@ -9,11 +9,12 @@ import frc.drive.auton.followtrajectory.Trajectories;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
 import frc.robot.Robot;
-import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import static frc.robot.Robot.RobotSettings;
 
 /**
  * If you have a custom auton that needs to be implemented, extend this class. Since every Auton Manager needs to have a

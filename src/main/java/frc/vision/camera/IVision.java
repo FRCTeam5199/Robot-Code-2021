@@ -12,6 +12,13 @@ public interface IVision extends ISubsystem {
     boolean hasValidTarget();
 
     /**
+     * Changes the mode of the vision (on, off, blink)
+     *
+     * @param ledMode the mode (on, off, blink) from enum {@link VisionLEDMode}
+     */
+    void setLedMode(VisionLEDMode ledMode);
+
+    /**
      * Returns the angle between the camera and the object
      *
      * @return the angle in degrees between the camera and the object
@@ -54,12 +61,5 @@ public interface IVision extends ISubsystem {
     }
 
     double getSize(int targetId);
-
-    /**
-     * Changes the mode of the vision (on, off, blink)
-     *
-     * @param ledMode the mode (on, off, blink) from enum {@link VisionLEDMode}
-     */
-    void setLedMode(VisionLEDMode ledMode);
 
 }

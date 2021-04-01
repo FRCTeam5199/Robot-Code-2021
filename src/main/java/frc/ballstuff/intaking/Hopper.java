@@ -7,10 +7,11 @@ import frc.misc.ISubsystem;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
-import frc.robot.RobotSettings;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.vision.distancesensor.IDistanceSensor;
 import frc.vision.distancesensor.RevDistanceSensor;
+
+import static frc.robot.Robot.RobotSettings;
 
 /**
  * The Hopper subsystem effectively takes a ball from the front (where the {@link frc.ballstuff.intaking.Intake intake}
@@ -62,9 +63,9 @@ public class Hopper implements ISubsystem {
 
     /**
      * Uses the distance sensor to determine if there is a ball in the indxer. Enable and disable the indexer using
-     * {@link RobotSettings#ENABLE_INDEXER_AUTO_INDEX}
+     * {@link frc.robot.Robot#RobotSettings#ENABLE_INDEXER_AUTO_INDEX}
      *
-     * @return distance as read by {@link #indexSensor} assuming it is {@link RobotSettings#ENABLE_INDEXER_AUTO_INDEX
+     * @return distance as read by {@link #indexSensor} assuming it is {@link frc.robot.Robot#RobotSettings#ENABLE_INDEXER_AUTO_INDEX
      * enabled}
      */
     public double indexerSensorRange() {

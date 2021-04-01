@@ -6,8 +6,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
 import frc.misc.UserInterface;
 
-import static frc.vision.camera.VisionLEDMode.ON;
-
 /**
  * This is for the limelight looking at the goal that the shooter is shooting at
  */
@@ -125,9 +123,9 @@ public class GoalLimelight implements IVision {
     }
 
     @Override
-    public void setLedMode(VisionLEDMode ledMode){
+    public void setLedMode(VisionLEDMode ledMode) {
         int setTo;
-        switch(ledMode){
+        switch (ledMode) {
             case ON:
                 setTo = 3;
                 break;
@@ -140,7 +138,7 @@ public class GoalLimelight implements IVision {
             default:
                 throw new IllegalStateException("Unexpected value: " + ledMode);
         }
-        if (UserInterface.SHOOTER_OVERRIDE_LED.getEntry().getBoolean(false)){
+        if (UserInterface.SHOOTER_OVERRIDE_LED.getEntry().getBoolean(false)) {
             setTo = 3;
         }
         limelight.getEntry("ledMode").setNumber(setTo);

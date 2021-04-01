@@ -12,7 +12,11 @@ import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.followtrajectory.Trajectories;
-import frc.misc.*;
+import frc.misc.Chirp;
+import frc.misc.ISubsystem;
+import frc.misc.LEDs;
+import frc.misc.QuoteOfTheDay;
+import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
@@ -45,7 +49,7 @@ public class Robot extends TimedRobot {
     public static final Preferences preferences = Preferences.getInstance();
     public static final ArrayList<ISubsystem> subsystems = new ArrayList<>();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
-    public static DefaultConfig settingsFile;
+    public static DefaultConfig RobotSettings;
     public static DriveManager driver;
     public static Intake intake;
     public static Hopper hopper;
@@ -99,7 +103,7 @@ public class Robot extends TimedRobot {
             chirp = new Chirp();
         }
         if (RobotSettings.ENABLE_DRIVE) {
-            switch (RobotSettings.AUTON_MODE) {
+            switch (RobotSettings.AUTON_TYPE) {
                 case GALACTIC_SEARCH:
                     autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     break;
@@ -155,13 +159,13 @@ public class Robot extends TimedRobot {
         System.out.println("I am " + hostName);
         switch (hostName) {
             case "2020-Comp":
-                settingsFile = new Robot2020();
+                RobotSettings = new Robot2020();
                 break;
             case "2021-Prac":
-                settingsFile = new PracticeRobot2021();
+                RobotSettings = new PracticeRobot2021();
                 break;
             case "2021-Comp":
-                settingsFile = new CompetitionRobot2021();
+                RobotSettings = new CompetitionRobot2021();
                 break;
             default:
                 //preferences.putString("hostname", "2021-Comp");

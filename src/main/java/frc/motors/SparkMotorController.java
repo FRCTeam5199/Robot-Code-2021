@@ -1,6 +1,11 @@
 package frc.motors;
 
-import com.revrobotics.*;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.EncoderType;
 import frc.misc.PID;
 import frc.robot.Robot;
 
@@ -134,11 +139,6 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
-    public double getMotorTemperature() {
-        return motor.getMotorTemperature();
-    }
-
-    @Override
     public String getSuggestedFix() {
         short failmap = motor.getFaults();
         failureFlag = failmap != 0;
@@ -175,5 +175,10 @@ public class SparkMotorController extends AbstractMotorController {
         else
             potentialFix = "¯\\_(ツ)_/¯";
         return potentialFix;
+    }
+
+    @Override
+    public double getMotorTemperature() {
+        return motor.getMotorTemperature();
     }
 }

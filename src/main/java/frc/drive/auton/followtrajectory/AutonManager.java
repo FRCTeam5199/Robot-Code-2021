@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.IAutonEnumPath;
-import frc.robot.RobotSettings;
+
+import static frc.robot.Robot.RobotSettings;
 
 /**
  * Check back later for some fun and fresh auton routines!

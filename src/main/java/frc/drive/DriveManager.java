@@ -7,10 +7,16 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.util.Units;
-import frc.controllers.*;
+import frc.controllers.BaseController;
+import frc.controllers.BopItBasicController;
+import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
+import frc.controllers.DrumTimeController;
+import frc.controllers.SixButtonGuitarController;
+import frc.controllers.WiiController;
+import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.misc.PID;
@@ -21,15 +27,16 @@ import frc.motors.TalonMotorController;
 import frc.motors.followers.AbstractFollowerMotorController;
 import frc.motors.followers.SparkFollowerMotorsController;
 import frc.motors.followers.TalonFollowerMotorController;
-import frc.robot.RobotSettings;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
 
 import java.util.Map;
 
+import static frc.robot.Robot.RobotSettings;
+
 /**
- * Everything that has to do with driving is in here. There are a lot of auxilairy helpers and {@link RobotSettings}
- * that feed in here.
+ * Everything that has to do with driving is in here. There are a lot of auxilairy helpers and {@link
+ * frc.robot.Robot#RobotSettings} that feed in here.
  *
  * @see RobotTelemetry
  */
@@ -138,7 +145,7 @@ public class DriveManager implements ISubsystem {
     /**
      * Creates xbox controller n stuff
      *
-     * @throws IllegalStateException when there is no configuration for {@link RobotSettings#DRIVE_STYLE}
+     * @throws IllegalStateException when there is no configuration for {@link frc.robot.Robot#RobotSettings#DRIVE_STYLE}
      */
     private void initMisc() throws IllegalStateException {
         driveSpeed = UserInterface.DRIVE_TAB.add("Drivebase Speed", 0).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min", 0, "Max", 20));
@@ -146,19 +153,19 @@ public class DriveManager implements ISubsystem {
         switch (RobotSettings.DRIVE_STYLE) {
             case STANDARD:
             case EXPERIMENTAL:
-                controller = new XBoxController(RobotSettings.XBOX_CONTROLLER_USB_SLOT);
+                controller = XBoxController.createOrGet(RobotSettings.XBOX_CONTROLLER_USB_SLOT);
                 break;
             case MARIO_KART:
-                controller = new WiiController(0);
+                controller = WiiController.createOrGet(0);
                 break;
             case GUITAR:
-                controller = new SixButtonGuitarController(0);
+                controller = SixButtonGuitarController.createOrGet(0);
                 break;
             case DRUM_TIME:
-                controller = new DrumTimeController(0);
+                controller = DrumTimeController.createOrGet(0);
                 break;
             case BOP_IT:
-                controller = new BopItBasicController(0);
+                controller = BopItBasicController.createOrGet(0);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");
@@ -198,11 +205,11 @@ public class DriveManager implements ISubsystem {
     }
 
     /**
-     * This is where driving happens. Call this every tick to drive and set {@link RobotSettings#DRIVE_STYLE} to change
-     * the drive stype
+     * This is where driving happens. Call this every tick to drive and set {@link frc.robot.Robot#RobotSettings#DRIVE_STYLE}
+     * to change the drive stype
      *
-     * @throws IllegalArgumentException if {@link RobotSettings#DRIVE_STYLE} is not implemented here or if you missed a
-     *                                  break statement
+     * @throws IllegalArgumentException if {@link frc.robot.Robot#RobotSettings#DRIVE_STYLE} is not implemented here or
+     *                                  if you missed a break statement
      */
     @Override
     public void updateTeleop() throws IllegalArgumentException {

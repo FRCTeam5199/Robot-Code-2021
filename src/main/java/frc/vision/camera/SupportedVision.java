@@ -7,4 +7,3 @@ public enum SupportedVision {
     PHOTON, LIMELIGHT
 }
 
-;

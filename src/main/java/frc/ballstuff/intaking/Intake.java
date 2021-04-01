@@ -11,7 +11,9 @@ import frc.misc.InitializationFailureException;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
-import frc.robot.RobotSettings;
+
+import static frc.robot.Robot.RobotSettings;
+
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 
 /**
@@ -38,10 +40,10 @@ public class Intake implements ISubsystem {
     public void init() throws InitializationFailureException, IllegalStateException {
         switch (RobotSettings.INTAKE_CONTROL_STYLE) {
             case STANDARD:
-                joystick = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
+                joystick = JoystickController.createOrGet(RobotSettings.FLIGHT_STICK_USB_SLOT);
                 break;
             case BOPIT:
-                joystick = new DrumTimeController(0);
+                joystick = DrumTimeController.createOrGet(0);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
@@ -71,7 +73,7 @@ public class Intake implements ISubsystem {
 
     @Override
     public void updateAuton() {
-        if (RobotSettings.AUTON_MODE == AutonType.GALACTIC_SEARCH || RobotSettings.AUTON_MODE == AutonType.GALACTIC_SCAM) {
+        if (RobotSettings.AUTON_TYPE == AutonType.GALACTIC_SEARCH || RobotSettings.AUTON_TYPE == AutonType.GALACTIC_SCAM) {
             setIntake(RobotSettings.autonComplete ? IntakeDirection.OFF : IntakeDirection.IN);
         }
         updateGeneric();

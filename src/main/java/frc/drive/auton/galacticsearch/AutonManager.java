@@ -10,14 +10,14 @@ import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
 import frc.misc.UserInterface;
 import frc.robot.Robot;
-import frc.robot.RobotSettings;
 
+import static frc.robot.Robot.RobotSettings;
 import static frc.robot.Robot.ballPhoton;
 
 /**
  * Used for the galactic search challenge which includes automatically determining a path to take at enable-time.
  * <p>
- * Requirements: {@link frc.robot.RobotSettings#ENABLE_VISION} {@link frc.robot.RobotSettings#ENABLE_IMU}
+ * Requirements: {@link frc.robot.Robot#RobotSettings#ENABLE_VISION} {@link frc.robot.Robot#RobotSettings#ENABLE_IMU}
  */
 public class AutonManager extends AbstractAutonManager {
 
@@ -44,8 +44,8 @@ public class AutonManager extends AbstractAutonManager {
     }
 
     /**
-     * Runs the auton path. When complete, sets a flag in {@link RobotSettings#autonComplete} and runs {@link
-     * #onFinish()}
+     * Runs the auton path. When complete, sets a flag in {@link frc.robot.Robot#RobotSettings#autonComplete} and runs
+     * {@link #onFinish()}
      */
     @Override
     public void updateAuton() {

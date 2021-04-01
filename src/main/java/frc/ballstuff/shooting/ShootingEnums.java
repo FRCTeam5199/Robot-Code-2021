@@ -2,7 +2,7 @@ package frc.ballstuff.shooting;
 
 import frc.controllers.ControllerEnums;
 import frc.robot.Robot;
-import frc.robot.RobotSettings;
+import static frc.robot.Robot.RobotSettings;
 
 import java.util.function.Consumer;
 

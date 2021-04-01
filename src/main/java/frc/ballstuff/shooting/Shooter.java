@@ -17,12 +17,12 @@ import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.Robot;
-import frc.robot.RobotSettings;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.vision.camera.GoalLimelight;
 import frc.vision.camera.GoalPhoton;
 import frc.vision.camera.IVision;
 
+import static frc.robot.Robot.RobotSettings;
 import static frc.robot.Robot.hopper;
 
 /**
@@ -61,31 +61,31 @@ public class Shooter implements ISubsystem {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
-                joystickController = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
-                panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);
+                joystickController = JoystickController.createOrGet(RobotSettings.FLIGHT_STICK_USB_SLOT);
+                panel = ButtonPanelController.createOrGet(RobotSettings.BUTTON_PANEL_USB_SLOT);
                 break;
             case BOP_IT:
-                joystickController = new BopItBasicController(1);
+                joystickController = BopItBasicController.createOrGet(1);
                 break;
             case XBOX_CONTROLLER:
-                joystickController = new XBoxController(1);
+                joystickController = XBoxController.createOrGet(1);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + RobotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         createAndInitMotors();
         if (RobotSettings.ENABLE_VISION) {
-            switch(RobotSettings.GOAL_CAMERA_TYPE){
-            case LIMELIGHT:
-                goalCamera = new GoalLimelight();
-                goalCamera.init();
-                break;
-            case PHOTON:
-                goalCamera = new GoalPhoton();
-                goalCamera.init();
-                break;
-            default:
-                throw new IllegalStateException("You must have a camera type set.");
+            switch (RobotSettings.GOAL_CAMERA_TYPE) {
+                case LIMELIGHT:
+                    goalCamera = new GoalLimelight();
+                    goalCamera.init();
+                    break;
+                case PHOTON:
+                    goalCamera = new GoalPhoton();
+                    goalCamera.init();
+                    break;
+                default:
+                    throw new IllegalStateException("You must have a camera type set.");
             }
         }
     }
@@ -231,26 +231,6 @@ public class Shooter implements ISubsystem {
         }
     }
 
-    private void shooterDefault() {
-        if (RobotSettings.ENABLE_HOPPER) {
-            hopper.setAll(false);
-        }
-        double speedYouWant = constSpeed.getDouble(0);
-        if (speedYouWant != 0) {
-            isConstSpeed = true;
-            if (!isConstSpeedLast){
-                isConstSpeedLast = true;
-                leader.setPid(RobotSettings.SHOOTER_CONST_SPEED_PID);
-            }
-            leader.moveAtVelocity(speedYouWant);
-
-        } else {
-            leader.moveAtPercent(0);
-        }
-        isShooting = false;
-        ballsShot = 0;
-    }
-
     @Override
     public void initTest() {
         initGeneric();
@@ -302,11 +282,11 @@ public class Shooter implements ISubsystem {
             if (!isConstSpeed && isConstSpeedLast) {
                 leader.setPid(RobotSettings.SHOOTER_PID);
                 isConstSpeedLast = false;
-                if (DEBUG && RobotSettings.DEBUG){
+                if (DEBUG && RobotSettings.DEBUG) {
                     System.out.println("Normal shooter PID.");
                 }
             } else {
-                if (DEBUG && RobotSettings.DEBUG){
+                if (DEBUG && RobotSettings.DEBUG) {
                     System.out.println("Running constant speed PID.");
                 }
             }
@@ -317,13 +297,24 @@ public class Shooter implements ISubsystem {
         UserInterface.smartDashboardPutBoolean("IS SHOOTING?", isShooting);
     }
 
-    /**
-     * if the goal photon is in use and has a valid target in its sights
-     *
-     * @return if the goal photon is in use and has a valid target in its sights
-     */
-    public boolean isValidTarget() {
-        return RobotSettings.ENABLE_VISION && goalCamera.hasValidTarget();
+    private void shooterDefault() {
+        if (RobotSettings.ENABLE_HOPPER) {
+            hopper.setAll(false);
+        }
+        double speedYouWant = constSpeed.getDouble(0);
+        if (speedYouWant != 0) {
+            isConstSpeed = true;
+            if (!isConstSpeedLast) {
+                isConstSpeedLast = true;
+                leader.setPid(RobotSettings.SHOOTER_CONST_SPEED_PID);
+            }
+            leader.moveAtVelocity(speedYouWant);
+
+        } else {
+            leader.moveAtPercent(0);
+        }
+        isShooting = false;
+        ballsShot = 0;
     }
 
     /**
@@ -333,6 +324,15 @@ public class Shooter implements ISubsystem {
      */
     public boolean isAtSpeed() {
         return Math.abs(leader.getSpeed() - speed) < 50;
+    }
+
+    /**
+     * if the goal photon is in use and has a valid target in its sights
+     *
+     * @return if the goal photon is in use and has a valid target in its sights
+     */
+    public boolean isValidTarget() {
+        return RobotSettings.ENABLE_VISION && goalCamera.hasValidTarget();
     }
 
     public double getSpeed() {

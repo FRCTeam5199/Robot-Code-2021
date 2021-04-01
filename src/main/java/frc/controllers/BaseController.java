@@ -12,9 +12,12 @@ public abstract class BaseController {
     protected final Joystick stick;
     private final int JOYSTICK_CHANNEL;
 
+    protected static final BaseController[] allControllers = new BaseController[6];
+
     protected BaseController(int channel) {
         stick = new Joystick(channel);
         JOYSTICK_CHANNEL = channel;
+        allControllers[channel] = this;
     }
 
     @Deprecated

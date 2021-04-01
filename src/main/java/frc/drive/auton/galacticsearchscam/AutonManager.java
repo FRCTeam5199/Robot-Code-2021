@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
-import frc.robot.RobotSettings;
+
+import static frc.robot.Robot.RobotSettings;
 
 /**
  * This is for running a preselected galactic search path

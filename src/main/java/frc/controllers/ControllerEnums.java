@@ -1,6 +1,6 @@
 package frc.controllers;
 
-import frc.robot.RobotSettings;
+import static frc.robot.Robot.RobotSettings;
 
 /**
  * These enums are used for each controller. If you make a new controller, create a new enum for its mappings here for

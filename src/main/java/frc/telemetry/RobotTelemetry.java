@@ -10,7 +10,7 @@ import frc.drive.DriveManager;
 import frc.misc.ISubsystem;
 import frc.misc.UserInterface;
 import frc.misc.UtilFunctions;
-import frc.robot.RobotSettings;
+import static frc.robot.Robot.RobotSettings;
 import frc.telemetry.imu.AbstractIMU;
 import frc.telemetry.imu.WrappedNavX2IMU;
 import frc.telemetry.imu.WrappedPigeonIMU;

@@ -1,7 +1,8 @@
 package frc.vision.camera;
 
 /**
- * A nice place for all the modes of the camera's LEDs ({@link VisionLEDMode#OFF}, {@link VisionLEDMode#ON}, {@link VisionLEDMode#BLINK}).
+ * A nice place for all the modes of the camera's LEDs ({@link VisionLEDMode#OFF}, {@link VisionLEDMode#ON}, {@link
+ * VisionLEDMode#BLINK}).
  */
 public enum VisionLEDMode {
     /**
@@ -15,5 +16,5 @@ public enum VisionLEDMode {
     /**
      * Turns on the LEDs
      */
-    ON();
+    ON()
 }
