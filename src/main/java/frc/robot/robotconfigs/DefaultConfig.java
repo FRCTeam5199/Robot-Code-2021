@@ -65,7 +65,7 @@ public abstract class DefaultConfig {
     public SupportedMotors TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
     public SupportedIMU IMU_TYPE = SupportedIMU.PIGEON;
     public AutonType AUTON_TYPE = AutonType.FOLLOW_PATH;
-    public DriveBases DRIVE_BASE = DriveBases.STNADARD;
+    public DriveBases DRIVE_BASE = DriveBases.STANDARD;
 
     public int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
     public double DRIVEBASE_DISTANCE_BETWEEN_WHEELS = -2; //Distance in meters between wheels

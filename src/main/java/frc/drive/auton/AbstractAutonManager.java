@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.drive.AbstractDriveManager;
-import frc.drive.DriveManager;
+import frc.drive.DriveManagerStandard;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
@@ -19,7 +19,7 @@ import static frc.robot.Robot.robotSettings;
 
 /**
  * If you have a custom auton that needs to be implemented, extend this class. Since every Auton Manager needs to have a
- * {@link DriveManager drivetrain} and a {@link Timer timer}, they are here along with {@link ISubsystem}.
+ * {@link DriveManagerStandard drivetrain} and a {@link Timer timer}, they are here along with {@link ISubsystem}.
  *
  * @see ISubsystem
  * @see frc.drive.auton.followtrajectory.AutonManager

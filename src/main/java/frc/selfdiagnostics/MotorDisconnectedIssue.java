@@ -3,6 +3,9 @@ package frc.selfdiagnostics;
 import frc.misc.ISubsystem;
 import frc.robot.Robot;
 
+/**
+ * Pretty self explanatory. This issue is regarding an non operational Motor
+ */
 public class MotorDisconnectedIssue implements ISimpleIssue {
     private static final String[] fixes = {"Ensure there is a motor with an id of %d", "Ensure motor with id %d is plugged in", "Ensure motor %d can spin freely", "Verify motor %d is not boiling"};
     private final int faultedMotor;

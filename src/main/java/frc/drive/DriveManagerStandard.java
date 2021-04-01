@@ -39,7 +39,7 @@ import static frc.robot.Robot.robotSettings;
  *
  * @see RobotTelemetry
  */
-public class DriveManager extends AbstractDriveManager {
+public class DriveManagerStandard extends AbstractDriveManager {
     private static final boolean DEBUG = false;
     public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(robotSettings.DRIVEBASE_DISTANCE_BETWEEN_WHEELS);
     private final NetworkTableEntry driveRotMult = UserInterface.DRIVE_ROT_MULT.getEntry(),
@@ -57,7 +57,7 @@ public class DriveManager extends AbstractDriveManager {
     private BaseController controller;
     private PID lastPID = PID.EMPTY_PID;
 
-    public DriveManager() throws RuntimeException {
+    public DriveManagerStandard() throws RuntimeException {
         super();
         addToMetaList();
         init();
@@ -335,11 +335,6 @@ public class DriveManager extends AbstractDriveManager {
     @Override
     public void initGeneric() {
         setBrake(true);
-    }
-
-    @Override
-    public String getSubsystemName() {
-        return "Drivetrain";
     }
 
     /**

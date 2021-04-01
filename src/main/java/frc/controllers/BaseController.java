@@ -9,6 +9,11 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author jojo2357
  */
 public abstract class BaseController {
+    /**
+     * This is the meta registrar of controllers. This is to prevent two different controller types from existing on the same channel. To use, simply query the index corresponding to the port desired and if null, create and set. Otherwise, verify controller type then use.
+     *
+     * @see XBoxController#createOrGet(int)
+     */
     protected static final BaseController[] allControllers = new BaseController[6];
     protected final Joystick stick;
     private final int JOYSTICK_CHANNEL;

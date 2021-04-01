@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.AbstractDriveManager;
-import frc.drive.DriveManager;
+import frc.drive.DriveManagerStandard;
 import frc.drive.DriveManagerSwerve;
 import frc.misc.ISubsystem;
 import frc.misc.UserInterface;
@@ -46,9 +46,9 @@ public class RobotTelemetry implements ISubsystem {
             case NAVX2:
                 imu = new WrappedNavX2IMU();
         }
-        if (driver instanceof DriveManager) {
+        if (driver instanceof DriveManagerStandard) {
             odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
-            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManager) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManager) driver).leaderR.getRotations()));
+            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
         } else if (driver instanceof DriveManagerSwerve) {
             //TODO implement this
         }
@@ -84,8 +84,8 @@ public class RobotTelemetry implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (robotSettings.ENABLE_IMU) {
-            if (driver instanceof DriveManager)
-                robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManager) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManager) driver).leaderR.getRotations()));
+            if (driver instanceof DriveManagerStandard)
+                robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
             else if (driver instanceof DriveManagerSwerve){
                 //TODO implement this
             }

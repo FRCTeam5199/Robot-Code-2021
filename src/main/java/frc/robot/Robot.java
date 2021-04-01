@@ -11,7 +11,7 @@ import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.drive.AbstractDriveManager;
 import frc.drive.DriveBases;
-import frc.drive.DriveManager;
+import frc.drive.DriveManagerStandard;
 import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.followtrajectory.Trajectories;
@@ -86,8 +86,8 @@ public class Robot extends TimedRobot {
             ballPhoton = new BallPhoton();
         }
         if (robotSettings.ENABLE_DRIVE) {
-            if (robotSettings.DRIVE_BASE == DriveBases.STNADARD)
-                driver = new DriveManager();
+            if (robotSettings.DRIVE_BASE == DriveBases.STANDARD)
+                driver = new DriveManagerStandard();
             else if (robotSettings.DRIVE_BASE == DriveBases.SWIVEL)
                 driver = new DriveManagerSwerve();
         }
