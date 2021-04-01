@@ -129,6 +129,11 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
+    public void moveAtPosition(double pos) {
+        myPid.setReference(pos / sensorToRealDistanceFactor, ControlType.kPosition);
+    }
+
+    @Override
     public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
         if (motor.setOpenLoopRampRate(timeToMax) != CANError.kOk)
             if (!Robot.SECOND_TRY)

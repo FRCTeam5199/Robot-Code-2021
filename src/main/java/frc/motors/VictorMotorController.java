@@ -6,8 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.misc.PID;
 import frc.robot.Robot;
 
-import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
-import static com.ctre.phoenix.motorcontrol.ControlMode.Velocity;
+import static com.ctre.phoenix.motorcontrol.ControlMode.*;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Brake;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
 
@@ -74,6 +73,11 @@ public class VictorMotorController extends AbstractMotorController {
             motor.set(Velocity, realVelocity / sensorToRealDistanceFactor);
         else
             motor.set(Velocity, 0);
+    }
+
+    @Override
+    public void moveAtPosition(double pos) {
+        motor.set(Position, pos / sensorToRealDistanceFactor);
     }
 
     @Override

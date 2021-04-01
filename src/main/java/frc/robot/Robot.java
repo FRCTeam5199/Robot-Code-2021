@@ -10,6 +10,7 @@ import frc.ballstuff.shooting.ArticulatedHood;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.drive.DriveManager;
+import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.misc.Chirp;
@@ -51,6 +52,7 @@ public class Robot extends TimedRobot {
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
     public static DefaultConfig robotSettings;
     public static DriveManager driver;
+    public static DriveManagerSwerve swerve;
     public static Intake intake;
     public static Hopper hopper;
     public static Shooter shooter;
