@@ -46,7 +46,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;
-        SHOOTER_CONTROL_STYLE = ShootingControlStyles.SPEED_2021;//ShootingControlStyles.ACCURACY_2021;
+        SHOOTER_CONTROL_STYLE = ShootingControlStyles.ACCURACY_2021;//ShootingControlStyles.ACCURACY_2021;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
         IMU_TYPE = SupportedIMU.PIGEON;
@@ -54,7 +54,8 @@ public class CompetitionRobot2021 extends DefaultConfig {
         AUTON_TYPE = AutonType.GALACTIC_SEARCH;
 
         DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
-        SHOOTER_PID = new PID(0.0014, 0.0000007, 0.03, 0);
+        SHOOTER_PID = new PID(0.001, 0.0000005, 0.03, 0);//Accuracy. SPEED = new PID(0.0004, 0.0000007, 0.03, 0);
+        SHOOTER_CONST_SPEED_PID = new PID(0.0001, 0.0000007, 0.05, 0);
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
         TURRET_PID = new PID(0.006, 0.00001, 0.001);
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);

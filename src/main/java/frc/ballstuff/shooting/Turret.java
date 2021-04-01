@@ -279,9 +279,9 @@ public class Turret implements ISubsystem {
             System.out.println("Set to " + (speed * (RobotSettings.TURRET_SPROCKET_SIZE * RobotSettings.TURRET_GEAR_RATIO * Math.PI / 30)) + " from " + speed);
         }
         //Dont overcook it pls
-        if (!Robot.shooter.isShooting) {
+        //if (!Robot.shooter.isShooting) {
             motor.moveAtPercent(speed * 0.15);
-        }
+        //}
     }
 
     /**

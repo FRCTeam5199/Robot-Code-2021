@@ -17,7 +17,7 @@ import frc.vision.distancesensor.RevDistanceSensor;
  * is ) to the {@link frc.ballstuff.shooting.Shooter}
  */
 public class Hopper implements ISubsystem {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     public AbstractMotorController agitator, indexer;
     public IDistanceSensor indexSensor;
     public boolean indexed = false;
@@ -96,14 +96,14 @@ public class Hopper implements ISubsystem {
         if (!indexerActive && !agitatorActive) {
             if (RobotSettings.ENABLE_INDEXER) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    indexer.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.6 : 0);
+                    indexer.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.3 : 0);
                 } else {
                     indexer.moveAtPercent(0);
                 }
             } //2021 COMP 4 & 2020 COMP 9
             if (RobotSettings.ENABLE_AGITATOR) {
                 if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    agitator.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.15 : 0);
+                    agitator.moveAtPercent(indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.5 : 0);
                 } else {
                     agitator.moveAtPercent(0);
                 }
@@ -114,7 +114,7 @@ public class Hopper implements ISubsystem {
                 indexer.moveAtPercent(indexerActive ? 0.9 : 0);
             }
             if (RobotSettings.ENABLE_AGITATOR) {
-                agitator.moveAtPercent(agitatorActive ? 0.35 : 0);
+                agitator.moveAtPercent(agitatorActive ? 0.8 : 0);
             }
             indexed = (RobotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() < RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE); //indexed = true;//indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE;
         }

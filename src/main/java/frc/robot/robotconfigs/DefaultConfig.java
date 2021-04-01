@@ -74,6 +74,7 @@ public abstract class DefaultConfig {
 
     public PID DRIVEBASE_PID = PID.EMPTY_PID;
     public PID SHOOTER_PID = PID.EMPTY_PID;
+    public PID SHOOTER_CONST_SPEED_PID = PID.EMPTY_PID;
     public PID SHOOTER_RECOVERY_PID = SHOOTER_PID;
     public PID TURRET_PID = PID.EMPTY_PID;
     public PID HEADING_PID = PID.EMPTY_PID;

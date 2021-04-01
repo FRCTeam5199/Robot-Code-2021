@@ -45,6 +45,7 @@ public class Shooter implements ISubsystem {
     BaseController panel, joystickController;
     private AbstractMotorController leader, follower;
     private PID lastPID = PID.EMPTY_PID;
+    private boolean isConstSpeed, isConstSpeedLast = false;
 
     public Shooter() {
         addToMetaList();
@@ -160,8 +161,10 @@ public class Shooter implements ISubsystem {
             case STANDARD: {
                 if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                    isConstSpeed = false;
                 } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                    isConstSpeed = false;
                 } else {
                     if (RobotSettings.ENABLE_HOPPER) {
                         hopper.setAll(false);
@@ -175,12 +178,15 @@ public class Shooter implements ISubsystem {
             case ACCURACY_2021: {
                 if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                    isConstSpeed = false;
                 } else if (Robot.articulatedHood.unTargeted) {
                     shooterDefault();
                 } else if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                    isConstSpeed = false;
                 } else if (singleShot) {
                     ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
+                    isConstSpeed = false;
                 } else if (panel.get(ButtonPanelButtons.INTAKE_UP) == ButtonStatus.DOWN) {
                     singleShot = true;
                 } else {
@@ -191,8 +197,11 @@ public class Shooter implements ISubsystem {
             case SPEED_2021: {
                 if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_WITH_NO_REGARD_TO_ACCURACY.shoot(this);
+                    //ShootingEnums.FIRE_TIMED.shoot(this);
+                    isConstSpeed = false;
                 } else if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                    isConstSpeed = false;
                 } else {
                     shooterDefault();
                 }
@@ -228,7 +237,13 @@ public class Shooter implements ISubsystem {
         }
         double speedYouWant = constSpeed.getDouble(0);
         if (speedYouWant != 0) {
+            isConstSpeed = true;
+            if (!isConstSpeedLast){
+                isConstSpeedLast = true;
+                leader.setPid(RobotSettings.SHOOTER_CONST_SPEED_PID);
+            }
             leader.moveAtVelocity(speedYouWant);
+
         } else {
             leader.moveAtPercent(0);
         }
@@ -258,6 +273,8 @@ public class Shooter implements ISubsystem {
 
     @Override
     public void initGeneric() {
+        isConstSpeedLast = false;
+        isConstSpeed = false;
         singleShot = false;
         if (RobotSettings.SHOOTER_CONTROL_STYLE == ShootingControlStyles.SPEED_2021) {
             leader.setPid(new PID(0.0025, 0.0000007, 0.03, 0));
@@ -279,6 +296,18 @@ public class Shooter implements ISubsystem {
                 leader.setPid(lastPID);
                 if (RobotSettings.DEBUG && DEBUG) {
                     System.out.println("Set shooter pid to " + lastPID);
+                }
+            }
+        } else {
+            if (!isConstSpeed && isConstSpeedLast) {
+                leader.setPid(RobotSettings.SHOOTER_PID);
+                isConstSpeedLast = false;
+                if (DEBUG && RobotSettings.DEBUG){
+                    System.out.println("Normal shooter PID.");
+                }
+            } else {
+                if (DEBUG && RobotSettings.DEBUG){
+                    System.out.println("Running constant speed PID.");
                 }
             }
         }

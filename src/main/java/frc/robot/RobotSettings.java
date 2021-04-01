@@ -152,6 +152,7 @@ public class RobotSettings {
     public static final double DRIVE_SCALE = settingsFile.DRIVE_SCALE;
     public static final double DRIVE_GEARING = settingsFile.DRIVE_GEARING;
     public static final PID SHOOTER_PID = settingsFile.SHOOTER_PID;
+    public static final PID SHOOTER_CONST_SPEED_PID = settingsFile.SHOOTER_CONST_SPEED_PID;
     public static final PID SHOOTER_RECOVERY_PID = settingsFile.SHOOTER_RECOVERY_PID;
     public static final PID HEADING_PID = settingsFile.HEADING_PID;
     public static final PID DRIVEBASE_PID = settingsFile.DRIVEBASE_PID;

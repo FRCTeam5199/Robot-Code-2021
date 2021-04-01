@@ -61,10 +61,10 @@ public enum ShootingEnums {
             System.out.println("Ticks passed: " + shooter.ticksPassed);
         }
         if (shooter.ballsShot == 0 && shooter.getSpeed() >= 4200) {
-            if (shooter.ticksPassed >= 33) {
-                hopper.setAgitator(true);
+            if (shooter.ticksPassed >= 17) {
+                hopper.setIndexer(true);
                 if (!hopper.indexed) {
-                    hopper.setAgitator(false);
+                    hopper.setIndexer(false);
                     shooter.ballsShot++;
                     shooter.ticksPassed = 0;
                 }
@@ -72,10 +72,10 @@ public enum ShootingEnums {
                 shooter.ticksPassed++;
             }
         } else if (shooter.ballsShot >= 1) {
-            if (shooter.ticksPassed >= 1) {//33) {
-                hopper.setAgitator(true);
+            if (shooter.ticksPassed >= 17) {//33) {
+                hopper.setAll(true);
                 if (!hopper.indexed) {
-                    hopper.setAgitator(false);
+                    hopper.setAll(false);
                     shooter.ticksPassed = 0;
                     shooter.ballsShot++;
                 }
@@ -89,7 +89,7 @@ public enum ShootingEnums {
     FIRE_WITH_NO_REGARD_TO_ACCURACY(shooter -> {
         shooter.setSpeed(4400);
         if (RobotSettings.ENABLE_HOPPER) {
-            hopper.setAll(shooter.getSpeed() >= 4200); //atSpeed is 4200 +- 50, so 4500 should overdo it maybe and rapid fire, untested.
+            hopper.setAll(shooter.getSpeed() >= 4200);
         }
     }),
     FIRE_WITH_HOPPER_CONTROLLED(shooter -> {
