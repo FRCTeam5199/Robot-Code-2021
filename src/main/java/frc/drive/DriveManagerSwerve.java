@@ -5,7 +5,9 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
 import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.controllers.BaseController;
 import frc.controllers.ControllerEnums;
@@ -60,6 +62,9 @@ public class DriveManagerSwerve implements ISubsystem {
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation
     );
+
+    private SwerveDriveOdometry odometry;
+    private Pose2d pose;
 
     public DriveManagerSwerve() {
         init();
@@ -134,10 +139,14 @@ public class DriveManagerSwerve implements ISubsystem {
         } catch (RuntimeException ex ) {
             System.out.println("gyro machine broke");
         }
+
+        odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(compassHeading()), new Pose2d(0, 0, new Rotation2d()));
+        pose = new Pose2d(new Translation2d(0,0),Rotation2d.fromDegrees(compassHeading()));
     }
 
     @Override
     public void updateTest() {
+        //pose = odometry.update(compassHeading(), m_frontLeftModule.getState(), m_frontRightModule.getState(), m_backLeftModule.getState(), m_backRightModule.getState());
 //        driveSwerve();
 //        System.out.println(FRcoder.getAbsolutePosition() + " FR " + steeringFR.getEncoder().getPosition());
 //        System.out.println(FLcoder.getAbsolutePosition() + " FL " + steeringFL.getEncoder().getPosition());
@@ -196,6 +205,11 @@ public class DriveManagerSwerve implements ISubsystem {
     public void initTest() {
         resetSteeringEncoders();
         setupSteeringEncoders();
+
+        driverFR.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        driverFL.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        driverBR.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        driverBL.setIdleMode(CANSparkMax.IdleMode.kCoast);
     }
 
     @Override
@@ -204,6 +218,11 @@ public class DriveManagerSwerve implements ISubsystem {
         resetSteeringEncoders();
         setupSteeringEncoders();
         startAngle = ahrs.getYaw();
+
+        driverFR.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        driverFL.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        driverBR.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        driverBL.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
 //        DriverRF.setIdleMode(CANSparkMax.IdleMode.kBrake);
 //        DriverLF.setIdleMode(CANSparkMax.IdleMode.kBrake);
