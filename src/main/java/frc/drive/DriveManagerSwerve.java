@@ -53,7 +53,7 @@ public class DriveManagerSwerve implements ISubsystem {
 
     @Override
     public void init() {
-        PID steeringPID = new PID(0.004, 0.000001, 0);
+        PID steeringPID = new PID(0.0035, 0.000001, 0);
         //https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/controller/PIDController.html
         FLpid = new PIDController(steeringPID.P, steeringPID.I, steeringPID.D);
         FRpid = new PIDController(steeringPID.P, steeringPID.I, steeringPID.D);
@@ -87,7 +87,7 @@ public class DriveManagerSwerve implements ISubsystem {
         steeringBL.setInverted(true);
         steeringFL.setInverted(true);
 
-        setSteeringPIDS(new PID(0.006, 0.0000, 0.01));
+        //setSteeringPIDS(new PID(0.005, 0.0000, 0.01));
 
         FRcoder = new CANCoder(11);
         BRcoder = new CANCoder(12);
@@ -193,7 +193,7 @@ public class DriveManagerSwerve implements ISubsystem {
 
         boolean useFieldOriented = xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER) > 0.1;
         if (useFieldOriented) {
-            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forwards, leftwards, rotation, Rotation2d.fromDegrees(IMU.relativeYaw()));
+            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forwards, leftwards, rotation, Rotation2d.fromDegrees(-IMU.relativeYaw()));
         }
 
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
@@ -244,7 +244,7 @@ public class DriveManagerSwerve implements ISubsystem {
     }
 
     private void setDrive(double FL, double FR, double BL, double BR) {
-        double num = 3;
+        double num = 3.5;
         System.out.println("FL: " + FL);
         System.out.println("FR: " + FR);
         System.out.println("BL: " + BL);
