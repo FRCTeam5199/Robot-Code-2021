@@ -198,11 +198,18 @@ public class DriveManagerSwerve implements ISubsystem {
         double leftwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_X) * (2);
         double rotation = xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X) * (-3);
 
-        //x+ m/s forwards, y+ m/s left, omega+ rad/sec ccw
-        ChassisSpeeds speeds = new ChassisSpeeds(forwards, leftwards, rotation);
-
         boolean useFieldOriented = xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER) < 0.1;
         boolean dorifto = xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
+
+        ChassisSpeeds speeds;
+
+        //x+ m/s forwards, y+ m/s left, omega+ rad/sec ccw
+        if(dorifto){
+            speeds = new ChassisSpeeds(forwards, 0, rotation);
+        }
+        else {
+            speeds = new ChassisSpeeds(forwards, leftwards, rotation);
+        }
 
         if(useFieldOriented&&!dorifto){
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forwards, leftwards, rotation, Rotation2d.fromDegrees(-IMU.relativeYaw()));
@@ -212,8 +219,9 @@ public class DriveManagerSwerve implements ISubsystem {
 
 
         if(dorifto){
+            double driftOffset = 3; //3
             double offset = trackLength/2/39.3701;
-            offset -= forwards/3;
+            offset -= forwards/driftOffset;
             System.out.println("forwards: " + forwards);
             moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(offset,0));
         }
