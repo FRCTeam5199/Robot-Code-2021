@@ -205,7 +205,7 @@ public class DriveManagerSwerve implements ISubsystem {
         boolean dorifto = xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
 
         if(useFieldOriented&&!dorifto){
-            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forwards, leftwards, rotation, Rotation2d.fromDegrees(IMU.relativeYaw()));
+            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forwards, leftwards, rotation, Rotation2d.fromDegrees(-IMU.relativeYaw()));
         }
 
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
