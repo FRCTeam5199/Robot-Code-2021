@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
 
-import static frc.robot.Robot.RobotSettings;
+import static frc.robot.Robot.robotSettings;
 
 public class GoalPhoton implements IVision {
     private NetworkTableEntry yaw;
@@ -30,7 +30,7 @@ public class GoalPhoton implements IVision {
     public void init() {
         filter = LinearFilter.movingAverage(5);
         NetworkTableInstance table = NetworkTableInstance.getDefault();
-        NetworkTable cameraTable = table.getTable("photonvision").getSubTable(RobotSettings.GOAL_CAM_NAME);
+        NetworkTable cameraTable = table.getTable("photonvision").getSubTable(robotSettings.GOAL_CAM_NAME);
         yaw = cameraTable.getEntry("targetYaw");
         size = cameraTable.getEntry("targetArea");
         hasTarget = cameraTable.getEntry("hasTarget");

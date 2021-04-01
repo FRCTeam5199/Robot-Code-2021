@@ -2,10 +2,10 @@ package frc.ballstuff.shooting;
 
 import frc.controllers.ControllerEnums;
 import frc.robot.Robot;
-import static frc.robot.Robot.RobotSettings;
 
 import java.util.function.Consumer;
 
+import static frc.robot.Robot.robotSettings;
 import static frc.robot.Robot.hopper;
 
 
@@ -18,7 +18,7 @@ public enum ShootingEnums {
     //TODO make controller dynamic
     FIRE_SOLID_SPEED(shooter -> {
         shooter.setSpeed(4200 * (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
-        if (RobotSettings.ENABLE_HOPPER) {
+        if (robotSettings.ENABLE_HOPPER) {
             hopper.setAll(shooter.isAtSpeed() && shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN);
         }
     }),
@@ -26,7 +26,7 @@ public enum ShootingEnums {
     FIRE_TEST_SPEED(shooter -> {
         //shooter.setPercentSpeed(1);
         shooter.setSpeed(4200);
-        if (RobotSettings.ENABLE_HOPPER) {
+        if (robotSettings.ENABLE_HOPPER) {
             hopper.setAll(shooter.isAtSpeed());
         }
     }),
@@ -34,13 +34,13 @@ public enum ShootingEnums {
     //Used by our current vision tracking
     FIRE_HIGH_SPEED(shooter -> {
         shooter.setSpeed(4200); //* (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1)
-        if (RobotSettings.ENABLE_HOPPER) {
+        if (robotSettings.ENABLE_HOPPER) {
             hopper.setAll((shooter.isAtSpeed() && shooter.isValidTarget()));
         }
     }),
 
     FIRE_SINGLE_SHOT(shooter -> {
-        if (RobotSettings.ENABLE_HOPPER) {
+        if (robotSettings.ENABLE_HOPPER) {
             shooter.ticksPassed = (shooter.isAtSpeed() ? Robot.shooter.ticksPassed + 1 : 0);
             if (shooter.ticksPassed >= 50) {
                 hopper.setAgitator(true);
@@ -88,13 +88,13 @@ public enum ShootingEnums {
     }),
     FIRE_WITH_NO_REGARD_TO_ACCURACY(shooter -> {
         shooter.setSpeed(4400);
-        if (RobotSettings.ENABLE_HOPPER) {
+        if (robotSettings.ENABLE_HOPPER) {
             hopper.setAll(shooter.getSpeed() >= 4200);
         }
     }),
     FIRE_WITH_HOPPER_CONTROLLED(shooter -> {
         shooter.setSpeed(4400);
-        if (RobotSettings.ENABLE_HOPPER) {
+        if (robotSettings.ENABLE_HOPPER) {
             hopper.setIndexer(shooter.getSpeed() >= 4200);
             hopper.setAgitator(!hopper.indexed && shooter.getSpeed() >= 4200);
         }
@@ -108,7 +108,7 @@ public enum ShootingEnums {
 
     public void shoot(Shooter shooter) {
 
-        if (RobotSettings.DEBUG && DEBUG) {
+        if (robotSettings.DEBUG && DEBUG) {
             System.out.println("Shooting " + this.name());
         }
         this.function.accept(shooter);

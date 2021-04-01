@@ -14,7 +14,7 @@ import frc.telemetry.RobotTelemetry;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static frc.robot.Robot.RobotSettings;
+import static frc.robot.Robot.robotSettings;
 
 /**
  * If you have a custom auton that needs to be implemented, extend this class. Since every Auton Manager needs to have a
@@ -67,10 +67,10 @@ public abstract class AbstractAutonManager implements ISubsystem {
     }
 
     protected void onFinish() {
-        RobotSettings.autonComplete = true;
-        if (RobotSettings.ENABLE_MUSIC && !RobotSettings.AUTON_COMPLETE_NOISE.equals("")) {
+        robotSettings.autonComplete = true;
+        if (robotSettings.ENABLE_MUSIC && !robotSettings.AUTON_COMPLETE_NOISE.equals("")) {
             DRIVING_CHILD.setBrake(true);
-            Robot.chirp.loadMusic(RobotSettings.AUTON_COMPLETE_NOISE);
+            Robot.chirp.loadMusic(robotSettings.AUTON_COMPLETE_NOISE);
             Robot.chirp.play();
         }
     }

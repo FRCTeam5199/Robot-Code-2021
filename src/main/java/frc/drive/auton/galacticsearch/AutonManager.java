@@ -11,13 +11,13 @@ import frc.drive.auton.Point;
 import frc.misc.UserInterface;
 import frc.robot.Robot;
 
-import static frc.robot.Robot.RobotSettings;
+import static frc.robot.Robot.robotSettings;
 import static frc.robot.Robot.ballPhoton;
 
 /**
  * Used for the galactic search challenge which includes automatically determining a path to take at enable-time.
  * <p>
- * Requirements: {@link frc.robot.Robot#RobotSettings#ENABLE_VISION} {@link frc.robot.Robot#RobotSettings#ENABLE_IMU}
+ * Requirements: {@link frc.robot.Robot#robotSettings#ENABLE_VISION} {@link frc.robot.Robot#robotSettings#ENABLE_IMU}
  */
 public class AutonManager extends AbstractAutonManager {
 
@@ -44,14 +44,14 @@ public class AutonManager extends AbstractAutonManager {
     }
 
     /**
-     * Runs the auton path. When complete, sets a flag in {@link frc.robot.Robot#RobotSettings#autonComplete} and runs
+     * Runs the auton path. When complete, sets a flag in {@link frc.robot.Robot#robotSettings#autonComplete} and runs
      * {@link #onFinish()}
      */
     @Override
     public void updateAuton() {
-        if (!RobotSettings.autonComplete) {
+        if (!robotSettings.autonComplete) {
             Trajectory.State goal = trajectory.sample(timer.get());
-            if (RobotSettings.ENABLE_IMU) {
+            if (robotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
                 ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
                 DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond * 2);
@@ -96,7 +96,7 @@ public class AutonManager extends AbstractAutonManager {
         System.out.println("I chose" + path.name());
         UserInterface.smartDashboardPutString("Auton Path", path.name());
         trajectory = paths.get(path);
-        if (RobotSettings.ENABLE_IMU) {
+        if (robotSettings.ENABLE_IMU) {
             telem.resetOdometry();
             Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
             trajectory = trajectory.transformBy(transform);

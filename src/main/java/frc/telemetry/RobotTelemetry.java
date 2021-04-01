@@ -10,10 +10,11 @@ import frc.drive.DriveManager;
 import frc.misc.ISubsystem;
 import frc.misc.UserInterface;
 import frc.misc.UtilFunctions;
-import static frc.robot.Robot.RobotSettings;
 import frc.telemetry.imu.AbstractIMU;
 import frc.telemetry.imu.WrappedNavX2IMU;
 import frc.telemetry.imu.WrappedPigeonIMU;
+
+import static frc.robot.Robot.robotSettings;
 
 public class RobotTelemetry implements ISubsystem {
     private final DriveManager driver;
@@ -36,16 +37,16 @@ public class RobotTelemetry implements ISubsystem {
     @Override
     public void init() {
         resetEncoders();
-        if (!RobotSettings.ENABLE_IMU)
+        if (!robotSettings.ENABLE_IMU)
             return;
-        switch (RobotSettings.IMU_TYPE) {
+        switch (robotSettings.IMU_TYPE) {
             case PIGEON:
                 imu = new WrappedPigeonIMU();
                 break;
             case NAVX2:
                 imu = new WrappedNavX2IMU();
         }
-        headingPID = new PIDController(RobotSettings.HEADING_PID.getP(), RobotSettings.HEADING_PID.getI(), RobotSettings.HEADING_PID.getD());
+        headingPID = new PIDController(robotSettings.HEADING_PID.getP(), robotSettings.HEADING_PID.getI(), robotSettings.HEADING_PID.getD());
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
         robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
     }
@@ -105,7 +106,7 @@ public class RobotTelemetry implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (RobotSettings.ENABLE_IMU) {
+        if (robotSettings.ENABLE_IMU) {
             robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
             robotTranslation = robotPose.getTranslation();
             robotRotation = robotPose.getRotation();
@@ -199,7 +200,7 @@ public class RobotTelemetry implements ISubsystem {
      * Resets all orienting to zeroes.
      */
     public void resetOdometry() {
-        if (RobotSettings.ENABLE_IMU)
+        if (robotSettings.ENABLE_IMU)
             imu.resetOdometry();
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
         resetEncoders();

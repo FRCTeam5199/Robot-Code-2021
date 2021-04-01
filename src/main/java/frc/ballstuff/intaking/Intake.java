@@ -11,10 +11,9 @@ import frc.misc.InitializationFailureException;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
-
-import static frc.robot.Robot.RobotSettings;
-
 import frc.selfdiagnostics.MotorDisconnectedIssue;
+
+import static frc.robot.Robot.robotSettings;
 
 /**
  * The "Intake" is referring to the part that picks up power cells from the floor
@@ -38,18 +37,18 @@ public class Intake implements ISubsystem {
      */
     @Override
     public void init() throws InitializationFailureException, IllegalStateException {
-        switch (RobotSettings.INTAKE_CONTROL_STYLE) {
+        switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case STANDARD:
-                joystick = JoystickController.createOrGet(RobotSettings.FLIGHT_STICK_USB_SLOT);
+                joystick = JoystickController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT);
                 break;
             case BOPIT:
                 joystick = DrumTimeController.createOrGet(0);
                 break;
             default:
-                throw new IllegalStateException("There is no UI configuration for " + RobotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
+                throw new IllegalStateException("There is no UI configuration for " + robotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         try {
-            intakeMotor = new VictorMotorController(RobotSettings.INTAKE_MOTOR_ID);
+            intakeMotor = new VictorMotorController(robotSettings.INTAKE_MOTOR_ID);
         } catch (Exception e) {
             throw new InitializationFailureException("Intake motor failed to be created", "Disable the intake or investigate your motor mappings");
         }
@@ -73,8 +72,8 @@ public class Intake implements ISubsystem {
 
     @Override
     public void updateAuton() {
-        if (RobotSettings.AUTON_TYPE == AutonType.GALACTIC_SEARCH || RobotSettings.AUTON_TYPE == AutonType.GALACTIC_SCAM) {
-            setIntake(RobotSettings.autonComplete ? IntakeDirection.OFF : IntakeDirection.IN);
+        if (robotSettings.AUTON_TYPE == AutonType.GALACTIC_SEARCH || robotSettings.AUTON_TYPE == AutonType.GALACTIC_SCAM) {
+            setIntake(robotSettings.autonComplete ? IntakeDirection.OFF : IntakeDirection.IN);
         }
         updateGeneric();
     }
@@ -82,11 +81,11 @@ public class Intake implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (intakeMotor.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.INTAKE_MOTOR_ID, intakeMotor.getSuggestedFix());
+            MotorDisconnectedIssue.reportIssue(this, robotSettings.INTAKE_MOTOR_ID, intakeMotor.getSuggestedFix());
         else
-            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.INTAKE_MOTOR_ID);
+            MotorDisconnectedIssue.resolveIssue(this, robotSettings.INTAKE_MOTOR_ID);
         intakeMotor.moveAtPercent(0.8 * intakeMult);
-        switch (RobotSettings.INTAKE_CONTROL_STYLE) {
+        switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case STANDARD:
                 if (joystick.hatIs(JoystickHatDirection.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
                     setIntake(IntakeDirection.IN);
@@ -103,9 +102,9 @@ public class Intake implements ISubsystem {
                     setIntake(IntakeDirection.OFF);
                 break;
             default:
-                throw new IllegalStateException("There is no UI configuration for " + RobotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
+                throw new IllegalStateException("There is no UI configuration for " + robotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
-        if (RobotSettings.DEBUG && DEBUG) {
+        if (robotSettings.DEBUG && DEBUG) {
             UserInterface.smartDashboardPutNumber("Intake Speed", intakeMult);
         }
     }

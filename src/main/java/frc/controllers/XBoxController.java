@@ -15,6 +15,16 @@ import frc.controllers.ControllerEnums.XboxAxes;
 public class XBoxController extends BaseController {
     private final boolean triggerFlag = false;
 
+    public static BaseController createOrGet(int channel) {
+        if (channel < 0 || channel >= 6)
+            throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
+        if (BaseController.allControllers[channel] == null)
+            return BaseController.allControllers[channel] = new XBoxController(channel);
+        if (BaseController.allControllers[channel] instanceof XBoxController)
+            return BaseController.allControllers[channel];
+        throw new ArrayStoreException("A different controller has already been made for channel " + channel);
+    }
+
     /**
      * Creates a new Xbox Controller object on a specified usb port
      *
@@ -54,15 +64,5 @@ public class XBoxController extends BaseController {
     public void rumble(double percent) {
         stick.setRumble(GenericHID.RumbleType.kLeftRumble, percent);
         stick.setRumble(GenericHID.RumbleType.kRightRumble, percent);
-    }
-
-    public static BaseController createOrGet(int channel){
-        if (channel < 0 || channel >= 6)
-            throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
-        if (BaseController.allControllers[channel] == null)
-            return BaseController.allControllers[channel] = new XBoxController(channel);
-        if (BaseController.allControllers[channel] instanceof XBoxController)
-            return BaseController.allControllers[channel];
-        throw new ArrayStoreException("A different controller has already been made for channel " + channel);
     }
 }

@@ -1,16 +1,21 @@
 package frc.ballstuff.shooting;
 
 import com.revrobotics.CANSparkMaxLowLevel;
-import frc.controllers.*;
+import frc.controllers.BaseController;
+import frc.controllers.BopItBasicController;
+import frc.controllers.ButtonPanelController;
+import frc.controllers.ControllerEnums;
+import frc.controllers.JoystickController;
+import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.Robot;
-import static frc.robot.Robot.RobotSettings;
 
 import static frc.misc.UtilFunctions.weightedAverage;
+import static frc.robot.Robot.robotSettings;
 
 public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = false;
@@ -40,12 +45,12 @@ public class ArticulatedHood implements ISubsystem {
 
     @Override
     public void init() {
-        switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
+        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
-                joystickController = JoystickController.createOrGet(RobotSettings.FLIGHT_STICK_USB_SLOT);
-                panel = ButtonPanelController.createOrGet(RobotSettings.BUTTON_PANEL_USB_SLOT);
+                joystickController = JoystickController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT);
+                panel = ButtonPanelController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT);
                 break;
             case BOP_IT:
                 joystickController = BopItBasicController.createOrGet(1);
@@ -54,7 +59,7 @@ public class ArticulatedHood implements ISubsystem {
                 joystickController = XBoxController.createOrGet(1);
                 break;
             default:
-                throw new IllegalStateException("There is no UI configuration for " + RobotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the articulated hood. Please implement me");
+                throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the articulated hood. Please implement me");
         }
         createAndInitMotors();
     }
@@ -63,17 +68,17 @@ public class ArticulatedHood implements ISubsystem {
      * Initialize the motors.
      */
     private void createAndInitMotors() {
-        switch (RobotSettings.HOOD_MOTOR_TYPE) {
+        switch (robotSettings.HOOD_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
-                hoodMotor = new SparkMotorController(RobotSettings.SHOOTER_HOOD_ID, CANSparkMaxLowLevel.MotorType.kBrushed);
+                hoodMotor = new SparkMotorController(robotSettings.SHOOTER_HOOD_ID, CANSparkMaxLowLevel.MotorType.kBrushed);
                 hoodMotor.setSensorToRealDistanceFactor(1);
                 break;
             case TALON_FX:
-                hoodMotor = new TalonMotorController(RobotSettings.SHOOTER_HOOD_ID);
-                hoodMotor.setSensorToRealDistanceFactor(600 / RobotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
+                hoodMotor = new TalonMotorController(robotSettings.SHOOTER_HOOD_ID);
+                hoodMotor.setSensorToRealDistanceFactor(600 / robotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
                 break;
             default:
-                throw new IllegalStateException("No such supported hood config for " + RobotSettings.HOOD_MOTOR_TYPE.name());
+                throw new IllegalStateException("No such supported hood config for " + robotSettings.HOOD_MOTOR_TYPE.name());
         }
         hoodMotor.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
         hoodMotor.setBrake(true);
@@ -97,7 +102,7 @@ public class ArticulatedHood implements ISubsystem {
     @Override
     public void updateGeneric() { //FIVE UP THREE DOWN
         double currentPos = hoodMotor.getRotations();
-        switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
+        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
             case ACCURACY_2021:
                 if (currentPos > 1.75) {
                     moveTo = -1;
@@ -112,7 +117,7 @@ public class ArticulatedHood implements ISubsystem {
                     moveTo = -1;
                     hoodMotor.moveAtPercent(0.3);
                 } else if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
-                    if (!Robot.shooter.isValidTarget()){
+                    if (!Robot.shooter.isValidTarget()) {
                         moveTo = 1.4;
                         unTargeted = true;
                     } else {
@@ -143,7 +148,7 @@ public class ArticulatedHood implements ISubsystem {
                     moveTo = -1;
                     hoodMotor.moveAtPercent(0.3);
                 } else if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
-                    if (!Robot.shooter.isValidTarget()){
+                    if (!Robot.shooter.isValidTarget()) {
                         moveTo = 1.4;
                         unTargeted = true;
                     } else {
@@ -191,58 +196,11 @@ public class ArticulatedHood implements ISubsystem {
             default:
                 throw new IllegalStateException("You can't articulate the hood without the panel.");
         }
-        if (DEBUG && RobotSettings.DEBUG) {
+        if (DEBUG && robotSettings.DEBUG) {
             UserInterface.smartDashboardPutNumber("Hood Pos", hoodMotor.getRotations());
             UserInterface.smartDashboardPutNumber("Moving to pos", moveTo);
         }
         moveToPos(moveTo, currentPos);
-    }
-
-    private void moveToPosFromButtons() {
-        if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN) {
-            moveTo = 0.05; //POS 1
-            unTargeted = false;
-        } else if (panel.get(ControllerEnums.ButtonPanelButtons.INTAKE_DOWN) == ControllerEnums.ButtonStatus.DOWN) {
-            moveTo = 0.77; //POS 2
-            unTargeted = false;
-        } else if (panel.get(ControllerEnums.ButtonPanelButtons.HOPPER_OUT) == ControllerEnums.ButtonStatus.DOWN) {
-            moveTo = 1.05; //POS 3
-            unTargeted = false;
-        } else if (panel.get(ControllerEnums.ButtonPanelButtons.SOLID_SPEED) == ControllerEnums.ButtonStatus.DOWN) {
-            moveTo = 1.135; //POS 4
-            unTargeted = false;
-        } else {
-            hoodMotor.moveAtPercent(0);
-        }
-    }
-
-    private void moveToPos(double moveTo, double currentPos) {
-        if (DEBUG && RobotSettings.DEBUG) {
-            UserInterface.smartDashboardPutNumber("Moving to", moveTo);
-        }
-        if (moveTo != -2 && moveTo != -1) {
-            double distanceNeededToTravel = currentPos - moveTo;
-            //double hoodPercent = distanceNeededToTravel > 0 ? 0.3 : -0.3;
-            double hoodPercent = Math.min(Math.abs(distanceNeededToTravel), 0.3);
-            hoodPercent *= distanceNeededToTravel > 0 ? 1 : -1;
-            /*if (Math.abs(distanceNeededToTravel) < 0.035) {
-                hoodPercent = 0;
-            }*/
-            hoodMotor.moveAtPercent(hoodPercent);
-            if (DEBUG && RobotSettings.DEBUG) {
-                UserInterface.smartDashboardPutNumber("Moving to", moveTo);
-                UserInterface.smartDashboardPutNumber("Distance from target", distanceNeededToTravel);
-            }
-        } else if (moveTo == -2) {
-            if (DEBUG && RobotSettings.DEBUG) {
-                UserInterface.smartDashboardPutNumber("Distance from target", 0);
-            }
-            hoodMotor.moveAtPercent(0);
-        } else {
-            if (DEBUG && RobotSettings.DEBUG) {
-                UserInterface.smartDashboardPutNumber("Distance from target", 0);
-            }
-        }
     }
 
     @Override
@@ -293,5 +251,52 @@ public class ArticulatedHood implements ISubsystem {
         }
         throw new IllegalStateException("The only way to get here is to not have sizeEncoderPositionArray sorted in ascending order based on the first value of each entry. Please ensure that it is sorted as such and try again.");
         //return -2;
+    }
+
+    private void moveToPosFromButtons() {
+        if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN) {
+            moveTo = 0.05; //POS 1
+            unTargeted = false;
+        } else if (panel.get(ControllerEnums.ButtonPanelButtons.INTAKE_DOWN) == ControllerEnums.ButtonStatus.DOWN) {
+            moveTo = 0.77; //POS 2
+            unTargeted = false;
+        } else if (panel.get(ControllerEnums.ButtonPanelButtons.HOPPER_OUT) == ControllerEnums.ButtonStatus.DOWN) {
+            moveTo = 1.05; //POS 3
+            unTargeted = false;
+        } else if (panel.get(ControllerEnums.ButtonPanelButtons.SOLID_SPEED) == ControllerEnums.ButtonStatus.DOWN) {
+            moveTo = 1.135; //POS 4
+            unTargeted = false;
+        } else {
+            hoodMotor.moveAtPercent(0);
+        }
+    }
+
+    private void moveToPos(double moveTo, double currentPos) {
+        if (DEBUG && robotSettings.DEBUG) {
+            UserInterface.smartDashboardPutNumber("Moving to", moveTo);
+        }
+        if (moveTo != -2 && moveTo != -1) {
+            double distanceNeededToTravel = currentPos - moveTo;
+            //double hoodPercent = distanceNeededToTravel > 0 ? 0.3 : -0.3;
+            double hoodPercent = Math.min(Math.abs(distanceNeededToTravel), 0.3);
+            hoodPercent *= distanceNeededToTravel > 0 ? 1 : -1;
+            /*if (Math.abs(distanceNeededToTravel) < 0.035) {
+                hoodPercent = 0;
+            }*/
+            hoodMotor.moveAtPercent(hoodPercent);
+            if (DEBUG && robotSettings.DEBUG) {
+                UserInterface.smartDashboardPutNumber("Moving to", moveTo);
+                UserInterface.smartDashboardPutNumber("Distance from target", distanceNeededToTravel);
+            }
+        } else if (moveTo == -2) {
+            if (DEBUG && robotSettings.DEBUG) {
+                UserInterface.smartDashboardPutNumber("Distance from target", 0);
+            }
+            hoodMotor.moveAtPercent(0);
+        } else {
+            if (DEBUG && robotSettings.DEBUG) {
+                UserInterface.smartDashboardPutNumber("Distance from target", 0);
+            }
+        }
     }
 }

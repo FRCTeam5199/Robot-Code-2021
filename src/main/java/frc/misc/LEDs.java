@@ -7,7 +7,7 @@ import frc.robot.Robot;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import static frc.robot.Robot.RobotSettings;
+import static frc.robot.Robot.robotSettings;
 
 public class LEDs {
     private static final Random random = new Random(System.currentTimeMillis());
@@ -17,8 +17,8 @@ public class LEDs {
     private int chaseLastLEDSet = 0;
 
     public void init() {
-        ledBuffer = new AddressableLEDBuffer(RobotSettings.LED_STRAND_LENGTH);
-        ledConfig = new AddressableLED(RobotSettings.LED_STRAND_PORT_ID);
+        ledBuffer = new AddressableLEDBuffer(robotSettings.LED_STRAND_LENGTH);
+        ledConfig = new AddressableLED(robotSettings.LED_STRAND_PORT_ID);
         ledConfig.setLength(ledBuffer.getLength());
         ledConfig.setData(ledBuffer);
         ledConfig.start();

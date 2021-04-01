@@ -9,7 +9,7 @@ import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 
-import static frc.robot.Robot.RobotSettings;
+import static frc.robot.Robot.robotSettings;
 
 /**
  * This is for running a preselected galactic search path
@@ -42,10 +42,10 @@ public class AutonManager extends AbstractAutonManager {
      */
     @Override
     public void updateAuton() {
-        if (!RobotSettings.autonComplete) {
+        if (!robotSettings.autonComplete) {
             //TrajectoryUtil.serializeTrajectory();
             Trajectory.State goal = trajectory.sample(timer.get());
-            if (RobotSettings.ENABLE_IMU) {
+            if (robotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
                 ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
                 DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond * 2);
@@ -73,9 +73,9 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void initAuton() {
-        RobotSettings.autonComplete = false;
+        robotSettings.autonComplete = false;
         trajectory = paths.get(GalacticSearchPaths.PATH_B_BLUE);
-        if (RobotSettings.ENABLE_IMU) {
+        if (robotSettings.ENABLE_IMU) {
             telem.resetOdometry();
             Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
             trajectory = trajectory.transformBy(transform);

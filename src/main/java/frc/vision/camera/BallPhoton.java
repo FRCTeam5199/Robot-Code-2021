@@ -7,7 +7,7 @@ import org.photonvision.PhotonTrackedTarget;
 
 import java.util.List;
 
-import static frc.robot.Robot.RobotSettings;
+import static frc.robot.Robot.robotSettings;
 
 public class BallPhoton implements IVision {
     private static final boolean DEBUG = false;
@@ -29,7 +29,7 @@ public class BallPhoton implements IVision {
      */
     public void init() {
         filter = LinearFilter.movingAverage(5);
-        ballCamera = new PhotonCamera(RobotSettings.BALL_CAM_NAME);
+        ballCamera = new PhotonCamera(robotSettings.BALL_CAM_NAME);
         cameraResult = ballCamera.getLatestResult();
         System.out.println("Found " + cameraResult.targets.size() + " targets");
     }
@@ -64,7 +64,7 @@ public class BallPhoton implements IVision {
     @Override
     public void updateGeneric() {
         cameraResult = ballCamera.getLatestResult();
-        if (RobotSettings.DEBUG && DEBUG) {
+        if (robotSettings.DEBUG && DEBUG) {
             System.out.println("Found " + cameraResult.targets.size() + " targets");
         }
         //if (validTarget()) {

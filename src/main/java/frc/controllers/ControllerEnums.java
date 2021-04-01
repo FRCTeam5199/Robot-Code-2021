@@ -1,6 +1,6 @@
 package frc.controllers;
 
-import static frc.robot.Robot.RobotSettings;
+import static frc.robot.Robot.robotSettings;
 
 /**
  * These enums are used for each controller. If you make a new controller, create a new enum for its mappings here for
@@ -69,7 +69,7 @@ public class ControllerEnums {
      * @see XBoxController
      */
     public enum XboxAxes {
-        LEFT_JOY_X(0, RobotSettings.XBOX_CONTROLLER_DEADZONE), LEFT_JOY_Y(1, RobotSettings.XBOX_CONTROLLER_DEADZONE), LEFT_TRIGGER(2, 0), RIGHT_TRIGGER(3, 0), RIGHT_JOY_X(4, RobotSettings.XBOX_CONTROLLER_DEADZONE), RIGHT_JOY_Y(5, RobotSettings.XBOX_CONTROLLER_DEADZONE);
+        LEFT_JOY_X(0, robotSettings.XBOX_CONTROLLER_DEADZONE), LEFT_JOY_Y(1, robotSettings.XBOX_CONTROLLER_DEADZONE), LEFT_TRIGGER(2, 0), RIGHT_TRIGGER(3, 0), RIGHT_JOY_X(4, robotSettings.XBOX_CONTROLLER_DEADZONE), RIGHT_JOY_Y(5, robotSettings.XBOX_CONTROLLER_DEADZONE);
 
         public final int AXIS_VALUE;
         public final double DEADZONE;

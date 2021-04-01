@@ -9,7 +9,7 @@ import frc.drive.DriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.IAutonEnumPath;
 
-import static frc.robot.Robot.RobotSettings;
+import static frc.robot.Robot.robotSettings;
 
 /**
  * Check back later for some fun and fresh auton routines!
@@ -44,7 +44,7 @@ public class AutonManager extends AbstractAutonManager {
     @Override
     public void updateAuton() {
         Trajectory.State goal = trajectory.sample(timer.get());
-        if (RobotSettings.ENABLE_IMU) {
+        if (robotSettings.ENABLE_IMU) {
             System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
             ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
             DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
@@ -68,7 +68,7 @@ public class AutonManager extends AbstractAutonManager {
     @Override
     public void initAuton() {
         trajectory = paths.get(autonPath);
-        if (RobotSettings.ENABLE_IMU) {
+        if (robotSettings.ENABLE_IMU) {
             telem.resetOdometry();
             Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
             trajectory = trajectory.transformBy(transform);

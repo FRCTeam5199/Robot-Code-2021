@@ -9,10 +9,9 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author jojo2357
  */
 public abstract class BaseController {
+    protected static final BaseController[] allControllers = new BaseController[6];
     protected final Joystick stick;
     private final int JOYSTICK_CHANNEL;
-
-    protected static final BaseController[] allControllers = new BaseController[6];
 
     protected BaseController(int channel) {
         stick = new Joystick(channel);
