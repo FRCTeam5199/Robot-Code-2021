@@ -325,14 +325,16 @@ public class DriveManagerSwerve implements ISubsystem {
         //x+ m/s forwards, y+ m/s left, omega+ rad/sec ccw
         ChassisSpeeds speeds = new ChassisSpeeds(forwards, leftwards, rotation);
 
-        boolean useFieldOriented = xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER) > 0.1;
-        if(useFieldOriented){
+        boolean useFieldOriented = xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER) < 0.1;
+        boolean dorifto = xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
+
+        if(useFieldOriented&&!dorifto){
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forwards, leftwards, rotation, Rotation2d.fromDegrees(compassHeading()));
         }
 
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
 
-        boolean dorifto = xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
+
         if(dorifto){
             double offset = trackLength/2/39.3701;
             offset -= forwards/3;
@@ -371,11 +373,17 @@ public class DriveManagerSwerve implements ISubsystem {
     }
 
     private void setSteeringContinuous(double FL, double FR, double BL, double BR) {
+        double FLoffset, FRoffset, BLoffset, BRoffset;
+        FLoffset = -1;
+        FRoffset = -1;
+        BLoffset = 2;
+        BRoffset = 2;
+
         //will this work? good question
-        FLpid.setSetpoint(FL);
-        FRpid.setSetpoint(FR);
-        BRpid.setSetpoint(BR);
-        BLpid.setSetpoint(BL);
+        FLpid.setSetpoint(FL+FLoffset);
+        FRpid.setSetpoint(FR+FRoffset);
+        BRpid.setSetpoint(BR+BRoffset);
+        BLpid.setSetpoint(BL+BLoffset);
 
         steeringFL.set(FLpid.calculate(FLcoder.getAbsolutePosition()));
         steeringFR.set(FRpid.calculate(FRcoder.getAbsolutePosition()));
