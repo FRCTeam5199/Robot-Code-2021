@@ -12,6 +12,7 @@ import frc.robot.Robot;
 import static com.revrobotics.CANSparkMax.IdleMode.kBrake;
 import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
+import static com.revrobotics.ControlType.kPosition;
 import static com.revrobotics.ControlType.kVelocity;
 
 /**
@@ -96,6 +97,11 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
+    public void moveAtPosition(double pos) {
+        myPid.setReference(pos / sensorToRealDistanceFactor, kPosition);
+    }
+
+    @Override
     public AbstractMotorController setBrake(boolean brake) {
         motor.setIdleMode(brake ? kBrake : kCoast);
         return this;
@@ -126,11 +132,6 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public void moveAtPercent(double percent) {
         motor.set(percent);
-    }
-
-    @Override
-    public void moveAtPosition(double pos) {
-        myPid.setReference(pos / sensorToRealDistanceFactor, ControlType.kPosition);
     }
 
     @Override

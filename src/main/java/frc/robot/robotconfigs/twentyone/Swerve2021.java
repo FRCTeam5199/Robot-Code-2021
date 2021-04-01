@@ -3,6 +3,7 @@ package frc.robot.robotconfigs.twentyone;
 import edu.wpi.first.wpilibj.I2C;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
+import frc.drive.DriveBases;
 import frc.drive.DriveTypes;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
@@ -11,8 +12,8 @@ import frc.robot.robotconfigs.DefaultConfig;
 import frc.telemetry.imu.SupportedIMU;
 import frc.vision.camera.SupportedVision;
 
-public class CompetitionRobot2021 extends DefaultConfig {
-    public CompetitionRobot2021() {
+public class Swerve2021 extends DefaultConfig {
+    public Swerve2021() {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
         ENABLE_TURRET = true;
@@ -49,6 +50,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
         IMU_TYPE = SupportedIMU.PIGEON;
+        DRIVE_BASE = DriveBases.SWIVEL;
 
         AUTON_TYPE = AutonType.GALACTIC_SEARCH;
 

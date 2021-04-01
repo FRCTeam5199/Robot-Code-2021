@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import frc.drive.AbstractDriveManager;
 import frc.drive.DriveManager;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
@@ -49,7 +50,7 @@ public abstract class AbstractAutonManager implements ISubsystem {
     }
 
     protected final Timer timer = new Timer();
-    protected final DriveManager DRIVING_CHILD;
+    protected final AbstractDriveManager DRIVING_CHILD;
     protected final RobotTelemetry telem;
 
     /**
@@ -57,7 +58,7 @@ public abstract class AbstractAutonManager implements ISubsystem {
      *
      * @param driveManager the drivetrain object created for the robot
      */
-    protected AbstractAutonManager(DriveManager driveManager) {
+    protected AbstractAutonManager(AbstractDriveManager driveManager) {
         addToMetaList();
         DRIVING_CHILD = driveManager;
         if (DRIVING_CHILD.guidance != null)

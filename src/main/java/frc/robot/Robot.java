@@ -9,6 +9,8 @@ import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.ArticulatedHood;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
+import frc.drive.AbstractDriveManager;
+import frc.drive.DriveBases;
 import frc.drive.DriveManager;
 import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
@@ -23,6 +25,7 @@ import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 import frc.robot.robotconfigs.twentyone.PracticeRobot2021;
+import frc.robot.robotconfigs.twentyone.Swerve2021;
 import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.selfdiagnostics.ISimpleIssue;
 import frc.vision.camera.BallPhoton;
@@ -51,7 +54,7 @@ public class Robot extends TimedRobot {
     public static final ArrayList<ISubsystem> subsystems = new ArrayList<>();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
     public static DefaultConfig robotSettings;
-    public static DriveManager driver;
+    public static AbstractDriveManager driver;
     public static DriveManagerSwerve swerve;
     public static Intake intake;
     public static Hopper hopper;
@@ -83,7 +86,10 @@ public class Robot extends TimedRobot {
             ballPhoton = new BallPhoton();
         }
         if (robotSettings.ENABLE_DRIVE) {
-            driver = new DriveManager();
+            if (robotSettings.DRIVE_BASE == DriveBases.STNADARD)
+                driver = new DriveManager();
+            else if (robotSettings.DRIVE_BASE == DriveBases.SWIVEL)
+                driver = new DriveManagerSwerve();
         }
         if (robotSettings.ENABLE_INTAKE) {
             intake = new Intake();
@@ -168,6 +174,9 @@ public class Robot extends TimedRobot {
                 break;
             case "2021-Comp":
                 robotSettings = new CompetitionRobot2021();
+                break;
+            case "2021-Swivel":
+                robotSettings = new Swerve2021();
                 break;
             default:
                 //preferences.putString("hostname", "2021-Comp");

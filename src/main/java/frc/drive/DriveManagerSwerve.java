@@ -34,7 +34,7 @@ notes n stuff
 max speed 3.6 m/s
 
  */
-public class DriveManagerSwerve implements ISubsystem {
+public class DriveManagerSwerve extends AbstractDriveManager {
 
     private final Translation2d driftOffset = new Translation2d(-0.6, 0);
     private final double trackWidth = 13.25;
@@ -61,6 +61,20 @@ public class DriveManagerSwerve implements ISubsystem {
         addToMetaList();
     }
 
+    //TODO implement this in regard to telem
+    @Override
+    public void resetDriveEncoders() {
+
+    }
+
+    @Override
+    public void setBrake(boolean brake) {
+        driverFR.setBrake(brake);
+        driverFL.setBrake(brake);
+        driverBL.setBrake(brake);
+        driverBR.setBrake(brake);
+    }
+
     @Override
     public void init() {
         PID steeringPID = new PID(0.0035, 0.000001, 0);
@@ -74,7 +88,7 @@ public class DriveManagerSwerve implements ISubsystem {
         BLpid.enableContinuousInput(-180, 180);
         BRpid.enableContinuousInput(-180, 180);
 
-        xbox = new XBoxController(0);
+        xbox = XBoxController.createOrGet(0);
 
         driverFR = new SparkMotorController(1, CANSparkMaxLowLevel.MotorType.kBrushless);
         driverBR = new SparkMotorController(4, CANSparkMaxLowLevel.MotorType.kBrushless);

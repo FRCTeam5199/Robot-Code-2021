@@ -17,7 +17,6 @@ import frc.controllers.DrumTimeController;
 import frc.controllers.SixButtonGuitarController;
 import frc.controllers.WiiController;
 import frc.controllers.XBoxController;
-import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
 import frc.misc.PID;
 import frc.misc.UserInterface;
@@ -40,7 +39,7 @@ import static frc.robot.Robot.robotSettings;
  *
  * @see RobotTelemetry
  */
-public class DriveManager implements ISubsystem {
+public class DriveManager extends AbstractDriveManager {
     private static final boolean DEBUG = false;
     public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(robotSettings.DRIVEBASE_DISTANCE_BETWEEN_WHEELS);
     private final NetworkTableEntry driveRotMult = UserInterface.DRIVE_ROT_MULT.getEntry(),
@@ -53,13 +52,13 @@ public class DriveManager implements ISubsystem {
             coast = UserInterface.DRIVE_COAST.getEntry(),
             rumblecontroller = UserInterface.DRIVE_RUMBLE_NEAR_MAX.getEntry();
     public AbstractMotorController leaderL, leaderR;
-    public RobotTelemetry guidance;
     public AbstractFollowerMotorController followerL, followerR;
     public SimpleWidget driveSpeed;
     private BaseController controller;
     private PID lastPID = PID.EMPTY_PID;
 
     public DriveManager() throws RuntimeException {
+        super();
         addToMetaList();
         init();
     }
@@ -73,7 +72,6 @@ public class DriveManager implements ISubsystem {
     @Override
     public void init() throws IllegalArgumentException, InitializationFailureException {
         createDriveMotors();
-        initGuidance();
         initPID();
         initMisc();
     }
@@ -125,14 +123,6 @@ public class DriveManager implements ISubsystem {
 
         followerL.invert(robotSettings.DRIVE_INVERT_LEFT);
         followerR.invert(robotSettings.DRIVE_INVERT_RIGHT);
-    }
-
-    /**
-     * Initialize the IMU and telemetry
-     */
-    private void initGuidance() {
-        guidance = new RobotTelemetry(this);
-        guidance.resetOdometry();
     }
 
     /**
@@ -328,7 +318,13 @@ public class DriveManager implements ISubsystem {
     public void initAuton() {
         initGeneric();
         setBrake(false);
-        guidance.resetEncoders();
+        resetDriveEncoders();
+    }
+
+    @Override
+    public void resetDriveEncoders() {
+        leaderL.resetEncoder();
+        leaderR.resetEncoder();
     }
 
     @Override
