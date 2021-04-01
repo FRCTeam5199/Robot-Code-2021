@@ -41,7 +41,6 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
-        System.out.println("INVERTING MOTOR " + motor.getDeviceId() + "!" + invert);
         return this;
     }
 
@@ -122,6 +121,11 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public void moveAtPercent(double percent) {
         motor.set(percent);
+    }
+
+    @Override
+    public void moveAtPosition(double pos) {
+        myPid.setReference(pos / sensorToRealDistanceFactor, ControlType.kPosition);
     }
 
     @Override

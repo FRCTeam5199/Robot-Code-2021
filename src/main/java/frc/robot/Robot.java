@@ -74,13 +74,13 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() throws IllegalStateException {
-        swerve = new DriveManagerSwerve();
         getRestartProximity();
         getSettings();
         RobotSettings.printMappings();
         RobotSettings.printToggles();
         RobotSettings.printNumbers();
         UserInterface.initRobot();
+        swerve = new DriveManagerSwerve();
         if (RobotSettings.ENABLE_VISION) {
             goalPhoton = new GoalPhoton();
             ballPhoton = new BallPhoton();
