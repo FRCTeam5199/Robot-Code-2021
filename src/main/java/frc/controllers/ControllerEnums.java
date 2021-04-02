@@ -215,6 +215,33 @@ public class ControllerEnums {
         }
     }
 
+    /**
+     * @see ButtonPanelController
+     */
+    public enum ButtonPanelTapedButtons {
+        RAISE_CLIMBER(1), LOWER_CLIMBER(2), CLIMBER_LOCK(3), CLIMBER_UNLOCK(4), BUDDY_CLIMB(5), AUX_TOP(6), HOOD_POS_1(7), SINGLE_SHOT(8), HOOD_POS_2(9), SOLID_SPEED(10), HOOD_POS_3(11), TARGET(12), HOOD_POS_4(13);
+
+        public final int AXIS_VALUE;
+
+        /**
+         * @param id - the button panel button id requested
+         * @return the {@link ButtonPanelTapedButtons} enum with id mathing input
+         * @throws NoSuchFieldException if there is no mapped button panel button with that id
+         * @deprecated Feature that should <b>never</b> be used. Gets the button panel button from a provided int
+         */
+        @Deprecated
+        public static ButtonPanelTapedButtons get(int id) throws NoSuchFieldException {
+            for (ButtonPanelTapedButtons axis : ButtonPanelTapedButtons.values()) {
+                if (axis.AXIS_VALUE == id) return axis;
+            }
+            throw new NoSuchFieldException("There is no Button Panel taped Button with an ID of " + id);
+        }
+
+        ButtonPanelTapedButtons(int value) {
+            this.AXIS_VALUE = value;
+        }
+    }
+
     public enum SixKeyGuitarButtons {
         ONE(2), TWO(3), THREE(4), FOUR(1), FIVE(5), SIX(6), HERO_POWER(9), PAUSE(10), MENU(11), REFRESH(13);
 

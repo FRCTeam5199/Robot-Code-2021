@@ -86,7 +86,7 @@ public class RobotTelemetry implements ISubsystem {
         if (robotSettings.ENABLE_IMU) {
             if (driver instanceof DriveManagerStandard)
                 robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
-            else if (driver instanceof DriveManagerSwerve){
+            else if (driver instanceof DriveManagerSwerve) {
                 //TODO implement this
             }
             robotTranslation = robotPose.getTranslation();

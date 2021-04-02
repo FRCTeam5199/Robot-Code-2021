@@ -5,8 +5,8 @@ import frc.robot.Robot;
 
 import java.util.function.Consumer;
 
-import static frc.robot.Robot.robotSettings;
 import static frc.robot.Robot.hopper;
+import static frc.robot.Robot.robotSettings;
 
 
 /**
@@ -45,7 +45,7 @@ public enum ShootingEnums {
             if (shooter.ticksPassed >= 50) {
                 hopper.setAgitator(true);
             }
-            if (!hopper.indexed) {
+            if (!hopper.isIndexed()) {
                 shooter.singleShot = false;
                 hopper.setAgitator(false);
                 shooter.ticksPassed = 0;
@@ -60,27 +60,14 @@ public enum ShootingEnums {
             System.out.println("Balls shot: " + shooter.ballsShot);
             System.out.println("Ticks passed: " + shooter.ticksPassed);
         }
-        if (shooter.ballsShot == 0 && shooter.getSpeed() >= 4200) {
-            if (shooter.ticksPassed >= 17) {
+        if (shooter.getSpeed() >= 4200) {
+            if (++shooter.ticksPassed >= 17) {
                 hopper.setIndexer(true);
-                if (!hopper.indexed) {
+                if (!hopper.isIndexed()) {
                     hopper.setIndexer(false);
                     shooter.ballsShot++;
                     shooter.ticksPassed = 0;
                 }
-            } else {
-                shooter.ticksPassed++;
-            }
-        } else if (shooter.ballsShot >= 1) {
-            if (shooter.ticksPassed >= 17) {//33) {
-                hopper.setAll(true);
-                if (!hopper.indexed) {
-                    hopper.setAll(false);
-                    shooter.ticksPassed = 0;
-                    shooter.ballsShot++;
-                }
-            } else {
-                shooter.ticksPassed++;
             }
         } else {
             shooter.ticksPassed = 0;
@@ -96,7 +83,7 @@ public enum ShootingEnums {
         shooter.setSpeed(4400);
         if (robotSettings.ENABLE_HOPPER) {
             hopper.setIndexer(shooter.getSpeed() >= 4200);
-            hopper.setAgitator(!hopper.indexed && shooter.getSpeed() >= 4200);
+            hopper.setAgitator(!hopper.isIndexed() && shooter.getSpeed() >= 4200);
         }
     });
     public final Consumer<Shooter> function;
@@ -112,6 +99,6 @@ public enum ShootingEnums {
             System.out.println("Shooting " + this.name());
         }
         this.function.accept(shooter);
-        shooter.isShooting = true;
+        shooter.setShooting(true);
     }
 }

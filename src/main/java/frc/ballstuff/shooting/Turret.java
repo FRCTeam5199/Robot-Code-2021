@@ -15,8 +15,6 @@ import frc.motors.TalonMotorController;
 import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
-import frc.vision.camera.GoalLimelight;
-import frc.vision.camera.GoalPhoton;
 import frc.vision.camera.IVision;
 import frc.vision.camera.VisionLEDMode;
 
@@ -27,7 +25,6 @@ import static frc.robot.Robot.robotSettings;
  */
 public class Turret implements ISubsystem {
     private static final boolean DEBUG = false;
-    public boolean track, atTarget;
     private BaseController joy, panel;
     private AbstractMotorController motor;
     private RobotTelemetry guidance;
@@ -41,9 +38,12 @@ public class Turret implements ISubsystem {
 
     /**
      * Creates a plethora of new objects
+     *
+     * @throws UnsupportedOperationException if the configuration is not supported
+     * @see frc.robot.robotconfigs.DefaultConfig
      */
     @Override
-    public void init() {
+    public void init() throws UnsupportedOperationException {
         switch (robotSettings.SHOOTER_CONTROL_STYLE) {
             case ACCURACY_2021:
             case SPEED_2021:
@@ -54,6 +54,8 @@ public class Turret implements ISubsystem {
             case BOP_IT:
                 joy = BopItBasicController.createOrGet(1);
                 break;
+            default:
+                throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");
         }
 
         switch (robotSettings.TURRET_MOTOR_TYPE) {
@@ -67,21 +69,10 @@ public class Turret implements ISubsystem {
                 motor.setSensorToRealDistanceFactor(robotSettings.TURRET_SPROCKET_SIZE * robotSettings.TURRET_GEAR_RATIO * Math.PI / 30 * 600 / 2048);
                 break;
             default:
-                throw new IllegalStateException("cringe.");
+                throw new UnsupportedOperationException("This motor is not supported here in TurretLand inc.");
         }
         if (robotSettings.ENABLE_VISION) {
-            switch (robotSettings.GOAL_CAMERA_TYPE) {
-                case LIMELIGHT:
-                    visionCamera = new GoalLimelight();
-                    visionCamera.init();
-                    break;
-                case PHOTON:
-                    visionCamera = new GoalPhoton();
-                    visionCamera.init();
-                    break;
-                default:
-                    throw new IllegalStateException("You must have a camera type set.");
-            }
+            visionCamera = IVision.manufactureGoalCamera(robotSettings.GOAL_CAMERA_TYPE);
         }
         motor.setInverted(false).setPid(robotSettings.TURRET_PID).setBrake(true);
 
@@ -140,7 +131,7 @@ public class Turret implements ISubsystem {
                 if (robotSettings.ENABLE_VISION) {
                     if (panel.get(ButtonPanelButtons.BUDDY_CLIMB) == ButtonStatus.DOWN) {
                         visionCamera.setLedMode(VisionLEDMode.BLINK); //haha suffer
-                    } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && !Robot.shooter.isShooting) {
+                    } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && !Robot.shooter.isShooting()) {
                         if (robotSettings.DEBUG && DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
                         }
@@ -175,7 +166,7 @@ public class Turret implements ISubsystem {
                 break;
         }
 
-        if (isSafe() && !Robot.shooter.isShooting) {
+        if (isSafe() && !Robot.shooter.isShooting()) {
             rotateTurret(omegaSetpoint);
             if (robotSettings.DEBUG && DEBUG) {
                 System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
@@ -200,9 +191,6 @@ public class Turret implements ISubsystem {
                 UserInterface.smartDashboardPutNumber("YawWrap", guidance.imu.yawWraparoundAhead() - 360);
                 UserInterface.smartDashboardPutNumber("Turret North", limitAngle(235 + guidance.imu.yawWraparoundAhead() - 360));
             }
-            UserInterface.smartDashboardPutBoolean("Turret At Target", atTarget);
-            UserInterface.smartDashboardPutBoolean("Turret Track", track);
-            UserInterface.smartDashboardPutBoolean("Turret at Target", atTarget);
         }
     }
 

@@ -19,9 +19,8 @@ import static frc.robot.Robot.robotSettings;
  */
 public class Hopper implements ISubsystem {
     private static final boolean DEBUG = true;
-    public AbstractMotorController agitator, indexer;
-    public IDistanceSensor indexSensor;
-    public boolean indexed = false;
+    private AbstractMotorController agitator, indexer;
+    private IDistanceSensor indexSensor;
     private boolean agitatorActive = false, indexerActive = false;
 
     public Hopper() {
@@ -75,6 +74,10 @@ public class Hopper implements ISubsystem {
         return -2;
     }
 
+    public boolean isIndexed() {
+        return robotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() < robotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE;
+    }
+
     /**
      * Runs every tick. Runs the indexer and agitator motors.
      */
@@ -109,7 +112,6 @@ public class Hopper implements ISubsystem {
                     agitator.moveAtPercent(0);
                 }
             }
-            indexed = (robotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() < robotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE);
         } else {
             if (robotSettings.ENABLE_INDEXER) {
                 indexer.moveAtPercent(indexerActive ? 0.9 : 0);
@@ -117,13 +119,12 @@ public class Hopper implements ISubsystem {
             if (robotSettings.ENABLE_AGITATOR) {
                 agitator.moveAtPercent(agitatorActive ? 0.8 : 0);
             }
-            indexed = (robotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() < robotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE); //indexed = true;//indexerSensorRange() > RobotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE;
         }
         if (robotSettings.DEBUG && DEBUG) {
             UserInterface.smartDashboardPutBoolean("indexer enable", indexerActive);
             UserInterface.smartDashboardPutBoolean("agitator enable", agitatorActive);
             UserInterface.smartDashboardPutNumber("indexer sensor", indexerSensorRange());
-            UserInterface.smartDashboardPutBoolean("hopper indexed", indexed);
+            UserInterface.smartDashboardPutBoolean("hopper indexed", isIndexed());
         }
     }
 

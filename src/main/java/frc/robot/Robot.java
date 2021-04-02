@@ -28,9 +28,6 @@ import frc.robot.robotconfigs.twentyone.PracticeRobot2021;
 import frc.robot.robotconfigs.twentyone.Swerve2021;
 import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.selfdiagnostics.ISimpleIssue;
-import frc.vision.camera.BallPhoton;
-import frc.vision.camera.GoalPhoton;
-import frc.vision.camera.IVision;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,7 +52,6 @@ public class Robot extends TimedRobot {
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
     public static DefaultConfig robotSettings;
     public static AbstractDriveManager driver;
-    public static DriveManagerSwerve swerve;
     public static Intake intake;
     public static Hopper hopper;
     public static Shooter shooter;
@@ -64,7 +60,6 @@ public class Robot extends TimedRobot {
     public static Chirp chirp;
     public static PDP pdp;
     public static LEDs leds;
-    public static IVision goalPhoton, ballPhoton;
     public static AbstractAutonManager autonManager;
     public static boolean SECOND_TRY;
     public static String lastFoundSong = "";
@@ -81,10 +76,6 @@ public class Robot extends TimedRobot {
         robotSettings.printToggles();
         robotSettings.printNumbers();
         UserInterface.initRobot();
-        if (robotSettings.ENABLE_VISION) {
-            goalPhoton = new GoalPhoton();
-            ballPhoton = new BallPhoton();
-        }
         if (robotSettings.ENABLE_DRIVE) {
             if (robotSettings.DRIVE_BASE == DriveBases.STANDARD)
                 driver = new DriveManagerStandard();

@@ -50,8 +50,8 @@ public class AutonManager extends AbstractAutonManager {
             System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
             ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
             if (DRIVING_CHILD instanceof DriveManagerStandard)
-                ((DriveManagerStandard)DRIVING_CHILD).drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
-            else if (DRIVING_CHILD instanceof DriveManagerSwerve){
+                ((DriveManagerStandard) DRIVING_CHILD).drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
+            else if (DRIVING_CHILD instanceof DriveManagerSwerve) {
                 //TODO implement this
             }
         }

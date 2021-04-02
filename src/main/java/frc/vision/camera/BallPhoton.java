@@ -10,6 +10,7 @@ import java.util.List;
 import static frc.robot.Robot.robotSettings;
 
 public class BallPhoton implements IVision {
+    public static final BallPhoton BALL_PHOTON = new BallPhoton();
     private static final boolean DEBUG = false;
     private PhotonCamera ballCamera;
     private List<PhotonTrackedTarget> targets;
@@ -19,7 +20,7 @@ public class BallPhoton implements IVision {
     /**
      * inits BallPhoton
      */
-    public BallPhoton() {
+    private BallPhoton() {
         addToMetaList();
         init();
     }
@@ -67,9 +68,7 @@ public class BallPhoton implements IVision {
         if (robotSettings.DEBUG && DEBUG) {
             System.out.println("Found " + cameraResult.targets.size() + " targets");
         }
-        //if (validTarget()) {
         targets = cameraResult.getTargets();
-        //}
     }
 
     @Override

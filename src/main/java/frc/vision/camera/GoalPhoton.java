@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.LinearFilter;
 import static frc.robot.Robot.robotSettings;
 
 public class GoalPhoton implements IVision {
+    public static final GoalPhoton GOAL_PHOTON = new GoalPhoton();
+
     private NetworkTableEntry yaw;
     private NetworkTableEntry size;
     private NetworkTableEntry hasTarget;
@@ -18,7 +20,7 @@ public class GoalPhoton implements IVision {
     /**
      * inits GoalPhoton
      */
-    public GoalPhoton() {
+    private GoalPhoton() {
         addToMetaList();
         init();
     }

@@ -19,6 +19,8 @@ import static frc.robot.Robot.robotSettings;
 
 public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = false;
+    public boolean unTargeted = true;
+    BaseController joystickController, panel;
     /*
     private final double[][] sizeEncoderPositionArray = {
             {2.415, 0.05},
@@ -33,9 +35,7 @@ public class ArticulatedHood implements ISubsystem {
             {0.481, 1.135},
     };
      */
-    public double moveTo = 0.0;
-    public boolean unTargeted = true;
-    BaseController joystickController, panel;
+    private double moveTo = 0.0;
     private AbstractMotorController hoodMotor;
 
     public ArticulatedHood() {
@@ -172,7 +172,7 @@ public class ArticulatedHood implements ISubsystem {
                     hoodMotor.moveAtPercent(-0.1);
                 } else {
                     if ((panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) && Robot.shooter.goalCamera.hasValidTarget()) {
-                        if (!Robot.shooter.isShooting) {
+                        if (!Robot.shooter.isShooting()) {
                             double[][] sizeEncoderPositionArrayStraight = {
                                     {2.415, 0.05},
                                     {1.466, 0.77},
@@ -254,16 +254,16 @@ public class ArticulatedHood implements ISubsystem {
     }
 
     private void moveToPosFromButtons() {
-        if (panel.get(ControllerEnums.ButtonPanelButtons.AUX_BOTTOM) == ControllerEnums.ButtonStatus.DOWN) {
+        if (panel.get(ControllerEnums.ButtonPanelTapedButtons.HOOD_POS_1) == ControllerEnums.ButtonStatus.DOWN) {
             moveTo = 0.05; //POS 1
             unTargeted = false;
-        } else if (panel.get(ControllerEnums.ButtonPanelButtons.INTAKE_DOWN) == ControllerEnums.ButtonStatus.DOWN) {
+        } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.HOOD_POS_2) == ControllerEnums.ButtonStatus.DOWN) {
             moveTo = 0.77; //POS 2
             unTargeted = false;
-        } else if (panel.get(ControllerEnums.ButtonPanelButtons.HOPPER_OUT) == ControllerEnums.ButtonStatus.DOWN) {
+        } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.HOOD_POS_3) == ControllerEnums.ButtonStatus.DOWN) {
             moveTo = 1.05; //POS 3
             unTargeted = false;
-        } else if (panel.get(ControllerEnums.ButtonPanelButtons.SOLID_SPEED) == ControllerEnums.ButtonStatus.DOWN) {
+        } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.HOOD_POS_4) == ControllerEnums.ButtonStatus.DOWN) {
             moveTo = 1.135; //POS 4
             unTargeted = false;
         } else {

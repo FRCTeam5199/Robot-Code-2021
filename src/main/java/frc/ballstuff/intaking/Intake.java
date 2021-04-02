@@ -32,11 +32,10 @@ public class Intake implements ISubsystem {
     /**
      * create controller and motor
      *
-     * @throws InitializationFailureException intake motor failed to be created
-     * @throws IllegalStateException          if the selected control is not implemented
+     * @throws IllegalStateException if the selected control is not implemented
      */
     @Override
-    public void init() throws InitializationFailureException, IllegalStateException {
+    public void init() throws IllegalStateException {
         switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case STANDARD:
                 joystick = JoystickController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT);
@@ -47,11 +46,7 @@ public class Intake implements ISubsystem {
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
-        try {
-            intakeMotor = new VictorMotorController(robotSettings.INTAKE_MOTOR_ID);
-        } catch (Exception e) {
-            throw new InitializationFailureException("Intake motor failed to be created", "Disable the intake or investigate your motor mappings");
-        }
+        intakeMotor = new VictorMotorController(robotSettings.INTAKE_MOTOR_ID);
     }
 
     /**

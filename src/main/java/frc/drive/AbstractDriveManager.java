@@ -12,15 +12,6 @@ public abstract class AbstractDriveManager implements ISubsystem {
      */
     public RobotTelemetry guidance;
 
-    protected AbstractDriveManager(){
-        guidance = new RobotTelemetry(this);
-        guidance.resetOdometry();
-    }
-
-    public String getSubsystemName(){
-        return "Drivetrain";
-    }
-
     /**
      * Required by {@link RobotTelemetry} in order to reset position
      */
@@ -32,4 +23,16 @@ public abstract class AbstractDriveManager implements ISubsystem {
      * @param brake true to brake false to coast
      */
     public abstract void setBrake(boolean brake);
+
+    /**
+     * Creates new {@link #guidance} object
+     */
+    protected AbstractDriveManager() {
+        guidance = new RobotTelemetry(this);
+        guidance.resetOdometry();
+    }
+
+    public String getSubsystemName() {
+        return "Drivetrain";
+    }
 }

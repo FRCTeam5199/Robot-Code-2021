@@ -4,8 +4,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
@@ -29,8 +27,6 @@ import frc.motors.followers.TalonFollowerMotorController;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
 
-import java.util.Map;
-
 import static frc.robot.Robot.robotSettings;
 
 /**
@@ -53,11 +49,10 @@ public class DriveManagerStandard extends AbstractDriveManager {
             rumblecontroller = UserInterface.DRIVE_RUMBLE_NEAR_MAX.getEntry();
     public AbstractMotorController leaderL, leaderR;
     public AbstractFollowerMotorController followerL, followerR;
-    public SimpleWidget driveSpeed;
     private BaseController controller;
     private PID lastPID = PID.EMPTY_PID;
 
-    public DriveManagerStandard() throws RuntimeException {
+    public DriveManagerStandard() throws UnsupportedOperationException, InitializationFailureException {
         super();
         addToMetaList();
         init();
@@ -66,11 +61,11 @@ public class DriveManagerStandard extends AbstractDriveManager {
     /**
      * Initializes the driver
      *
-     * @throws IllegalArgumentException       When IDs for follower motors are too few or too many
+     * @throws UnsupportedOperationException  When a setting does not have a valid configuration defined
      * @throws InitializationFailureException When something fails to init properly
      */
     @Override
-    public void init() throws IllegalArgumentException, InitializationFailureException {
+    public void init() throws UnsupportedOperationException, InitializationFailureException {
         createDriveMotors();
         initPID();
         initMisc();
@@ -79,11 +74,11 @@ public class DriveManagerStandard extends AbstractDriveManager {
     /**
      * Creates the drive motors
      *
-     * @throws IllegalArgumentException       When IDs for follower motors are too few or too many
      * @throws InitializationFailureException When follower drive motors fail to link to leaders or when leader
      *                                        drivetrain motors fail to invert
      */
-    private void createDriveMotors() throws InitializationFailureException, IllegalArgumentException {
+    private void createDriveMotors() throws InitializationFailureException {
+        double s2rf;
         switch (robotSettings.DRIVE_MOTOR_TYPE) {
             case CAN_SPARK_MAX: {
                 leaderL = new SparkMotorController(robotSettings.DRIVE_LEADER_L_ID);
@@ -91,9 +86,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
                 followerL = new SparkFollowerMotorsController(robotSettings.DRIVE_FOLLOWERS_L_IDS);
                 followerR = new SparkFollowerMotorsController(robotSettings.DRIVE_FOLLOWERS_R_IDS);
                 //rpm <=> rps <=> gearing <=> wheel circumference
-                final double s2rf = robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60;
-                leaderL.setSensorToRealDistanceFactor(s2rf);
-                leaderR.setSensorToRealDistanceFactor(s2rf);
+                s2rf = robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60;
                 break;
             }
             case TALON_FX: {
@@ -102,20 +95,18 @@ public class DriveManagerStandard extends AbstractDriveManager {
                 followerL = new TalonFollowerMotorController(robotSettings.DRIVE_FOLLOWERS_L_IDS);
                 followerR = new TalonFollowerMotorController(robotSettings.DRIVE_FOLLOWERS_R_IDS);
                 //Sens units / 100ms <=> rps <=> gearing <=> wheel circumference
-                final double s2rf = (10.0 / robotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER * Math.PI / 12);
-                leaderL.setSensorToRealDistanceFactor(s2rf);
-                leaderR.setSensorToRealDistanceFactor(s2rf);
+                s2rf = (10.0 / robotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER * Math.PI / 12);
                 break;
             }
             default:
                 throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + robotSettings.DRIVE_MOTOR_TYPE.name(), "Add an implementation in the init for drive manager");
         }
-        try {
-            followerL.follow(leaderL);
-            followerR.follow(leaderR);
-        } catch (Exception e) {
-            throw new InitializationFailureException("An error has occurred linking follower drive motors to leaders", "Make sure the motors are plugged in and id'd properly");
-        }
+        leaderL.setSensorToRealDistanceFactor(s2rf);
+        leaderR.setSensorToRealDistanceFactor(s2rf);
+
+        followerL.follow(leaderL);
+        followerR.follow(leaderR);
+
         leaderL.setInverted(robotSettings.DRIVE_INVERT_LEFT).resetEncoder();
         leaderR.setInverted(robotSettings.DRIVE_INVERT_RIGHT).resetEncoder();
 
@@ -135,10 +126,9 @@ public class DriveManagerStandard extends AbstractDriveManager {
     /**
      * Creates xbox controller n stuff
      *
-     * @throws IllegalStateException when there is no configuration for {@link frc.robot.Robot#robotSettings#DRIVE_STYLE}
+     * @throws UnsupportedOperationException when there is no configuration for {@link frc.robot.Robot#robotSettings#DRIVE_STYLE}
      */
-    private void initMisc() throws IllegalStateException {
-        driveSpeed = UserInterface.DRIVE_TAB.add("Drivebase Speed", 0).withWidget(BuiltInWidgets.kDial).withProperties(Map.of("Min", 0, "Max", 20));
+    private void initMisc() throws UnsupportedOperationException {
         System.out.println("THE XBOX CONTROLLER IS ON " + robotSettings.XBOX_CONTROLLER_USB_SLOT);
         switch (robotSettings.DRIVE_STYLE) {
             case STANDARD:
@@ -158,7 +148,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
                 controller = BopItBasicController.createOrGet(0);
                 break;
             default:
-                throw new IllegalStateException("There is no UI configuration for " + robotSettings.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");
+                throw new UnsupportedOperationException("There is no UI configuration for " + robotSettings.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");
         }
         if (robotSettings.DEBUG && DEBUG)
             System.out.println("Created a " + controller.toString());
@@ -205,10 +195,9 @@ public class DriveManagerStandard extends AbstractDriveManager {
     public void updateTeleop() throws IllegalArgumentException {
         updateGeneric();
         double avgSpeedInFPS = Math.abs((leaderL.getSpeed() + leaderR.getSpeed()) / 2);
-        driveSpeed.getEntry().setNumber(avgSpeedInFPS);
+        UserInterface.DRIVE_SPEED.getEntry().setNumber(avgSpeedInFPS);
         switch (robotSettings.DRIVE_STYLE) {
             case EXPERIMENTAL: {
-
                 double invertedDrive = robotSettings.DRIVE_INVERT_LEFT ? -1 : 1;
                 if (Math.abs(controller.get(XboxAxes.LEFT_JOY_Y)) > 0.9) {
                     double dir = controller.get(XboxAxes.LEFT_JOY_Y) > 0 ? 1 : -1;
@@ -327,6 +316,14 @@ public class DriveManagerStandard extends AbstractDriveManager {
         leaderR.resetEncoder();
     }
 
+    public void setBrake(boolean braking) {
+        coast.setBoolean(!braking);
+        leaderL.setBrake(braking);
+        leaderR.setBrake(braking);
+        followerL.setBrake(braking);
+        followerR.setBrake(braking);
+    }
+
     @Override
     public void initDisabled() {
         setBrake(true);
@@ -360,15 +357,6 @@ public class DriveManagerStandard extends AbstractDriveManager {
      */
     public void drive(double forward, double rotation) {
         drivePure(adjustedDrive(forward), adjustedRotation(rotation));
-    }
-
-    public void setBrake(boolean braking) {
-        coast.setBoolean(!braking);
-        leaderL.setBrake(braking);
-        leaderR.setBrake(braking);
-        followerL.setBrake(braking);
-        followerR.setBrake(braking);
-        //System.out.println("Set brake: " + braking + " at " + System.currentTimeMillis() + " \r");
     }
 
     /**

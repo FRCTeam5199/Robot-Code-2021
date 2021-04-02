@@ -18,6 +18,17 @@ public interface IVision extends ISubsystem {
      */
     void setLedMode(VisionLEDMode ledMode);
 
+    static IVision manufactureGoalCamera(SupportedVision cameraType) {
+        switch (cameraType) {
+            case LIMELIGHT:
+                return GoalLimelight.GOAL_LIME_LIGHT;
+            case PHOTON:
+                return GoalPhoton.GOAL_PHOTON;
+            default:
+                throw new IllegalStateException("You must have a camera type set.");
+        }
+    }
+
     /**
      * Returns the angle between the camera and the object
      *
@@ -61,5 +72,4 @@ public interface IVision extends ISubsystem {
     }
 
     double getSize(int targetId);
-
 }

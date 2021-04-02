@@ -25,6 +25,11 @@ public class WrappedPigeonIMU extends AbstractIMU {
     @Override
     public void initTeleop() {
 
+    }
+
+    @Override
+    public void initAuton() {
+
     }    /**
      * Yaw since last restart
      *
@@ -37,11 +42,6 @@ public class WrappedPigeonIMU extends AbstractIMU {
     }
 
     @Override
-    public void initAuton() {
-
-    }
-
-    @Override
     public void initDisabled() {
 
     }
@@ -51,6 +51,8 @@ public class WrappedPigeonIMU extends AbstractIMU {
 
     }
 
+
+
     /**
      * Updates the Pigeon IMU data
      */
@@ -59,8 +61,6 @@ public class WrappedPigeonIMU extends AbstractIMU {
         pigeon.getYawPitchRoll(ypr);
         super.updateGeneric();
     }
-
-
 
 
     /**

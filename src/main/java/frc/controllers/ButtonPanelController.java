@@ -29,7 +29,15 @@ public class ButtonPanelController extends BaseController {
      * Gets the Raw button value and returns true if it is pressed when it is run
      */
     @Override
-    public ControllerEnums.ButtonStatus get(ButtonPanelButtons n) {
+    public ControllerEnums.ButtonStatus get(ControllerEnums.ButtonPanelButtons n) {
+        return ControllerEnums.ButtonStatus.get(stick.getRawButton(n.AXIS_VALUE));
+    }
+
+    /**
+     * Gets the Raw button value and returns true if it is pressed when it is run
+     */
+    @Override
+    public ControllerEnums.ButtonStatus get(ControllerEnums.ButtonPanelTapedButtons n) {
         return ControllerEnums.ButtonStatus.get(stick.getRawButton(n.AXIS_VALUE));
     }
 }

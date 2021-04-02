@@ -10,15 +10,13 @@ import frc.misc.UserInterface;
  * This is for the limelight looking at the goal that the shooter is shooting at
  */
 public class GoalLimelight implements IVision {
+    public static final GoalLimelight GOAL_LIME_LIGHT = new GoalLimelight();
+
     private NetworkTable limelight;
-    private NetworkTableEntry yaw;
-    private NetworkTableEntry size;
-    private NetworkTableEntry hasTarget;
-    private NetworkTableEntry pitch;
-    private NetworkTableEntry pose;
+    private NetworkTableEntry yaw, size, hasTarget, pitch, pose;
     private LinearFilter filter;
 
-    public GoalLimelight() {
+    private GoalLimelight() {
         addToMetaList();
         init();
     }

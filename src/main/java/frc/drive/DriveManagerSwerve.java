@@ -52,6 +52,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     private Pose2d pose;
 
     public DriveManagerSwerve() {
+        super();
         init();
         addToMetaList();
     }
@@ -196,19 +197,18 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         //x+ m/s forwards, y+ m/s left, omega+ rad/sec ccw
         if (useFieldOriented && !dorifto) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forwards, leftwards, rotation, Rotation2d.fromDegrees(-IMU.relativeYaw()));
-        }else if (dorifto) {
+        } else if (dorifto) {
             speeds = new ChassisSpeeds(forwards, 0, rotation);
         } else {
             speeds = new ChassisSpeeds(forwards, leftwards, rotation);
         }
 
 
-
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
 
         if (xbox.get(ControllerEnums.XBoxButtons.RIGHT_BUMPER) == ControllerEnums.ButtonStatus.DOWN) {
             moduleStates = kinematics.toSwerveModuleStates(speeds, frontRightLocation);
-        }else if (dorifto) {
+        } else if (dorifto) {
             double driftOffset = 3; //3
             double offset = trackLength / 2 / 39.3701;
             offset -= forwards / driftOffset;

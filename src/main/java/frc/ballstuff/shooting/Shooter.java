@@ -18,12 +18,10 @@ import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
-import frc.vision.camera.GoalLimelight;
-import frc.vision.camera.GoalPhoton;
 import frc.vision.camera.IVision;
 
-import static frc.robot.Robot.robotSettings;
 import static frc.robot.Robot.hopper;
+import static frc.robot.Robot.robotSettings;
 
 /**
  * Shooter pertains to spinning the flywheel that actually makes the balls go really fast
@@ -36,16 +34,15 @@ public class Shooter implements ISubsystem {
             F = UserInterface.SHOOTER_F.getEntry(),
             constSpeed = UserInterface.SHOOTER_CONST_SPEED.getEntry(),
             calibratePID = UserInterface.SHOOTER_CALIBRATE_PID.getEntry();
-    public double speed = 4200, shooting;
-    public IVision goalCamera;
-    public boolean singleShot = false;
-    public boolean isShooting = false;
-    public int ballsShot = 0;
-    public int ticksPassed = 0;
+    public double speed = 4200;
+    public int ballsShot = 0, ticksPassed = 0;
+    //Yes this needs to be package private
+    boolean singleShot = false;
+    IVision goalCamera;
     BaseController panel, joystickController;
     private AbstractMotorController leader, follower;
     private PID lastPID = PID.EMPTY_PID;
-    private boolean isConstSpeed, isConstSpeedLast = false;
+    private boolean isConstSpeed, isConstSpeedLast = false, shooting = false;
 
     public Shooter() {
         addToMetaList();
@@ -75,25 +72,16 @@ public class Shooter implements ISubsystem {
         }
         createAndInitMotors();
         if (robotSettings.ENABLE_VISION) {
-            switch (robotSettings.GOAL_CAMERA_TYPE) {
-                case LIMELIGHT:
-                    goalCamera = new GoalLimelight();
-                    goalCamera.init();
-                    break;
-                case PHOTON:
-                    goalCamera = new GoalPhoton();
-                    goalCamera.init();
-                    break;
-                default:
-                    throw new IllegalStateException("You must have a camera type set.");
-            }
+            goalCamera = IVision.manufactureGoalCamera(robotSettings.GOAL_CAMERA_TYPE);
         }
     }
 
     /**
      * Initialize the motors. Checks for SHOOTER_USE_SPARKS and SHOOTER_USE_TWO_MOTORS to allow modularity.
+     *
+     * @throws IllegalStateException If the motor configuration is not implemented
      */
-    private void createAndInitMotors() {
+    private void createAndInitMotors() throws IllegalStateException {
         switch (robotSettings.SHOOTER_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
                 leader = new SparkMotorController(robotSettings.SHOOTER_LEADER_ID);
@@ -143,11 +131,15 @@ public class Shooter implements ISubsystem {
     }
 
     /**
-     * Input is parsed and shooter object maintained appropriately
+     * Input is parsed and shooter object maintained appropriately.
+     *
+     * @throws IllegalStateException if control is not implemented for {@link frc.robot.robotconfigs.DefaultConfig#SHOOTER_CONTROL_STYLE
+     *                               current control style}
+     * @see frc.robot.robotconfigs.DefaultConfig#SHOOTER_CONTROL_STYLE
+     * @see ShootingControlStyles
      */
     @Override
-    public void updateGeneric() {
-
+    public void updateGeneric() throws IllegalStateException {
         if (leader.failureFlag)
             MotorDisconnectedIssue.reportIssue(this, robotSettings.SHOOTER_LEADER_ID, leader.getSuggestedFix());
         else
@@ -170,24 +162,21 @@ public class Shooter implements ISubsystem {
                         hopper.setAll(false);
                     }
                     leader.moveAtPercent(0);
-                    isShooting = false;
+                    shooting = false;
                     ballsShot = 0;
                 }
                 break;
             }
             case ACCURACY_2021: {
-                if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
-                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
-                    isConstSpeed = false;
-                } else if (Robot.articulatedHood.unTargeted) {
+                if (Robot.articulatedHood.unTargeted) {
                     shooterDefault();
-                } else if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
+                } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
                     isConstSpeed = false;
                 } else if (singleShot) {
                     ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
                     isConstSpeed = false;
-                } else if (panel.get(ButtonPanelButtons.INTAKE_UP) == ButtonStatus.DOWN) {
+                } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.SINGLE_SHOT) == ButtonStatus.DOWN) {
                     singleShot = true;
                 } else {
                     shooterDefault();
@@ -211,7 +200,7 @@ public class Shooter implements ISubsystem {
                 if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
                 } else {
-                    isShooting = false;
+                    shooting = false;
                     ballsShot = 0;
                 }
                 break;
@@ -221,7 +210,7 @@ public class Shooter implements ISubsystem {
                     ShootingEnums.FIRE_TEST_SPEED.shoot(this);
                 } else {
                     leader.moveAtPercent(0);
-                    isShooting = false;
+                    shooting = false;
                     ballsShot = 0;
                 }
                 break;
@@ -294,9 +283,13 @@ public class Shooter implements ISubsystem {
         UserInterface.smartDashboardPutNumber("RPM", leader.getSpeed());
         UserInterface.smartDashboardPutNumber("Target RPM", speed);
         UserInterface.smartDashboardPutBoolean("atSpeed", isAtSpeed());
-        UserInterface.smartDashboardPutBoolean("IS SHOOTING?", isShooting);
+        UserInterface.smartDashboardPutBoolean("IS SHOOTING?", shooting);
     }
 
+    /**
+     * Runs the default update which unsets hopper {@link frc.ballstuff.intaking.Hopper#setAll(boolean) active flags}
+     * and sets speed to constant speed (or 0)
+     */
     private void shooterDefault() {
         if (robotSettings.ENABLE_HOPPER) {
             hopper.setAll(false);
@@ -309,11 +302,10 @@ public class Shooter implements ISubsystem {
                 leader.setPid(robotSettings.SHOOTER_CONST_SPEED_PID);
             }
             leader.moveAtVelocity(speedYouWant);
-
         } else {
             leader.moveAtPercent(0);
         }
-        isShooting = false;
+        shooting = false;
         ballsShot = 0;
     }
 
@@ -335,6 +327,11 @@ public class Shooter implements ISubsystem {
         return robotSettings.ENABLE_VISION && goalCamera.hasValidTarget();
     }
 
+    /**
+     * Gets the current speed of the leader motor
+     *
+     * @return the current speed of the leader motor based on the output units of {@link #leader}
+     */
     public double getSpeed() {
         return leader.getSpeed();
     }
@@ -348,10 +345,29 @@ public class Shooter implements ISubsystem {
         if (robotSettings.DEBUG && DEBUG) {
             System.out.println("set shooter speed to " + rpm);
         }
+        speed = rpm;
         leader.moveAtVelocity(rpm);
     }
 
+    /**
+     * Moves the shooter at a -1 to 1 percent speed
+     *
+     * @param percentSpeed percent from -1 to 1 to move the shooter at
+     */
     public void setPercentSpeed(double percentSpeed) {
         leader.moveAtPercent(percentSpeed);
+    }
+
+    /**
+     * Getter for {@link #shooting}
+     *
+     * @return whether the shooter is shooting or not
+     */
+    public boolean isShooting() {
+        return shooting;
+    }
+
+    void setShooting(boolean shooting) {
+        this.shooting = shooting;
     }
 }

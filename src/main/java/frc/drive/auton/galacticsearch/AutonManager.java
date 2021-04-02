@@ -11,10 +11,10 @@ import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
 import frc.misc.UserInterface;
-import frc.robot.Robot;
+import frc.vision.camera.BallPhoton;
+import frc.vision.camera.IVision;
 
 import static frc.robot.Robot.robotSettings;
-import static frc.robot.Robot.ballPhoton;
 
 /**
  * Used for the galactic search challenge which includes automatically determining a path to take at enable-time.
@@ -22,9 +22,9 @@ import static frc.robot.Robot.ballPhoton;
  * Requirements: {@link frc.robot.Robot#robotSettings#ENABLE_VISION} {@link frc.robot.Robot#robotSettings#ENABLE_IMU}
  */
 public class AutonManager extends AbstractAutonManager {
-
     private final RamseteController controller = new RamseteController();
     private Trajectory trajectory = new Trajectory();
+    private IVision ballPhoton;
 
     public AutonManager(AbstractDriveManager driveManager) {
         super(driveManager);
@@ -33,6 +33,7 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void init() {
+        ballPhoton = BallPhoton.BALL_PHOTON;
     }
 
     @Override
@@ -57,8 +58,8 @@ public class AutonManager extends AbstractAutonManager {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
                 ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
                 if (DRIVING_CHILD instanceof DriveManagerStandard)
-                    ((DriveManagerStandard)DRIVING_CHILD).drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond * 2);
-                else if (DRIVING_CHILD instanceof DriveManagerSwerve){
+                    ((DriveManagerStandard) DRIVING_CHILD).drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond * 2);
+                else if (DRIVING_CHILD instanceof DriveManagerSwerve) {
                     //TODO implement this
                 }
             }
@@ -84,10 +85,10 @@ public class AutonManager extends AbstractAutonManager {
     }
 
     /**
-     * gathers data points (yaw, apparent size) from {@link Robot#ballPhoton} and plots them against expected values.
-     * However, given the fact that the robot wont always be exactly in the right place and that the auton paths will
-     * have a bit of tolerance to them, we need a flexible solution. Introducing {@link #sumOfSquares(Point[], Point[])
-     * Least Sum of Squares regression}! It takes the expected layout with the smallest error and runs that path
+     * gathers data points (yaw, apparent size) from {} and plots them against expected values. However, given the fact
+     * that the robot wont always be exactly in the right place and that the auton paths will have a bit of tolerance to
+     * them, we need a flexible solution. Introducing {@link #sumOfSquares(Point[], Point[]) Least Sum of Squares
+     * regression}! It takes the expected layout with the smallest error and runs that path
      */
     @Override
     public void initAuton() {

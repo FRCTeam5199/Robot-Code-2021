@@ -21,9 +21,14 @@ public class WrappedNavX2IMU extends AbstractIMU {
 
     /**
      * Creates a new IMU
+     *
+     * @throws NullPointerException  If {@link frc.robot.robotconfigs.DefaultConfig#IMU_NAVX_PORT} is null
+     * @throws IllegalStateException If {@link frc.robot.robotconfigs.DefaultConfig#IMU_NAVX_PORT} is an invalid port.
+     * @see SPI.Port
+     * @see SerialPort.Port
+     * @see I2C.Port
      */
-    //TODO make this a setting
-    public void init() {
+    public void init() throws NullPointerException, IllegalStateException {
         if (robotSettings.IMU_NAVX_PORT instanceof I2C.Port)
             navX2IMU = new AHRS((I2C.Port) robotSettings.IMU_NAVX_PORT);
         else if (robotSettings.IMU_NAVX_PORT instanceof SerialPort.Port)
@@ -94,7 +99,6 @@ public class WrappedNavX2IMU extends AbstractIMU {
         ypr[1] = navX2IMU.getPitch();
         ypr[2] = navX2IMU.getRoll();
         super.updateGeneric();
-        //System.out.println("Yaw: " + ypr[0]);
     }
 
     @Override
