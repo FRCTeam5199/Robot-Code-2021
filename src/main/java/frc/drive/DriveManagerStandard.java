@@ -69,6 +69,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
         createDriveMotors();
         initPID();
         initMisc();
+        setupGuidance();
     }
 
     /**

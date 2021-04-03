@@ -105,6 +105,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverFL.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
         driverBL.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
         IMU = new WrappedNavX2IMU();
+        setupGuidance();
     }
 
     @Override
@@ -144,8 +145,8 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
     @Override
     public void initTeleop() {
-        resetSteeringEncoders();
         setupSteeringEncoders();
+        resetSteeringEncoders();
     }
 
     @Override
@@ -226,6 +227,10 @@ public class DriveManagerSwerve extends AbstractDriveManager {
             System.out.printf("%4f %4f %4f %4f \n", frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
         }
         setDrive(frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
+
+        //ODOMETRY
+        //Pose2d robotPose = odometry.update(Rotation2d.fromDegrees(IMU.relativeYaw()), frontLeft, frontRight, backLeft, backRight);
+        //System.out.println("X: " + robotPose.getX() + "\nY: " + robotPose.getY() + "\nRot: " + robotPose.getRotation());
     }
 
     /**
@@ -274,7 +279,10 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     //TODO implement this in regard to telem
     @Override
     public void resetDriveEncoders() {
-
+        driverFR.resetEncoder();
+        driverFL.resetEncoder();
+        driverBR.resetEncoder();
+        driverBL.resetEncoder();
     }
 
     @Override

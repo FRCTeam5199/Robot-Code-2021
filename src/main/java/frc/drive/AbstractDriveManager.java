@@ -28,6 +28,9 @@ public abstract class AbstractDriveManager implements ISubsystem {
      * Creates new {@link #guidance} object
      */
     protected AbstractDriveManager() {
+    }
+
+    public void setupGuidance() {
         guidance = new RobotTelemetry(this);
         guidance.resetOdometry();
     }
