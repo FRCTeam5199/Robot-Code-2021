@@ -120,7 +120,7 @@ public class Robot extends TimedRobot {
 
         for (AbstractMotorController motor : AbstractMotorController.motorList) {
             if (motor.getMotorTemperature() > 5) {
-                UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", 100)));
+                UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", 80)));
             }
         }
         String quote = QuoteOfTheDay.getRandomQuote();

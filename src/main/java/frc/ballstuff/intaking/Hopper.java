@@ -117,7 +117,7 @@ public class Hopper implements ISubsystem {
                 indexer.moveAtPercent(indexerActive ? 0.9 : 0);
             }
             if (robotSettings.ENABLE_AGITATOR) {
-                agitator.moveAtPercent(agitatorActive ? 0.8 : 0);
+                agitator.moveAtPercent(agitatorActive ? 0.6 : 0);
             }
         }
         if (robotSettings.DEBUG && DEBUG) {

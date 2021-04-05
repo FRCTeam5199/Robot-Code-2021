@@ -146,7 +146,7 @@ public class AutonManager extends AbstractAutonManager {
                 bestPath = path;
             }
         }
-        if (bestOption > 5000)
+        if (bestOption > 500)
             throw new IllegalStateException("I dont see a path. For safety, I will not run " + bestPath);
         return bestPath;
     }

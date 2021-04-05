@@ -149,7 +149,7 @@ public class ArticulatedHood implements ISubsystem {
                     hoodMotor.moveAtPercent(0.3);
                 } else if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
                     if (!Robot.shooter.isValidTarget()) {
-                        moveTo = 1.4;
+                        moveTo = 0.95;
                         unTargeted = true;
                     } else {
                         double[][] sizeEncoderPositionArrayAngled = {

@@ -185,7 +185,7 @@ public class Shooter implements ISubsystem {
             }
             case SPEED_2021: {
                 if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
-                    ShootingEnums.FIRE_WITH_NO_REGARD_TO_ACCURACY.shoot(this);
+                    ShootingEnums.FIRE_WITH_HOPPER_CONTROLLED.shoot(this);
                     //ShootingEnums.FIRE_TIMED.shoot(this);
                     isConstSpeed = false;
                 } else if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {

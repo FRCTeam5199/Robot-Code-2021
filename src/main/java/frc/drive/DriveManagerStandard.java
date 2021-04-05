@@ -24,6 +24,7 @@ import frc.motors.TalonMotorController;
 import frc.motors.followers.AbstractFollowerMotorController;
 import frc.motors.followers.SparkFollowerMotorsController;
 import frc.motors.followers.TalonFollowerMotorController;
+import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
 
@@ -69,6 +70,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
         createDriveMotors();
         initPID();
         initMisc();
+        createTelem();
     }
 
     /**

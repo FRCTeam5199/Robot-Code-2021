@@ -118,7 +118,7 @@ public class Turret implements ISubsystem {
                 camoffset = -3;
                 break;
             case SPEED_2021:
-                camoffset = 0.75;
+                camoffset = -0.75;
                 break;
             default:
                 camoffset = 0;
@@ -135,7 +135,8 @@ public class Turret implements ISubsystem {
                         if (robotSettings.DEBUG && DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
                         }
-                        Robot.articulatedHood.unTargeted = true;
+                        if (robotSettings.ENABLE_HOOD_ARTICULATION)
+                            Robot.articulatedHood.unTargeted = true;
                         if (visionCamera.hasValidTarget()) {
                             double angle = -visionCamera.getAngle() + camoffset;
                             if (angle > 0.005) {

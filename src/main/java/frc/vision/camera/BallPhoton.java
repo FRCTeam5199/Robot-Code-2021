@@ -109,8 +109,11 @@ public class BallPhoton implements IVision {
      */
     @Override
     public double getAngle(int targetId) {
+        if (targets==null)
+            updateGeneric();
         if (hasValidTarget()/* && targetId < targets.size()*/) {
-            return targets.get(targetId).getYaw();
+            return targets.get(targetId)
+                    .getYaw();
         }
         return -10000;
     }
