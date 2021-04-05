@@ -49,6 +49,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     private CANCoder FRcoder, BRcoder, BLcoder, FLcoder;
 
     private SwerveDriveOdometry odometry;
+    public SwerveModuleState[] moduleStates;
     private Pose2d pose;
 
     public DriveManagerSwerve() {
@@ -105,6 +106,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverFL.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
         driverBL.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
         IMU = new WrappedNavX2IMU();
+        setupGuidance();
     }
 
     @Override
@@ -144,8 +146,8 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
     @Override
     public void initTeleop() {
-        resetSteeringEncoders();
         setupSteeringEncoders();
+        resetSteeringEncoders();
     }
 
     @Override
@@ -204,7 +206,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         }
 
 
-        SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds);
+        moduleStates = kinematics.toSwerveModuleStates(speeds);
 
         if (xbox.get(ControllerEnums.XBoxButtons.RIGHT_BUMPER) == ControllerEnums.ButtonStatus.DOWN) {
             moduleStates = kinematics.toSwerveModuleStates(speeds, frontRightLocation);
@@ -226,6 +228,10 @@ public class DriveManagerSwerve extends AbstractDriveManager {
             System.out.printf("%4f %4f %4f %4f \n", frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
         }
         setDrive(frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
+
+        //ODOMETRY
+        //Pose2d robotPose = odometry.update(Rotation2d.fromDegrees(IMU.relativeYaw()), frontLeft, frontRight, backLeft, backRight);
+        //System.out.println("X: " +  + "\nY: " + robotPose.getY() + "\nRot: " + robotPose.getRotation());
     }
 
     /**
@@ -260,10 +266,10 @@ public class DriveManagerSwerve extends AbstractDriveManager {
      */
     private void setDrive(double FL, double FR, double BL, double BR) {
         double num = 3.5;
-        System.out.println("FL: " + FL);
-        System.out.println("FR: " + FR);
-        System.out.println("BL: " + BL);
-        System.out.println("BR: " + BR);
+        //System.out.println("FL: " + FL);
+        //System.out.println("FR: " + FR);
+        //System.out.println("BL: " + BL);
+        //System.out.println("BR: " + BR);
 
         driverFR.moveAtPercent(FR / num);
         driverBR.moveAtPercent(BR / num);
@@ -274,7 +280,10 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     //TODO implement this in regard to telem
     @Override
     public void resetDriveEncoders() {
-
+        driverFR.resetEncoder();
+        driverFL.resetEncoder();
+        driverBR.resetEncoder();
+        driverBL.resetEncoder();
     }
 
     @Override

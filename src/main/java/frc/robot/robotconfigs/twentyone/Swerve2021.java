@@ -15,20 +15,20 @@ import frc.vision.camera.SupportedVision;
 public class Swerve2021 extends DefaultConfig {
     public Swerve2021() {
         ENABLE_DRIVE = true;
-        ENABLE_INTAKE = true;
-        ENABLE_TURRET = true;
-        ENABLE_SHOOTER = true;
-        ENABLE_HOPPER = true;
-        ENABLE_AGITATOR = true;
-        ENABLE_INDEXER = true;
-        ENABLE_MUSIC = true;
+        ENABLE_INTAKE = false;
+        ENABLE_TURRET = false;
+        ENABLE_SHOOTER = false;
+        ENABLE_HOPPER = false;
+        ENABLE_AGITATOR = false;
+        ENABLE_INDEXER = false;
+        ENABLE_MUSIC = false;
 
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = true;
+        ENABLE_VISION = false;
         USE_PHOTONVISION = true;
         ENABLE_IMU = true;
         IMU_NAVX_PORT = I2C.Port.kMXP;
@@ -38,18 +38,18 @@ public class Swerve2021 extends DefaultConfig {
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
-        ENABLE_HOOD_ARTICULATION = true;
+        ENABLE_HOOD_ARTICULATION = false;
         INDEXER_DETECTION_CUTOFF_DISTANCE = 5;
 
         //INTAKE
-        ENABLE_INDEXER_AUTO_INDEX = true;
+        ENABLE_INDEXER_AUTO_INDEX = false;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.ACCURACY_2021;//ShootingControlStyles.ACCURACY_2021;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
-        IMU_TYPE = SupportedIMU.PIGEON;
+        IMU_TYPE = SupportedIMU.NAVX2;
         DRIVE_BASE = DriveBases.SWIVEL;
 
         AUTON_TYPE = AutonType.GALACTIC_SEARCH;

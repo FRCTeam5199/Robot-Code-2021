@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.AbstractDriveManager;
 import frc.drive.DriveManagerStandard;
@@ -88,6 +89,8 @@ public class RobotTelemetry implements ISubsystem {
                 robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
             else if (driver instanceof DriveManagerSwerve) {
                 //TODO implement this
+                SwerveModuleState frontLeft = ((DriveManagerSwerve) driver).moduleStates[0], frontRight = ((DriveManagerSwerve) driver).moduleStates[1], backLeft = ((DriveManagerSwerve) driver).moduleStates[2], backRight = ((DriveManagerSwerve) driver).moduleStates[3];
+                //robotPose = odometer.update(Rotation2d.fromDegrees(imu.absoluteYaw()), frontLeft, frontRight, backLeft, backRight);
             }
             robotTranslation = robotPose.getTranslation();
             robotRotation = robotPose.getRotation();
