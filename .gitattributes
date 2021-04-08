@@ -6,4 +6,7 @@ build/docs/javadoc/** linguist-detectable=false
 MurderDriveStation/** linguist-vendored=false
 MurderDriveStation/** linguist-detectable=true
 
+*.css linguist-detectable=false
+*.js linguist-detectable=false
+*.html linguist-detectable=false
 *.json linguist-detectable=false
