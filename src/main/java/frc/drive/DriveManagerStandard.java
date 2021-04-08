@@ -128,7 +128,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
     /**
      * Creates xbox controller n stuff
      *
-     * @throws UnsupportedOperationException when there is no configuration for {@link frc.robot.Robot#robotSettings#DRIVE_STYLE}
+     * @throws UnsupportedOperationException when there is no configuration for {@link frc.robot.robotconfigs.DefaultConfig#DRIVE_STYLE}
      */
     private void initMisc() throws UnsupportedOperationException {
         System.out.println("THE XBOX CONTROLLER IS ON " + robotSettings.XBOX_CONTROLLER_USB_SLOT);
@@ -187,10 +187,10 @@ public class DriveManagerStandard extends AbstractDriveManager {
     }
 
     /**
-     * This is where driving happens. Call this every tick to drive and set {@link frc.robot.Robot#robotSettings#DRIVE_STYLE}
+     * This is where driving happens. Call this every tick to drive and set {@link frc.robot.robotconfigs.DefaultConfig#DRIVE_STYLE}
      * to change the drive stype
      *
-     * @throws IllegalArgumentException if {@link frc.robot.Robot#robotSettings#DRIVE_STYLE} is not implemented here or
+     * @throws IllegalArgumentException if {@link frc.robot.robotconfigs.DefaultConfig#DRIVE_STYLE} is not implemented here or
      *                                  if you missed a break statement
      */
     @Override

@@ -62,9 +62,9 @@ public class Hopper implements ISubsystem {
 
     /**
      * Uses the distance sensor to determine if there is a ball in the indxer. Enable and disable the indexer using
-     * {@link frc.robot.Robot#robotSettings#ENABLE_INDEXER_AUTO_INDEX}
+     * {@link frc.robot.robotconfigs.DefaultConfig#ENABLE_INDEXER_AUTO_INDEX}
      *
-     * @return distance as read by {@link #indexSensor} assuming it is {@link frc.robot.Robot#robotSettings#ENABLE_INDEXER_AUTO_INDEX
+     * @return distance as read by {@link #indexSensor} assuming it is {@link frc.robot.robotconfigs.DefaultConfig#ENABLE_INDEXER_AUTO_INDEX
      * enabled}
      */
     public double indexerSensorRange() {
