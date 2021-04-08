@@ -17,9 +17,10 @@ import frc.misc.PID;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.SupportedMotors;
-import frc.robot.Robot;
 import frc.telemetry.imu.AbstractIMU;
 import frc.telemetry.imu.WrappedNavX2IMU;
+
+import static frc.robot.Robot.robotSettings;
 
 /*
 notes n stuff
@@ -41,21 +42,18 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation
     );
+    public SwerveModuleState[] moduleStates;
     private AbstractIMU IMU;
     private PIDController FRpid, BRpid, BLpid, FLpid;
     private AbstractMotorController driverFR, driverBR, driverBL, driverFL;
     private AbstractMotorController steeringFR, steeringBR, steeringBL, steeringFL;
     private BaseController xbox;
     private CANCoder FRcoder, BRcoder, BLcoder, FLcoder;
-
     private SwerveDriveOdometry odometry;
-    public SwerveModuleState[] moduleStates;
     private Pose2d pose;
 
     public DriveManagerSwerve() {
         super();
-        init();
-        addToMetaList();
     }
 
     @Override
@@ -106,7 +104,6 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverFL.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
         driverBL.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
         IMU = new WrappedNavX2IMU();
-        setupGuidance();
     }
 
     @Override
@@ -224,7 +221,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
         //try continuous here
         setSteeringContinuous(frontLeft.angle.getDegrees(), frontRight.angle.getDegrees(), backLeft.angle.getDegrees(), backRight.angle.getDegrees());
-        if (DEBUG && Robot.robotSettings.DEBUG) {
+        if (DEBUG && robotSettings.DEBUG) {
             System.out.printf("%4f %4f %4f %4f \n", frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
         }
         setDrive(frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
@@ -259,18 +256,19 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     /**
      * Drives the bot in percent control mode based on inputs
      *
-     * @param FL  {@link #driverFL} requested drive (-3.5, 3.5)
-     * @param FR  {@link #driverFR} requested drive (-3.5, 3.5)
-     * @param BL  {@link #driverBL} requested drive (-3.5, 3.5)
-     * @param BR{ @link #driverBR} requested drive (-3.5, 3.5)
+     * @param FL {@link #driverFL} requested drive (-3.5, 3.5)
+     * @param FR {@link #driverFR} requested drive (-3.5, 3.5)
+     * @param BL {@link #driverBL} requested drive (-3.5, 3.5)
+     * @param BR {@link #driverBR} requested drive (-3.5, 3.5)
      */
     private void setDrive(double FL, double FR, double BL, double BR) {
         double num = 3.5;
-        //System.out.println("FL: " + FL);
-        //System.out.println("FR: " + FR);
-        //System.out.println("BL: " + BL);
-        //System.out.println("BR: " + BR);
-
+        if (robotSettings.DEBUG && DEBUG) {
+            System.out.println("FL: " + FL);
+            System.out.println("FR: " + FR);
+            System.out.println("BL: " + BL);
+            System.out.println("BR: " + BR);
+        }
         driverFR.moveAtPercent(FR / num);
         driverBR.moveAtPercent(BR / num);
         driverFL.moveAtPercent(FL / num);
@@ -294,6 +292,13 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverBR.setBrake(brake);
     }
 
+    /**
+     * Sets the pid for all steering motors
+     *
+     * @param pid the pid for the swerve steering motors
+     * @deprecated (For now, dont use this since the PID in the motors arent continuous)
+     */
+    @Deprecated
     private void setSteeringPIDS(PID pid) {
         steeringFR.setPid(pid);
         steeringBR.setPid(pid);
@@ -311,12 +316,5 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverFL.setPid(pid);
         driverFL.setPid(pid);
         driverBL.setPid(pid);
-    }
-
-    private void setSteering(double FL, double FR, double BL, double BR) {
-        steeringFR.moveAtPosition(FR);
-        steeringBR.moveAtPosition(BR);
-        steeringFL.moveAtPosition(FL);
-        steeringBL.moveAtPosition(BL);
     }
 }

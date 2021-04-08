@@ -24,12 +24,18 @@ public abstract class AbstractDriveManager implements ISubsystem {
      */
     public abstract void setBrake(boolean brake);
 
-    public String getSubsystemName() {
-        return "Drivetrain";
+    protected AbstractDriveManager() {
+        init();
+        addToMetaList();
+        createTelem();
     }
 
-    protected void createTelem(){
+    protected void createTelem() {
         guidance = new RobotTelemetry(this);
         guidance.resetOdometry();
+    }
+
+    public String getSubsystemName() {
+        return "Drivetrain";
     }
 }
