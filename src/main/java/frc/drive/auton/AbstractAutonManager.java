@@ -4,19 +4,22 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import frc.drive.DriveManager;
+import frc.drive.AbstractDriveManager;
+import frc.drive.DriveManagerStandard;
+import frc.drive.auton.followtrajectory.Trajectories;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
 import frc.robot.Robot;
-import frc.robot.RobotSettings;
 import frc.telemetry.RobotTelemetry;
 
 import java.io.IOException;
 import java.util.HashMap;
 
+import static frc.robot.Robot.robotSettings;
+
 /**
  * If you have a custom auton that needs to be implemented, extend this class. Since every Auton Manager needs to have a
- * {@link DriveManager drivetrain} and a {@link Timer timer}, they are here along with {@link ISubsystem}.
+ * {@link DriveManagerStandard drivetrain} and a {@link Timer timer}, they are here along with {@link ISubsystem}.
  *
  * @see ISubsystem
  * @see frc.drive.auton.followtrajectory.AutonManager
@@ -36,10 +39,18 @@ public abstract class AbstractAutonManager implements ISubsystem {
                 throw new RuntimeException(e);
             }
         }
+
+        for (Trajectories path : Trajectories.values()) {
+            try {
+                paths.put(path, TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("paths/" + path.getDeployLocation() + ".wpilib.json")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     protected final Timer timer = new Timer();
-    protected final DriveManager DRIVING_CHILD;
+    protected final AbstractDriveManager DRIVING_CHILD;
     protected final RobotTelemetry telem;
 
     /**
@@ -47,7 +58,7 @@ public abstract class AbstractAutonManager implements ISubsystem {
      *
      * @param driveManager the drivetrain object created for the robot
      */
-    protected AbstractAutonManager(DriveManager driveManager) {
+    protected AbstractAutonManager(AbstractDriveManager driveManager) {
         addToMetaList();
         DRIVING_CHILD = driveManager;
         if (DRIVING_CHILD.guidance != null)
@@ -57,11 +68,16 @@ public abstract class AbstractAutonManager implements ISubsystem {
     }
 
     protected void onFinish() {
-        RobotSettings.autonComplete = true;
-        if (RobotSettings.ENABLE_MUSIC && !RobotSettings.AUTON_COMPLETE_NOISE.equals("")) {
+        robotSettings.autonComplete = true;
+        if (robotSettings.ENABLE_MUSIC && !robotSettings.AUTON_COMPLETE_NOISE.equals("")) {
             DRIVING_CHILD.setBrake(true);
-            Robot.chirp.loadMusic(RobotSettings.AUTON_COMPLETE_NOISE);
+            Robot.chirp.loadMusic(robotSettings.AUTON_COMPLETE_NOISE);
             Robot.chirp.play();
         }
+    }
+
+    @Override
+    public String getSubsystemName() {
+        return "Auton manager";
     }
 }

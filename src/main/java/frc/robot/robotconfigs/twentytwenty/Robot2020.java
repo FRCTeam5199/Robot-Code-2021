@@ -7,6 +7,8 @@ import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
+import frc.telemetry.imu.SupportedIMU;
+import frc.vision.camera.SupportedVision;
 
 public class Robot2020 extends DefaultConfig {
     public Robot2020() {
@@ -26,23 +28,24 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_VISION = false;
         USE_PHOTONVISION = true;
         ENABLE_IMU = false;
-        USE_PIGEON = true;
-        USE_NAVX2 = false;
 
         //SHOOTER
         SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
+        GOAL_CAMERA_TYPE = SupportedVision.PHOTON;
+        ENABLE_HOOD_ARTICULATION = false;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
+        INDEXER_DETECTION_CUTOFF_DISTANCE = 9;
 
         //UI Style
         DRIVE_STYLE = DriveTypes.STANDARD;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
-
+        IMU_TYPE = SupportedIMU.PIGEON;
         AUTON_TYPE = AutonType.FOLLOW_PATH;
 
         DRIVEBASE_PID = new PID(0, 0, 0.000005, 0.00002);
@@ -52,6 +55,7 @@ public class Robot2020 extends DefaultConfig {
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.5588;
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
+        RUMBLE_TOLERANCE_FPS = 8;
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
         WHEEL_DIAMETER = 6; //update: now it's used once
         TURN_SCALE = 0.7;

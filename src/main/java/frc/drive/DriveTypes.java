@@ -1,7 +1,7 @@
 package frc.drive;
 
 /**
- * See {@link DriveManager#updateTeleop() updateTeleop} for implementation of each drive style
+ * See {@link DriveManagerStandard#updateTeleop() updateTeleop} for implementation of each drive style
  *
  * @author jojo2357
  */

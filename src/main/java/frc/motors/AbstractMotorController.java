@@ -1,7 +1,10 @@
 package frc.motors;
 
 import frc.misc.PID;
+import frc.misc.UserInterface;
 import frc.motors.followers.AbstractFollowerMotorController;
+
+import java.util.ArrayList;
 
 /**
  * This is the base class for any motor. It is not an interface because it has to have a {@link
@@ -15,6 +18,8 @@ import frc.motors.followers.AbstractFollowerMotorController;
  * @see VictorMotorController
  */
 public abstract class AbstractMotorController {
+    public static final ArrayList<AbstractMotorController> motorList = new ArrayList<>();
+    public boolean failureFlag = false;
     /**
      * Value to convert from sensor position to real units (this will vary between motors so know your units!)
      * Destination units are RPM that include the gearing on the motor
@@ -23,6 +28,8 @@ public abstract class AbstractMotorController {
      * dont want to actually fix the issue, just change to double
      */
     public Double sensorToRealDistanceFactor;
+    protected String potentialFix;
+    protected boolean isOverheated;
 
     /**
      * Inverts the motor rotation from default for that motor (varies motor to motor of course)
@@ -32,6 +39,8 @@ public abstract class AbstractMotorController {
      */
     public abstract AbstractMotorController setInverted(boolean invert);
 
+    public abstract String getName();
+
     /**
      * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
      * the passed motor will be the leader
@@ -40,7 +49,20 @@ public abstract class AbstractMotorController {
      * @return this object for factory style construction
      * @see AbstractFollowerMotorController
      */
+    @Deprecated
     public abstract AbstractMotorController follow(AbstractMotorController leader);
+
+    /**
+     * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
+     * the passed motor will be the leader
+     *
+     * @param leader motor to follow
+     * @param invert whether to invert this follower
+     * @return this object for factory style construction
+     * @see AbstractFollowerMotorController
+     */
+    public abstract AbstractMotorController follow(AbstractMotorController leader, boolean invert);
+
 
     /**
      * Sets current encoder position to be the zero position. If you are absolutely crazy and want to set the encoder to
@@ -61,6 +83,11 @@ public abstract class AbstractMotorController {
      * @param amount requested drive velocity
      */
     public abstract void moveAtVelocity(double amount);
+
+    /**
+     * @param pos requested position
+     */
+    public abstract void moveAtPosition(double pos);
 
     /**
      * Sets the idle mode to either be (brake = false) minimally resistive or (brake = true) to resist all motion/use
@@ -92,7 +119,7 @@ public abstract class AbstractMotorController {
     /**
      * Sets the motor output on a percent output basis
      *
-     * @param percent 0 to 1 output requested
+     * @param percent -1 to 1 output requested
      */
     public abstract void moveAtPercent(double percent);
 
@@ -105,12 +132,11 @@ public abstract class AbstractMotorController {
      */
     public abstract AbstractMotorController setOpenLoopRampRate(double timeToMax);
 
-    /**
-     * Gets the temperature of the motor
-     *
-     * @return the temperature in celcius
-     */
-    public abstract double getMotorTemperature();
+    public abstract String getSuggestedFix();
+
+    protected AbstractMotorController() {
+        motorList.add(this);
+    }
 
     /**
      * see docs for {@link #sensorToRealDistanceFactor} for full explanation
@@ -120,4 +146,24 @@ public abstract class AbstractMotorController {
     public void setSensorToRealDistanceFactor(double s2rf) {
         sensorToRealDistanceFactor = s2rf;
     }
+
+    protected boolean isTemperatureAcceptable(int myID) {
+        if (getMotorTemperature() > 100) {
+            if (!isOverheated) {
+                UserInterface.smartDashboardPutBoolean("OVERHEAT " + myID, false);
+                isOverheated = true;
+            }
+        } else if (isOverheated) {
+            isOverheated = false;
+            UserInterface.smartDashboardPutBoolean("OVERHEAT " + myID, true);
+        }
+        return !isOverheated;
+    }
+
+    /**
+     * Gets the temperature of the motor
+     *
+     * @return the temperature in celcius
+     */
+    public abstract double getMotorTemperature();
 }

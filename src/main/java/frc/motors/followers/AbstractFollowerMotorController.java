@@ -30,8 +30,12 @@ public abstract class AbstractFollowerMotorController {
      * @see AbstractMotorController#follow(AbstractMotorController)
      */
     public void follow(AbstractMotorController leader) {
+        follow(leader, false);
+    }
+
+    public void follow(AbstractMotorController leader, boolean invert) {
         for (AbstractMotorController follower : motors)
-            follower.follow(leader);
+            follower.follow(leader, invert);
     }
 
     /**
@@ -55,5 +59,19 @@ public abstract class AbstractFollowerMotorController {
     public void setCurrentLimit(int limit) {
         for (AbstractMotorController motor : motors)
             motor.setCurrentLimit(limit);
+    }
+
+    public boolean failureFlag() {
+        for (AbstractMotorController motor : motors)
+            if (motor.failureFlag)
+                return true;
+        return false;
+    }
+
+    public String getSuggestedFix() {
+        for (AbstractMotorController motor : motors)
+            if (!motor.getSuggestedFix().equals(""))
+                return motor.getSuggestedFix();
+        return "";
     }
 }

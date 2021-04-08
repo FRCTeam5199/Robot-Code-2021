@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 /**
  * This is where we play our gnarly tunez. Although it cant be seen from here, there is a delete deploy directory method
@@ -25,22 +24,18 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     public static final ArrayList<TalonMotorController> talonMotorArrayList = new ArrayList<>();
     /**
-     * No son, I refuse to make a new, unseeded random everytime we want a new song. Besides, we have a random at home
-     * already so you don't need another one
-     */
-    private static final Random musicRand = new Random(System.currentTimeMillis());
-
-    /**
      * K: Title. V: All files matching (differs in motors required)
      */
     private static HashMap<String, List<String>> songnames;
+    public static final SendableChooser<List<String>> MUSIC_SELECTION = getSongs();
 
     /**
-     * Loads up songs for {@link #songnames} and {@link Robot#MUSIC_SELECTION}
+     * Loads up songs for {@link #songnames} and {@link UserInterface#MUSIC_SELECTOR}
      *
-     * @param listObject The scroll list object to add to
+     * @return listObject a SendableChooser with all the songs
      */
-    public static void getSongs(SendableChooser<List<String>> listObject) {
+    public static SendableChooser<List<String>> getSongs() {
+        SendableChooser<List<String>> listObject = new SendableChooser<>();
         songnames = new HashMap<>();
         File[] files = Filesystem.getDeployDirectory().toPath().resolve("sounds").toFile().listFiles();
         for (File file : files) {
@@ -62,9 +57,10 @@ public class Chirp extends Orchestra implements ISubsystem {
             filenames.add((String) songnames.keySet().toArray()[i]);
         filenames.sort(String::compareTo);
         for (String key : filenames) {
-            System.out.println((String) key);
-            listObject.addOption((String) key, songnames.get((String) key));
+            //System.out.println(key);
+            listObject.setDefaultOption(key, songnames.get(key)); //WORKING: listObject.addOption(key, songnames.get(key));
         }
+        return listObject;
     }
 
     public Chirp() {
@@ -94,7 +90,7 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     @Override
     public void updateTest() {
-        List<String> selected = Robot.MUSIC_SELECTION.getSelected();
+        List<String> selected = MUSIC_SELECTION.getSelected();
         String songName = "";//Robot.songTab.getString("");
         if (selected != null && selected.size() > 0) {
             for (String str : selected) {
@@ -104,7 +100,7 @@ public class Chirp extends Orchestra implements ISubsystem {
                     songName = str;
             }
         }
-        Robot.foundSong.setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
+        UserInterface.MUSIC_FOUND_SONG.getEntry().setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
         if (!songName.equals("") && new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(Robot.lastFoundSong)) {
             Robot.lastFoundSong = songName;
             loadMusic(songName);
@@ -163,6 +159,11 @@ public class Chirp extends Orchestra implements ISubsystem {
 
     }
 
+    @Override
+    public String getSubsystemName() {
+        return "Music";
+    }
+
     /**
      * Loads a song from the provided name assuming it is in the sounds deploy directory (deploy/sounds). Songs must be
      * in format {@code <name>_<instruments>_<playtime in millis>.chrp}
@@ -201,7 +202,7 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     public String getRandomSong() {
         String songName = "";
-        for (String str : songnames.get(songnames.keySet().toArray()[musicRand.nextInt(songnames.keySet().toArray().length)])) {
+        for (String str : songnames.get(songnames.keySet().toArray()[Robot.RANDOM.nextInt(songnames.keySet().toArray().length)])) {
             if (songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size())
                 songName = str;
             else if (!songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size() && Integer.parseInt(songName.split("_")[1]) < Integer.parseInt(str.split("_")[1]))

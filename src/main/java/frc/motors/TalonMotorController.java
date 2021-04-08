@@ -1,6 +1,7 @@
 package frc.motors;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.Faults;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
@@ -8,8 +9,7 @@ import frc.misc.Chirp;
 import frc.misc.PID;
 import frc.robot.Robot;
 
-import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
-import static com.ctre.phoenix.motorcontrol.ControlMode.Velocity;
+import static com.ctre.phoenix.motorcontrol.ControlMode.*;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Brake;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
 
@@ -17,9 +17,10 @@ import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
  * This is the wrapper for falcon 500's and maybe some other stuff
  */
 public class TalonMotorController extends AbstractMotorController {
-    public final WPI_TalonFX motor;
+    private final WPI_TalonFX motor;
 
     public TalonMotorController(int id) {
+        super();
         motor = new WPI_TalonFX(id);
         Chirp.talonMotorArrayList.add(this);
     }
@@ -32,7 +33,11 @@ public class TalonMotorController extends AbstractMotorController {
      * @see Chirp
      */
     public void addToOrchestra(Orchestra orchestra) {
-        orchestra.addInstrument(motor);
+        if (orchestra.addInstrument(motor) != ErrorCode.OK)
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Talon " + motor.getDeviceID() + " could not join the orchestra");
+            else
+                failureFlag = true;
     }
 
     @Override
@@ -42,16 +47,32 @@ public class TalonMotorController extends AbstractMotorController {
     }
 
     @Override
-    public AbstractMotorController follow(AbstractMotorController leader) {
+    public String getName() {
+        return "Talon: " + motor.getDeviceID();
+    }
+
+    @Override
+    public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
         if (leader instanceof TalonMotorController)
             motor.follow(((TalonMotorController) leader).motor);
+        else
+            throw new IllegalArgumentException("I cant follow that");
+        setInverted(invert);
         return this;
+    }
+
+    @Override
+    public AbstractMotorController follow(AbstractMotorController leader) {
+        return follow(leader, false);
     }
 
     @Override
     public void resetEncoder() {
         if (motor.setSelectedSensorPosition(0) != ErrorCode.OK)
-            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not be reset");
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not be reset");
+            else
+                failureFlag = true;
     }
 
     @Override
@@ -60,18 +81,23 @@ public class TalonMotorController extends AbstractMotorController {
             if (!Robot.SECOND_TRY)
                 throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " PIDF couldnt be set");
             else
-                Robot.FAILURES_TAB.add("Talon Motor " + motor.getDeviceID() + " failed", false).getEntry();
+                failureFlag = true;
         return this;
     }
 
     @Override
     public void moveAtVelocity(double realAmount) {
-        if (getMotorTemperature() > 100) {
-            System.out.println("Im literally boiling chill out");
-            Robot.FAILURES_TAB.add("OVERHEAT " + motor.getDeviceID(), false);
-        } else
-            motor.set(Velocity, realAmount / sensorToRealDistanceFactor);/// sensorToRealDistanceFactor);
+        if (isTemperatureAcceptable(motor.getDeviceID()))
+            motor.set(Velocity, realAmount / sensorToRealDistanceFactor);
+        else
+            motor.set(Velocity, 0);
+        /// sensorToRealDistanceFactor);
         //System.out.println("I'm crying. RealAmount: " + realAmount + "\nSensortoDist: " + sensorToRealDistanceFactor + "\nSetting motors to " + realAmount / sensorToRealDistanceFactor);
+    }
+
+    @Override
+    public void moveAtPosition(double pos) {
+        motor.set(Position, pos);
     }
 
     @Override
@@ -96,27 +122,51 @@ public class TalonMotorController extends AbstractMotorController {
         config.currentLimit = limit;
         config.enable = true;
         if (motor.configSupplyCurrentLimit(config) != ErrorCode.OK)
-            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " current limit could not be set");
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " current limit could not be set");
+            else
+                failureFlag = true;
         return this;
     }
 
     @Override
     public void moveAtPercent(double percent) {
-        if (getMotorTemperature() > 100) {
-            System.out.println("Im literally boiling chill out");
-        } else
+        if (isTemperatureAcceptable(motor.getDeviceID()))
             motor.set(PercentOutput, percent);
+        else
+            motor.set(PercentOutput, 0);
     }
 
     @Override
     public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
         if (motor.configOpenloopRamp(timeToMax) != ErrorCode.OK)
-            throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not set open ramp rate");
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not set open ramp rate");
+            else
+                failureFlag = true;
         return this;
     }
 
     @Override
     public double getMotorTemperature() {
         return motor.getTemperature();
+    }
+
+    @Override
+    public String getSuggestedFix() {
+        Faults foundFaults = new Faults();
+        motor.getFaults(foundFaults);
+        failureFlag = foundFaults.hasAnyFault();
+        if (foundFaults.UnderVoltage) ;
+            //report to PDP
+        else if (foundFaults.RemoteLossOfSignal)
+            potentialFix = "Ensure that motor %d is plugged into can AND power";
+        else if (foundFaults.APIError)
+            potentialFix = "Update the software for motor %d";
+        else if (foundFaults.hasAnyFault())
+            potentialFix = "Idk youre probably screwed";
+        else
+            potentialFix = "";
+        return potentialFix;
     }
 }

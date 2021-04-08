@@ -7,14 +7,17 @@ import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
+import frc.telemetry.imu.SupportedIMU;
+import frc.vision.camera.SupportedVision;
 
 public class PracticeRobot2021 extends DefaultConfig {
     //Subsystems
     public PracticeRobot2021() {
-        ENABLE_DRIVE = true;
+        ENABLE_DRIVE = false;
         ENABLE_INTAKE = false;
-        ENABLE_SHOOTER = false;
-        ENABLE_HOPPER = false;
+        ENABLE_SHOOTER = true;
+        ENABLE_TURRET = true;
+        ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
@@ -24,16 +27,17 @@ public class PracticeRobot2021 extends DefaultConfig {
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = false;
-        USE_PHOTONVISION = true;
+        ENABLE_VISION = true;
+        USE_PHOTONVISION = false;
         ENABLE_IMU = false;
-        USE_PIGEON = true;
-        USE_NAVX2 = false;
 
         //SHOOTER
-        SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
+        SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
         SHOOTER_USE_TWO_MOTORS = true;
-        SHOOTER_INVERTED = true;
+        SHOOTER_INVERTED = false;
+        GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
+        ENABLE_HOOD_ARTICULATION = true;
+        INDEXER_DETECTION_CUTOFF_DISTANCE = 4;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
@@ -43,23 +47,25 @@ public class PracticeRobot2021 extends DefaultConfig {
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
+        IMU_TYPE = SupportedIMU.PIGEON;
+        TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
 
         AUTON_TYPE = AutonType.FOLLOW_PATH;
 
         DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
-        SHOOTER_PID = new PID(0.001, 0.00003, 0.0001, 0.001);
+        SHOOTER_PID = new PID(0.001, 0.0000005, 0.03, 0);
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
         TURRET_PID = new PID(0.006, 0.00001, 0.001);
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.524891;
-        MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
+        MAX_SPEED = 20; //max speed in fps
+        RUMBLE_TOLERANCE_FPS = 14;
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
         WHEEL_DIAMETER = 4; //inches. update: now it's used once
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
-        DRIVE_GEARING = 10 / 60.0;
-
+        DRIVE_GEARING = 12 / 60.0;
         SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
         motorPulleySize = 0;//?;
         driverPulleySize = 0;//?;
@@ -83,6 +89,9 @@ public class PracticeRobot2021 extends DefaultConfig {
         GOAL_CAM_NAME = "GoalCamera";
         BALL_CAM_NAME = "BallCamera";
 
+        //PDP
+        PDP_ID = 0;
+
         //Drive Motors
         DRIVE_LEADER_L_ID = 1; //talon
         DRIVE_FOLLOWERS_L_IDS = new int[]{2}; //talon
@@ -93,9 +102,10 @@ public class PracticeRobot2021 extends DefaultConfig {
         //Shooter Motors
         SHOOTER_LEADER_ID = 7; //talon
         SHOOTER_FOLLOWER_ID = 8; //talon
+        SHOOTER_HOOD_ID = 32;
 
         //turret
-        TURRET_YAW_ID = 33; //550
+        TURRET_YAW_ID = 33;
 
         //hopper
         AGITATOR_MOTOR_ID = 10; //victor

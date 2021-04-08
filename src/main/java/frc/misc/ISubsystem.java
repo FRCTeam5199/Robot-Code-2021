@@ -1,6 +1,7 @@
 package frc.misc;
 
 import frc.robot.Robot;
+import frc.selfdiagnostics.ISimpleIssue;
 
 /**
  * The generic layout for any subsystem. Ensures that any subsystem on the robot has the appropriate fields
@@ -77,9 +78,17 @@ public interface ISubsystem {
     void initGeneric();
 
     /**
-     * In devlopment, adds this object to {@link Robot#subsytems a master registry} for later use
+     * Used in {@link ISimpleIssue} to provide a user friendly explanation as to why their jank isnt working. This could
+     * be static but that doesnt make sense since you should be querying an object anyway.
+     *
+     * @return the hardcoded name of the subsystem
+     */
+    String getSubsystemName();
+
+    /**
+     * In devlopment, adds this object to {@link Robot#subsystems a master registry} for later use
      */
     default void addToMetaList() {
-        Robot.subsytems.add(this);
+        Robot.subsystems.add(this);
     }
 }

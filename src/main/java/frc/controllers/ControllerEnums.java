@@ -1,6 +1,6 @@
 package frc.controllers;
 
-import frc.robot.RobotSettings;
+import static frc.robot.Robot.robotSettings;
 
 /**
  * These enums are used for each controller. If you make a new controller, create a new enum for its mappings here for
@@ -69,7 +69,7 @@ public class ControllerEnums {
      * @see XBoxController
      */
     public enum XboxAxes {
-        LEFT_JOY_X(0, RobotSettings.XBOX_CONTROLLER_DEADZONE), LEFT_JOY_Y(1, RobotSettings.XBOX_CONTROLLER_DEADZONE), LEFT_TRIGGER(2, 0), RIGHT_TRIGGER(3, 0), RIGHT_JOY_X(4, RobotSettings.XBOX_CONTROLLER_DEADZONE), RIGHT_JOY_Y(5, RobotSettings.XBOX_CONTROLLER_DEADZONE);
+        LEFT_JOY_X(0, robotSettings.XBOX_CONTROLLER_DEADZONE), LEFT_JOY_Y(1, robotSettings.XBOX_CONTROLLER_DEADZONE), LEFT_TRIGGER(2, 0), RIGHT_TRIGGER(3, 0), RIGHT_JOY_X(4, robotSettings.XBOX_CONTROLLER_DEADZONE), RIGHT_JOY_Y(5, robotSettings.XBOX_CONTROLLER_DEADZONE);
 
         public final int AXIS_VALUE;
         public final double DEADZONE;
@@ -165,7 +165,7 @@ public class ControllerEnums {
      * @see JoystickController
      */
     public enum JoystickButtons {
-        ONE(1), TWO(2), EIGHT(8), ELEVEN(11);
+        ONE(1), TWO(2), THREE(3), FIVE(5), EIGHT(8), ELEVEN(11);
 
         public final int AXIS_VALUE;
 
@@ -211,6 +211,33 @@ public class ControllerEnums {
         }
 
         ButtonPanelButtons(int value) {
+            this.AXIS_VALUE = value;
+        }
+    }
+
+    /**
+     * @see ButtonPanelController
+     */
+    public enum ButtonPanelTapedButtons {
+        RAISE_CLIMBER(1), LOWER_CLIMBER(2), CLIMBER_LOCK(3), CLIMBER_UNLOCK(4), BUDDY_CLIMB(5), AUX_TOP(6), HOOD_POS_1(7), SINGLE_SHOT(8), HOOD_POS_2(9), SOLID_SPEED(10), HOOD_POS_3(11), TARGET(12), HOOD_POS_4(13);
+
+        public final int AXIS_VALUE;
+
+        /**
+         * @param id - the button panel button id requested
+         * @return the {@link ButtonPanelTapedButtons} enum with id mathing input
+         * @throws NoSuchFieldException if there is no mapped button panel button with that id
+         * @deprecated Feature that should <b>never</b> be used. Gets the button panel button from a provided int
+         */
+        @Deprecated
+        public static ButtonPanelTapedButtons get(int id) throws NoSuchFieldException {
+            for (ButtonPanelTapedButtons axis : ButtonPanelTapedButtons.values()) {
+                if (axis.AXIS_VALUE == id) return axis;
+            }
+            throw new NoSuchFieldException("There is no Button Panel taped Button with an ID of " + id);
+        }
+
+        ButtonPanelTapedButtons(int value) {
             this.AXIS_VALUE = value;
         }
     }

@@ -1,29 +1,131 @@
 package frc.telemetry;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.util.Units;
-import frc.drive.DriveManager;
+import frc.drive.AbstractDriveManager;
+import frc.drive.DriveManagerStandard;
+import frc.drive.DriveManagerSwerve;
 import frc.misc.ISubsystem;
+import frc.misc.UserInterface;
 import frc.misc.UtilFunctions;
-import frc.robot.RobotSettings;
+import frc.telemetry.imu.AbstractIMU;
+import frc.telemetry.imu.WrappedNavX2IMU;
+import frc.telemetry.imu.WrappedPigeonIMU;
+
+import static frc.robot.Robot.robotSettings;
 
 public class RobotTelemetry implements ISubsystem {
-    private final DriveManager driver;
+    private final AbstractDriveManager driver;
     public Pose2d robotPose;
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
-    public PIDController headingPID;
     public DifferentialDriveOdometry odometer;
     public AbstractIMU imu;
 
-    public RobotTelemetry(DriveManager driver) {
+    public RobotTelemetry(AbstractDriveManager driver) {
         addToMetaList();
         this.driver = driver;
         init();
+    }
+
+    /**
+     * creates pigeon, heading pid, and odometer
+     */
+    @Override
+    public void init() {
+        driver.resetDriveEncoders();
+        if (!robotSettings.ENABLE_IMU)
+            return;
+        switch (robotSettings.IMU_TYPE) {
+            case PIGEON:
+                imu = new WrappedPigeonIMU();
+                break;
+            case NAVX2:
+                imu = new WrappedNavX2IMU();
+        }
+        if (driver instanceof DriveManagerStandard) {
+            odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
+            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
+        } else if (driver instanceof DriveManagerSwerve) {
+            //TODO implement this
+        }
+    }
+
+    /**
+     * @see #updateGeneric()
+     */
+    @Override
+    public void updateTest() {
+        //updateGeneric();
+    }
+
+    /**
+     * @see #updateGeneric()
+     */
+    @Override
+    public void updateTeleop() {
+        updateGeneric();
+    }
+
+    /**
+     * does {@link #updateGeneric()}
+     */
+    @Override
+    public void updateAuton() {
+        updateGeneric();
+    }
+
+    /**
+     * updates the robot orientation based on the IMU and distance traveled
+     */
+    @Override
+    public void updateGeneric() {
+        if (robotSettings.ENABLE_IMU) {
+            if (driver instanceof DriveManagerStandard)
+                robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
+            else if (driver instanceof DriveManagerSwerve) {
+                //TODO implement this
+                SwerveModuleState frontLeft = ((DriveManagerSwerve) driver).moduleStates[0], frontRight = ((DriveManagerSwerve) driver).moduleStates[1], backLeft = ((DriveManagerSwerve) driver).moduleStates[2], backRight = ((DriveManagerSwerve) driver).moduleStates[3];
+                //robotPose = odometer.update(Rotation2d.fromDegrees(imu.absoluteYaw()), frontLeft, frontRight, backLeft, backRight);
+            }
+            robotTranslation = robotPose.getTranslation();
+            robotRotation = robotPose.getRotation();
+            UserInterface.smartDashboardPutNumber("Yaw", imu.absoluteYaw());
+        }
+    }
+
+    @Override
+    public void initTest() {
+
+    }
+
+    @Override
+    public void initTeleop() {
+
+    }
+
+    @Override
+    public void initAuton() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
+
+    }
+
+    @Override
+    public String getSubsystemName() {
+        return "Guidance";
     }
 
     /**
@@ -63,14 +165,6 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     /**
-     * @return the robot's X position in relation to its starting position(right positive) typically facing away from
-     * opposing alliance station
-     */
-    public double fieldX() {
-        return robotTranslation.getX();
-    }
-
-    /**
      * @return the robot's Y position in relation to its starting position(away positive) typically facing away from
      * opposing alliance station
      */
@@ -79,116 +173,20 @@ public class RobotTelemetry implements ISubsystem {
     }
 
     /**
-     * Zeroes the encoders at their current position
+     * @return the robot's X position in relation to its starting position(right positive) typically facing away from
+     * opposing alliance station
      */
-    public void resetEncoders() {
-        driver.leaderL.resetEncoder();
-        driver.leaderR.resetEncoder();
+    public double fieldX() {
+        return robotTranslation.getX();
     }
 
     /**
      * Resets all orienting to zeroes.
      */
     public void resetOdometry() {
-        if (RobotSettings.ENABLE_IMU)
+        if (robotSettings.ENABLE_IMU)
             imu.resetOdometry();
-        resetEncoders();
-    }
-
-    /**
-     * Gets the meters traveled by the left encoder
-     *
-     * @return wheel meters traveled
-     */
-    public double getMetersLeft() {
-        return Units.inchesToMeters(driver.leaderL.getRotations());
-    }
-
-    /**
-     * Gets the meters traveled by the right encoder
-     *
-     * @return wheel meters traveled
-     */
-    public double getMetersRight() {
-        return Units.inchesToMeters(driver.leaderR.getRotations());
-    }
-
-    /**
-     * creates pigeon, heading pid, and odometer
-     */
-    @Override
-    public void init() {
-        resetEncoders();
-        if (!RobotSettings.ENABLE_IMU)
-            return;
-        if (RobotSettings.USE_PIGEON) {
-            imu = new WrappedPigeonIMU();
-        } else {
-            imu = new WrappedNavX2IMU();
-        }
-        headingPID = new PIDController(RobotSettings.HEADING_PID.getP(), RobotSettings.HEADING_PID.getI(), RobotSettings.HEADING_PID.getD());
         odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
-        robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
-    }
-
-    /**
-     * @see #updateGeneric()
-     */
-    @Override
-    public void updateTest() {
-        //updateGeneric();
-    }
-
-    /**
-     * @see #updateGeneric()
-     */
-    @Override
-    public void updateTeleop() {
-        updateGeneric();
-    }
-
-    /**
-     * does {@link #updateGeneric()}
-     */
-    @Override
-    public void updateAuton() {
-        updateGeneric();
-    }
-
-    /**
-     * updates the robot orientation based on the IMU and distance traveled
-     */
-    @Override
-    public void updateGeneric() {
-        if (RobotSettings.ENABLE_IMU) {
-            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), getMetersLeft(), getMetersRight());
-            robotTranslation = robotPose.getTranslation();
-            robotRotation = robotPose.getRotation();
-        }
-    }
-
-    @Override
-    public void initTest() {
-
-    }
-
-    @Override
-    public void initTeleop() {
-
-    }
-
-    @Override
-    public void initAuton() {
-
-    }
-
-    @Override
-    public void initDisabled() {
-
-    }
-
-    @Override
-    public void initGeneric() {
-
+        driver.resetDriveEncoders();
     }
 }

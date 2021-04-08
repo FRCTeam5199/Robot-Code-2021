@@ -1,25 +1,27 @@
 package frc.ballstuff.intaking;
 
-import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.misc.ISubsystem;
+import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
-import frc.robot.RobotSettings;
+import frc.selfdiagnostics.MotorDisconnectedIssue;
+import frc.vision.distancesensor.IDistanceSensor;
+import frc.vision.distancesensor.RevDistanceSensor;
+
+import static frc.robot.Robot.robotSettings;
 
 /**
  * The Hopper subsystem effectively takes a ball from the front (where the {@link frc.ballstuff.intaking.Intake intake}
  * is ) to the {@link frc.ballstuff.shooting.Shooter}
  */
 public class Hopper implements ISubsystem {
-    public AbstractMotorController agitator, indexer;
-    public Rev2mDistanceSensor indexSensor;
-    public boolean indexed = false;
-    private boolean agitatorActive = false;
-    private boolean indexerActive = false;
+    private static final boolean DEBUG = true;
+    private AbstractMotorController agitator, indexer;
+    private IDistanceSensor indexSensor;
+    private boolean agitatorActive = false, indexerActive = false;
 
     public Hopper() {
         addToMetaList();
@@ -28,27 +30,18 @@ public class Hopper implements ISubsystem {
 
     @Override
     public void init() {
-        if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-            indexSensor = new Rev2mDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighAccuracy);
-            indexSensor.setEnabled(true);
-            indexSensor.setAutomaticMode(true);
+        if (robotSettings.ENABLE_INDEXER_AUTO_INDEX) {
+            indexSensor = new RevDistanceSensor(Port.kOnboard, Unit.kInches, RangeProfile.kHighAccuracy);
+            System.out.println("Enabling index sensor.");
         }
-        if (RobotSettings.ENABLE_AGITATOR)
-            agitator = new VictorMotorController(RobotSettings.AGITATOR_MOTOR_ID);
-        if (RobotSettings.ENABLE_INDEXER)
-            indexer = new VictorMotorController(RobotSettings.INDEXER_MOTOR_ID);
+        if (robotSettings.ENABLE_AGITATOR)
+            agitator = new VictorMotorController(robotSettings.AGITATOR_MOTOR_ID);
+        if (robotSettings.ENABLE_INDEXER)
+            indexer = new VictorMotorController(robotSettings.INDEXER_MOTOR_ID);
     }
 
     @Override
     public void updateTest() {
-        //updateGeneric();
-    }
-
-    public double indexerSensorRange() {
-        if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-            return indexSensor.getRange();
-        }
-        return -2;
     }
 
     @Override
@@ -58,6 +51,31 @@ public class Hopper implements ISubsystem {
 
     @Override
     public void updateAuton() {
+        if (!robotSettings.autonComplete) {
+            updateTeleop();
+            agitator.moveAtPercent(0.6);
+        } else {
+            agitator.moveAtPercent(0);
+            indexer.moveAtPercent(0);
+        }
+    }
+
+    /**
+     * Uses the distance sensor to determine if there is a ball in the indxer. Enable and disable the indexer using
+     * {@link frc.robot.robotconfigs.DefaultConfig#ENABLE_INDEXER_AUTO_INDEX}
+     *
+     * @return distance as read by {@link #indexSensor} assuming it is {@link frc.robot.robotconfigs.DefaultConfig#ENABLE_INDEXER_AUTO_INDEX
+     * enabled}
+     */
+    public double indexerSensorRange() {
+        if (robotSettings.ENABLE_INDEXER_AUTO_INDEX) {
+            return indexSensor.getDistance();
+        }
+        return -2;
+    }
+
+    public boolean isIndexed() {
+        return robotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() < robotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE;
     }
 
     /**
@@ -65,35 +83,48 @@ public class Hopper implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (RobotSettings.DEBUG) {
-            SmartDashboard.putBoolean("indexer enable", indexerActive);
-            SmartDashboard.putBoolean("agitator enable", agitatorActive);
-            SmartDashboard.putNumber("indexer sensor", indexerSensorRange());
+        if (robotSettings.ENABLE_INDEXER) {
+            if (indexer.failureFlag) {
+                MotorDisconnectedIssue.reportIssue(this, robotSettings.INDEXER_MOTOR_ID, indexer.getSuggestedFix());
+            } else {
+                MotorDisconnectedIssue.resolveIssue(this, robotSettings.INDEXER_MOTOR_ID);
+            }
+        }
+        if (robotSettings.ENABLE_AGITATOR) {
+            if (agitator.failureFlag) {
+                MotorDisconnectedIssue.reportIssue(this, robotSettings.AGITATOR_MOTOR_ID, indexer.getSuggestedFix());
+            } else {
+                MotorDisconnectedIssue.resolveIssue(this, robotSettings.AGITATOR_MOTOR_ID);
+            }
         }
         if (!indexerActive && !agitatorActive) {
-            if (RobotSettings.ENABLE_INDEXER) {
-                if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    indexer.moveAtPercent(indexerSensorRange() > 9 ? 0.4 : 0);
+            if (robotSettings.ENABLE_INDEXER) {
+                if (robotSettings.ENABLE_INDEXER_AUTO_INDEX) {
+                    indexer.moveAtPercent(indexerSensorRange() > robotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.3 : 0);
                 } else {
                     indexer.moveAtPercent(0);
                 }
-            }
-            if (RobotSettings.ENABLE_AGITATOR) {
-                if (RobotSettings.ENABLE_INDEXER_AUTO_INDEX) {
-                    agitator.moveAtPercent(indexerSensorRange() > 9 ? 0.3 : 0);
+            } //2021 COMP 4 & 2020 COMP 9
+            if (robotSettings.ENABLE_AGITATOR) {
+                if (robotSettings.ENABLE_INDEXER_AUTO_INDEX) {
+                    agitator.moveAtPercent(indexerSensorRange() > robotSettings.INDEXER_DETECTION_CUTOFF_DISTANCE ? 0.5 : 0);
                 } else {
                     agitator.moveAtPercent(0);
                 }
             }
-            indexed = (RobotSettings.ENABLE_INDEXER_AUTO_INDEX && indexerSensorRange() > 9);
         } else {
-            if (RobotSettings.ENABLE_INDEXER) {
-                indexer.moveAtPercent(indexerActive ? 0.8 : 0);
+            if (robotSettings.ENABLE_INDEXER) {
+                indexer.moveAtPercent(indexerActive ? 0.9 : 0);
             }
-            if (RobotSettings.ENABLE_AGITATOR) {
+            if (robotSettings.ENABLE_AGITATOR) {
                 agitator.moveAtPercent(agitatorActive ? 0.6 : 0);
             }
-            indexed = true;//indexerSensorRange() > 9;
+        }
+        if (robotSettings.DEBUG && DEBUG) {
+            UserInterface.smartDashboardPutBoolean("indexer enable", indexerActive);
+            UserInterface.smartDashboardPutBoolean("agitator enable", agitatorActive);
+            UserInterface.smartDashboardPutNumber("indexer sensor", indexerSensorRange());
+            UserInterface.smartDashboardPutBoolean("hopper indexed", isIndexed());
         }
     }
 
@@ -122,6 +153,11 @@ public class Hopper implements ISubsystem {
 
     }
 
+    @Override
+    public String getSubsystemName() {
+        return "Hopper";
+    }
+
     /**
      * applies settings/toggles Agitator and Indexer on/off
      *
@@ -139,7 +175,7 @@ public class Hopper implements ISubsystem {
      */
     public void setAgitator(boolean set) {
         agitatorActive = set;
-        if (RobotSettings.DEBUG) {
+        if (robotSettings.DEBUG && DEBUG) {
             System.out.println("Agitator set to " + set);
         }
     }
@@ -150,7 +186,7 @@ public class Hopper implements ISubsystem {
      * @param set a boolean to determine wether or not Indexer is turned on/off
      */
     public void setIndexer(boolean set) {
-        if (RobotSettings.DEBUG) {
+        if (robotSettings.DEBUG && DEBUG) {
             System.out.println("Indexer set to " + set);
         }
         indexerActive = set;

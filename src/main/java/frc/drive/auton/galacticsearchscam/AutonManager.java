@@ -5,10 +5,13 @@ import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.util.Units;
-import frc.drive.DriveManager;
+import frc.drive.AbstractDriveManager;
+import frc.drive.DriveManagerStandard;
+import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
-import frc.robot.RobotSettings;
+
+import static frc.robot.Robot.robotSettings;
 
 /**
  * This is for running a preselected galactic search path
@@ -17,7 +20,7 @@ public class AutonManager extends AbstractAutonManager {
     private final RamseteController controller = new RamseteController();
     private Trajectory trajectory = new Trajectory();
 
-    public AutonManager(DriveManager driveManager) {
+    public AutonManager(AbstractDriveManager driveManager) {
         super(driveManager);
         init();
     }
@@ -41,12 +44,17 @@ public class AutonManager extends AbstractAutonManager {
      */
     @Override
     public void updateAuton() {
-        if (!RobotSettings.autonComplete) {
+        if (!robotSettings.autonComplete) {
+            //TrajectoryUtil.serializeTrajectory();
             Trajectory.State goal = trajectory.sample(timer.get());
-            if (RobotSettings.ENABLE_IMU) {
+            if (robotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
                 ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-                DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond);
+                if (DRIVING_CHILD instanceof DriveManagerStandard)
+                    ((DriveManagerStandard) DRIVING_CHILD).drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond * 2);
+                else if (DRIVING_CHILD instanceof DriveManagerSwerve) {
+                    //TODO implement this
+                }
             }
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
                 onFinish();
@@ -71,9 +79,9 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void initAuton() {
-        RobotSettings.autonComplete = false;
-        trajectory = paths.get(GalacticSearchPaths.PATH_A_RED);
-        if (RobotSettings.ENABLE_IMU) {
+        robotSettings.autonComplete = false;
+        trajectory = paths.get(GalacticSearchPaths.PATH_B_BLUE);
+        if (robotSettings.ENABLE_IMU) {
             telem.resetOdometry();
             Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
             trajectory = trajectory.transformBy(transform);

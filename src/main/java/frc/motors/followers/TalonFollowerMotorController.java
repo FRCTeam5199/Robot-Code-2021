@@ -1,6 +1,5 @@
 package frc.motors.followers;
 
-import frc.misc.Chirp;
 import frc.motors.AbstractMotorController;
 import frc.motors.TalonMotorController;
 
@@ -10,9 +9,8 @@ import frc.motors.TalonMotorController;
 public class TalonFollowerMotorController extends AbstractFollowerMotorController {
     public TalonFollowerMotorController(int... ids) {
         motors = new TalonMotorController[ids.length];
-        for (int i = 0; i < ids.length; i++) {
+        for (int i = 0; i < ids.length; i++)
             motors[i] = new TalonMotorController(ids[i]);
-        }
     }
 
     @Override

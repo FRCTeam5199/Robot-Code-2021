@@ -9,12 +9,36 @@ import edu.wpi.first.wpilibj.Joystick;
  * @author jojo2357
  */
 public abstract class BaseController {
+    /**
+     * This is the meta registrar of controllers. This is to prevent two different controller types from existing on the
+     * same channel and to reduce memory impact by reducing redundant objects. To use, simply query the index
+     * corresponding to the port desired and if null, create and set. Otherwise, verify controller type then use.
+     *
+     * @see XBoxController#createOrGet(int)
+     */
+    protected static final BaseController[] allControllers = new BaseController[6];
     protected final Joystick stick;
     private final int JOYSTICK_CHANNEL;
 
-    protected BaseController(int channel) {
+    //TODO verify this:
+    /*public static BaseController createOrGet(int channel, Class<? extends BaseController> clazz) throws ArrayIndexOutOfBoundsException, ArrayStoreException, UnsupportedOperationException {
+        if (channel < 0 || channel >= 6)
+            throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
+        try {
+            if (allControllers[channel] == null)
+                return allControllers[channel] = clazz.getConstructor(Integer.class).newInstance(channel);
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            throw new UnsupportedOperationException("Create a constructor in " + clazz.getName() + " that has ONLY and Integer parameter (not int)");
+        }
+        if (clazz.isAssignableFrom(allControllers[channel].getClass()))
+            return allControllers[channel];
+        throw new ArrayStoreException("A different controller has already been made for channel " + channel);
+    }*/
+
+    protected BaseController(Integer channel) {
         stick = new Joystick(channel);
         JOYSTICK_CHANNEL = channel;
+        allControllers[channel] = this;
     }
 
     @Deprecated
@@ -23,6 +47,10 @@ public abstract class BaseController {
     }
 
     public ControllerEnums.ButtonStatus get(ControllerEnums.ButtonPanelButtons n) {
+        throw new UnsupportedOperationException("This controller does not support getting a button panel button. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    }
+
+    public ControllerEnums.ButtonStatus get(ControllerEnums.ButtonPanelTapedButtons n) {
         throw new UnsupportedOperationException("This controller does not support getting a button panel button. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
@@ -52,6 +80,10 @@ public abstract class BaseController {
 
     public ControllerEnums.ButtonStatus get(ControllerEnums.XBoxButtons button) {
         throw new UnsupportedOperationException("This controller does not support getting an xbox button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    }
+
+    public void rumble(double percent) {
+        throw new UnsupportedOperationException("This controller does not support rumbling. If you believe this is a mistake, please override the overloaded rumble in the appropriate class");
     }
 
     public double get(ControllerEnums.WiiAxis axis) {
