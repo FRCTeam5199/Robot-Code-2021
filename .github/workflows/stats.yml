@@ -6,5 +6,15 @@ jobs:
   generate-file:
     runs-on: ubuntu-latest
     steps:
-    - name: Code_Stats
-      uses: jojo2357/CodeStats@0.0.2
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Code_Stats
+        uses: jojo2357/CodeStats@0.0.3
+
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v4.9.2
+        with:
+          commit_message: Update file to reflect new albums in library 🥳
+          commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
