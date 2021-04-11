@@ -30,11 +30,11 @@
 |[Point.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/drive/auton/Point.java)|59 (0.8%)|25|42.4%|27|45.8%|7|11.9%|
 |[AbstractAutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/drive/auton/AbstractAutonManager.java)|83 (1.1%)|58|69.9%|15|18.1%|10|12.0%|
 |[TalonMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/motors/TalonMotorController.java)|172 (2.3%)|138|80.2%|13|7.6%|21|12.2%|
-|[ShootingEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/shooting/ShootingEnums.java)|104 (1.4%)|21|20.2%|70|67.3%|13|12.5%|
 |[IDistanceSensor.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/vision/distancesensor/IDistanceSensor.java)|24 (0.3%)|10|41.7%|11|45.8%|3|12.5%|
 |[SupportedIMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/telemetry/imu/SupportedIMU.java)|8 (0.1%)|4|50.0%|3|37.5%|1|12.5%|
 |[IntakeControlStyles.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/intaking/IntakeControlStyles.java)|8 (0.1%)|4|50.0%|3|37.5%|1|12.5%|
 |[ShootingControlStyles.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/shooting/ShootingControlStyles.java)|8 (0.1%)|4|50.0%|3|37.5%|1|12.5%|
+|[ShootingEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/shooting/ShootingEnums.java)|104 (1.4%)|84|80.8%|7|6.7%|13|12.5%|
 |[Chirp.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/misc/Chirp.java)|213 (2.8%)|138|64.8%|48|22.5%|27|12.7%|
 |[Hopper.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/intaking/Hopper.java)|194 (2.6%)|140|72.2%|29|14.9%|25|12.9%|
 |[Main.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/robot/Main.java)|30 (0.4%)|9|30.0%|17|56.7%|4|13.3%|
@@ -74,4 +74,4 @@
 |[SupportedVision.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/vision/camera/SupportedVision.java)|9 (0.1%)|4|44.4%|3|33.3%|2|22.2%|
 |[WrappedPigeonIMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/telemetry/imu/WrappedPigeonIMU.java)|91 (1.2%)|54|59.3%|15|16.5%|22|24.2%|
 |[RevDistanceSensor.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/vision/distancesensor/RevDistanceSensor.java)|92 (1.2%)|58|63.0%|11|12.0%|23|25.0%|
-|Total|7603|4956| |1672| |975| |
+|Total|7603|5019| |1609| |975| |

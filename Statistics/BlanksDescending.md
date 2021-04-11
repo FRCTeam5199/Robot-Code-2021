@@ -32,8 +32,8 @@
 |[CompetitionRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/robot/robotconfigs/twentyone/CompetitionRobot2021.java)|118 (1.6%)|91|77.1%|10|8.5%|17|14.4%|
 |[Swerve2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/robot/robotconfigs/twentyone/Swerve2021.java)|120 (1.6%)|93|77.5%|10|8.3%|17|14.2%|
 |[ISubsystem.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/misc/ISubsystem.java)|94 (1.2%)|19|20.2%|62|66.0%|13|13.8%|
-|[ShootingEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/shooting/ShootingEnums.java)|104 (1.4%)|21|20.2%|70|67.3%|13|12.5%|
 |[IVision.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/vision/camera/IVision.java)|75 (1.0%)|32|42.7%|30|40.0%|13|17.3%|
+|[ShootingEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/shooting/ShootingEnums.java)|104 (1.4%)|84|80.8%|7|6.7%|13|12.5%|
 |[AbstractIMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/telemetry/imu/AbstractIMU.java)|60 (0.8%)|38|63.3%|10|16.7%|12|20.0%|
 |[LEDs.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/misc/LEDs.java)|90 (1.2%)|74|82.2%|4|4.4%|12|13.3%|
 |[UserInterface.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/misc/UserInterface.java)|98 (1.3%)|71|72.4%|16|16.3%|11|11.2%|
@@ -74,4 +74,4 @@
 |[DriveBases.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/drive/DriveBases.java)|9 (0.1%)|5|55.6%|3|33.3%|1|11.1%|
 |[VisionLEDMode.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/vision/camera/VisionLEDMode.java)|20 (0.3%)|6|30.0%|13|65.0%|1|5.0%|
 |[DriveTypes.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/drive/DriveTypes.java)|15 (0.2%)|9|60.0%|5|33.3%|1|6.7%|
-|Total|7603|4956| |1672| |975| |
+|Total|7603|5019| |1609| |975| |

@@ -47,7 +47,7 @@
 |[JoystickController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/controllers/JoystickController.java)|96 (1.3%)|43|44.8%|44|45.8%|9|9.4%|
 |[UserInterface.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/misc/UserInterface.java)|98 (1.3%)|71|72.4%|16|16.3%|11|11.2%|
 |[AutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/drive/auton/galacticsearchscam/AutonManager.java)|102 (1.3%)|74|72.5%|8|7.8%|20|19.6%|
-|[ShootingEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/shooting/ShootingEnums.java)|104 (1.4%)|21|20.2%|70|67.3%|13|12.5%|
+|[ShootingEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/shooting/ShootingEnums.java)|104 (1.4%)|84|80.8%|7|6.7%|13|12.5%|
 |[Robot2020.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/robot/robotconfigs/twentytwenty/Robot2020.java)|111 (1.5%)|83|74.8%|10|9.0%|18|16.2%|
 |[CompetitionRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/robot/robotconfigs/twentyone/CompetitionRobot2021.java)|118 (1.6%)|91|77.1%|10|8.5%|17|14.4%|
 |[WrappedNavX2IMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/telemetry/imu/WrappedNavX2IMU.java)|119 (1.6%)|70|58.8%|29|24.4%|20|16.8%|
@@ -74,4 +74,4 @@
 |[ControllerEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/controllers/ControllerEnums.java)|362 (4.8%)|196|54.1%|110|30.4%|56|15.5%|
 |[Shooter.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/shooting/Shooter.java)|373 (4.9%)|282|75.6%|62|16.6%|29|7.8%|
 |[DriveManagerStandard.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/drive/DriveManagerStandard.java)|407 (5.4%)|285|70.0%|89|21.9%|33|8.1%|
-|Total|7603|4956| |1672| |975| |
+|Total|7603|5019| |1609| |975| |

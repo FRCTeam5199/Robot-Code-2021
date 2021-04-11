@@ -7,6 +7,7 @@
 |[LEDs.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/misc/LEDs.java)|90 (1.2%)|74|82.2%|4|4.4%|12|13.3%|
 |[Robot.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/robot/Robot.java)|286 (3.8%)|235|82.2%|32|11.2%|19|6.6%|
 |[SparkMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/motors/SparkMotorController.java)|190 (2.5%)|155|81.6%|14|7.4%|21|11.1%|
+|[ShootingEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/shooting/ShootingEnums.java)|104 (1.4%)|84|80.8%|7|6.7%|13|12.5%|
 |[TalonMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/motors/TalonMotorController.java)|172 (2.3%)|138|80.2%|13|7.6%|21|12.2%|
 |[QuoteOfTheDay.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/misc/QuoteOfTheDay.java)|69 (0.9%)|55|79.7%|11|15.9%|3|4.3%|
 |[GoalLimelight.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/vision/camera/GoalLimelight.java)|149 (2.0%)|116|77.9%|6|4.0%|27|18.1%|
@@ -73,5 +74,4 @@
 |[IAutonEnumPath.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/drive/auton/IAutonEnumPath.java)|15 (0.2%)|4|26.7%|10|66.7%|1|6.7%|
 |[UtilFunctions.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/misc/UtilFunctions.java)|35 (0.5%)|9|25.7%|24|68.6%|2|5.7%|
 |[ISubsystem.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/misc/ISubsystem.java)|94 (1.2%)|19|20.2%|62|66.0%|13|13.8%|
-|[ShootingEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Main-Development/src/main/java/frc/ballstuff/shooting/ShootingEnums.java)|104 (1.4%)|21|20.2%|70|67.3%|13|12.5%|
-|Total|7603|4956| |1672| |975| |
+|Total|7603|5019| |1609| |975| |
