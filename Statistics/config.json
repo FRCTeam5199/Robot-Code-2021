@@ -1,5 +1,5 @@
 {
-  "root": "",
+  "root": "src/main/java/frc",
   "exclude": [],
-  "langs": []
+  "langs": ["java"]
 }
