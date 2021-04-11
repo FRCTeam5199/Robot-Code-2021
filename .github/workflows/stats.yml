@@ -6,5 +6,5 @@ jobs:
   generate-file:
     runs-on: ubuntu-latest
     steps:
-      - name: Code_Stats
-        uses: jojo2357/CodeStats@0.0.1
+    - name: Code_Stats
+      uses: jojo2357/CodeStats@0.0.2
