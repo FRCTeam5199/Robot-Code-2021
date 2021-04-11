@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Code_Stats
-        uses: jojo2357/CodeStats@0.0.7
+        uses: jojo2357/CodeStats@0.0.8
 
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v4.9.2
