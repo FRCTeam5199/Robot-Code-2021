@@ -61,7 +61,7 @@ public class Robot2020 extends DefaultConfig {
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
         DRIVE_GEARING = 1 / 9.0;
-        HOPPER_BALL_COUNT = 5;
+        //HOPPER_BALL_COUNT = 5;
 
         SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
         motorPulleySize = 0;//?;

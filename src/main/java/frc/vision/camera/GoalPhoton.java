@@ -4,12 +4,16 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
+import frc.misc.SubsystemStatus;
 
 import static frc.robot.Robot.robotSettings;
 
 public class GoalPhoton implements IVision {
     public static final GoalPhoton GOAL_PHOTON = new GoalPhoton();
-
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return SubsystemStatus.FAILED;
+    }
     private NetworkTableEntry yaw;
     private NetworkTableEntry size;
     private NetworkTableEntry hasTarget;

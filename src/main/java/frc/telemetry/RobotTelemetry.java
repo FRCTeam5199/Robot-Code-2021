@@ -10,6 +10,7 @@ import frc.drive.AbstractDriveManager;
 import frc.drive.DriveManagerStandard;
 import frc.drive.DriveManagerSwerve;
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.misc.UtilFunctions;
 import frc.telemetry.imu.AbstractIMU;
@@ -53,6 +54,11 @@ public class RobotTelemetry implements ISubsystem {
         } else if (driver instanceof DriveManagerSwerve) {
             //TODO implement this
         }
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return imu.getSubsystemStatus() == SubsystemStatus.NOMINAL && driver.getSubsystemStatus() == SubsystemStatus.NOMINAL ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     /**

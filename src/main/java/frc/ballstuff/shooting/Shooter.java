@@ -12,6 +12,7 @@ import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.PID;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
@@ -76,37 +77,9 @@ public class Shooter implements ISubsystem {
         }
     }
 
-    /**
-     * Initialize the motors. Checks for SHOOTER_USE_SPARKS and SHOOTER_USE_TWO_MOTORS to allow modularity.
-     *
-     * @throws IllegalStateException If the motor configuration is not implemented
-     */
-    private void createAndInitMotors() throws IllegalStateException {
-        switch (robotSettings.SHOOTER_MOTOR_TYPE) {
-            case CAN_SPARK_MAX:
-                leader = new SparkMotorController(robotSettings.SHOOTER_LEADER_ID);
-                if (robotSettings.SHOOTER_USE_TWO_MOTORS) {
-                    follower = new SparkMotorController(robotSettings.SHOOTER_FOLLOWER_ID);
-                }
-                leader.setSensorToRealDistanceFactor(1);
-                break;
-            case TALON_FX:
-                leader = new TalonMotorController(robotSettings.SHOOTER_LEADER_ID);
-                if (robotSettings.SHOOTER_USE_TWO_MOTORS) {
-                    follower = new TalonMotorController(robotSettings.SHOOTER_FOLLOWER_ID);
-                }
-                leader.setSensorToRealDistanceFactor(600 / robotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
-                break;
-            default:
-                throw new IllegalStateException("No such supported shooter motor config for " + robotSettings.SHOOTER_MOTOR_TYPE.name());
-        }
-
-        leader.setInverted(robotSettings.SHOOTER_INVERTED);
-        if (robotSettings.SHOOTER_USE_TWO_MOTORS) {
-            follower.follow(leader, true).setInverted(!robotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
-            //TODO test if braking leader brakes follower
-        }
-        leader.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return !leader.failureFlag && !follower.failureFlag ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     /**
@@ -316,6 +289,39 @@ public class Shooter implements ISubsystem {
      */
     public boolean isAtSpeed() {
         return Math.abs(leader.getSpeed() - speed) < 50;
+    }
+
+    /**
+     * Initialize the motors. Checks for SHOOTER_USE_SPARKS and SHOOTER_USE_TWO_MOTORS to allow modularity.
+     *
+     * @throws IllegalStateException If the motor configuration is not implemented
+     */
+    private void createAndInitMotors() throws IllegalStateException {
+        switch (robotSettings.SHOOTER_MOTOR_TYPE) {
+            case CAN_SPARK_MAX:
+                leader = new SparkMotorController(robotSettings.SHOOTER_LEADER_ID);
+                if (robotSettings.SHOOTER_USE_TWO_MOTORS) {
+                    follower = new SparkMotorController(robotSettings.SHOOTER_FOLLOWER_ID);
+                }
+                leader.setSensorToRealDistanceFactor(1);
+                break;
+            case TALON_FX:
+                leader = new TalonMotorController(robotSettings.SHOOTER_LEADER_ID);
+                if (robotSettings.SHOOTER_USE_TWO_MOTORS) {
+                    follower = new TalonMotorController(robotSettings.SHOOTER_FOLLOWER_ID);
+                }
+                leader.setSensorToRealDistanceFactor(600 / robotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
+                break;
+            default:
+                throw new IllegalStateException("No such supported shooter motor config for " + robotSettings.SHOOTER_MOTOR_TYPE.name());
+        }
+
+        leader.setInverted(robotSettings.SHOOTER_INVERTED);
+        if (robotSettings.SHOOTER_USE_TWO_MOTORS) {
+            follower.follow(leader, true).setInverted(!robotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
+            //TODO test if braking leader brakes follower
+        }
+        leader.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
     }
 
     /**

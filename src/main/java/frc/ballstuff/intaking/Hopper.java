@@ -4,6 +4,7 @@ import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
@@ -38,6 +39,11 @@ public class Hopper implements ISubsystem {
             agitator = new VictorMotorController(robotSettings.AGITATOR_MOTOR_ID);
         if (robotSettings.ENABLE_INDEXER)
             indexer = new VictorMotorController(robotSettings.INDEXER_MOTOR_ID);
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return !indexer.failureFlag && !agitator.failureFlag ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     @Override

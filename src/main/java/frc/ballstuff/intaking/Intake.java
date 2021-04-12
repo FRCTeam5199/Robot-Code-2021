@@ -8,6 +8,7 @@ import frc.controllers.JoystickController;
 import frc.drive.auton.AutonType;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
@@ -47,6 +48,11 @@ public class Intake implements ISubsystem {
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         intakeMotor = new VictorMotorController(robotSettings.INTAKE_MOTOR_ID);
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return intakeMotor.failureFlag ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
     }
 
     /**

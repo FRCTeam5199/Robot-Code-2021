@@ -1,6 +1,7 @@
 package frc.vision.camera;
 
 import edu.wpi.first.wpilibj.LinearFilter;
+import frc.misc.SubsystemStatus;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPipelineResult;
 import org.photonvision.PhotonTrackedTarget;
@@ -16,6 +17,11 @@ public class BallPhoton implements IVision {
     private List<PhotonTrackedTarget> targets;
     private PhotonPipelineResult cameraResult;
     private LinearFilter filter;
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return SubsystemStatus.FAILED;
+    }
 
     /**
      * inits BallPhoton

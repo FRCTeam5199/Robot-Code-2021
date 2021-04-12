@@ -17,6 +17,7 @@ import frc.controllers.WiiController;
 import frc.controllers.XBoxController;
 import frc.misc.InitializationFailureException;
 import frc.misc.PID;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
@@ -24,7 +25,6 @@ import frc.motors.TalonMotorController;
 import frc.motors.followers.AbstractFollowerMotorController;
 import frc.motors.followers.SparkFollowerMotorsController;
 import frc.motors.followers.TalonFollowerMotorController;
-import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
 
@@ -73,109 +73,9 @@ public class DriveManagerStandard extends AbstractDriveManager {
         createTelem();
     }
 
-    /**
-     * Creates the drive motors
-     *
-     * @throws InitializationFailureException When follower drive motors fail to link to leaders or when leader
-     *                                        drivetrain motors fail to invert
-     */
-    private void createDriveMotors() throws InitializationFailureException {
-        double s2rf;
-        switch (robotSettings.DRIVE_MOTOR_TYPE) {
-            case CAN_SPARK_MAX: {
-                leaderL = new SparkMotorController(robotSettings.DRIVE_LEADER_L_ID);
-                leaderR = new SparkMotorController(robotSettings.DRIVE_LEADER_R_ID);
-                followerL = new SparkFollowerMotorsController(robotSettings.DRIVE_FOLLOWERS_L_IDS);
-                followerR = new SparkFollowerMotorsController(robotSettings.DRIVE_FOLLOWERS_R_IDS);
-                //rpm <=> rps <=> gearing <=> wheel circumference
-                s2rf = robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60;
-                break;
-            }
-            case TALON_FX: {
-                leaderL = new TalonMotorController(robotSettings.DRIVE_LEADER_L_ID);
-                leaderR = new TalonMotorController(robotSettings.DRIVE_LEADER_R_ID);
-                followerL = new TalonFollowerMotorController(robotSettings.DRIVE_FOLLOWERS_L_IDS);
-                followerR = new TalonFollowerMotorController(robotSettings.DRIVE_FOLLOWERS_R_IDS);
-                //Sens units / 100ms <=> rps <=> gearing <=> wheel circumference
-                s2rf = (10.0 / robotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER * Math.PI / 12);
-                break;
-            }
-            default:
-                throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + robotSettings.DRIVE_MOTOR_TYPE.name(), "Add an implementation in the init for drive manager");
-        }
-        leaderL.setSensorToRealDistanceFactor(s2rf);
-        leaderR.setSensorToRealDistanceFactor(s2rf);
-
-        followerL.follow(leaderL);
-        followerR.follow(leaderR);
-
-        leaderL.setInverted(robotSettings.DRIVE_INVERT_LEFT).resetEncoder();
-        leaderR.setInverted(robotSettings.DRIVE_INVERT_RIGHT).resetEncoder();
-
-        setAllMotorCurrentLimits(50);
-
-        followerL.invert(robotSettings.DRIVE_INVERT_LEFT);
-        followerR.invert(robotSettings.DRIVE_INVERT_RIGHT);
-    }
-
-    /**
-     * Initialize the PID for the motor controllers.
-     */
-    private void initPID() {
-        setPID(robotSettings.DRIVEBASE_PID);
-    }
-
-    /**
-     * Creates xbox controller n stuff
-     *
-     * @throws UnsupportedOperationException when there is no configuration for {@link frc.robot.robotconfigs.DefaultConfig#DRIVE_STYLE}
-     */
-    private void initMisc() throws UnsupportedOperationException {
-        System.out.println("THE XBOX CONTROLLER IS ON " + robotSettings.XBOX_CONTROLLER_USB_SLOT);
-        switch (robotSettings.DRIVE_STYLE) {
-            case STANDARD:
-            case EXPERIMENTAL:
-                controller = XBoxController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT);
-                break;
-            case MARIO_KART:
-                controller = WiiController.createOrGet(0);
-                break;
-            case GUITAR:
-                controller = SixButtonGuitarController.createOrGet(0);
-                break;
-            case DRUM_TIME:
-                controller = DrumTimeController.createOrGet(0);
-                break;
-            case BOP_IT:
-                controller = BopItBasicController.createOrGet(0);
-                break;
-            default:
-                throw new UnsupportedOperationException("There is no UI configuration for " + robotSettings.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");
-        }
-        if (robotSettings.DEBUG && DEBUG)
-            System.out.println("Created a " + controller.toString());
-    }
-
-    /**
-     * Set all motor current limits
-     *
-     * @param limit Current limit in amps
-     */
-    public void setAllMotorCurrentLimits(int limit) {
-        leaderL.setCurrentLimit(limit);
-        leaderR.setCurrentLimit(limit);
-        followerL.setCurrentLimit(limit);
-        followerR.setCurrentLimit(limit);
-    }
-
-    /**
-     * Sets the pid for all the motors that need pid setting
-     *
-     * @param pid the {@link PID} object that contains pertinent pidf data
-     */
-    private void setPID(PID pid) {
-        leaderL.setPid(pid);
-        leaderR.setPid(pid);
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return !leaderL.failureFlag && !leaderR.failureFlag && !followerL.failureFlag() && !followerR.failureFlag() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     /**
@@ -190,8 +90,8 @@ public class DriveManagerStandard extends AbstractDriveManager {
      * This is where driving happens. Call this every tick to drive and set {@link frc.robot.robotconfigs.DefaultConfig#DRIVE_STYLE}
      * to change the drive stype
      *
-     * @throws IllegalArgumentException if {@link frc.robot.robotconfigs.DefaultConfig#DRIVE_STYLE} is not implemented here or
-     *                                  if you missed a break statement
+     * @throws IllegalArgumentException if {@link frc.robot.robotconfigs.DefaultConfig#DRIVE_STYLE} is not implemented
+     *                                  here or if you missed a break statement
      */
     @Override
     public void updateTeleop() throws IllegalArgumentException {
@@ -403,5 +303,110 @@ public class DriveManagerStandard extends AbstractDriveManager {
      */
     public void driveMPS(double leftMPS, double rightMPS) {
         driveFPS(Units.metersToFeet(leftMPS), Units.metersToFeet(rightMPS));
+    }
+
+    /**
+     * Creates the drive motors
+     *
+     * @throws InitializationFailureException When follower drive motors fail to link to leaders or when leader
+     *                                        drivetrain motors fail to invert
+     */
+    private void createDriveMotors() throws InitializationFailureException {
+        double s2rf;
+        switch (robotSettings.DRIVE_MOTOR_TYPE) {
+            case CAN_SPARK_MAX: {
+                leaderL = new SparkMotorController(robotSettings.DRIVE_LEADER_L_ID);
+                leaderR = new SparkMotorController(robotSettings.DRIVE_LEADER_R_ID);
+                followerL = new SparkFollowerMotorsController(robotSettings.DRIVE_FOLLOWERS_L_IDS);
+                followerR = new SparkFollowerMotorsController(robotSettings.DRIVE_FOLLOWERS_R_IDS);
+                //rpm <=> rps <=> gearing <=> wheel circumference
+                s2rf = robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60;
+                break;
+            }
+            case TALON_FX: {
+                leaderL = new TalonMotorController(robotSettings.DRIVE_LEADER_L_ID);
+                leaderR = new TalonMotorController(robotSettings.DRIVE_LEADER_R_ID);
+                followerL = new TalonFollowerMotorController(robotSettings.DRIVE_FOLLOWERS_L_IDS);
+                followerR = new TalonFollowerMotorController(robotSettings.DRIVE_FOLLOWERS_R_IDS);
+                //Sens units / 100ms <=> rps <=> gearing <=> wheel circumference
+                s2rf = (10.0 / robotSettings.DRIVEBASE_SENSOR_UNITS_PER_ROTATION) * robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER * Math.PI / 12);
+                break;
+            }
+            default:
+                throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + robotSettings.DRIVE_MOTOR_TYPE.name(), "Add an implementation in the init for drive manager");
+        }
+        leaderL.setSensorToRealDistanceFactor(s2rf);
+        leaderR.setSensorToRealDistanceFactor(s2rf);
+
+        followerL.follow(leaderL);
+        followerR.follow(leaderR);
+
+        leaderL.setInverted(robotSettings.DRIVE_INVERT_LEFT).resetEncoder();
+        leaderR.setInverted(robotSettings.DRIVE_INVERT_RIGHT).resetEncoder();
+
+        setAllMotorCurrentLimits(50);
+
+        followerL.invert(robotSettings.DRIVE_INVERT_LEFT);
+        followerR.invert(robotSettings.DRIVE_INVERT_RIGHT);
+    }
+
+    /**
+     * Initialize the PID for the motor controllers.
+     */
+    private void initPID() {
+        setPID(robotSettings.DRIVEBASE_PID);
+    }
+
+    /**
+     * Creates xbox controller n stuff
+     *
+     * @throws UnsupportedOperationException when there is no configuration for {@link frc.robot.robotconfigs.DefaultConfig#DRIVE_STYLE}
+     */
+    private void initMisc() throws UnsupportedOperationException {
+        System.out.println("THE XBOX CONTROLLER IS ON " + robotSettings.XBOX_CONTROLLER_USB_SLOT);
+        switch (robotSettings.DRIVE_STYLE) {
+            case STANDARD:
+            case EXPERIMENTAL:
+                controller = XBoxController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT);
+                break;
+            case MARIO_KART:
+                controller = WiiController.createOrGet(0);
+                break;
+            case GUITAR:
+                controller = SixButtonGuitarController.createOrGet(0);
+                break;
+            case DRUM_TIME:
+                controller = DrumTimeController.createOrGet(0);
+                break;
+            case BOP_IT:
+                controller = BopItBasicController.createOrGet(0);
+                break;
+            default:
+                throw new UnsupportedOperationException("There is no UI configuration for " + robotSettings.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");
+        }
+        if (robotSettings.DEBUG && DEBUG)
+            System.out.println("Created a " + controller.toString());
+    }
+
+    /**
+     * Set all motor current limits
+     *
+     * @param limit Current limit in amps
+     */
+    public void setAllMotorCurrentLimits(int limit) {
+        leaderL.setCurrentLimit(limit);
+        leaderR.setCurrentLimit(limit);
+        followerL.setCurrentLimit(limit);
+        followerR.setCurrentLimit(limit);
+    }
+
+    /**
+     * Sets the pid for all the motors that need pid setting
+     *
+     * @param pid the {@link PID} object that contains pertinent pidf data
+     */
+    private void setPID(PID pid) {
+        leaderL.setPid(pid);
+        leaderR.setPid(pid);
     }
 }

@@ -14,6 +14,7 @@ import frc.controllers.BaseController;
 import frc.controllers.ControllerEnums;
 import frc.controllers.XBoxController;
 import frc.misc.PID;
+import frc.misc.SubsystemStatus;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.SupportedMotors;
@@ -104,6 +105,11 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverFL.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
         driverBL.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
         IMU = new WrappedNavX2IMU();
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return SubsystemStatus.FAILED;
     }
 
     @Override

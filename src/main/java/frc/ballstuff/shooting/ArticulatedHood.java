@@ -8,6 +8,7 @@ import frc.controllers.ControllerEnums;
 import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
@@ -37,6 +38,11 @@ public class ArticulatedHood implements ISubsystem {
      */
     private double moveTo = 0.0;
     private AbstractMotorController hoodMotor;
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return hoodMotor.failureFlag ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
+    }
 
     public ArticulatedHood() {
         addToMetaList();

@@ -78,6 +78,11 @@ public class Chirp extends Orchestra implements ISubsystem {
         }
     }
 
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return isPlaying() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+    }
+
     /**
      * Autoplays music while taking suggestions. A few important things:
      * <p>
@@ -209,5 +214,26 @@ public class Chirp extends Orchestra implements ISubsystem {
                 songName = str;
         }
         return songName;
+    }
+
+    public String playSongMostNearlyMatching(String songname) {
+        if (songname.equals("rand") || songname.equals("random") || songname.equals("rng")) {
+            loadMusic(getRandomSong());
+            return songname;
+        }
+        String winningSong = "";
+        int winningScore = Integer.MAX_VALUE;
+        for (String song : songnames.keySet()) {
+            int matchingScore = 0;
+            for (int i = 0; i < Math.min(songname.length(), song.toLowerCase().split("_")[0].length()); i++) {
+                if (songname.charAt(i) != song.toLowerCase().split("_")[0].charAt(i))
+                    matchingScore++;
+            }
+            if (matchingScore < winningScore) {
+                winningScore = matchingScore;
+                winningSong = song;
+            }
+        }
+        return winningSong;
     }
 }

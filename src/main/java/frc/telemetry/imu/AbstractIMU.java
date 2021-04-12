@@ -1,6 +1,7 @@
 package frc.telemetry.imu;
 
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.misc.UtilFunctions;
 import frc.selfdiagnostics.IMUNonOpIssue;
 
@@ -10,6 +11,10 @@ import frc.selfdiagnostics.IMUNonOpIssue;
  * @author jojo2357
  */
 public abstract class AbstractIMU implements ISubsystem {
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return absoluteYaw() != 0 ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+    }
     protected double startYaw;
 
     protected double[] ypr = new double[3];

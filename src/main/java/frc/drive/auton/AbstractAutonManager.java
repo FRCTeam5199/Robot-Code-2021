@@ -9,6 +9,7 @@ import frc.drive.DriveManagerStandard;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.robot.Robot;
 import frc.telemetry.RobotTelemetry;
 
@@ -52,7 +53,6 @@ public abstract class AbstractAutonManager implements ISubsystem {
     protected final Timer timer = new Timer();
     protected final AbstractDriveManager DRIVING_CHILD;
     protected final RobotTelemetry telem;
-
     /**
      * Initializes the auton manager and stores the reference to the drivetrain object
      *
@@ -67,6 +67,16 @@ public abstract class AbstractAutonManager implements ISubsystem {
             telem = null;
     }
 
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return DRIVING_CHILD.getSubsystemStatus() == SubsystemStatus.NOMINAL && telem.getSubsystemStatus() == SubsystemStatus.NOMINAL ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+    }
+
+    @Override
+    public String getSubsystemName() {
+        return "Auton manager";
+    }
+
     protected void onFinish() {
         robotSettings.autonComplete = true;
         if (robotSettings.ENABLE_MUSIC && !robotSettings.AUTON_COMPLETE_NOISE.equals("")) {
@@ -74,10 +84,5 @@ public abstract class AbstractAutonManager implements ISubsystem {
             Robot.chirp.loadMusic(robotSettings.AUTON_COMPLETE_NOISE);
             Robot.chirp.play();
         }
-    }
-
-    @Override
-    public String getSubsystemName() {
-        return "Auton manager";
     }
 }
