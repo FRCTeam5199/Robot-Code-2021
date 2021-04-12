@@ -1,7 +1,8 @@
 package frc.telemetry.imu;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-import frc.robot.RobotSettings;
+
+import static frc.robot.Robot.robotSettings;
 
 public class WrappedPigeonIMU extends AbstractIMU {
     private PigeonIMU pigeon;
@@ -13,7 +14,7 @@ public class WrappedPigeonIMU extends AbstractIMU {
 
     @Override
     public void init() {
-        pigeon = new PigeonIMU(RobotSettings.IMU_ID);
+        pigeon = new PigeonIMU(robotSettings.IMU_ID);
     }
 
     @Override
@@ -29,6 +30,15 @@ public class WrappedPigeonIMU extends AbstractIMU {
     @Override
     public void initAuton() {
 
+    }    /**
+     * Yaw since last restart
+     *
+     * @return yaw since last restart
+     */
+    @Override
+    public double relativeYaw() { //return relative(to start) yaw of pigeon
+        updateGeneric();
+        return (ypr[0] - startYaw);
     }
 
     @Override
@@ -41,15 +51,7 @@ public class WrappedPigeonIMU extends AbstractIMU {
 
     }
 
-    /**
-     * Resets the Pigeon IMU
-     */
-    @Override
-    public void resetOdometry() {
-        updateGeneric();
-        startypr = ypr;
-        startYaw = absoluteYaw();
-    }
+
 
     /**
      * Updates the Pigeon IMU data
@@ -60,9 +62,15 @@ public class WrappedPigeonIMU extends AbstractIMU {
         super.updateGeneric();
     }
 
+
+    /**
+     * Resets the Pigeon IMU
+     */
     @Override
-    public String getSubsystemName() {
-        return "Pigeon IMU";
+    public void resetOdometry() {
+        updateGeneric();
+        startypr = ypr;
+        startYaw = absoluteYaw();
     }
 
     /**
@@ -76,14 +84,8 @@ public class WrappedPigeonIMU extends AbstractIMU {
         return ypr[0];
     }
 
-    /**
-     * Yaw since last restart
-     *
-     * @return yaw since last restart
-     */
     @Override
-    public double relativeYaw() { //return relative(to start) yaw of pigeon
-        updateGeneric();
-        return (ypr[0] - startYaw);
+    public String getSubsystemName() {
+        return "Pigeon IMU";
     }
 }

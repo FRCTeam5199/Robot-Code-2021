@@ -85,8 +85,6 @@ public interface ISubsystem {
      */
     String getSubsystemName();
 
-    SubsystemStatus getSubsystemStatus();
-
     /**
      * In devlopment, adds this object to {@link Robot#subsystems a master registry} for later use
      */

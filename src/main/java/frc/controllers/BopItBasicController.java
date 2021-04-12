@@ -9,7 +9,17 @@ package frc.controllers;
  * @see ControllerEnums.ButtonStatus
  */
 public class BopItBasicController extends BaseController {
-    public BopItBasicController(int channel) {
+    public static BaseController createOrGet(int channel) {
+        if (channel < 0 || channel >= 6)
+            throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
+        if (BaseController.allControllers[channel] == null)
+            return BaseController.allControllers[channel] = new BopItBasicController(channel);
+        if (BaseController.allControllers[channel] instanceof BopItBasicController)
+            return BaseController.allControllers[channel];
+        throw new ArrayStoreException("A different controller has already been made for channel " + channel);
+    }
+
+    private BopItBasicController(int channel) {
         super(channel);
     }
 

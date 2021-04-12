@@ -4,19 +4,19 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
+import frc.misc.UserInterface;
 
 /**
  * This is for the limelight looking at the goal that the shooter is shooting at
  */
 public class GoalLimelight implements IVision {
-    private NetworkTableEntry yaw;
-    private NetworkTableEntry size;
-    private NetworkTableEntry hasTarget;
-    private NetworkTableEntry pitch;
-    private NetworkTableEntry pose;
+    public static final GoalLimelight GOAL_LIME_LIGHT = new GoalLimelight();
+
+    private NetworkTable limelight;
+    private NetworkTableEntry yaw, size, hasTarget, pitch, pose;
     private LinearFilter filter;
 
-    public GoalLimelight() {
+    private GoalLimelight() {
         addToMetaList();
         init();
     }
@@ -26,7 +26,7 @@ public class GoalLimelight implements IVision {
      */
     @Override
     public void init() {
-        NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
+        limelight = NetworkTableInstance.getDefault().getTable("limelight");
         filter = LinearFilter.movingAverage(5);
         yaw = limelight.getEntry("tx");
         size = limelight.getEntry("ta");
@@ -118,6 +118,28 @@ public class GoalLimelight implements IVision {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public void setLedMode(VisionLEDMode ledMode) {
+        int setTo;
+        switch (ledMode) {
+            case ON:
+                setTo = 3;
+                break;
+            case OFF:
+                setTo = 1;
+                break;
+            case BLINK:
+                setTo = 2;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + ledMode);
+        }
+        if (UserInterface.SHOOTER_OVERRIDE_LED.getEntry().getBoolean(false)) {
+            setTo = 3;
+        }
+        limelight.getEntry("ledMode").setNumber(setTo);
     }
 
     @Override

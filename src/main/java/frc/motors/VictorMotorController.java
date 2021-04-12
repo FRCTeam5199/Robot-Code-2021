@@ -6,8 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.misc.PID;
 import frc.robot.Robot;
 
-import static com.ctre.phoenix.motorcontrol.ControlMode.PercentOutput;
-import static com.ctre.phoenix.motorcontrol.ControlMode.Velocity;
+import static com.ctre.phoenix.motorcontrol.ControlMode.*;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Brake;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
 
@@ -77,6 +76,11 @@ public class VictorMotorController extends AbstractMotorController {
     }
 
     @Override
+    public void moveAtPosition(double pos) {
+        motor.set(Position, pos / sensorToRealDistanceFactor);
+    }
+
+    @Override
     public AbstractMotorController setBrake(boolean brake) {
         motor.setNeutralMode(brake ? Brake : Coast);
         return this;
@@ -118,12 +122,6 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public double getMotorTemperature() {
-        Faults faults = new Faults();
-        if (motor.getFaults(faults) != ErrorCode.OK){
-            failureFlag = true;
-            return 0;
-        }
-        failureFlag = faults.hasAnyFault();
         return motor.getTemperature();
     }
 

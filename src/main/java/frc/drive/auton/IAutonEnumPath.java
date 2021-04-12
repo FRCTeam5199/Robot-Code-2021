@@ -6,5 +6,10 @@ package frc.drive.auton;
  * anything
  */
 public interface IAutonEnumPath {
+    /**
+     * This is a method EVERY auton enum field must be able to supply.
+     *
+     * @return The location that the auton path associated with this auton path is stored in the deplot dir
+     */
     String getDeployLocation();
 }

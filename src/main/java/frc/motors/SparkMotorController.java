@@ -1,12 +1,18 @@
 package frc.motors;
 
-import com.revrobotics.*;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.EncoderType;
 import frc.misc.PID;
 import frc.robot.Robot;
 
 import static com.revrobotics.CANSparkMax.IdleMode.kBrake;
 import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
+import static com.revrobotics.ControlType.kPosition;
 import static com.revrobotics.ControlType.kVelocity;
 
 /**
@@ -41,7 +47,6 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
-        System.out.println("INVERTING MOTOR " + motor.getDeviceId() + "!" + invert);
         return this;
     }
 
@@ -89,6 +94,11 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public void moveAtVelocity(double realDistance) {
         myPid.setReference(realDistance / sensorToRealDistanceFactor, kVelocity);
+    }
+
+    @Override
+    public void moveAtPosition(double pos) {
+        myPid.setReference(pos / sensorToRealDistanceFactor, kPosition);
     }
 
     @Override

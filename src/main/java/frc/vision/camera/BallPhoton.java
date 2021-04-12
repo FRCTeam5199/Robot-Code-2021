@@ -1,14 +1,16 @@
 package frc.vision.camera;
 
 import edu.wpi.first.wpilibj.LinearFilter;
-import frc.robot.RobotSettings;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPipelineResult;
 import org.photonvision.PhotonTrackedTarget;
 
 import java.util.List;
 
+import static frc.robot.Robot.robotSettings;
+
 public class BallPhoton implements IVision {
+    public static final BallPhoton BALL_PHOTON = new BallPhoton();
     private static final boolean DEBUG = false;
     private PhotonCamera ballCamera;
     private List<PhotonTrackedTarget> targets;
@@ -18,7 +20,7 @@ public class BallPhoton implements IVision {
     /**
      * inits BallPhoton
      */
-    public BallPhoton() {
+    private BallPhoton() {
         addToMetaList();
         init();
     }
@@ -28,7 +30,7 @@ public class BallPhoton implements IVision {
      */
     public void init() {
         filter = LinearFilter.movingAverage(5);
-        ballCamera = new PhotonCamera(RobotSettings.BALL_CAM_NAME);
+        ballCamera = new PhotonCamera(robotSettings.BALL_CAM_NAME);
         cameraResult = ballCamera.getLatestResult();
         System.out.println("Found " + cameraResult.targets.size() + " targets");
     }
@@ -63,12 +65,10 @@ public class BallPhoton implements IVision {
     @Override
     public void updateGeneric() {
         cameraResult = ballCamera.getLatestResult();
-        if (RobotSettings.DEBUG && DEBUG) {
+        if (robotSettings.DEBUG && DEBUG) {
             System.out.println("Found " + cameraResult.targets.size() + " targets");
         }
-        //if (validTarget()) {
         targets = cameraResult.getTargets();
-        //}
     }
 
     @Override
@@ -109,8 +109,11 @@ public class BallPhoton implements IVision {
      */
     @Override
     public double getAngle(int targetId) {
+        if (targets==null)
+            updateGeneric();
         if (hasValidTarget()/* && targetId < targets.size()*/) {
-            return targets.get(targetId).getYaw();
+            return targets.get(targetId)
+                    .getYaw();
         }
         return -10000;
     }
@@ -163,5 +166,10 @@ public class BallPhoton implements IVision {
     @Override
     public boolean hasValidTarget() {
         return cameraResult.hasTargets();
+    }
+
+    @Override
+    public void setLedMode(VisionLEDMode ledMode) {
+        throw new UnsupportedOperationException("Cannot set LED mode " + ledMode.name() + " on " + getSubsystemName());
     }
 }

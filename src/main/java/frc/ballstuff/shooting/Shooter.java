@@ -12,37 +12,37 @@ import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.PID;
-import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
-import frc.robot.RobotSettings;
+import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
-import frc.vision.camera.GoalPhoton;
 import frc.vision.camera.IVision;
 
 import static frc.robot.Robot.hopper;
+import static frc.robot.Robot.robotSettings;
 
 /**
  * Shooter pertains to spinning the flywheel that actually makes the balls go really fast
  */
 public class Shooter implements ISubsystem {
-    private static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     private final NetworkTableEntry P = UserInterface.SHOOTER_P.getEntry(),
             I = UserInterface.SHOOTER_I.getEntry(),
             D = UserInterface.SHOOTER_D.getEntry(),
             F = UserInterface.SHOOTER_F.getEntry(),
             constSpeed = UserInterface.SHOOTER_CONST_SPEED.getEntry(),
             calibratePID = UserInterface.SHOOTER_CALIBRATE_PID.getEntry();
-    public int shootBallCount = 0, ballsShot = 0;
-    public double shootRPM = 0;
-    public boolean isShooting = false, fireNumBallsLoop = false, hasShotNumBalls = false;
-    public double speed = 4200, shooting;
+    public double speed = 4200;
+    public int ballsShot = 0, ticksPassed = 0;
+    //Yes this needs to be package private
+    boolean singleShot = false;
+    IVision goalCamera;
     BaseController panel, joystickController;
     private AbstractMotorController leader, follower;
-    private IVision goalPhoton;
     private PID lastPID = PID.EMPTY_PID;
+    private boolean isConstSpeed, isConstSpeedLast = false, shooting = false;
 
     public Shooter() {
         addToMetaList();
@@ -54,52 +54,56 @@ public class Shooter implements ISubsystem {
      */
     @Override
     public void init() throws IllegalStateException {
-        switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
+        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
+            case ACCURACY_2021:
+            case SPEED_2021:
             case STANDARD:
-                joystickController = new JoystickController(RobotSettings.FLIGHT_STICK_USB_SLOT);
-                panel = new ButtonPanelController(RobotSettings.BUTTON_PANEL_USB_SLOT);
+                joystickController = JoystickController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT);
+                panel = ButtonPanelController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT);
                 break;
             case BOP_IT:
-                joystickController = new BopItBasicController(1);
+                joystickController = BopItBasicController.createOrGet(1);
                 break;
             case XBOX_CONTROLLER:
-                joystickController = new XBoxController(1);
+                joystickController = XBoxController.createOrGet(1);
                 break;
             default:
-                throw new IllegalStateException("There is no UI configuration for " + RobotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
+                throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
         createAndInitMotors();
-        if (RobotSettings.ENABLE_VISION) {
-            goalPhoton = new GoalPhoton();
+        if (robotSettings.ENABLE_VISION) {
+            goalCamera = IVision.manufactureGoalCamera(robotSettings.GOAL_CAMERA_TYPE);
         }
     }
 
     /**
      * Initialize the motors. Checks for SHOOTER_USE_SPARKS and SHOOTER_USE_TWO_MOTORS to allow modularity.
+     *
+     * @throws IllegalStateException If the motor configuration is not implemented
      */
-    private void createAndInitMotors() {
-        switch (RobotSettings.SHOOTER_MOTOR_TYPE) {
+    private void createAndInitMotors() throws IllegalStateException {
+        switch (robotSettings.SHOOTER_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
-                leader = new SparkMotorController(RobotSettings.SHOOTER_LEADER_ID);
-                if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
-                    follower = new SparkMotorController(RobotSettings.SHOOTER_FOLLOWER_ID);
+                leader = new SparkMotorController(robotSettings.SHOOTER_LEADER_ID);
+                if (robotSettings.SHOOTER_USE_TWO_MOTORS) {
+                    follower = new SparkMotorController(robotSettings.SHOOTER_FOLLOWER_ID);
                 }
                 leader.setSensorToRealDistanceFactor(1);
                 break;
             case TALON_FX:
-                leader = new TalonMotorController(RobotSettings.SHOOTER_LEADER_ID);
-                if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
-                    follower = new TalonMotorController(RobotSettings.SHOOTER_FOLLOWER_ID);
+                leader = new TalonMotorController(robotSettings.SHOOTER_LEADER_ID);
+                if (robotSettings.SHOOTER_USE_TWO_MOTORS) {
+                    follower = new TalonMotorController(robotSettings.SHOOTER_FOLLOWER_ID);
                 }
-                leader.setSensorToRealDistanceFactor(600 / RobotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
+                leader.setSensorToRealDistanceFactor(600 / robotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
                 break;
             default:
-                throw new IllegalStateException("No such supported shooter motor config for " + RobotSettings.SHOOTER_MOTOR_TYPE.name());
+                throw new IllegalStateException("No such supported shooter motor config for " + robotSettings.SHOOTER_MOTOR_TYPE.name());
         }
 
-        leader.setInverted(RobotSettings.SHOOTER_INVERTED).setPid(RobotSettings.SHOOTER_PID);
-        if (RobotSettings.SHOOTER_USE_TWO_MOTORS) {
-            follower.follow(leader, true).setInverted(!RobotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
+        leader.setInverted(robotSettings.SHOOTER_INVERTED);
+        if (robotSettings.SHOOTER_USE_TWO_MOTORS) {
+            follower.follow(leader, true).setInverted(!robotSettings.SHOOTER_INVERTED).setCurrentLimit(80).setBrake(false);
             //TODO test if braking leader brakes follower
         }
         leader.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
@@ -127,36 +131,77 @@ public class Shooter implements ISubsystem {
     }
 
     /**
-     * Input is parsed and shooter object maintained appropriately
+     * Input is parsed and shooter object maintained appropriately.
+     *
+     * @throws IllegalStateException if control is not implemented for {@link frc.robot.robotconfigs.DefaultConfig#SHOOTER_CONTROL_STYLE
+     *                               current control style}
+     * @see frc.robot.robotconfigs.DefaultConfig#SHOOTER_CONTROL_STYLE
+     * @see ShootingControlStyles
      */
     @Override
-    public void updateGeneric() {
+    public void updateGeneric() throws IllegalStateException {
         if (leader.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_LEADER_ID, leader.getSuggestedFix());
+            MotorDisconnectedIssue.reportIssue(this, robotSettings.SHOOTER_LEADER_ID, leader.getSuggestedFix());
         else
-            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.SHOOTER_LEADER_ID);
+            MotorDisconnectedIssue.resolveIssue(this, robotSettings.SHOOTER_LEADER_ID);
         if (follower != null && follower.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, RobotSettings.SHOOTER_FOLLOWER_ID, follower.getSuggestedFix());
+            MotorDisconnectedIssue.reportIssue(this, robotSettings.SHOOTER_FOLLOWER_ID, follower.getSuggestedFix());
         else
-            MotorDisconnectedIssue.resolveIssue(this, RobotSettings.SHOOTER_FOLLOWER_ID);
+            MotorDisconnectedIssue.resolveIssue(this, robotSettings.SHOOTER_FOLLOWER_ID);
         updateShuffleboard();
-        switch (RobotSettings.SHOOTER_CONTROL_STYLE) {
+        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD: {
                 if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
-                } else if (isValidTarget() && panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                    isConstSpeed = false;
+                } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                    isConstSpeed = false;
                 } else {
-                    if (RobotSettings.ENABLE_HOPPER) {
+                    if (robotSettings.ENABLE_HOPPER) {
                         hopper.setAll(false);
                     }
                     leader.moveAtPercent(0);
+                    shooting = false;
+                    ballsShot = 0;
+                }
+                break;
+            }
+            case ACCURACY_2021: {
+                if (Robot.articulatedHood.unTargeted) {
+                    shooterDefault();
+                } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                    isConstSpeed = false;
+                } else if (singleShot) {
+                    ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
+                    isConstSpeed = false;
+                } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.SINGLE_SHOT) == ButtonStatus.DOWN) {
+                    singleShot = true;
+                } else {
+                    shooterDefault();
+                }
+                break;
+            }
+            case SPEED_2021: {
+                if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_WITH_HOPPER_CONTROLLED.shoot(this);
+                    //ShootingEnums.FIRE_TIMED.shoot(this);
+                    isConstSpeed = false;
+                } else if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                    isConstSpeed = false;
+                } else {
+                    shooterDefault();
                 }
                 break;
             }
             case BOP_IT: {
                 if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                } else {
+                    shooting = false;
+                    ballsShot = 0;
                 }
                 break;
             }
@@ -165,6 +210,8 @@ public class Shooter implements ISubsystem {
                     ShootingEnums.FIRE_TEST_SPEED.shoot(this);
                 } else {
                     leader.moveAtPercent(0);
+                    shooting = false;
+                    ballsShot = 0;
                 }
                 break;
             }
@@ -175,17 +222,17 @@ public class Shooter implements ISubsystem {
 
     @Override
     public void initTest() {
-
+        initGeneric();
     }
 
     @Override
     public void initTeleop() {
-
+        initGeneric();
     }
 
     @Override
     public void initAuton() {
-
+        initGeneric();
     }
 
     @Override
@@ -195,7 +242,14 @@ public class Shooter implements ISubsystem {
 
     @Override
     public void initGeneric() {
-
+        isConstSpeedLast = false;
+        isConstSpeed = false;
+        singleShot = false;
+        if (robotSettings.SHOOTER_CONTROL_STYLE == ShootingControlStyles.SPEED_2021) {
+            leader.setPid(new PID(0.0025, 0.0000007, 0.03, 0));
+        } else {
+            leader.setPid(robotSettings.SHOOTER_PID);
+        }
     }
 
     @Override
@@ -203,34 +257,56 @@ public class Shooter implements ISubsystem {
         return "Shooter";
     }
 
-    @Override
-    public SubsystemStatus getSubsystemStatus() {
-        return !leader.failureFlag && !follower.failureFlag ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
-    }
-
     private void updateShuffleboard() {
         if (calibratePID.getBoolean(false)) {
-            PID readPid = new PID(P.getDouble(RobotSettings.SHOOTER_PID.getP()), I.getDouble(RobotSettings.SHOOTER_PID.getI()), D.getDouble(RobotSettings.SHOOTER_PID.getD()), F.getDouble(RobotSettings.SHOOTER_PID.getF()));
+            PID readPid = new PID(P.getDouble(robotSettings.SHOOTER_PID.getP()), I.getDouble(robotSettings.SHOOTER_PID.getI()), D.getDouble(robotSettings.SHOOTER_PID.getD()), F.getDouble(robotSettings.SHOOTER_PID.getF()));
             if (!lastPID.equals(readPid)) {
                 lastPID = readPid;
                 leader.setPid(lastPID);
-                if (RobotSettings.DEBUG && DEBUG) {
+                if (robotSettings.DEBUG && DEBUG) {
                     System.out.println("Set shooter pid to " + lastPID);
+                }
+            }
+        } else {
+            if (!isConstSpeed && isConstSpeedLast) {
+                leader.setPid(robotSettings.SHOOTER_PID);
+                isConstSpeedLast = false;
+                if (DEBUG && robotSettings.DEBUG) {
+                    System.out.println("Normal shooter PID.");
+                }
+            } else {
+                if (DEBUG && robotSettings.DEBUG) {
+                    System.out.println("Running constant speed PID.");
                 }
             }
         }
         UserInterface.smartDashboardPutNumber("RPM", leader.getSpeed());
         UserInterface.smartDashboardPutNumber("Target RPM", speed);
         UserInterface.smartDashboardPutBoolean("atSpeed", isAtSpeed());
+        UserInterface.smartDashboardPutBoolean("IS SHOOTING?", shooting);
     }
 
     /**
-     * if the goal photon is in use and has a valid target in its sights
-     *
-     * @return if the goal photon is in use and has a valid target in its sights
+     * Runs the default update which unsets hopper {@link frc.ballstuff.intaking.Hopper#setAll(boolean) active flags}
+     * and sets speed to constant speed (or 0)
      */
-    public boolean isValidTarget() {
-        return RobotSettings.ENABLE_VISION && goalPhoton.hasValidTarget();
+    private void shooterDefault() {
+        if (robotSettings.ENABLE_HOPPER) {
+            hopper.setAll(false);
+        }
+        double speedYouWant = constSpeed.getDouble(0);
+        if (speedYouWant != 0) {
+            isConstSpeed = true;
+            if (!isConstSpeedLast) {
+                isConstSpeedLast = true;
+                leader.setPid(robotSettings.SHOOTER_CONST_SPEED_PID);
+            }
+            leader.moveAtVelocity(speedYouWant);
+        } else {
+            leader.moveAtPercent(0);
+        }
+        shooting = false;
+        ballsShot = 0;
     }
 
     /**
@@ -239,7 +315,25 @@ public class Shooter implements ISubsystem {
      * @return if the shooter is actually at the requested speed
      */
     public boolean isAtSpeed() {
-        return leader.getSpeed() > speed - 80;
+        return Math.abs(leader.getSpeed() - speed) < 50;
+    }
+
+    /**
+     * if the goal photon is in use and has a valid target in its sights
+     *
+     * @return if the goal photon is in use and has a valid target in its sights
+     */
+    public boolean isValidTarget() {
+        return robotSettings.ENABLE_VISION && goalCamera.hasValidTarget();
+    }
+
+    /**
+     * Gets the current speed of the leader motor
+     *
+     * @return the current speed of the leader motor based on the output units of {@link #leader}
+     */
+    public double getSpeed() {
+        return leader.getSpeed();
     }
 
     /**
@@ -248,25 +342,32 @@ public class Shooter implements ISubsystem {
      * @param rpm speed to set
      */
     public void setSpeed(double rpm) {
-        if (RobotSettings.DEBUG && DEBUG) {
+        if (robotSettings.DEBUG && DEBUG) {
             System.out.println("set shooter speed to " + rpm);
         }
+        speed = rpm;
         leader.moveAtVelocity(rpm);
     }
 
-    public void fireNumBalls(double rpm, int balls) {
-        if (!fireNumBallsLoop) {
-            shootBallCount = Math.min(balls, RobotSettings.HOPPER_BALL_COUNT);
-            shootRPM = rpm;
-            fireNumBallsLoop = true;
-            hasShotNumBalls = false;
-        }
-        if (!hasShotNumBalls) {
-            ShootingEnums.FIRE_NUM_BALLS.shoot(this);
-        }
-    }
-
+    /**
+     * Moves the shooter at a -1 to 1 percent speed
+     *
+     * @param percentSpeed percent from -1 to 1 to move the shooter at
+     */
     public void setPercentSpeed(double percentSpeed) {
         leader.moveAtPercent(percentSpeed);
+    }
+
+    /**
+     * Getter for {@link #shooting}
+     *
+     * @return whether the shooter is shooting or not
+     */
+    public boolean isShooting() {
+        return shooting;
+    }
+
+    void setShooting(boolean shooting) {
+        this.shooting = shooting;
     }
 }

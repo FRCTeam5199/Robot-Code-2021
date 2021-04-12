@@ -5,32 +5,35 @@ import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.util.Units;
-import frc.drive.DriveManager;
+import frc.drive.AbstractDriveManager;
+import frc.drive.DriveManagerStandard;
+import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
 import frc.misc.UserInterface;
-import frc.robot.Robot;
-import frc.robot.RobotSettings;
+import frc.vision.camera.BallPhoton;
+import frc.vision.camera.IVision;
 
-import static frc.robot.Robot.ballPhoton;
+import static frc.robot.Robot.robotSettings;
 
 /**
  * Used for the galactic search challenge which includes automatically determining a path to take at enable-time.
  * <p>
- * Requirements: {@link frc.robot.RobotSettings#ENABLE_VISION} {@link frc.robot.RobotSettings#ENABLE_IMU}
+ * Requiremed: {@link frc.robot.robotconfigs.DefaultConfig#ENABLE_VISION } {@link frc.robot.robotconfigs.DefaultConfig#ENABLE_IMU }
  */
 public class AutonManager extends AbstractAutonManager {
-
     private final RamseteController controller = new RamseteController();
     private Trajectory trajectory = new Trajectory();
+    private IVision ballPhoton;
 
-    public AutonManager(DriveManager driveManager) {
+    public AutonManager(AbstractDriveManager driveManager) {
         super(driveManager);
         init();
     }
 
     @Override
     public void init() {
+        ballPhoton = BallPhoton.BALL_PHOTON;
     }
 
     @Override
@@ -44,17 +47,21 @@ public class AutonManager extends AbstractAutonManager {
     }
 
     /**
-     * Runs the auton path. When complete, sets a flag in {@link RobotSettings#autonComplete} and runs {@link
-     * #onFinish()}
+     * Runs the auton path. When complete, sets a flag in {@link frc.robot.robotconfigs.DefaultConfig#autonComplete} and runs
+     * {@link #onFinish()}
      */
     @Override
     public void updateAuton() {
-        if (!RobotSettings.autonComplete) {
+        if (!robotSettings.autonComplete) {
             Trajectory.State goal = trajectory.sample(timer.get());
-            if (RobotSettings.ENABLE_IMU) {
+            if (robotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
                 ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-                DRIVING_CHILD.drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond * 2);
+                if (DRIVING_CHILD instanceof DriveManagerStandard)
+                    ((DriveManagerStandard) DRIVING_CHILD).drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond * 2);
+                else if (DRIVING_CHILD instanceof DriveManagerSwerve) {
+                    //TODO implement this
+                }
             }
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
                 onFinish();
@@ -78,10 +85,10 @@ public class AutonManager extends AbstractAutonManager {
     }
 
     /**
-     * gathers data points (yaw, apparent size) from {@link Robot#ballPhoton} and plots them against expected values.
-     * However, given the fact that the robot wont always be exactly in the right place and that the auton paths will
-     * have a bit of tolerance to them, we need a flexible solution. Introducing {@link #sumOfSquares(Point[], Point[])
-     * Least Sum of Squares regression}! It takes the expected layout with the smallest error and runs that path
+     * gathers data points (yaw, apparent size) from {} and plots them against expected values. However, given the fact
+     * that the robot wont always be exactly in the right place and that the auton paths will have a bit of tolerance to
+     * them, we need a flexible solution. Introducing {@link #sumOfSquares(Point[], Point[]) Least Sum of Squares
+     * regression}! It takes the expected layout with the smallest error and runs that path
      */
     @Override
     public void initAuton() {
@@ -96,7 +103,7 @@ public class AutonManager extends AbstractAutonManager {
         System.out.println("I chose" + path.name());
         UserInterface.smartDashboardPutString("Auton Path", path.name());
         trajectory = paths.get(path);
-        if (RobotSettings.ENABLE_IMU) {
+        if (robotSettings.ENABLE_IMU) {
             telem.resetOdometry();
             Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
             trajectory = trajectory.transformBy(transform);
@@ -139,7 +146,7 @@ public class AutonManager extends AbstractAutonManager {
                 bestPath = path;
             }
         }
-        if (bestOption > 5000)
+        if (bestOption > 500)
             throw new IllegalStateException("I dont see a path. For safety, I will not run " + bestPath);
         return bestPath;
     }

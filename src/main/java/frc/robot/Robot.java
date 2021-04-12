@@ -9,8 +9,10 @@ import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.ArticulatedHood;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
-import frc.discordbot.DiscordBot;
-import frc.drive.DriveManager;
+import frc.drive.AbstractDriveManager;
+import frc.drive.DriveBases;
+import frc.drive.DriveManagerStandard;
+import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.misc.Chirp;
@@ -23,11 +25,9 @@ import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.robot.robotconfigs.twentyone.CompetitionRobot2021;
 import frc.robot.robotconfigs.twentyone.PracticeRobot2021;
+import frc.robot.robotconfigs.twentyone.Swerve2021;
 import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.selfdiagnostics.ISimpleIssue;
-import frc.vision.camera.BallPhoton;
-import frc.vision.camera.GoalPhoton;
-import frc.vision.camera.IVision;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,8 +50,8 @@ public class Robot extends TimedRobot {
     public static final Preferences preferences = Preferences.getInstance();
     public static final ArrayList<ISubsystem> subsystems = new ArrayList<>();
     private static final String DELETE_PASSWORD = "programmer funtime lanD";
-    public static DefaultConfig settingsFile;
-    public static DriveManager driver;
+    public static DefaultConfig robotSettings;
+    public static AbstractDriveManager driver;
     public static Intake intake;
     public static Hopper hopper;
     public static Shooter shooter;
@@ -60,7 +60,6 @@ public class Robot extends TimedRobot {
     public static Chirp chirp;
     public static PDP pdp;
     public static LEDs leds;
-    public static IVision goalPhoton, ballPhoton;
     public static AbstractAutonManager autonManager;
     public static boolean SECOND_TRY;
     public static String lastFoundSong = "";
@@ -73,62 +72,60 @@ public class Robot extends TimedRobot {
     public void robotInit() throws IllegalStateException {
         getRestartProximity();
         getSettings();
-        RobotSettings.printMappings();
-        RobotSettings.printToggles();
-        RobotSettings.printNumbers();
+        robotSettings.printMappings();
+        robotSettings.printToggles();
+        robotSettings.printNumbers();
         UserInterface.initRobot();
-        if (RobotSettings.ENABLE_VISION) {
-            goalPhoton = new GoalPhoton();
-            ballPhoton = new BallPhoton();
+        if (robotSettings.ENABLE_DRIVE) {
+            if (robotSettings.DRIVE_BASE == DriveBases.STANDARD)
+                driver = new DriveManagerStandard();
+            else if (robotSettings.DRIVE_BASE == DriveBases.SWIVEL)
+                driver = new DriveManagerSwerve();
         }
-        if (RobotSettings.ENABLE_DRIVE) {
-            driver = new DriveManager();
-        }
-        if (RobotSettings.ENABLE_INTAKE) {
+        if (robotSettings.ENABLE_INTAKE) {
             intake = new Intake();
         }
-        if (RobotSettings.ENABLE_HOPPER) {
+        if (robotSettings.ENABLE_HOPPER) {
             hopper = new Hopper();
         }
-        if (RobotSettings.ENABLE_SHOOTER) {
+        if (robotSettings.ENABLE_SHOOTER) {
             shooter = new Shooter();
         }
-        if (RobotSettings.ENABLE_HOOD_ARTICULATION){
+        if (robotSettings.ENABLE_HOOD_ARTICULATION) {
             articulatedHood = new ArticulatedHood();
         }
-        if (RobotSettings.ENABLE_TURRET) {
+        if (robotSettings.ENABLE_TURRET) {
             turret = new Turret();
-            if (RobotSettings.ENABLE_DRIVE) turret.setTelemetry(driver.guidance);
+            if (robotSettings.ENABLE_DRIVE) turret.setTelemetry(driver.guidance);
         }
-        if (RobotSettings.ENABLE_MUSIC) {
+        if (robotSettings.ENABLE_MUSIC) {
             chirp = new Chirp();
         }
-        if (RobotSettings.ENABLE_DRIVE) {
-            switch (RobotSettings.AUTON_MODE) {
+        if (robotSettings.ENABLE_DRIVE) {
+            switch (robotSettings.AUTON_TYPE) {
                 case GALACTIC_SEARCH:
                     autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     break;
                 case FOLLOW_PATH:
-                    autonManager = new frc.drive.auton.followtrajectory.AutonManager(Trajectories.TEST_PATH, driver);
+                    autonManager = new frc.drive.auton.followtrajectory.AutonManager(Trajectories.SLALOM2, driver);//Trajectories.TEST_PATH, driver);
                     break;
                 case GALACTIC_SCAM:
                     autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);
                     break;
             }
         }
-        if (RobotSettings.ENABLE_PDP) {
-            pdp = new PDP(RobotSettings.PDP_ID);
+        if (robotSettings.ENABLE_PDP) {
+            pdp = new PDP(robotSettings.PDP_ID);
         }
 
         for (AbstractMotorController motor : AbstractMotorController.motorList) {
             if (motor.getMotorTemperature() > 5) {
-                UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", 100)));
+                UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", 80)));
             }
         }
         String quote = QuoteOfTheDay.getRandomQuote();
         System.out.println("\n\n" + quote);
         UserInterface.smartDashboardPutString("Quote", quote);
-        DiscordBot.newInstance();
     }
 
     /**
@@ -161,13 +158,16 @@ public class Robot extends TimedRobot {
         System.out.println("I am " + hostName);
         switch (hostName) {
             case "2020-Comp":
-                settingsFile = new Robot2020();
+                robotSettings = new Robot2020();
                 break;
             case "2021-Prac":
-                settingsFile = new PracticeRobot2021();
+                robotSettings = new PracticeRobot2021();
                 break;
             case "2021-Comp":
-                settingsFile = new CompetitionRobot2021();
+                robotSettings = new CompetitionRobot2021();
+                break;
+            case "2021-Swivel":
+                robotSettings = new Swerve2021();
                 break;
             default:
                 //preferences.putString("hostname", "2021-Comp");
@@ -209,15 +209,15 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         if (UserInterface.PRINT_ROBOT_TOGGLES.getEntry().getBoolean(false)) {
-            RobotSettings.printToggles();
+            robotSettings.printToggles();
             UserInterface.PRINT_ROBOT_TOGGLES.getEntry().setBoolean(false);
         }
         if (UserInterface.PRINT_ROBOT_MAPPINGS.getEntry().getBoolean(false)) {
-            RobotSettings.printMappings();
+            robotSettings.printMappings();
             UserInterface.PRINT_ROBOT_MAPPINGS.getEntry().setBoolean(false);
         }
         if (UserInterface.PRINT_ROBOT_NUMBERS.getEntry().getBoolean(false)) {
-            RobotSettings.printNumbers();
+            robotSettings.printNumbers();
             UserInterface.PRINT_ROBOT_NUMBERS.getEntry().setBoolean(false);
         }
         if (UserInterface.MUSIC_DISABLE_SONG_TAB.getEntry().getBoolean(false)) {
@@ -229,7 +229,7 @@ public class Robot extends TimedRobot {
             deleteFolder(Filesystem.getDeployDirectory());
             throw new RuntimeException("Deleted deploy dir contents");
         }
-        if (RobotSettings.ENABLE_PDP) {
+        if (robotSettings.ENABLE_PDP) {
             pdp.update();
         }
 
@@ -244,7 +244,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        if (RobotSettings.ENABLE_DRIVE && System.currentTimeMillis() > lastDisable + 5000)
+        if (robotSettings.ENABLE_DRIVE && System.currentTimeMillis() > lastDisable + 5000)
             driver.setBrake(false);
     }
 

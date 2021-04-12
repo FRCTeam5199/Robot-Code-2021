@@ -1,7 +1,6 @@
 package frc.vision.camera;
 
 import frc.misc.ISubsystem;
-import frc.misc.SubsystemStatus;
 
 /**
  * I'm just simply vibing here, calm down bro. Anyone that can SEE would use me
@@ -9,6 +8,26 @@ import frc.misc.SubsystemStatus;
  * @author Smaltin
  */
 public interface IVision extends ISubsystem {
+
+    boolean hasValidTarget();
+
+    /**
+     * Changes the mode of the vision (on, off, blink)
+     *
+     * @param ledMode the mode (on, off, blink) from enum {@link VisionLEDMode}
+     */
+    void setLedMode(VisionLEDMode ledMode);
+
+    static IVision manufactureGoalCamera(SupportedVision cameraType) {
+        switch (cameraType) {
+            case LIMELIGHT:
+                return GoalLimelight.GOAL_LIME_LIGHT;
+            case PHOTON:
+                return GoalPhoton.GOAL_PHOTON;
+            default:
+                throw new IllegalStateException("You must have a camera type set.");
+        }
+    }
 
     /**
      * Returns the angle between the camera and the object
@@ -53,11 +72,4 @@ public interface IVision extends ISubsystem {
     }
 
     double getSize(int targetId);
-
-    @Override
-    default SubsystemStatus getSubsystemStatus() {
-        return hasValidTarget() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
-    }
-
-    boolean hasValidTarget();
 }

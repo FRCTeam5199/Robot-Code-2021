@@ -1,12 +1,12 @@
 Old/** linguist-vendored=true
-build/docs/javadoc/** linguist-documentation=false
+build/docs/javadoc/** linguist-documentation=true
 build/docs/javadoc/** linguist-vendored=false
-build/docs/javadoc/** linguist-detectable=true
+build/docs/javadoc/** linguist-detectable=false
 
 MurderDriveStation/** linguist-vendored=false
 MurderDriveStation/** linguist-detectable=true
 
-*.js linguist-language=RDoc
-*.html linguist-language=RDoc
+*.css linguist-documentation=true
+*.js linguist-documentation=true
+*.html linguist-documentation=true
 *.json linguist-detectable=false
-*.css linguist-language=RDoc

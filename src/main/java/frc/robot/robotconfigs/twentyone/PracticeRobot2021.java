@@ -66,7 +66,6 @@ public class PracticeRobot2021 extends DefaultConfig {
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
         DRIVE_GEARING = 12 / 60.0;
-        HOPPER_BALL_COUNT = 3;
         SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
         motorPulleySize = 0;//?;
         driverPulleySize = 0;//?;
@@ -89,6 +88,9 @@ public class PracticeRobot2021 extends DefaultConfig {
 
         GOAL_CAM_NAME = "GoalCamera";
         BALL_CAM_NAME = "BallCamera";
+
+        //PDP
+        PDP_ID = 0;
 
         //Drive Motors
         DRIVE_LEADER_L_ID = 1; //talon

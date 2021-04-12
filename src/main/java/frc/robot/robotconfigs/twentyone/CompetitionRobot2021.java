@@ -12,16 +12,16 @@ import frc.telemetry.imu.SupportedIMU;
 import frc.vision.camera.SupportedVision;
 
 public class CompetitionRobot2021 extends DefaultConfig {
-    //Subsystems
     public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
         ENABLE_TURRET = true;
-        ENABLE_SHOOTER = false;
+        ENABLE_SHOOTER = true;
         ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
+        ENABLE_HOOD_ARTICULATION = false;
 
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
@@ -38,23 +38,23 @@ public class CompetitionRobot2021 extends DefaultConfig {
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
-        ENABLE_HOOD_ARTICULATION = false;
+        INDEXER_DETECTION_CUTOFF_DISTANCE = 5;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
-        INDEXER_DETECTION_CUTOFF_DISTANCE = 4;
 
         //UI Styles
         DRIVE_STYLE = DriveTypes.STANDARD;
-        SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
+        SHOOTER_CONTROL_STYLE = ShootingControlStyles.SPEED_2021;//ShootingControlStyles.ACCURACY_2021;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
-        IMU_TYPE = SupportedIMU.NAVX2;
+        IMU_TYPE = SupportedIMU.PIGEON;
 
-        AUTON_TYPE = AutonType.GALACTIC_SCAM;
+        AUTON_TYPE = AutonType.GALACTIC_SEARCH;
 
         DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
-        SHOOTER_PID = new PID(0.001, 0.0000005, 0.03, 0);
+        SHOOTER_PID = new PID(0.001, 0.0000005, 0.03, 0);//Accuracy. SPEED = new PID(0.0004, 0.0000007, 0.03, 0);
+        SHOOTER_CONST_SPEED_PID = new PID(0.0001, 0.0000007, 0.05, 0);
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
         TURRET_PID = new PID(0.006, 0.00001, 0.001);
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
@@ -79,8 +79,9 @@ public class CompetitionRobot2021 extends DefaultConfig {
         MOTOR_SPROCKET_SIZE = 1;
         TURRET_SPROCKET_SIZE = 11.1;
         TURRET_GEAR_RATIO = 7;
-        TURRET_MAX_POS = 270;
-        TURRET_MIN_POS = 0;
+        TURRET_MAX_POS = 520;
+        TURRET_MIN_POS = -2;
+        TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
         AUTON_TOLERANCE = 0.1;
         AUTO_SPEED = 3;
         AUTO_ROTATION_SPEED = 1;
@@ -104,6 +105,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         //Shooter Motors
         SHOOTER_LEADER_ID = 7; //talon
         SHOOTER_FOLLOWER_ID = 8; //talon
+        SHOOTER_HOOD_ID = 32;
 
         //turret
         TURRET_YAW_ID = 33; //550

@@ -53,7 +53,9 @@ public class QuoteOfTheDay {
             "so when can we expect the break beams to be installed? \nGood question! If you would like to receive a response please press 1. If all your questions have been answered and you'd like to hear about what's new press 2. If you'd like to sign up for our email list press 3. If you wish to unsubscribe from our email list press 4. Good Bye!",
             "It's not working, and I don't know why.\nIt's working, and I don't know why.",
             "I did it! I plugged in the magic numbers.",
-            "It may or may not work."
+            "It may or may not work.",
+            "Africa, Default Pi.. \nWhere's Africa? \n... Amica..",
+            "Fix your software!!"
     };
 
     /**

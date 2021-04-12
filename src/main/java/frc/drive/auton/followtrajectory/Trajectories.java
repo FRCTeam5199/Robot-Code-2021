@@ -8,7 +8,9 @@ import frc.drive.auton.IAutonEnumPath;
 public enum Trajectories implements IAutonEnumPath {
     TEST_PATH("OutlineField"),
     FORWARD("ForwardTinyBit"),
-    BACKWARD("BackwardTinyBit");
+    BACKWARD("BackwardTinyBit"),
+    SLALOM("Slalom"),
+    SLALOM2("Slalom_0");
 
     /**
      * The file name that holds this trajectory. Leave off the generic file extension stuff
