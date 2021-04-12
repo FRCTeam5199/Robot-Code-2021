@@ -1,6 +1,6 @@
 package frc.discordbot.commands;
 
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.JDA;
 
 public class PingCommand extends AbstractCommand {
     private static final String[] pingMessages = new String[]{
@@ -11,34 +11,13 @@ public class PingCommand extends AbstractCommand {
     };
 
     @Override
-    public void run(MessageReceivedEvent message) {
-        String[] args = message.getMessage().getContentRaw().split(" ");
-        if (args.length > 1 && args[1].matches("fancy")) {
-            message.getChannel().sendMessage("Checking ping...").queue(msg -> {
-                int pings = 5;
-                int lastResult;
-                int sum = 0, min = 999, max = 0;
-                long start = System.currentTimeMillis();
-                for (int j = 0; j < pings; j++) {
-                    msg.editMessage(pingMessages[j % pingMessages.length]).submit();
-                    lastResult = (int) (System.currentTimeMillis() - start);
-                    sum += lastResult;
-                    min = Math.min(min, lastResult);
-                    max = Math.max(max, lastResult);
-                    try {
-                        Thread.sleep(1_500L);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    start = System.currentTimeMillis();
-                }
-                msg.editMessage(String.format("Average ping is %dms (min: %d, max: %d)", (int) Math.ceil(sum / 5f), min, max)).submit();
-            });
-        } else {
-            long start = System.currentTimeMillis();
-            message.getChannel().sendMessage(":outbox_tray: checking ping").queue(
-                    msg -> msg.editMessage(":inbox_tray: ping is " + (System.currentTimeMillis() - start) + "ms").submit());
-        }
+    public boolean isServerSideCommand() {
+        return false;
+    }
+
+    @Override
+    public AbstractCommandResponse run(AbstractCommandData message) {
+        return new PingCommandResponse(message);
     }
 
     @Override
@@ -49,5 +28,42 @@ public class PingCommand extends AbstractCommand {
     @Override
     public String getAliases() {
         return "";
+    }
+
+    public static class PingCommandResponse extends AbstractCommandResponse {
+        public PingCommandResponse(AbstractCommandData message) {
+            super(message);
+        }
+
+        @Override
+        public void doYourWorst(JDA client) {
+            String[] args = CONTENT.split(" ");
+            if (args.length > 1 && args[1].matches("fancy")) {
+                client.getTextChannelById(CHANNEL_ID).sendMessage("Checking ping...").queue(msg -> {
+                    int pings = 5;
+                    int lastResult;
+                    int sum = 0, min = 999, max = 0;
+                    long start = System.currentTimeMillis();
+                    for (int j = 0; j < pings; j++) {
+                        msg.editMessage(pingMessages[j % pingMessages.length]).submit();
+                        lastResult = (int) (System.currentTimeMillis() - start);
+                        sum += lastResult;
+                        min = Math.min(min, lastResult);
+                        max = Math.max(max, lastResult);
+                        try {
+                            Thread.sleep(1_500L);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        start = System.currentTimeMillis();
+                    }
+                    msg.editMessage(String.format("Average ping is %dms (min: %d, max: %d)", (int) Math.ceil(sum / 5f), min, max)).submit();
+                });
+            } else {
+                long start = System.currentTimeMillis();
+                client.getTextChannelById(CHANNEL_ID).sendMessage(":outbox_tray: checking ping").queue(
+                        msg -> msg.editMessage(":inbox_tray: ping is " + (System.currentTimeMillis() - start) + "ms").submit());
+            }
+        }
     }
 }

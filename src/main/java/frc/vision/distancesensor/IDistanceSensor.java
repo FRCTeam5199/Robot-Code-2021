@@ -12,7 +12,7 @@ import frc.misc.SubsystemStatus;
  */
 public interface IDistanceSensor extends ISubsystem {
     @Override
-    public default SubsystemStatus getSubsystemStatus() {
+    default SubsystemStatus getSubsystemStatus() {
         return getDistance() != -1 ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 

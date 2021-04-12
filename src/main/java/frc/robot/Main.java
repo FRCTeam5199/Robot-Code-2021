@@ -9,11 +9,15 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
+import java.io.File;
+
 /**
  * Do NOT add any static variables to this class, or any initialization at all. Unless you know what you are doing, do
  * not modify this file except to change the parameter class to the startRobot call.
  */
 public final class Main {
+    public static ClientServerPipeline pipeline;
+
     /**
      * Main initialization function. Do not perform any initialization here.
      *
@@ -22,7 +26,12 @@ public final class Main {
      * @param args does nothing
      */
     public static void main(String... args) {
-        RobotBase.startRobot(Robot::new);
+        if (new File("/home/lvuser", "deploy").isDirectory())
+            RobotBase.startRobot(Robot::new);
+        else {
+            pipeline = ClientServerPipeline.getServer();
+            pipeline.run();
+        }
     }
 
     private Main() {

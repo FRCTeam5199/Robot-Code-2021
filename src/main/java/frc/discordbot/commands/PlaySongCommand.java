@@ -1,12 +1,17 @@
 package frc.discordbot.commands;
 
 import frc.robot.Robot;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.JDA;
 
 public class PlaySongCommand extends AbstractCommand {
     @Override
-    public void run(MessageReceivedEvent message) {
-        message.getChannel().sendMessage("Playing " + Robot.chirp.playSongMostNearlyMatching(message.getMessage().getContentRaw().replace("!play", "").replace("!p", "").toLowerCase().trim())).queue();
+    public boolean isServerSideCommand() {
+        return false;
+    }
+
+    @Override
+    public AbstractCommandResponse run(AbstractCommandData message) {
+        return new PlaySongCommandResponse(message, "Playing " + Robot.chirp.playSongMostNearlyMatching(message.CONTENT.replace("!play", "").replace("!p", "").toLowerCase().trim()));
     }
 
     @Override
@@ -17,5 +22,19 @@ public class PlaySongCommand extends AbstractCommand {
     @Override
     public String getAliases() {
         return "p";
+    }
+
+    public static class PlaySongCommandResponse extends AbstractCommandResponse {
+        private final String RESPONSE;
+
+        public PlaySongCommandResponse(AbstractCommandData originalData, String response) {
+            super(originalData);
+            RESPONSE = response;
+        }
+
+        @Override
+        public void doYourWorst(JDA client) {
+            client.getTextChannelById(CHANNEL_ID).sendMessage(RESPONSE).queue();
+        }
     }
 }

@@ -1,7 +1,6 @@
 package frc.vision.distancesensor;
 
 import com.revrobotics.Rev2mDistanceSensor;
-import frc.misc.SubsystemStatus;
 import frc.selfdiagnostics.DistanceSensorNonOpIssue;
 
 /**

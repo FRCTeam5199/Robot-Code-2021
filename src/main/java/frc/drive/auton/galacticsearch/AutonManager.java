@@ -19,7 +19,8 @@ import static frc.robot.Robot.robotSettings;
 /**
  * Used for the galactic search challenge which includes automatically determining a path to take at enable-time.
  * <p>
- * Requiremed: {@link frc.robot.robotconfigs.DefaultConfig#ENABLE_VISION } {@link frc.robot.robotconfigs.DefaultConfig#ENABLE_IMU }
+ * Requiremed: {@link frc.robot.robotconfigs.DefaultConfig#ENABLE_VISION } {@link frc.robot.robotconfigs.DefaultConfig#ENABLE_IMU
+ * }
  */
 public class AutonManager extends AbstractAutonManager {
     private final RamseteController controller = new RamseteController();
@@ -47,8 +48,8 @@ public class AutonManager extends AbstractAutonManager {
     }
 
     /**
-     * Runs the auton path. When complete, sets a flag in {@link frc.robot.robotconfigs.DefaultConfig#autonComplete} and runs
-     * {@link #onFinish()}
+     * Runs the auton path. When complete, sets a flag in {@link frc.robot.robotconfigs.DefaultConfig#autonComplete} and
+     * runs {@link #onFinish()}
      */
     @Override
     public void updateAuton() {

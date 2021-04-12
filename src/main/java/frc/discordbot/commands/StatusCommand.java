@@ -4,18 +4,21 @@ import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.robot.Robot;
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.JDA;
 
 public class StatusCommand extends AbstractCommand {
     @Override
-    public void run(MessageReceivedEvent message) {
+    public boolean isServerSideCommand() {
+        return false;
+    }
+
+    @Override
+    public AbstractCommandResponse run(AbstractCommandData message) {
         StringBuilder statuses = new StringBuilder("```diff\n");
         for (ISubsystem system : Robot.subsystems)
             statuses.append(system.getSubsystemStatus() == SubsystemStatus.FAILED ? "- " : "+ ").append(system.getSubsystemName()).append(": ").append(system.getSubsystemStatus().name()).append('\n');
         statuses.append("```");
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.setTitle("Activated subsystem statuses:").setDescription(statuses).setAuthor("jojo2357");
-        message.getChannel().sendMessage(builder.build()).submit();
+        return new StatusCommandResponse(message, "Activated subsystem statuses:", "jojo2357", statuses.toString());
     }
 
     @Override
@@ -26,5 +29,23 @@ public class StatusCommand extends AbstractCommand {
     @Override
     public String getAliases() {
         return "stat";
+    }
+
+    public static class StatusCommandResponse extends AbstractCommandResponse {
+        private final String TITLE, AUTHOR, REPLY_CONTENT;
+
+        public StatusCommandResponse(AbstractCommandData data, String title, String author, String reply_content) {
+            super(data);
+            TITLE = title;
+            AUTHOR = author;
+            REPLY_CONTENT = reply_content;
+        }
+
+        @Override
+        public void doYourWorst(JDA client) {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setTitle(TITLE).setDescription(REPLY_CONTENT).setAuthor(AUTHOR);
+            client.getTextChannelById(CHANNEL_ID).sendMessage(builder.build()).submit();
+        }
     }
 }

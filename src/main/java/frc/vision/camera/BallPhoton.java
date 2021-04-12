@@ -18,11 +18,6 @@ public class BallPhoton implements IVision {
     private PhotonPipelineResult cameraResult;
     private LinearFilter filter;
 
-    @Override
-    public SubsystemStatus getSubsystemStatus() {
-        return SubsystemStatus.FAILED;
-    }
-
     /**
      * inits BallPhoton
      */
@@ -39,6 +34,11 @@ public class BallPhoton implements IVision {
         ballCamera = new PhotonCamera(robotSettings.BALL_CAM_NAME);
         cameraResult = ballCamera.getLatestResult();
         System.out.println("Found " + cameraResult.targets.size() + " targets");
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return SubsystemStatus.FAILED;
     }
 
     /**
@@ -115,7 +115,7 @@ public class BallPhoton implements IVision {
      */
     @Override
     public double getAngle(int targetId) {
-        if (targets==null)
+        if (targets == null)
             updateGeneric();
         if (hasValidTarget()/* && targetId < targets.size()*/) {
             return targets.get(targetId)

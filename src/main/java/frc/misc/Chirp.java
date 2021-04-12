@@ -181,7 +181,7 @@ public class Chirp extends Orchestra implements ISubsystem {
     public ErrorCode loadMusic(String soundName) {
         ErrorCode e = super.loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString());
         if (e != ErrorCode.OK) {
-            System.out.println("Failed to load " + Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString() + ": " + e);
+            System.out.println("Failed to load " + Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp") + ": " + e);
         }
         return e;
     }

@@ -78,6 +78,19 @@ dependencies {
     compile ('net.dv8tion:JDA:3.8.1_457'){
         exclude module: 'opus-java'
     }
+    // Add ntcore-java
+    compile "edu.wpi.first.ntcore:ntcore-java:2021.2.2"
+
+    // Add wpiutil-java
+    compile "edu.wpi.first.wpiutil:wpiutil-java:2021.2.2"
+
+    // Add ntcore-jni for runtime. We are adding all supported platforms
+    // so that our application will work on all supported platforms.
+    runtime "edu.wpi.first.ntcore:ntcore-jni:2021.2.2:windowsx86"
+    runtime "edu.wpi.first.ntcore:ntcore-jni:2021.2.2:windowsx86-64"
+    runtime "edu.wpi.first.ntcore:ntcore-jni:2021.2.2:linuxx86-64"
+    runtime "edu.wpi.first.ntcore:ntcore-jni:2021.2.2:linuxraspbian"
+    runtime "edu.wpi.first.ntcore:ntcore-jni:2021.2.2:osxx86-64"
 }
 
 // Simulation configuration (e.g. environment variables).

@@ -11,18 +11,18 @@ import frc.selfdiagnostics.IMUNonOpIssue;
  * @author jojo2357
  */
 public abstract class AbstractIMU implements ISubsystem {
+    protected double startYaw;
+    protected double[] ypr = new double[3];
+    protected double[] startypr = new double[3];
+
+    public abstract void resetOdometry();
+
     @Override
     public SubsystemStatus getSubsystemStatus() {
         return absoluteYaw() != 0 ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
-    protected double startYaw;
-
-    protected double[] ypr = new double[3];
-    protected double[] startypr = new double[3];
 
     public abstract double absoluteYaw();
-
-    public abstract void resetOdometry();
 
     @Override
     public void updateTest() {

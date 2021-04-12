@@ -39,11 +39,6 @@ public class ArticulatedHood implements ISubsystem {
     private double moveTo = 0.0;
     private AbstractMotorController hoodMotor;
 
-    @Override
-    public SubsystemStatus getSubsystemStatus() {
-        return hoodMotor.failureFlag ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
-    }
-
     public ArticulatedHood() {
         addToMetaList();
         init();
@@ -70,24 +65,9 @@ public class ArticulatedHood implements ISubsystem {
         createAndInitMotors();
     }
 
-    /**
-     * Initialize the motors.
-     */
-    private void createAndInitMotors() {
-        switch (robotSettings.HOOD_MOTOR_TYPE) {
-            case CAN_SPARK_MAX:
-                hoodMotor = new SparkMotorController(robotSettings.SHOOTER_HOOD_ID, CANSparkMaxLowLevel.MotorType.kBrushed);
-                hoodMotor.setSensorToRealDistanceFactor(1);
-                break;
-            case TALON_FX:
-                hoodMotor = new TalonMotorController(robotSettings.SHOOTER_HOOD_ID);
-                hoodMotor.setSensorToRealDistanceFactor(600 / robotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
-                break;
-            default:
-                throw new IllegalStateException("No such supported hood config for " + robotSettings.HOOD_MOTOR_TYPE.name());
-        }
-        hoodMotor.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
-        hoodMotor.setBrake(true);
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return hoodMotor.failureFlag ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
     }
 
     @Override
@@ -304,5 +284,25 @@ public class ArticulatedHood implements ISubsystem {
                 UserInterface.smartDashboardPutNumber("Distance from target", 0);
             }
         }
+    }
+
+    /**
+     * Initialize the motors.
+     */
+    private void createAndInitMotors() {
+        switch (robotSettings.HOOD_MOTOR_TYPE) {
+            case CAN_SPARK_MAX:
+                hoodMotor = new SparkMotorController(robotSettings.SHOOTER_HOOD_ID, CANSparkMaxLowLevel.MotorType.kBrushed);
+                hoodMotor.setSensorToRealDistanceFactor(1);
+                break;
+            case TALON_FX:
+                hoodMotor = new TalonMotorController(robotSettings.SHOOTER_HOOD_ID);
+                hoodMotor.setSensorToRealDistanceFactor(600 / robotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
+                break;
+            default:
+                throw new IllegalStateException("No such supported hood config for " + robotSettings.HOOD_MOTOR_TYPE.name());
+        }
+        hoodMotor.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
+        hoodMotor.setBrake(true);
     }
 }

@@ -69,17 +69,6 @@ public class WrappedNavX2IMU extends AbstractIMU {
     }
 
     /**
-     * Returns the yaw
-     *
-     * @return yaw of robot in degrees
-     */
-    @Override
-    public double absoluteYaw() {
-        updateGeneric();
-        return ypr[0];
-    }
-
-    /**
      * Resets the odometry (IMU)
      */
     @Override
@@ -88,6 +77,17 @@ public class WrappedNavX2IMU extends AbstractIMU {
         navX2IMU.zeroYaw();
         startypr = ypr;
         startYaw = absoluteYaw();
+    }
+
+    /**
+     * Returns the yaw
+     *
+     * @return yaw of robot in degrees
+     */
+    @Override
+    public double absoluteYaw() {
+        updateGeneric();
+        return ypr[0];
     }
 
     /**

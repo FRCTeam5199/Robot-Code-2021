@@ -53,6 +53,7 @@ public abstract class AbstractAutonManager implements ISubsystem {
     protected final Timer timer = new Timer();
     protected final AbstractDriveManager DRIVING_CHILD;
     protected final RobotTelemetry telem;
+
     /**
      * Initializes the auton manager and stores the reference to the drivetrain object
      *

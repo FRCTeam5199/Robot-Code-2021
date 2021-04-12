@@ -30,15 +30,6 @@ public class WrappedPigeonIMU extends AbstractIMU {
     @Override
     public void initAuton() {
 
-    }    /**
-     * Yaw since last restart
-     *
-     * @return yaw since last restart
-     */
-    @Override
-    public double relativeYaw() { //return relative(to start) yaw of pigeon
-        updateGeneric();
-        return (ypr[0] - startYaw);
     }
 
     @Override
@@ -50,18 +41,6 @@ public class WrappedPigeonIMU extends AbstractIMU {
     public void initGeneric() {
 
     }
-
-
-
-    /**
-     * Updates the Pigeon IMU data
-     */
-    @Override
-    public void updateGeneric() {
-        pigeon.getYawPitchRoll(ypr);
-        super.updateGeneric();
-    }
-
 
     /**
      * Resets the Pigeon IMU
@@ -84,8 +63,28 @@ public class WrappedPigeonIMU extends AbstractIMU {
         return ypr[0];
     }
 
+    /**
+     * Updates the Pigeon IMU data
+     */
+    @Override
+    public void updateGeneric() {
+        pigeon.getYawPitchRoll(ypr);
+        super.updateGeneric();
+    }
+
     @Override
     public String getSubsystemName() {
         return "Pigeon IMU";
+    }
+
+    /**
+     * Yaw since last restart
+     *
+     * @return yaw since last restart
+     */
+    @Override
+    public double relativeYaw() { //return relative(to start) yaw of pigeon
+        updateGeneric();
+        return (ypr[0] - startYaw);
     }
 }
