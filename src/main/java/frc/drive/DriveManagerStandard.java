@@ -272,16 +272,8 @@ public class DriveManagerStandard extends AbstractDriveManager {
      */
     @Override
     public void updateGeneric() {
-        if (leaderL.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, robotSettings.DRIVE_LEADER_L_ID, leaderL.getSuggestedFix());
-        else
-            MotorDisconnectedIssue.resolveIssue(this, robotSettings.DRIVE_LEADER_L_ID);
-        if (leaderR.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, robotSettings.DRIVE_LEADER_R_ID, leaderR.getSuggestedFix());
-        else
-            MotorDisconnectedIssue.resolveIssue(this, robotSettings.DRIVE_LEADER_L_ID);
-        if (followerL.failureFlag() || followerR.failureFlag())
-            MotorDisconnectedIssue.reportIssue(this, -1);
+        MotorDisconnectedIssue.handleIssue(this, leaderL, leaderR);
+        MotorDisconnectedIssue.handleIssue(this, followerL, followerR);
         setBrake(!coast.getBoolean(false));
         if (calibratePid.getBoolean(false)) {
             PID readPid = new PID(P.getDouble(robotSettings.DRIVEBASE_PID.getP()), I.getDouble(robotSettings.DRIVEBASE_PID.getI()), D.getDouble(robotSettings.DRIVEBASE_PID.getD()), F.getDouble(robotSettings.DRIVEBASE_PID.getF()));

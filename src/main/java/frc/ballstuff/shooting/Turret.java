@@ -104,10 +104,7 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (motor.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, robotSettings.TURRET_YAW_ID, motor.getSuggestedFix());
-        else
-            MotorDisconnectedIssue.resolveIssue(this, robotSettings.TURRET_YAW_ID);
+        MotorDisconnectedIssue.handleIssue(this, motor);
         if (robotSettings.DEBUG && DEBUG) {
             System.out.println("Turret degrees:" + turretDegrees());
         }

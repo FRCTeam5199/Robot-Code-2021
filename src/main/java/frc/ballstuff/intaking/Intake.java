@@ -75,10 +75,7 @@ public class Intake implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        if (intakeMotor.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, robotSettings.INTAKE_MOTOR_ID, intakeMotor.getSuggestedFix());
-        else
-            MotorDisconnectedIssue.resolveIssue(this, robotSettings.INTAKE_MOTOR_ID);
+        MotorDisconnectedIssue.handleIssue(this, intakeMotor);
         intakeMotor.moveAtPercent(0.8 * intakeMult);
         switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case STANDARD:

@@ -42,6 +42,11 @@ public class VictorMotorController extends AbstractMotorController {
     }
 
     @Override
+    public int getID(){
+        return motor.getDeviceID();
+    }
+
+    @Override
     public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
         follow(leader);
         setInverted(invert);

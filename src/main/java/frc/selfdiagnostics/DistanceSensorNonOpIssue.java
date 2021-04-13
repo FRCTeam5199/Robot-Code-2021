@@ -16,11 +16,18 @@ public class DistanceSensorNonOpIssue implements ISimpleIssue {
     private static final String[] fixes = {"Ensure the %1$s is plugged in", "Ensure the %1$s is listening for the right port"};
     private final String distanceSensorName;
 
-    public static void reportIssue(ISubsystem owner, String imuName) {
+    public static void handleIssue(ISubsystem owner, String imuName, boolean report){
+        if (report)
+            resolveIssue(owner);
+        else
+            reportIssue(owner, imuName);
+    }
+
+    private static void reportIssue(ISubsystem owner, String imuName) {
         IssueHandler.issues.put(owner, new DistanceSensorNonOpIssue(imuName));
     }
 
-    public static void resolveIssue(ISubsystem owner) {
+    private static void resolveIssue(ISubsystem owner) {
         IssueHandler.issues.remove(owner);
     }
 

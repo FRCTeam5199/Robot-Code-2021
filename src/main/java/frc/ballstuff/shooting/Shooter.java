@@ -140,14 +140,7 @@ public class Shooter implements ISubsystem {
      */
     @Override
     public void updateGeneric() throws IllegalStateException {
-        if (leader.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, robotSettings.SHOOTER_LEADER_ID, leader.getSuggestedFix());
-        else
-            MotorDisconnectedIssue.resolveIssue(this, robotSettings.SHOOTER_LEADER_ID);
-        if (follower != null && follower.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, robotSettings.SHOOTER_FOLLOWER_ID, follower.getSuggestedFix());
-        else
-            MotorDisconnectedIssue.resolveIssue(this, robotSettings.SHOOTER_FOLLOWER_ID);
+        MotorDisconnectedIssue.handleIssue(this, leader, follower);
         updateShuffleboard();
         switch (robotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD: {

@@ -41,6 +41,8 @@ public abstract class AbstractMotorController {
 
     public abstract String getName();
 
+    public abstract int getID();
+
     /**
      * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
      * the passed motor will be the leader

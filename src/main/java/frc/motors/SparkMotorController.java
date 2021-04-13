@@ -56,6 +56,11 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
+    public int getID() {
+        return motor.getDeviceId();
+    }
+
+    @Override
     public AbstractMotorController follow(AbstractMotorController leader) {
         return follow(leader, false);
     }
