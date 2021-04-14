@@ -26,7 +26,7 @@ import java.util.Scanner;
  * @author jojo2357
  */
 public abstract class DefaultConfig {
-    public final String BOTKEY = loadBotToken();
+    public static final String BOTKEY = loadBotToken();
     public final boolean DEBUG = false;
     public String AUTON_COMPLETE_NOISE = "";
     public boolean autonComplete = false;
@@ -130,7 +130,7 @@ public abstract class DefaultConfig {
      */
     public Object IMU_NAVX_PORT = I2C.Port.kMXP;
 
-    private String loadBotToken() {
+    private static String loadBotToken() {
         try {
             Scanner fis = new Scanner(new File("bottoken.env"));
             return fis.nextLine();
