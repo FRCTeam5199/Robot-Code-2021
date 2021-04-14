@@ -114,12 +114,14 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
     @Override
     public void updateTest() {
-        System.out.println(FRcoder.getAbsolutePosition() + " FR " + steeringFR.getRotations());
-        System.out.println(FLcoder.getAbsolutePosition() + " FL " + steeringFL.getRotations());
-        System.out.println(BRcoder.getAbsolutePosition() + " BR " + steeringBR.getRotations());
-        System.out.println(BLcoder.getAbsolutePosition() + " BL " + steeringBL.getRotations());
-        System.out.println();
-        System.out.println(IMU.relativeYaw());
+        if (robotSettings.DEBUG && DEBUG) {
+            System.out.println(FRcoder.getAbsolutePosition() + " FR " + steeringFR.getRotations());
+            System.out.println(FLcoder.getAbsolutePosition() + " FL " + steeringFL.getRotations());
+            System.out.println(BRcoder.getAbsolutePosition() + " BR " + steeringBR.getRotations());
+            System.out.println(BLcoder.getAbsolutePosition() + " BL " + steeringBL.getRotations());
+            System.out.println();
+            System.out.println(IMU.relativeYaw());
+        }
     }
 
     @Override

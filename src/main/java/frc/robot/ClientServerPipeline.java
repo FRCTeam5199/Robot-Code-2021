@@ -19,7 +19,7 @@ import java.util.Objects;
  * {@link #run()} method will create a new thread and prevent exiting.
  */
 public class ClientServerPipeline implements Runnable {
-    private static final NetworkTable serverNetworkTable = NetworkTableInstance.getDefault().getTable("dbs");
+    private static NetworkTable serverNetworkTable;
     public static boolean SERVER;
     private static ClientServerPipeline SERVER_PIPELINE, CLIENT_PIPELINE;
 
@@ -51,7 +51,20 @@ public class ClientServerPipeline implements Runnable {
      *               pipeline
      */
     private ClientServerPipeline(boolean server) {
+        serverNetworkTable = NetworkTableInstance.getDefault().getTable("Brobot");
+        wipeNetworkTable(serverNetworkTable);
         SERVER = server;
+        DiscordBot.newInstance(!SERVER);
+    }
+
+    /**
+     * Clears the networktable from all its keys.
+     * @param table The networktable being deleted
+     */
+    private void wipeNetworkTable(NetworkTable table){
+        for (String key : table.getKeys()){
+            table.delete(key);
+        }
     }
 
     /**
@@ -80,6 +93,7 @@ public class ClientServerPipeline implements Runnable {
             return false;
         }
         serverNetworkTable.getEntry("command").setRaw(outboundPacket);
+        //System.out.println(serverNetworkTable.getEntry("command").getRaw(new byte[0]).length);
         serverNetworkTable.getEntry("read_reciept_command").setBoolean(false);
         return true;
     }
@@ -126,7 +140,7 @@ public class ClientServerPipeline implements Runnable {
      */
     @Override
     public void run() {
-        DiscordBot.newInstance(!SERVER);
+        NetworkTableInstance.getDefault().startClientTeam(5199);  // where TEAM=190, 294, etc, or use inst.startClient("hostname") or similar
         while (true) {
             try {
                 Thread.sleep(20);
@@ -144,10 +158,12 @@ public class ClientServerPipeline implements Runnable {
         if (SERVER) {
             if (checkReply()) {
                 readReply().doYourWorst(DiscordBot.bot.getBotObject());
+                System.out.println("Recieved message from teddy");
             }
         } else {
             if (checkMessage()) {
-                MessageHandler.messageHandler.onMessageReceived(readCommandData());
+                System.out.println("I got a message.");
+                MessageHandler.onMessageReceived(readCommandData());
             }
         }
     }
@@ -196,6 +212,7 @@ public class ClientServerPipeline implements Runnable {
     public AbstractCommand.AbstractCommandData readCommandData() {
         byte[] inboundPacket = serverNetworkTable.getEntry("command").getRaw(new byte[0]);
         serverNetworkTable.getEntry("read_reciept_command").setBoolean(true);
+        System.out.println("I read the command data. Length:" + inboundPacket.length);
         if (readFromBytes(inboundPacket) instanceof AbstractCommand.AbstractCommandData)
             return (AbstractCommand.AbstractCommandData) readFromBytes(inboundPacket);
         throw new IllegalStateException("Not sure what happened but the command that I read isnt a known command");

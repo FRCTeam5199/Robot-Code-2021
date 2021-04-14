@@ -49,12 +49,15 @@ public class MessageHandler extends ListenerAdapter {
         if (message.getGuild() == null)
             return;
         if (message.getMessage().getContentRaw().charAt(0) == '!' && commands.containsKey(message.getMessage().getContentRaw().substring(1).split(" ")[0])) {
+            System.out.println("Recieved Message: " + message.getMessage().getContentRaw());
             if (!LISTENING) {
                 AbstractCommand command = commands.get(message.getMessage().getContentRaw().substring(1).split(" ")[0]);
                 if (command.isServerSideCommand())
                     command.run(command.extractData(message)).doYourWorst(DiscordBot.bot.getBotObject());
-                else
+                else {
+                    System.out.println("Sending to bot " + command.extractData(message));
                     Main.pipeline.sendData(command.extractData(message));
+                }
             } else
                 throw new IllegalStateException("How did you get here as a client?");
         }
@@ -66,9 +69,10 @@ public class MessageHandler extends ListenerAdapter {
      *
      * @param message the boiled-down data sent by the server
      */
-    public void onMessageReceived(AbstractCommand.AbstractCommandData message) {
+    public static void onMessageReceived(AbstractCommand.AbstractCommandData message) {
+        System.out.println("Recieved Message: " + message.CONTENT);
         if (message.CONTENT.charAt(0) == '!' && commands.containsKey(message.CONTENT.substring(1).split(" ")[0])) {
-            if (!LISTENING) {
+            if (LISTENING) {
                 AbstractCommand command = commands.get(message.CONTENT.substring(1).split(" ")[0]);
                 Main.pipeline.sendReply(command.run(message));
             } else

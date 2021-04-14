@@ -12,7 +12,7 @@ public class PingCommand extends AbstractCommand {
 
     @Override
     public boolean isServerSideCommand() {
-        return false;
+        return true;
     }
 
     @Override

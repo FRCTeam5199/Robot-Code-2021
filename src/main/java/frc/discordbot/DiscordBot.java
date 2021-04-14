@@ -31,12 +31,14 @@ public class DiscordBot {
         AbstractCommand.DRIVEN = listener;
         MessageHandler.loadCommands(listener);
         JDA holder = null;
-        try {
-            System.out.println();
-            holder = new JDABuilder(AccountType.BOT).addEventListener(new MessageHandler()).setToken("changethis").build();
-        } catch (Exception e) {
-            System.err.println("Discord bot failed to init");
-            e.printStackTrace();
+        if (!listener) {
+            try {
+                System.out.println();
+                holder = new JDABuilder(AccountType.BOT).addEventListener(new MessageHandler()).setToken("hahayourfunny").build();
+            } catch (Exception e) {
+                System.err.println("Discord bot failed to init");
+                e.printStackTrace();
+            }
         }
         botObject = holder;
     }

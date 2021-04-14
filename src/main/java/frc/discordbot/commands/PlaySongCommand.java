@@ -11,7 +11,11 @@ public class PlaySongCommand extends AbstractCommand {
 
     @Override
     public AbstractCommandResponse run(AbstractCommandData message) {
-        return new PlaySongCommandResponse(message, "Playing " + Robot.chirp.playSongMostNearlyMatching(message.CONTENT.replace("!play", "").replace("!p", "").toLowerCase().trim()));
+        if (Robot.robotSettings.ENABLE_MUSIC) {
+            return new PlaySongCommandResponse(message, "Playing " + Robot.chirp.playSongMostNearlyMatching(message.CONTENT.replace("!play", "").replace("!p", "").toLowerCase().trim()));
+        } else {
+            return new PlaySongCommandResponse(message, "Music is disabled in robotSettings");
+        }
     }
 
     @Override

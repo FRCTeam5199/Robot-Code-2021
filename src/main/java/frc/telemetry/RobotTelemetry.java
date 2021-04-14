@@ -13,6 +13,7 @@ import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.misc.UtilFunctions;
+import frc.robot.Robot;
 import frc.telemetry.imu.AbstractIMU;
 import frc.telemetry.imu.WrappedNavX2IMU;
 import frc.telemetry.imu.WrappedPigeonIMU;
@@ -58,7 +59,7 @@ public class RobotTelemetry implements ISubsystem {
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return imu.getSubsystemStatus() == SubsystemStatus.NOMINAL && driver.getSubsystemStatus() == SubsystemStatus.NOMINAL ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+        return (imu != null && imu.getSubsystemStatus() == SubsystemStatus.NOMINAL) && driver.getSubsystemStatus() == SubsystemStatus.NOMINAL ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     /**
@@ -190,9 +191,10 @@ public class RobotTelemetry implements ISubsystem {
      * Resets all orienting to zeroes.
      */
     public void resetOdometry() {
-        if (robotSettings.ENABLE_IMU)
+        if (robotSettings.ENABLE_IMU) {
             imu.resetOdometry();
-        odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
+            odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
+        }
         driver.resetDriveEncoders();
     }
 }

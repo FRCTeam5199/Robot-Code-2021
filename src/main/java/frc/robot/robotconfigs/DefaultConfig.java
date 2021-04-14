@@ -153,6 +153,7 @@ public abstract class DefaultConfig {
         System.out.println("   Shooter motors " + SHOOTER_MOTOR_TYPE.name());
         System.out.println("     Shoot with 2 " + SHOOTER_USE_TWO_MOTORS);
         System.out.println("      Drive style " + DRIVE_STYLE.name());
+        System.out.println("   Drivebase Type " + DRIVE_BASE.name());
         System.out.println("      Shoot style " + SHOOTER_CONTROL_STYLE.name());
         System.out.println("     Intake style " + INTAKE_CONTROL_STYLE.name());
         System.out.println("  Auton Completed " + autonComplete);

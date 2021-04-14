@@ -77,6 +77,7 @@ public class Robot extends TimedRobot {
         robotSettings.printNumbers();
         UserInterface.initRobot();
         Main.pipeline = ClientServerPipeline.getClient();
+
         if (robotSettings.ENABLE_DRIVE) {
             if (robotSettings.DRIVE_BASE == DriveBases.STANDARD)
                 driver = new DriveManagerStandard();
