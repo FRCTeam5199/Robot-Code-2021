@@ -82,4 +82,4 @@
 |[IAutonEnumPath.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/drive/auton/IAutonEnumPath.java)|15 (0.2%)|4|26.7%|10|66.7%|1|6.7%|
 |[UtilFunctions.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/misc/UtilFunctions.java)|35 (0.4%)|9|25.7%|24|68.6%|2|5.7%|
 |[ISubsystem.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/misc/ISubsystem.java)|96 (1.1%)|20|20.8%|62|64.6%|14|14.6%|
-|Total (4)|8400|5570|66.3%|1764| 21.0%|1066|12.7%|
+|Total (81)|8400|5570|66.3%|1764| 21.0%|1066|12.7%|

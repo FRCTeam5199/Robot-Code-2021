@@ -82,4 +82,4 @@
 |[ArticulatedHood.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/ballstuff/shooting/ArticulatedHood.java)|308 (3.7%)|261|84.7%|24|7.8%|23|7.5%|
 |[DiscordBot.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/DiscordBot.java)|49 (0.6%)|42|85.7%|1|2.0%|6|12.2%|
 |[PingCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/commands/PingCommand.java)|69 (0.8%)|61|88.4%|0|0.0%|8|11.6%|
-|Total (4)|8400|5570|66.3%|1764| 21.0%|1066|12.7%|
+|Total (81)|8400|5570|66.3%|1764| 21.0%|1066|12.7%|

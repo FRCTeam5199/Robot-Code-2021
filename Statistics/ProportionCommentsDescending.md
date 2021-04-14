@@ -82,4 +82,4 @@
 |[StatusCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/commands/StatusCommand.java)|51 (0.6%)|43|84.3%|0|0.0%|8|15.7%|
 |[PlaySongCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/commands/PlaySongCommand.java)|44 (0.5%)|36|81.8%|0|0.0%|8|18.2%|
 |[SubsystemStatus.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/misc/SubsystemStatus.java)|5 (0.1%)|4|80.0%|0|0.0%|1|20.0%|
-|Total (4)|8400|5570|66.3%|1764| 21.0%|1066|12.7%|
+|Total (81)|8400|5570|66.3%|1764| 21.0%|1066|12.7%|
