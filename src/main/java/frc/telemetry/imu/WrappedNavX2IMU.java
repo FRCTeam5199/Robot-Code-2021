@@ -15,8 +15,7 @@ public class WrappedNavX2IMU extends AbstractIMU {
     private AHRS navX2IMU;
 
     public WrappedNavX2IMU() {
-        addToMetaList();
-        init();
+        super();
     }
 
     /**

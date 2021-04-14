@@ -19,8 +19,8 @@ import java.util.Objects;
  * {@link #run()} method will create a new thread and prevent exiting.
  */
 public class ClientServerPipeline implements Runnable {
-    private static NetworkTable serverNetworkTable;
     public static boolean SERVER;
+    private static NetworkTable serverNetworkTable;
     private static ClientServerPipeline SERVER_PIPELINE, CLIENT_PIPELINE;
 
     /**
@@ -59,10 +59,11 @@ public class ClientServerPipeline implements Runnable {
 
     /**
      * Clears the networktable from all its keys.
+     *
      * @param table The networktable being deleted
      */
-    private void wipeNetworkTable(NetworkTable table){
-        for (String key : table.getKeys()){
+    private void wipeNetworkTable(NetworkTable table) {
+        for (String key : table.getKeys()) {
             table.delete(key);
         }
     }

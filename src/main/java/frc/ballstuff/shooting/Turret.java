@@ -15,7 +15,7 @@ import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
-import frc.telemetry.RobotTelemetry;
+import frc.telemetry.AbstractRobotTelemetry;
 import frc.vision.camera.IVision;
 import frc.vision.camera.VisionLEDMode;
 
@@ -28,7 +28,7 @@ public class Turret implements ISubsystem {
     private static final boolean DEBUG = false;
     private BaseController joy, panel;
     private AbstractMotorController motor;
-    private RobotTelemetry guidance;
+    private AbstractRobotTelemetry guidance;
     private IVision visionCamera;
     private int scanDirection = -1;
 
@@ -309,7 +309,7 @@ public class Turret implements ISubsystem {
      *
      * @param telem the RobotTelemtry object in use by the drivetrian
      */
-    public void setTelemetry(RobotTelemetry telem) {
+    public void setTelemetry(AbstractRobotTelemetry telem) {
         guidance = telem;
     }
 }

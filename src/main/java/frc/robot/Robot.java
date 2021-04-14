@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() throws IllegalStateException {
         getRestartProximity();
-        getSettings();
+        robotSettings = getSettings();
         robotSettings.printMappings();
         robotSettings.printToggles();
         robotSettings.printNumbers();
@@ -153,24 +153,21 @@ public class Robot extends TimedRobot {
     /**
      * Loads settings based on the id of the robot.
      *
+     * @return the settings for this robot based on the preferences
      * @see DefaultConfig
      */
-    private static void getSettings() {
+    private static DefaultConfig getSettings() {
         String hostName = preferences.getString("hostname", "Default");
         System.out.println("I am " + hostName);
         switch (hostName) {
             case "2020-Comp":
-                robotSettings = new Robot2020();
-                break;
+                return new Robot2020();
             case "2021-Prac":
-                robotSettings = new PracticeRobot2021();
-                break;
+                return new PracticeRobot2021();
             case "2021-Comp":
-                robotSettings = new CompetitionRobot2021();
-                break;
+                return new CompetitionRobot2021();
             case "2021-Swivel":
-                robotSettings = new Swerve2021();
-                break;
+                return new Swerve2021();
             default:
                 //preferences.putString("hostname", "2021-Comp");
                 //settingsFile = new CompetitionRobot2021();

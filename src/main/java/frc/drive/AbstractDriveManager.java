@@ -1,7 +1,8 @@
 package frc.drive;
 
 import frc.misc.ISubsystem;
-import frc.telemetry.RobotTelemetry;
+import frc.telemetry.AbstractRobotTelemetry;
+import frc.telemetry.RobotTelemetryStandard;
 
 /**
  * Chill out there is only vibing going on here, officer
@@ -10,10 +11,10 @@ public abstract class AbstractDriveManager implements ISubsystem {
     /**
      * I dont know where I am going, but i do know that whatever drive manager i end up in will love me
      */
-    public RobotTelemetry guidance;
+    public AbstractRobotTelemetry guidance;
 
     /**
-     * Required by {@link RobotTelemetry} in order to reset position
+     * Required by {@link RobotTelemetryStandard} in order to reset position
      */
     public abstract void resetDriveEncoders();
 
@@ -24,6 +25,8 @@ public abstract class AbstractDriveManager implements ISubsystem {
      */
     public abstract void setBrake(boolean brake);
 
+    public abstract void driveMPS(double xMeters, double yMeters, double rotation);
+
     protected AbstractDriveManager() {
         init();
         addToMetaList();
@@ -31,7 +34,7 @@ public abstract class AbstractDriveManager implements ISubsystem {
     }
 
     protected void createTelem() {
-        guidance = new RobotTelemetry(this);
+        guidance = new RobotTelemetryStandard(this);
         guidance.resetOdometry();
     }
 

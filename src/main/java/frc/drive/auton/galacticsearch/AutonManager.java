@@ -4,10 +4,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.AbstractDriveManager;
-import frc.drive.DriveManagerStandard;
-import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
 import frc.misc.UserInterface;
@@ -58,11 +55,7 @@ public class AutonManager extends AbstractAutonManager {
             if (robotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
                 ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-                if (DRIVING_CHILD instanceof DriveManagerStandard)
-                    ((DriveManagerStandard) DRIVING_CHILD).drivePure(Units.metersToFeet(chassisSpeeds.vxMetersPerSecond), chassisSpeeds.omegaRadiansPerSecond * 2);
-                else if (DRIVING_CHILD instanceof DriveManagerSwerve) {
-                    //TODO implement this
-                }
+                DRIVING_CHILD.driveMPS(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond * 2);
             }
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
                 onFinish();

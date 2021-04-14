@@ -10,8 +10,9 @@ import frc.drive.auton.followtrajectory.Trajectories;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
+import frc.misc.UserInterface;
 import frc.robot.Robot;
-import frc.telemetry.RobotTelemetry;
+import frc.telemetry.AbstractRobotTelemetry;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public abstract class AbstractAutonManager implements ISubsystem {
 
     protected final Timer timer = new Timer();
     protected final AbstractDriveManager DRIVING_CHILD;
-    protected final RobotTelemetry telem;
+    protected final AbstractRobotTelemetry telem;
 
     /**
      * Initializes the auton manager and stores the reference to the drivetrain object

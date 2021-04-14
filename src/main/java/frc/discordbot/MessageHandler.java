@@ -3,6 +3,7 @@ package frc.discordbot;
 import frc.discordbot.commands.AbstractCommand;
 import frc.discordbot.commands.PingCommand;
 import frc.discordbot.commands.PlaySongCommand;
+import frc.discordbot.commands.RoboPingCommand;
 import frc.discordbot.commands.StatusCommand;
 import frc.robot.Main;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -22,7 +23,7 @@ public class MessageHandler extends ListenerAdapter {
 
     public static void loadCommands(boolean listening) {
         LISTENING = listening;
-        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class);
+        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class);
         for (Class<? extends AbstractCommand> s : classes) {
             try {
                 if (Modifier.isAbstract(s.getModifiers())) {
@@ -35,6 +36,23 @@ public class MessageHandler extends ListenerAdapter {
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * A corrolary to {@link #onMessageReceived(MessageReceivedEvent)} that allows the client to process the data as if
+     * it were the server.
+     *
+     * @param message the boiled-down data sent by the server
+     */
+    public static void onMessageReceived(AbstractCommand.AbstractCommandData message) {
+        System.out.println("Recieved Message: " + message.CONTENT);
+        if (message.CONTENT.charAt(0) == '!' && commands.containsKey(message.CONTENT.substring(1).split(" ")[0])) {
+            if (LISTENING) {
+                AbstractCommand command = commands.get(message.CONTENT.substring(1).split(" ")[0]);
+                Main.pipeline.sendReply(command.run(message));
+            } else
+                throw new IllegalStateException("How did you get here as a client?");
         }
     }
 
@@ -58,23 +76,6 @@ public class MessageHandler extends ListenerAdapter {
                     System.out.println("Sending to bot " + command.extractData(message));
                     Main.pipeline.sendData(command.extractData(message));
                 }
-            } else
-                throw new IllegalStateException("How did you get here as a client?");
-        }
-    }
-
-    /**
-     * A corrolary to {@link #onMessageReceived(MessageReceivedEvent)} that allows the client to process the data as if
-     * it were the server.
-     *
-     * @param message the boiled-down data sent by the server
-     */
-    public static void onMessageReceived(AbstractCommand.AbstractCommandData message) {
-        System.out.println("Recieved Message: " + message.CONTENT);
-        if (message.CONTENT.charAt(0) == '!' && commands.containsKey(message.CONTENT.substring(1).split(" ")[0])) {
-            if (LISTENING) {
-                AbstractCommand command = commands.get(message.CONTENT.substring(1).split(" ")[0]);
-                Main.pipeline.sendReply(command.run(message));
             } else
                 throw new IllegalStateException("How did you get here as a client?");
         }

@@ -26,7 +26,7 @@ import frc.motors.followers.AbstractFollowerMotorController;
 import frc.motors.followers.SparkFollowerMotorsController;
 import frc.motors.followers.TalonFollowerMotorController;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
-import frc.telemetry.RobotTelemetry;
+import frc.telemetry.RobotTelemetryStandard;
 
 import static frc.robot.Robot.robotSettings;
 
@@ -34,7 +34,7 @@ import static frc.robot.Robot.robotSettings;
  * Everything that has to do with driving is in here. There are a lot of auxilairy helpers and {@link
  * frc.robot.Robot#robotSettings} that feed in here.
  *
- * @see RobotTelemetry
+ * @see RobotTelemetryStandard
  */
 public class DriveManagerStandard extends AbstractDriveManager {
     private static final boolean DEBUG = false;
@@ -55,8 +55,6 @@ public class DriveManagerStandard extends AbstractDriveManager {
 
     public DriveManagerStandard() throws UnsupportedOperationException, InitializationFailureException {
         super();
-        addToMetaList();
-        init();
     }
 
     /**
@@ -224,6 +222,11 @@ public class DriveManagerStandard extends AbstractDriveManager {
         leaderR.setBrake(braking);
         followerL.setBrake(braking);
         followerR.setBrake(braking);
+    }
+
+    @Override
+    public void driveMPS(double xMeters, double yMeters, double rotation) {
+        drivePure(Units.metersToFeet(xMeters), rotation);
     }
 
     @Override

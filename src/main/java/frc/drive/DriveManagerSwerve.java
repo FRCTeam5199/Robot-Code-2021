@@ -1,25 +1,20 @@
 package frc.drive;
 
 import com.ctre.phoenix.sensors.CANCoder;
-import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import frc.controllers.BaseController;
 import frc.controllers.ControllerEnums;
 import frc.controllers.XBoxController;
 import frc.misc.PID;
 import frc.misc.SubsystemStatus;
-import frc.motors.AbstractMotorController;
-import frc.motors.SparkMotorController;
 import frc.motors.SupportedMotors;
-import frc.telemetry.imu.AbstractIMU;
-import frc.telemetry.imu.WrappedNavX2IMU;
+import frc.motors.SwerveMotorController;
+import frc.robot.Robot;
 
 import static frc.robot.Robot.robotSettings;
 
@@ -40,18 +35,14 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     private final Translation2d frontRightLocation = new Translation2d(-trackLength / 2 / 39.3701, -trackWidth / 2 / 39.3701);
     private final Translation2d backLeftLocation = new Translation2d(trackLength / 2 / 39.3701, trackWidth / 2 / 39.3701);
     private final Translation2d backRightLocation = new Translation2d(trackLength / 2 / 39.3701, -trackWidth / 2 / 39.3701);
-    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+    public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation
     );
     public SwerveModuleState[] moduleStates;
-    private AbstractIMU IMU;
+    public SwerveMotorController driverFR, driverBR, driverBL, driverFL;
     private PIDController FRpid, BRpid, BLpid, FLpid;
-    private AbstractMotorController driverFR, driverBR, driverBL, driverFL;
-    private AbstractMotorController steeringFR, steeringBR, steeringBL, steeringFL;
     private BaseController xbox;
     private CANCoder FRcoder, BRcoder, BLcoder, FLcoder;
-    private SwerveDriveOdometry odometry;
-    private Pose2d pose;
 
     public DriveManagerSwerve() {
         super();
@@ -60,7 +51,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     @Override
     public void init() {
         PID steeringPID = new PID(0.0035, 0.000001, 0);
-        //https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/controller/PIDController.html
+
         FLpid = new PIDController(steeringPID.P, steeringPID.I, steeringPID.D);
         FRpid = new PIDController(steeringPID.P, steeringPID.I, steeringPID.D);
         BLpid = new PIDController(steeringPID.P, steeringPID.I, steeringPID.D);
@@ -72,26 +63,20 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
         xbox = XBoxController.createOrGet(0);
 
-        driverFR = new SparkMotorController(1, CANSparkMaxLowLevel.MotorType.kBrushless);
-        driverBR = new SparkMotorController(4, CANSparkMaxLowLevel.MotorType.kBrushless);
-        driverBL = new SparkMotorController(6, CANSparkMaxLowLevel.MotorType.kBrushless);
-        driverFL = new SparkMotorController(7, CANSparkMaxLowLevel.MotorType.kBrushless);
-        driverBL.setInverted(true);
-        driverFL.setInverted(true);
+        driverFR = new SwerveMotorController(1, SupportedMotors.CAN_SPARK_MAX, 2, SupportedMotors.CAN_SPARK_MAX);
+        driverBR = new SwerveMotorController(4, SupportedMotors.CAN_SPARK_MAX, 3, SupportedMotors.CAN_SPARK_MAX);
+        driverBL = new SwerveMotorController(6, SupportedMotors.CAN_SPARK_MAX, 5, SupportedMotors.CAN_SPARK_MAX);
+        driverFL = new SwerveMotorController(7, SupportedMotors.CAN_SPARK_MAX, 8, SupportedMotors.CAN_SPARK_MAX);
 
-        driverFR.setBrake(true);
-        driverFL.setBrake(true);
-        driverBR.setBrake(true);
-        driverBL.setBrake(true);
+        driverFR.driver.setBrake(true);
+        driverFL.driver.setInverted(true).setBrake(true);
+        driverBR.driver.setBrake(true);
+        driverBL.driver.setInverted(true).setBrake(true);
 
-        steeringFR = new SparkMotorController(2, CANSparkMaxLowLevel.MotorType.kBrushless);
-        steeringBR = new SparkMotorController(3, CANSparkMaxLowLevel.MotorType.kBrushless);
-        steeringBL = new SparkMotorController(5, CANSparkMaxLowLevel.MotorType.kBrushless);
-        steeringFL = new SparkMotorController(8, CANSparkMaxLowLevel.MotorType.kBrushless);
-        steeringFR.setInverted(true);
-        steeringBR.setInverted(true);
-        steeringBL.setInverted(true);
-        steeringFL.setInverted(true);
+        driverFR.steering.setInverted(true);
+        driverBR.steering.setInverted(true);
+        driverBL.steering.setInverted(true);
+        driverFL.steering.setInverted(true);
 
         //setSteeringPIDS(new PID(0.005, 0.0000, 0.01));
 
@@ -100,27 +85,28 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         FLcoder = new CANCoder(13);
         BLcoder = new CANCoder(14);
 
-        driverFR.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
-        driverBR.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
-        driverFL.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
-        driverBL.setSensorToRealDistanceFactor(1.0 / SupportedMotors.CAN_SPARK_MAX.MAX_SPEED_RPM);
-        IMU = new WrappedNavX2IMU();
+        driverFR.driver.setSensorToRealDistanceFactor(robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60);
+        driverBR.driver.setSensorToRealDistanceFactor(robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60);
+        driverFL.driver.setSensorToRealDistanceFactor(robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60);
+        driverBL.driver.setSensorToRealDistanceFactor(robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60);
     }
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return SubsystemStatus.FAILED;
+        if (driverFR.driver.failureFlag || driverBR.driver.failureFlag || driverFL.driver.failureFlag || driverBL.driver.failureFlag || driverFR.steering.failureFlag || driverBR.steering.failureFlag || driverFL.steering.failureFlag || driverBL.steering.failureFlag)
+            return SubsystemStatus.FAILED;
+        return SubsystemStatus.NOMINAL;
     }
 
     @Override
     public void updateTest() {
         if (robotSettings.DEBUG && DEBUG) {
-            System.out.println(FRcoder.getAbsolutePosition() + " FR " + steeringFR.getRotations());
-            System.out.println(FLcoder.getAbsolutePosition() + " FL " + steeringFL.getRotations());
-            System.out.println(BRcoder.getAbsolutePosition() + " BR " + steeringBR.getRotations());
-            System.out.println(BLcoder.getAbsolutePosition() + " BL " + steeringBL.getRotations());
+            System.out.println(FRcoder.getAbsolutePosition() + " FR " + driverFR.steering.getRotations());
+            System.out.println(FLcoder.getAbsolutePosition() + " FL " + driverFL.steering.getRotations());
+            System.out.println(BRcoder.getAbsolutePosition() + " BR " + driverBR.steering.getRotations());
+            System.out.println(BLcoder.getAbsolutePosition() + " BL " + driverBL.steering.getRotations());
             System.out.println();
-            System.out.println(IMU.relativeYaw());
+            System.out.println(guidance.imu.relativeYaw());
         }
     }
 
@@ -128,7 +114,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     public void updateTeleop() {
         driveSwerve();
         if (xbox.get(ControllerEnums.XBoxButtons.LEFT_BUMPER) == ControllerEnums.ButtonStatus.DOWN) {
-            IMU.resetOdometry();
+            guidance.resetOdometry();
         }
     }
 
@@ -174,10 +160,10 @@ public class DriveManagerSwerve extends AbstractDriveManager {
      * reset steering motor encoders
      */
     private void resetSteeringEncoders() {
-        steeringFR.resetEncoder();
-        steeringBR.resetEncoder();
-        steeringFL.resetEncoder();
-        steeringBL.resetEncoder();
+        driverFR.steering.resetEncoder();
+        driverBR.steering.resetEncoder();
+        driverFL.steering.resetEncoder();
+        driverBL.steering.resetEncoder();
     }
 
     /**
@@ -185,44 +171,40 @@ public class DriveManagerSwerve extends AbstractDriveManager {
      */
     private void setupSteeringEncoders() {
         //12.8:1
-        steeringFR.setSensorToRealDistanceFactor((1 / 12.8) * 360);
-        steeringBR.setSensorToRealDistanceFactor((1 / 12.8) * 360);
-        steeringFL.setSensorToRealDistanceFactor((1 / 12.8) * 360);
-        steeringBL.setSensorToRealDistanceFactor((1 / 12.8) * 360);
+        driverFR.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
+        driverBR.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
+        driverFL.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
+        driverBL.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
     }
 
     private void driveSwerve() {
-        double forwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y) * (-2);
-        double leftwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_X) * (2);
+        double forwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y) * (-1);
+        double leftwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_X) * (1);
         double rotation = xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X) * (-3);
 
-        boolean useFieldOriented = xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER) < 0.1;
-        boolean dorifto = xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
+        driveMPS(forwards * robotSettings.DRIVE_SCALE * robotSettings.MAX_SPEED, leftwards * robotSettings.DRIVE_SCALE * robotSettings.MAX_SPEED, rotation * robotSettings.TURN_SCALE);
+    }
 
-        ChassisSpeeds speeds;
+    private boolean useFieldOriented() {
+        return xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER) < 0.1;
+    }
 
-        //x+ m/s forwards, y+ m/s left, omega+ rad/sec ccw
-        if (useFieldOriented && !dorifto) {
-            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forwards, leftwards, rotation, Rotation2d.fromDegrees(-IMU.relativeYaw()));
-        } else if (dorifto) {
-            speeds = new ChassisSpeeds(forwards, 0, rotation);
-        } else {
-            speeds = new ChassisSpeeds(forwards, leftwards, rotation);
-        }
+    private boolean dorifto() {
+        return xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
+    }
 
-
+    private void driveWithChassisSpeeds(ChassisSpeeds speeds) {
         moduleStates = kinematics.toSwerveModuleStates(speeds);
 
         if (xbox.get(ControllerEnums.XBoxButtons.RIGHT_BUMPER) == ControllerEnums.ButtonStatus.DOWN) {
             moduleStates = kinematics.toSwerveModuleStates(speeds, frontRightLocation);
-        } else if (dorifto) {
-            double driftOffset = 3; //3
+        } else if (dorifto()) {
+            double driftOffset = 3;
             double offset = trackLength / 2 / 39.3701;
-            offset -= forwards / driftOffset;
-            System.out.println("forwards: " + forwards);
+            offset -= speeds.vxMetersPerSecond / driftOffset;
+            System.out.println("forwards: " + speeds.vxMetersPerSecond);
             moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(offset, 0));
         }
-
 
         // Front left module state
         SwerveModuleState frontLeft = moduleStates[0], frontRight = moduleStates[1], backLeft = moduleStates[2], backRight = moduleStates[3];
@@ -233,10 +215,6 @@ public class DriveManagerSwerve extends AbstractDriveManager {
             System.out.printf("%4f %4f %4f %4f \n", frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
         }
         setDrive(frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
-
-        //ODOMETRY
-        //Pose2d robotPose = odometry.update(Rotation2d.fromDegrees(IMU.relativeYaw()), frontLeft, frontRight, backLeft, backRight);
-        //System.out.println("X: " +  + "\nY: " + robotPose.getY() + "\nRot: " + robotPose.getRotation());
     }
 
     /**
@@ -255,10 +233,10 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         BRpid.setSetpoint(BR + BRoffset);
         BLpid.setSetpoint(BL + BLoffset);
 
-        steeringFL.moveAtPercent(FLpid.calculate(FLcoder.getAbsolutePosition()));
-        steeringFR.moveAtPercent(FRpid.calculate(FRcoder.getAbsolutePosition()));
-        steeringBL.moveAtPercent(BLpid.calculate(BLcoder.getAbsolutePosition()));
-        steeringBR.moveAtPercent(BRpid.calculate(BRcoder.getAbsolutePosition()));
+        driverFL.steering.moveAtPercent(FLpid.calculate(FLcoder.getAbsolutePosition()));
+        driverFR.steering.moveAtPercent(FRpid.calculate(FRcoder.getAbsolutePosition()));
+        driverBL.steering.moveAtPercent(BLpid.calculate(BLcoder.getAbsolutePosition()));
+        driverBR.steering.moveAtPercent(BRpid.calculate(BRcoder.getAbsolutePosition()));
     }
 
     /**
@@ -277,27 +255,43 @@ public class DriveManagerSwerve extends AbstractDriveManager {
             System.out.println("BL: " + BL);
             System.out.println("BR: " + BR);
         }
-        driverFR.moveAtPercent(FR / num);
-        driverBR.moveAtPercent(BR / num);
-        driverFL.moveAtPercent(FL / num);
-        driverBL.moveAtPercent(BL / num);
+        driverFR.driver.moveAtPercent(FR / num);
+        driverBR.driver.moveAtPercent(BR / num);
+        driverFL.driver.moveAtPercent(FL / num);
+        driverBL.driver.moveAtPercent(BL / num);
     }
 
     //TODO implement this in regard to telem
     @Override
     public void resetDriveEncoders() {
-        driverFR.resetEncoder();
-        driverFL.resetEncoder();
-        driverBR.resetEncoder();
-        driverBL.resetEncoder();
+        driverFR.driver.resetEncoder();
+        driverFL.driver.resetEncoder();
+        driverBR.driver.resetEncoder();
+        driverBL.driver.resetEncoder();
     }
 
     @Override
     public void setBrake(boolean brake) {
-        driverFR.setBrake(brake);
-        driverFL.setBrake(brake);
-        driverBL.setBrake(brake);
-        driverBR.setBrake(brake);
+        driverFR.driver.setBrake(brake);
+        driverFL.driver.setBrake(brake);
+        driverBL.driver.setBrake(brake);
+        driverBR.driver.setBrake(brake);
+    }
+
+    @Override
+    public void driveMPS(double xMeters, double yMeters, double rotation) {
+        ChassisSpeeds speeds;
+
+        //x+ m/s forwards, y+ m/s left, omega+ rad/sec ccw
+        if (useFieldOriented() && !dorifto()) {
+            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMeters, yMeters, rotation, Rotation2d.fromDegrees(-guidance.imu.relativeYaw()));
+        } else if (dorifto()) {
+            speeds = new ChassisSpeeds(xMeters, 0, rotation);
+        } else {
+            speeds = new ChassisSpeeds(xMeters, yMeters, rotation);
+        }
+
+        driveWithChassisSpeeds(speeds);
     }
 
     /**
@@ -308,10 +302,10 @@ public class DriveManagerSwerve extends AbstractDriveManager {
      */
     @Deprecated
     private void setSteeringPIDS(PID pid) {
-        steeringFR.setPid(pid);
-        steeringBR.setPid(pid);
-        steeringFL.setPid(pid);
-        steeringBL.setPid(pid);
+        driverFR.steering.setPid(pid);
+        driverBR.steering.setPid(pid);
+        driverFL.steering.setPid(pid);
+        driverBL.steering.setPid(pid);
     }
 
     /**
@@ -320,9 +314,15 @@ public class DriveManagerSwerve extends AbstractDriveManager {
      * @param pid the pid for the swerve drive motors
      */
     private void setDrivingPIDS(PID pid) {
-        driverFR.setPid(pid);
-        driverFL.setPid(pid);
-        driverFL.setPid(pid);
-        driverBL.setPid(pid);
+        driverFR.driver.setPid(pid);
+        driverBR.driver.setPid(pid);
+        driverFL.driver.setPid(pid);
+        driverBL.driver.setPid(pid);
+    }
+
+    public SwerveModuleState[] getStates() {
+        return new SwerveModuleState[]{
+                driverFL.getState(), driverFR.getState(), driverBL.getState(), driverBR.getState()
+        };
     }
 }

@@ -13,25 +13,19 @@ import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.misc.UtilFunctions;
-import frc.robot.Robot;
 import frc.telemetry.imu.AbstractIMU;
 import frc.telemetry.imu.WrappedNavX2IMU;
 import frc.telemetry.imu.WrappedPigeonIMU;
 
 import static frc.robot.Robot.robotSettings;
 
-public class RobotTelemetry implements ISubsystem {
-    private final AbstractDriveManager driver;
-    public Pose2d robotPose;
-    public Translation2d robotTranslation;
-    public Rotation2d robotRotation;
+public class RobotTelemetryStandard extends AbstractRobotTelemetry implements ISubsystem {
     public DifferentialDriveOdometry odometer;
-    public AbstractIMU imu;
 
-    public RobotTelemetry(AbstractDriveManager driver) {
-        addToMetaList();
-        this.driver = driver;
-        init();
+    public RobotTelemetryStandard(AbstractDriveManager driver) {
+        super(driver);
+        if (!(driver instanceof DriveManagerStandard))
+            throw new IllegalArgumentException("Wrong drive manager for this telem");
     }
 
     /**
@@ -39,27 +33,11 @@ public class RobotTelemetry implements ISubsystem {
      */
     @Override
     public void init() {
-        driver.resetDriveEncoders();
-        if (!robotSettings.ENABLE_IMU)
-            return;
-        switch (robotSettings.IMU_TYPE) {
-            case PIGEON:
-                imu = new WrappedPigeonIMU();
-                break;
-            case NAVX2:
-                imu = new WrappedNavX2IMU();
-        }
-        if (driver instanceof DriveManagerStandard) {
+        super.init();
+        if (imu != null) {
             odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
             robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
-        } else if (driver instanceof DriveManagerSwerve) {
-            //TODO implement this
         }
-    }
-
-    @Override
-    public SubsystemStatus getSubsystemStatus() {
-        return (imu != null && imu.getSubsystemStatus() == SubsystemStatus.NOMINAL) && driver.getSubsystemStatus() == SubsystemStatus.NOMINAL ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     /**
@@ -92,16 +70,8 @@ public class RobotTelemetry implements ISubsystem {
     @Override
     public void updateGeneric() {
         if (robotSettings.ENABLE_IMU) {
-            if (driver instanceof DriveManagerStandard)
-                robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
-            else if (driver instanceof DriveManagerSwerve) {
-                //TODO implement this
-                SwerveModuleState frontLeft = ((DriveManagerSwerve) driver).moduleStates[0], frontRight = ((DriveManagerSwerve) driver).moduleStates[1], backLeft = ((DriveManagerSwerve) driver).moduleStates[2], backRight = ((DriveManagerSwerve) driver).moduleStates[3];
-                //robotPose = odometer.update(Rotation2d.fromDegrees(imu.absoluteYaw()), frontLeft, frontRight, backLeft, backRight);
-            }
-            robotTranslation = robotPose.getTranslation();
-            robotRotation = robotPose.getRotation();
-            UserInterface.smartDashboardPutNumber("Yaw", imu.absoluteYaw());
+            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
+            super.updateGeneric();
         }
     }
 
@@ -128,11 +98,6 @@ public class RobotTelemetry implements ISubsystem {
     @Override
     public void initGeneric() {
 
-    }
-
-    @Override
-    public String getSubsystemName() {
-        return "Guidance";
     }
 
     /**
@@ -169,22 +134,6 @@ public class RobotTelemetry implements ISubsystem {
      */
     private double angleFromHere(double wayX, double wayY) {
         return Math.toDegrees(Math.atan2(wayY - fieldY(), wayX - fieldX()));
-    }
-
-    /**
-     * @return the robot's Y position in relation to its starting position(away positive) typically facing away from
-     * opposing alliance station
-     */
-    public double fieldY() {
-        return robotTranslation.getY();
-    }
-
-    /**
-     * @return the robot's X position in relation to its starting position(right positive) typically facing away from
-     * opposing alliance station
-     */
-    public double fieldX() {
-        return robotTranslation.getX();
     }
 
     /**

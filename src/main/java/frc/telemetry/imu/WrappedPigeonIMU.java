@@ -8,8 +8,7 @@ public class WrappedPigeonIMU extends AbstractIMU {
     private PigeonIMU pigeon;
 
     public WrappedPigeonIMU() {
-        addToMetaList();
-        init();
+        super();
     }
 
     @Override
