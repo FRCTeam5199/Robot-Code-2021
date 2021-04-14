@@ -81,10 +81,7 @@ public class Intake implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        if (intakeMotor.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, robotSettings.INTAKE_MOTOR_ID, intakeMotor.getSuggestedFix());
-        else
-            MotorDisconnectedIssue.resolveIssue(this, robotSettings.INTAKE_MOTOR_ID);
+        MotorDisconnectedIssue.handleIssue(this, intakeMotor);
         intakeMotor.moveAtPercent(0.8 * intakeMult);
         switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case STANDARD:
@@ -149,6 +146,11 @@ public class Intake implements ISubsystem {
         intakeMult = input.ordinal() - 1;
     }
 
+    /**
+     * Preserve this order. Out runs the motor at 0 - 1 = -1, off at 1 - 1 = 0, and in at 2 - 1 = 1 (percent)
+     *
+     * @see #setIntake(IntakeDirection)
+     */
     public enum IntakeDirection {
         OUT, OFF, IN
     }

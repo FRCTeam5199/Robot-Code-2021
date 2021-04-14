@@ -89,20 +89,7 @@ public class Hopper implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (robotSettings.ENABLE_INDEXER) {
-            if (indexer.failureFlag) {
-                MotorDisconnectedIssue.reportIssue(this, robotSettings.INDEXER_MOTOR_ID, indexer.getSuggestedFix());
-            } else {
-                MotorDisconnectedIssue.resolveIssue(this, robotSettings.INDEXER_MOTOR_ID);
-            }
-        }
-        if (robotSettings.ENABLE_AGITATOR) {
-            if (agitator.failureFlag) {
-                MotorDisconnectedIssue.reportIssue(this, robotSettings.AGITATOR_MOTOR_ID, indexer.getSuggestedFix());
-            } else {
-                MotorDisconnectedIssue.resolveIssue(this, robotSettings.AGITATOR_MOTOR_ID);
-            }
-        }
+        MotorDisconnectedIssue.handleIssue(this, agitator, indexer);
         if (!indexerActive && !agitatorActive) {
             if (robotSettings.ENABLE_INDEXER) {
                 if (robotSettings.ENABLE_INDEXER_AUTO_INDEX) {
