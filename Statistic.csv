@@ -53,7 +53,7 @@ src/main/java/frc/vision/camera/BallPhoton.java,181 (2.1%),107,59.1%,47,26.0%,27
 src/main/java/frc/vision/camera/VisionLEDMode.java,20 (0.2%),6,30.0%,13,65.0%,1,5.0%
 src/main/java/frc/vision/camera/IVision.java,75 (0.9%),32,42.7%,30,40.0%,13,17.3%
 src/main/java/frc/vision/camera/GoalPhoton.java,177 (2.1%),107,60.5%,43,24.3%,27,15.3%
-src/main/java/frc/discordbot/DiscordBot.java,50 (0.6%),43,86.0%,1,2.0%,6,12.0%
+src/main/java/frc/discordbot/DiscordBot.java,51 (0.6%),44,86.3%,1,2.0%,6,11.8%
 src/main/java/frc/discordbot/MessageHandler.java,86 (1.0%),72,83.7%,6,7.0%,8,9.3%
 src/main/java/frc/discordbot/commands/PlaySongCommand.java,44 (0.5%),36,81.8%,0,0.0%,8,18.2%
 src/main/java/frc/discordbot/commands/AbstractCommand.java,104 (1.2%),53,51.0%,34,32.7%,17,16.3%
@@ -84,4 +84,4 @@ src/main/java/frc/drive/auton/galacticsearch/GalacticSearchPaths.java,75 (0.9%),
 src/main/java/frc/drive/auton/followtrajectory/AutonManager.java,95 (1.1%),70,73.7%,7,7.4%,18,18.9%
 src/main/java/frc/drive/auton/followtrajectory/Trajectories.java,28 (0.3%),17,60.7%,6,21.4%,5,17.9%
 src/main/java/frc/drive/auton/galacticsearchscam/AutonManager.java,102 (1.2%),74,72.5%,8,7.8%,20,19.6%
-Total,8620,5757,0.6678654292343388,1758,0.20394431554524362,1105,0.12819025522041763
+Total,8621,5758,0.6679039554576035,1758,0.20392065885628116,1105,0.1281753856861153
