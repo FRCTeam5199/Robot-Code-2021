@@ -74,7 +74,7 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtVelocity(double realVelocity) {
-        if (isTemperatureAcceptable(motor.getDeviceID()))
+        if (isTemperatureAcceptable())
             motor.set(Velocity, realVelocity / sensorToRealDistanceFactor);
         else
             motor.set(Velocity, 0);
@@ -109,7 +109,7 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtPercent(double percent) {
-        if (isTemperatureAcceptable(motor.getDeviceID()))
+        if (isTemperatureAcceptable())
             motor.set(PercentOutput, percent);
         else
             motor.set(PercentOutput, 0);

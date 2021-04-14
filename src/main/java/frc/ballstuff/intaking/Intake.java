@@ -140,6 +140,11 @@ public class Intake implements ISubsystem {
         intakeMult = input.ordinal() - 1;
     }
 
+    /**
+     * Preserve this order. Out runs the motor at 0 - 1 = -1, off at 1 - 1 = 0, and in at 2 - 1 = 1 (percent)
+     *
+     * @see #setIntake(IntakeDirection)
+     */
     public enum IntakeDirection {
         OUT, OFF, IN
     }

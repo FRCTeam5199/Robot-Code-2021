@@ -76,6 +76,7 @@ public abstract class DefaultConfig {
     public double TURN_SCALE = 1;
     public double DRIVE_SCALE = 1;
     public double DRIVE_GEARING = 10 / 70.0;
+    public int OVERHEAT_THRESHOLD = 80;
 
     public PID DRIVEBASE_PID = PID.EMPTY_PID;
     public PID SHOOTER_PID = PID.EMPTY_PID;

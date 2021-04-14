@@ -3,6 +3,7 @@ package frc.motors;
 import frc.misc.PID;
 import frc.misc.UserInterface;
 import frc.motors.followers.AbstractFollowerMotorController;
+import frc.robot.Robot;
 
 import java.util.ArrayList;
 
@@ -149,15 +150,15 @@ public abstract class AbstractMotorController {
         sensorToRealDistanceFactor = s2rf;
     }
 
-    protected boolean isTemperatureAcceptable(int myID) {
-        if (getMotorTemperature() > 100) {
+    protected boolean isTemperatureAcceptable() {
+        if (getMotorTemperature() >= Robot.robotSettings.OVERHEAT_THRESHOLD) {
             if (!isOverheated) {
-                UserInterface.smartDashboardPutBoolean("OVERHEAT " + myID, false);
+                UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), false);
                 isOverheated = true;
             }
         } else if (isOverheated) {
             isOverheated = false;
-            UserInterface.smartDashboardPutBoolean("OVERHEAT " + myID, true);
+            UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), true);
         }
         return !isOverheated;
     }
