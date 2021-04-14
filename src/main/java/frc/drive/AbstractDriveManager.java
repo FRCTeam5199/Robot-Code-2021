@@ -3,6 +3,7 @@ package frc.drive;
 import frc.misc.ISubsystem;
 import frc.telemetry.AbstractRobotTelemetry;
 import frc.telemetry.RobotTelemetryStandard;
+import frc.robot.Robot;
 
 /**
  * Chill out there is only vibing going on here, officer
@@ -34,8 +35,10 @@ public abstract class AbstractDriveManager implements ISubsystem {
     }
 
     protected void createTelem() {
-        guidance = new RobotTelemetryStandard(this);
-        guidance.resetOdometry();
+        if (Robot.robotSettings.ENABLE_IMU) {
+            guidance = new RobotTelemetryStandard(this);
+            guidance.resetOdometry();
+        }
     }
 
     public String getSubsystemName() {

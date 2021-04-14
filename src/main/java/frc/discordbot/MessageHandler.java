@@ -33,6 +33,9 @@ public class MessageHandler extends ListenerAdapter {
                 if (!commands.containsKey(c.getCommand())) {
                     commands.put(c.getCommand(), c);
                 }
+                if (!commandsAlias.containsKey(c.getAliases())) {
+                    commandsAlias.put(c.getAliases(), c);
+                }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }

@@ -31,7 +31,9 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void init() {
-        ballPhoton = BallPhoton.BALL_PHOTON;
+        if (robotSettings.ENABLE_VISION) {
+            ballPhoton = BallPhoton.BALL_PHOTON;
+        }
     }
 
     @Override

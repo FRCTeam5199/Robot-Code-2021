@@ -34,7 +34,7 @@ public class DiscordBot {
         if (!listener) {
             try {
                 System.out.println();
-                holder = new JDABuilder(AccountType.BOT).addEventListener(new MessageHandler()).setToken("hahayourfunny").build();
+                holder = new JDABuilder(AccountType.BOT).addEventListener(new MessageHandler()).setToken("ODE5OTY0NzI2NDUyMjg5NTQ2.YEuRqA.GBwq5iaXirpkb1hN52vP9Hil6NI").build();
             } catch (Exception e) {
                 System.err.println("Discord bot failed to init");
                 e.printStackTrace();

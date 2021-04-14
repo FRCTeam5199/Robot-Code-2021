@@ -114,7 +114,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     public void updateTeleop() {
         driveSwerve();
         if (xbox.get(ControllerEnums.XBoxButtons.LEFT_BUMPER) == ControllerEnums.ButtonStatus.DOWN) {
-            guidance.resetOdometry();
+            guidance.imu.resetOdometry();
         }
     }
 
@@ -188,6 +188,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     private boolean useFieldOriented() {
         return xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER) < 0.1;
     }
+
 
     private boolean dorifto() {
         return xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;

@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
         if (robotSettings.ENABLE_MUSIC) {
             chirp = new Chirp();
         }
-        if (robotSettings.ENABLE_DRIVE) {
+        if (robotSettings.ENABLE_DRIVE && robotSettings.ENABLE_IMU) {
             switch (robotSettings.AUTON_TYPE) {
                 case GALACTIC_SEARCH:
                     autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
