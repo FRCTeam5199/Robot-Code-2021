@@ -15,12 +15,12 @@ public abstract class AbstractIMU implements ISubsystem {
     protected double[] ypr = new double[3];
     protected double[] startypr = new double[3];
 
-    protected AbstractIMU(){
+    public abstract void resetOdometry();
+
+    protected AbstractIMU() {
         init();
         addToMetaList();
     }
-
-    public abstract void resetOdometry();
 
     @Override
     public SubsystemStatus getSubsystemStatus() {

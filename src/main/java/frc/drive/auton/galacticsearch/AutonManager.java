@@ -1,9 +1,5 @@
 package frc.drive.auton.galacticsearch;
 
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import frc.drive.AbstractDriveManager;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.Point;
@@ -20,13 +16,10 @@ import static frc.robot.Robot.robotSettings;
  * }
  */
 public class AutonManager extends AbstractAutonManager {
-    private final RamseteController controller = new RamseteController();
-    private Trajectory trajectory = new Trajectory();
     private IVision ballPhoton;
 
     public AutonManager(AbstractDriveManager driveManager) {
         super(driveManager);
-        init();
     }
 
     @Override
@@ -46,25 +39,6 @@ public class AutonManager extends AbstractAutonManager {
 
     }
 
-    /**
-     * Runs the auton path. When complete, sets a flag in {@link frc.robot.robotconfigs.DefaultConfig#autonComplete} and
-     * runs {@link #onFinish()}
-     */
-    @Override
-    public void updateAuton() {
-        if (!robotSettings.autonComplete) {
-            Trajectory.State goal = trajectory.sample(timer.get());
-            if (robotSettings.ENABLE_IMU) {
-                System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
-                ChassisSpeeds chassisSpeeds = controller.calculate(telem.robotPose, goal);
-                DRIVING_CHILD.driveMPS(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond * 2);
-            }
-            if (timer.get() > trajectory.getTotalTimeSeconds()) {
-                onFinish();
-            }
-        }
-    }
-
     @Override
     public void updateGeneric() {
 
@@ -77,6 +51,16 @@ public class AutonManager extends AbstractAutonManager {
 
     @Override
     public void initTeleop() {
+
+    }
+
+    @Override
+    public void initDisabled() {
+
+    }
+
+    @Override
+    public void initGeneric() {
 
     }
 
@@ -98,25 +82,8 @@ public class AutonManager extends AbstractAutonManager {
         GalacticSearchPaths path = getPath(cringePoints);
         System.out.println("I chose" + path.name());
         UserInterface.smartDashboardPutString("Auton Path", path.name());
-        trajectory = paths.get(path);
-        if (robotSettings.ENABLE_IMU) {
-            telem.resetOdometry();
-            Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
-            trajectory = trajectory.transformBy(transform);
-        }
-        timer.stop();
-        timer.reset();
-        timer.start();
-    }
-
-    @Override
-    public void initDisabled() {
-
-    }
-
-    @Override
-    public void initGeneric() {
-
+        autonPath = path;
+        super.initAuton();
     }
 
     /**

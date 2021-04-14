@@ -20,19 +20,14 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
 
-    public void resetOdometry(){
-        imu.resetOdometry();
-        driver.resetDriveEncoders();
-    }
-
-    protected AbstractRobotTelemetry(AbstractDriveManager driver){
+    protected AbstractRobotTelemetry(AbstractDriveManager driver) {
         addToMetaList();
         this.driver = driver;
         init();
     }
 
     @Override
-    public void init(){
+    public void init() {
         driver.resetDriveEncoders();
         if (!robotSettings.ENABLE_IMU)
             return;
@@ -46,20 +41,25 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
     }
 
     @Override
-    public void updateGeneric(){
+    public SubsystemStatus getSubsystemStatus() {
+        return (imu != null && imu.getSubsystemStatus() == SubsystemStatus.NOMINAL) && driver.getSubsystemStatus() == SubsystemStatus.NOMINAL ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+    }
+
+    @Override
+    public void updateGeneric() {
         robotTranslation = robotPose.getTranslation();
         robotRotation = robotPose.getRotation();
         UserInterface.smartDashboardPutNumber("Yaw", imu.absoluteYaw());
     }
 
     @Override
-    public SubsystemStatus getSubsystemStatus() {
-        return (imu != null && imu.getSubsystemStatus() == SubsystemStatus.NOMINAL) && driver.getSubsystemStatus() == SubsystemStatus.NOMINAL ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
-    }
-
-    @Override
     public String getSubsystemName() {
         return "Guidance";
+    }
+
+    public void resetOdometry() {
+        imu.resetOdometry();
+        driver.resetDriveEncoders();
     }
 
     /**

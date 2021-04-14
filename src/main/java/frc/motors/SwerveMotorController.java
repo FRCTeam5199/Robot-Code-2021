@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 public class SwerveMotorController {
     public final AbstractMotorController driver, steering;
 
-    public SwerveMotorController(int driverID, SupportedMotors driverMotorType, int steeringID, SupportedMotors steeringMotorType){
-        switch (driverMotorType){
+    public SwerveMotorController(int driverID, SupportedMotors driverMotorType, int steeringID, SupportedMotors steeringMotorType) {
+        switch (driverMotorType) {
             case VICTOR:
                 driver = new VictorMotorController(driverID);
                 break;
@@ -20,7 +20,7 @@ public class SwerveMotorController {
             default:
                 throw new UnsupportedOperationException("Connot create a " + driverMotorType.name());
         }
-        switch (steeringMotorType){
+        switch (steeringMotorType) {
             case VICTOR:
                 steering = new VictorMotorController(steeringID);
                 break;
@@ -35,7 +35,7 @@ public class SwerveMotorController {
         }
     }
 
-    public SwerveModuleState getState(){
+    public SwerveModuleState getState() {
         return new SwerveModuleState(driver.getRotations(), Rotation2d.fromDegrees(steering.getRotations()));
     }
 }

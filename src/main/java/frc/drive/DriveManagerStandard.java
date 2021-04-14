@@ -39,8 +39,7 @@ import static frc.robot.Robot.robotSettings;
 public class DriveManagerStandard extends AbstractDriveManager {
     private static final boolean DEBUG = false;
     public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(robotSettings.DRIVEBASE_DISTANCE_BETWEEN_WHEELS);
-    private final NetworkTableEntry driveRotMult = UserInterface.DRIVE_ROT_MULT.getEntry(),
-            driveScaleMult = UserInterface.DRIVE_SCALE_MULT.getEntry(),
+    private final NetworkTableEntry
             P = UserInterface.DRIVE_P.getEntry(),
             I = UserInterface.DRIVE_I.getEntry(),
             D = UserInterface.DRIVE_D.getEntry(),
@@ -230,6 +229,12 @@ public class DriveManagerStandard extends AbstractDriveManager {
     }
 
     @Override
+    public void driveWithChassisSpeeds(ChassisSpeeds speeds) {
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+        driveMPS(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+    }
+
+    @Override
     public void initDisabled() {
         setBrake(true);
     }
@@ -271,31 +276,8 @@ public class DriveManagerStandard extends AbstractDriveManager {
      * @param omega Rotation in Radians per Second
      */
     public void drivePure(double FPS, double omega) {
-        omega *= driveRotMult.getDouble(robotSettings.TURN_SCALE);
-        FPS *= driveScaleMult.getDouble(robotSettings.DRIVE_SCALE);
-        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
-        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(chassisSpeeds);
-        driveMPS(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
-    }
+        driveWithChassisSpeeds(new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega));
 
-    /**
-     * Takes a -1 to 1 scaled value and returns it scaled based on the max sped
-     *
-     * @param input -1 to 1 drive amount
-     * @return input scaled based on the bot's max speed
-     */
-    private static double adjustedDrive(double input) {
-        return input * robotSettings.MAX_SPEED;
-    }
-
-    /**
-     * Takes a -1 to 1 scaled value and returns it scaled based on the max turning
-     *
-     * @param input -1 to 1 drive amount
-     * @return input scaled based on max turning
-     */
-    private static double adjustedRotation(double input) {
-        return input * robotSettings.MAX_ROTATION;
     }
 
     /**

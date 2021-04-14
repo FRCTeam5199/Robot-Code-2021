@@ -1,6 +1,5 @@
 package frc.robot.robotconfigs;
 
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -16,7 +15,6 @@ import frc.vision.camera.SupportedVision;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Scanner;
 
 /**

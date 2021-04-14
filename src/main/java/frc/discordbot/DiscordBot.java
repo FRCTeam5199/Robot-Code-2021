@@ -1,7 +1,6 @@
 package frc.discordbot;
 
 import frc.discordbot.commands.AbstractCommand;
-import frc.robot.Robot;
 import frc.robot.robotconfigs.DefaultConfig;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -35,7 +34,7 @@ public class DiscordBot {
         JDA holder = null;
         if (!listener) {
             try {
-                System.out.println();
+                System.out.println(DefaultConfig.BOTKEY);
                 holder = new JDABuilder(AccountType.BOT).addEventListener(new MessageHandler()).setToken(DefaultConfig.BOTKEY).build();
             } catch (Exception e) {
                 System.err.println("Discord bot failed to init");

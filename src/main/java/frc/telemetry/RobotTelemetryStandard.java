@@ -1,21 +1,12 @@
 package frc.telemetry;
 
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.AbstractDriveManager;
 import frc.drive.DriveManagerStandard;
-import frc.drive.DriveManagerSwerve;
 import frc.misc.ISubsystem;
-import frc.misc.SubsystemStatus;
-import frc.misc.UserInterface;
 import frc.misc.UtilFunctions;
-import frc.telemetry.imu.AbstractIMU;
-import frc.telemetry.imu.WrappedNavX2IMU;
-import frc.telemetry.imu.WrappedPigeonIMU;
 
 import static frc.robot.Robot.robotSettings;
 
@@ -41,6 +32,28 @@ public class RobotTelemetryStandard extends AbstractRobotTelemetry implements IS
     }
 
     /**
+     * updates the robot orientation based on the IMU and distance traveled
+     */
+    @Override
+    public void updateGeneric() {
+        if (robotSettings.ENABLE_IMU) {
+            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
+            super.updateGeneric();
+        }
+    }
+
+    /**
+     * Resets all orienting to zeroes.
+     */
+    public void resetOdometry() {
+        if (robotSettings.ENABLE_IMU) {
+            imu.resetOdometry();
+            odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
+        }
+        driver.resetDriveEncoders();
+    }
+
+    /**
      * @see #updateGeneric()
      */
     @Override
@@ -62,17 +75,6 @@ public class RobotTelemetryStandard extends AbstractRobotTelemetry implements IS
     @Override
     public void updateAuton() {
         updateGeneric();
-    }
-
-    /**
-     * updates the robot orientation based on the IMU and distance traveled
-     */
-    @Override
-    public void updateGeneric() {
-        if (robotSettings.ENABLE_IMU) {
-            robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
-            super.updateGeneric();
-        }
     }
 
     @Override
@@ -134,16 +136,5 @@ public class RobotTelemetryStandard extends AbstractRobotTelemetry implements IS
      */
     private double angleFromHere(double wayX, double wayY) {
         return Math.toDegrees(Math.atan2(wayY - fieldY(), wayX - fieldX()));
-    }
-
-    /**
-     * Resets all orienting to zeroes.
-     */
-    public void resetOdometry() {
-        if (robotSettings.ENABLE_IMU) {
-            imu.resetOdometry();
-            odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
-        }
-        driver.resetDriveEncoders();
     }
 }

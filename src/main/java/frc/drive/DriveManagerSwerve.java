@@ -14,7 +14,6 @@ import frc.misc.PID;
 import frc.misc.SubsystemStatus;
 import frc.motors.SupportedMotors;
 import frc.motors.SwerveMotorController;
-import frc.robot.Robot;
 
 import static frc.robot.Robot.robotSettings;
 
@@ -182,7 +181,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         double leftwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_X) * (1);
         double rotation = xbox.get(ControllerEnums.XboxAxes.RIGHT_JOY_X) * (-3);
 
-        driveMPS(forwards * robotSettings.DRIVE_SCALE * robotSettings.MAX_SPEED, leftwards * robotSettings.DRIVE_SCALE * robotSettings.MAX_SPEED, rotation * robotSettings.TURN_SCALE);
+        driveMPS(adjustedDrive(forwards), adjustedDrive(leftwards), adjustedRotation(rotation));
     }
 
     private boolean useFieldOriented() {
@@ -192,30 +191,6 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
     private boolean dorifto() {
         return xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
-    }
-
-    private void driveWithChassisSpeeds(ChassisSpeeds speeds) {
-        moduleStates = kinematics.toSwerveModuleStates(speeds);
-
-        if (xbox.get(ControllerEnums.XBoxButtons.RIGHT_BUMPER) == ControllerEnums.ButtonStatus.DOWN) {
-            moduleStates = kinematics.toSwerveModuleStates(speeds, frontRightLocation);
-        } else if (dorifto()) {
-            double driftOffset = 3;
-            double offset = trackLength / 2 / 39.3701;
-            offset -= speeds.vxMetersPerSecond / driftOffset;
-            System.out.println("forwards: " + speeds.vxMetersPerSecond);
-            moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(offset, 0));
-        }
-
-        // Front left module state
-        SwerveModuleState frontLeft = moduleStates[0], frontRight = moduleStates[1], backLeft = moduleStates[2], backRight = moduleStates[3];
-
-        //try continuous here
-        setSteeringContinuous(frontLeft.angle.getDegrees(), frontRight.angle.getDegrees(), backLeft.angle.getDegrees(), backRight.angle.getDegrees());
-        if (DEBUG && robotSettings.DEBUG) {
-            System.out.printf("%4f %4f %4f %4f \n", frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
-        }
-        setDrive(frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
     }
 
     /**
@@ -293,6 +268,31 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         }
 
         driveWithChassisSpeeds(speeds);
+    }
+
+    @Override
+    public void driveWithChassisSpeeds(ChassisSpeeds speeds) {
+        moduleStates = kinematics.toSwerveModuleStates(speeds);
+
+        if (xbox.get(ControllerEnums.XBoxButtons.RIGHT_BUMPER) == ControllerEnums.ButtonStatus.DOWN) {
+            moduleStates = kinematics.toSwerveModuleStates(speeds, frontRightLocation);
+        } else if (dorifto()) {
+            double driftOffset = 3;
+            double offset = trackLength / 2 / 39.3701;
+            offset -= speeds.vxMetersPerSecond / driftOffset;
+            System.out.println("forwards: " + speeds.vxMetersPerSecond);
+            moduleStates = kinematics.toSwerveModuleStates(speeds, new Translation2d(offset, 0));
+        }
+
+        // Front left module state
+        SwerveModuleState frontLeft = moduleStates[0], frontRight = moduleStates[1], backLeft = moduleStates[2], backRight = moduleStates[3];
+
+        //try continuous here
+        setSteeringContinuous(frontLeft.angle.getDegrees(), frontRight.angle.getDegrees(), backLeft.angle.getDegrees(), backRight.angle.getDegrees());
+        if (DEBUG && robotSettings.DEBUG) {
+            System.out.printf("%4f %4f %4f %4f \n", frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
+        }
+        setDrive(frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
     }
 
     /**

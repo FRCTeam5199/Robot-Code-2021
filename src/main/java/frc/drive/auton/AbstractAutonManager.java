@@ -2,6 +2,8 @@ package frc.drive.auton;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import frc.drive.AbstractDriveManager;
@@ -10,7 +12,6 @@ import frc.drive.auton.followtrajectory.Trajectories;
 import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
-import frc.misc.UserInterface;
 import frc.robot.Robot;
 import frc.telemetry.AbstractRobotTelemetry;
 
@@ -51,9 +52,13 @@ public abstract class AbstractAutonManager implements ISubsystem {
         }
     }
 
+    protected Trajectory trajectory;
+    protected IAutonEnumPath autonPath;
     protected final Timer timer = new Timer();
     protected final AbstractDriveManager DRIVING_CHILD;
     protected final AbstractRobotTelemetry telem;
+    protected final RamseteController controller = new RamseteController();
+
 
     /**
      * Initializes the auton manager and stores the reference to the drivetrain object
@@ -67,6 +72,7 @@ public abstract class AbstractAutonManager implements ISubsystem {
             telem = DRIVING_CHILD.guidance;
         else
             telem = null;
+        init();
     }
 
     @Override
@@ -86,5 +92,37 @@ public abstract class AbstractAutonManager implements ISubsystem {
             Robot.chirp.loadMusic(robotSettings.AUTON_COMPLETE_NOISE);
             Robot.chirp.play();
         }
+    }
+
+    /**
+     * Runs the auton path. When complete, sets a flag in {@link frc.robot.robotconfigs.DefaultConfig#autonComplete} and
+     * runs {@link #onFinish()}
+     */
+    @Override
+    public void updateAuton() {
+        if (!robotSettings.autonComplete) {
+            Trajectory.State goal = trajectory.sample(timer.get());
+            if (robotSettings.ENABLE_IMU) {
+                System.out.println("I am currently at (" + telem.fieldX() + "," + telem.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
+                DRIVING_CHILD.driveWithChassisSpeeds(controller.calculate(telem.robotPose, goal));
+            }
+            if (timer.get() > trajectory.getTotalTimeSeconds()) {
+                onFinish();
+            }
+        }
+    }
+
+    @Override
+    public void initAuton(){
+        robotSettings.autonComplete = false;
+        trajectory = paths.get(autonPath);
+        if (robotSettings.ENABLE_IMU) {
+            telem.resetOdometry();
+            Transform2d transform = telem.robotPose.minus(trajectory.getInitialPose());
+            trajectory = trajectory.transformBy(transform);
+        }
+        timer.stop();
+        timer.reset();
+        timer.start();
     }
 }
