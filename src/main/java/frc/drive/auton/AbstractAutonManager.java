@@ -52,12 +52,12 @@ public abstract class AbstractAutonManager implements ISubsystem {
         }
     }
 
-    protected Trajectory trajectory;
-    protected IAutonEnumPath autonPath;
     protected final Timer timer = new Timer();
     protected final AbstractDriveManager DRIVING_CHILD;
     protected final AbstractRobotTelemetry telem;
     protected final RamseteController controller = new RamseteController();
+    protected Trajectory trajectory;
+    protected IAutonEnumPath autonPath;
 
 
     /**
@@ -68,30 +68,13 @@ public abstract class AbstractAutonManager implements ISubsystem {
     protected AbstractAutonManager(AbstractDriveManager driveManager) {
         addToMetaList();
         DRIVING_CHILD = driveManager;
-        if (DRIVING_CHILD.guidance != null)
-            telem = DRIVING_CHILD.guidance;
-        else
-            telem = null;
+        telem = DRIVING_CHILD.guidance;
         init();
     }
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
         return DRIVING_CHILD.getSubsystemStatus() == SubsystemStatus.NOMINAL && telem.getSubsystemStatus() == SubsystemStatus.NOMINAL ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
-    }
-
-    @Override
-    public String getSubsystemName() {
-        return "Auton manager";
-    }
-
-    protected void onFinish() {
-        robotSettings.autonComplete = true;
-        if (robotSettings.ENABLE_MUSIC && !robotSettings.AUTON_COMPLETE_NOISE.equals("")) {
-            DRIVING_CHILD.setBrake(true);
-            Robot.chirp.loadMusic(robotSettings.AUTON_COMPLETE_NOISE);
-            Robot.chirp.play();
-        }
     }
 
     /**
@@ -112,8 +95,17 @@ public abstract class AbstractAutonManager implements ISubsystem {
         }
     }
 
+    protected void onFinish() {
+        robotSettings.autonComplete = true;
+        if (robotSettings.ENABLE_MUSIC && !robotSettings.AUTON_COMPLETE_NOISE.equals("")) {
+            DRIVING_CHILD.setBrake(true);
+            Robot.chirp.loadMusic(robotSettings.AUTON_COMPLETE_NOISE);
+            Robot.chirp.play();
+        }
+    }
+
     @Override
-    public void initAuton(){
+    public void initAuton() {
         robotSettings.autonComplete = false;
         trajectory = paths.get(autonPath);
         if (robotSettings.ENABLE_IMU) {
@@ -124,5 +116,10 @@ public abstract class AbstractAutonManager implements ISubsystem {
         timer.stop();
         timer.reset();
         timer.start();
+    }
+
+    @Override
+    public String getSubsystemName() {
+        return "Auton manager";
     }
 }

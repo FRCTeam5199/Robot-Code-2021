@@ -41,12 +41,12 @@ public class RobotTelemetrySwivel extends AbstractRobotTelemetry {
 
     @Override
     public void updateTeleop() {
-
+        updateGeneric();
     }
 
     @Override
     public void updateAuton() {
-
+        updateGeneric();
     }
 
     @Override

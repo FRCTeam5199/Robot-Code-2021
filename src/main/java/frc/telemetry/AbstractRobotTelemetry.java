@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import frc.drive.AbstractDriveManager;
+import frc.drive.DriveManagerStandard;
+import frc.drive.DriveManagerSwerve;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
@@ -19,6 +21,14 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
     public Pose2d robotPose;
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
+
+    public static AbstractRobotTelemetry createTelem(AbstractDriveManager driver) {
+        if (driver instanceof DriveManagerSwerve)
+            return new RobotTelemetrySwivel(driver);
+        if (driver instanceof DriveManagerStandard)
+            return new RobotTelemetryStandard(driver);
+        throw new IllegalArgumentException("Cannot create telem for that");
+    }
 
     protected AbstractRobotTelemetry(AbstractDriveManager driver) {
         addToMetaList();

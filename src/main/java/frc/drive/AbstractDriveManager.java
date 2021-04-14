@@ -45,7 +45,7 @@ public abstract class AbstractDriveManager implements ISubsystem {
 
     protected void createTelem() {
         if (Robot.robotSettings.ENABLE_IMU) {
-            guidance = new RobotTelemetryStandard(this);
+            guidance = AbstractRobotTelemetry.createTelem(this);
             guidance.resetOdometry();
         }
     }

@@ -243,6 +243,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
      * @param rightFPS Right drivetrain speed in feet per second
      */
     public void driveFPS(double leftFPS, double rightFPS) {
+        //todo get rid of this
         double mult = 3.8 * 2.16 * robotSettings.DRIVE_SCALE;
         if (robotSettings.DEBUG && DEBUG) {
             System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + mult + ")");
@@ -269,7 +270,6 @@ public class DriveManagerStandard extends AbstractDriveManager {
      */
     public void drivePure(double FPS, double omega) {
         driveWithChassisSpeeds(new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega));
-
     }
 
     /**
