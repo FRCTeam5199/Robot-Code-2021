@@ -11,6 +11,8 @@ jobs:
 
       - name: Code_Stats
         uses: jojo2357/CodeStats@0.3.0
+        with:
+          root_dir: src/main/java/frc
 
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v4.9.2
