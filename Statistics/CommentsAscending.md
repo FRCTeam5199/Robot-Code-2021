@@ -82,4 +82,4 @@
 |[AbstractMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/motors/AbstractMotorController.java)|169 (2.0%)|47|27.8%|99|58.6%|23|13.6%|
 |[ControllerEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/controllers/ControllerEnums.java)|362 (4.3%)|196|54.1%|110|30.4%|56|15.5%|
 |[ClientServerPipeline.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/robot/ClientServerPipeline.java)|267 (3.2%)|136|50.9%|111|41.6%|20|7.5%|
-|Total|8400|5570| |1764| |1066| |
+|Total (4)|8400|5570|66.3%|1764| 21.0%|1066|12.7%|

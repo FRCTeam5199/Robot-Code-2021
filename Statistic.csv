@@ -80,4 +80,4 @@ src/main/java/frc/drive/auton/galacticsearch/GalacticSearchPaths.java,75 (0.9%),
 src/main/java/frc/drive/auton/followtrajectory/AutonManager.java,95 (1.1%),70,73.7%,7,7.4%,18,18.9%
 src/main/java/frc/drive/auton/followtrajectory/Trajectories.java,28 (0.3%),17,60.7%,6,21.4%,5,17.9%
 src/main/java/frc/drive/auton/galacticsearchscam/AutonManager.java,102 (1.2%),74,72.5%,8,7.8%,20,19.6%
-Total,8400,5570,,1764,,1066,
+Total,8400,5570,0.6630952380952381,1764,0.21,1066,0.1269047619047619
