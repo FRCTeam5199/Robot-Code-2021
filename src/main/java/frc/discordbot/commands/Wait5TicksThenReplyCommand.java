@@ -23,8 +23,8 @@ public class Wait5TicksThenReplyCommand extends AbstractCommand{
     }
 
     @Override
-    public String getAliases() {
-        return "tst";
+    public String[] getAliases() {
+        return new String[]{"tst"};
     }
 
     @Override

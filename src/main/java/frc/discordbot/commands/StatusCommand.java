@@ -27,8 +27,8 @@ public class StatusCommand extends AbstractCommand {
     }
 
     @Override
-    public String getAliases() {
-        return "stat";
+    public String[] getAliases() {
+        return new String[]{"stat"};
     }
 
     public static class StatusCommandResponse extends AbstractCommandResponse {

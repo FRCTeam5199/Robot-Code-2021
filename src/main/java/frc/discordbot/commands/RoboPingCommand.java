@@ -20,8 +20,8 @@ public class RoboPingCommand extends AbstractCommand {
     }
 
     @Override
-    public String getAliases() {
-        return "rp";
+    public String[] getAliases() {
+        return new String[]{"rp"};
     }
 
     @Override

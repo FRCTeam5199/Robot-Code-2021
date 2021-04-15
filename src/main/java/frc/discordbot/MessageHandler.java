@@ -22,9 +22,17 @@ import java.util.List;
 public class MessageHandler extends ListenerAdapter {
     private static final HashMap<String, AbstractCommand> commands = new HashMap<>();
     private static final HashMap<String, AbstractCommand> commandsAlias = new HashMap<>();
+    private static final ArrayList<AbstractCommand.AbstractCommandData> pendingCommands = new ArrayList<>();
     public static MessageHandler messageHandler;
     private static boolean LISTENING;
-    private static ArrayList<AbstractCommand.AbstractCommandData> pendingCommands = new ArrayList<>();
+
+    public static AbstractCommand getCommand(String message) {
+        if (commands.containsKey(message.substring(1).split(" ")[0]))
+            return commands.get(message.substring(1).split(" ")[0]);
+        if (commandsAlias.containsKey(message.substring(1).split(" ")[0]))
+            return commands.get(message.substring(1).split(" ")[0]);
+        return null;
+    }
 
     public static void loadCommands(boolean listening) {
         LISTENING = listening;
@@ -38,9 +46,9 @@ public class MessageHandler extends ListenerAdapter {
                 if (!commands.containsKey(c.getCommand())) {
                     commands.put(c.getCommand(), c);
                 }
-                if (!commandsAlias.containsKey(c.getAliases())) {
-                    commandsAlias.put(c.getAliases(), c);
-                }
+                for (String alias : c.getAliases())
+                    if (!commandsAlias.containsKey(alias))
+                        commandsAlias.put(alias, c);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
@@ -56,11 +64,12 @@ public class MessageHandler extends ListenerAdapter {
     @ClientSide
     public static void onMessageReceived(AbstractCommand.AbstractCommandData message) {
         System.out.println("Recieved Message: " + message.CONTENT);
-        if (message.CONTENT.charAt(0) == '!' && commands.containsKey(message.CONTENT.substring(1).split(" ")[0])) {
+        if (message.CONTENT.charAt(0) == '!' && getCommand(message.CONTENT) != null) {
             if (LISTENING) {
-                AbstractCommand command = commands.get(message.CONTENT.substring(1).split(" ")[0]);
+                AbstractCommand command = getCommand(message.CONTENT);
                 pendingCommands.add(message);
-                Main.pipeline.sendReply(command.run(message));
+                if (command != null)
+                    Main.pipeline.sendReply(command.run(message));
             } else
                 throw new IllegalStateException("How did you get here as a client?");
         }
@@ -86,13 +95,17 @@ public class MessageHandler extends ListenerAdapter {
             return;
         if (message.getGuild() == null)
             return;
-        if (message.getMessage().getContentRaw().charAt(0) == '!' && commands.containsKey(message.getMessage().getContentRaw().substring(1).split(" ")[0])) {
+        if (message.getMessage().getContentRaw().charAt(0) == '!' && getCommand(message.getMessage().getContentRaw()) != null) {
             System.out.println("Recieved Message: " + message.getMessage().getContentRaw());
             if (!LISTENING) {
-                AbstractCommand command = commands.get(message.getMessage().getContentRaw().substring(1).split(" ")[0]);
-                if (command.isServerSideCommand())
-                    command.run(command.extractData(message)).doYourWorst(DiscordBot.bot.getBotObject());
-                else {
+                AbstractCommand command = getCommand(message.getMessage().getContentRaw());
+                if (command == null)
+                    return;
+                if (command.isServerSideCommand()) {
+                    try {
+                        command.run(command.extractData(message)).doYourWorst(DiscordBot.bot.getBotObject());
+                    }catch (NullPointerException ignored){}
+                }else {
                     System.out.println("Sending to bot " + command.extractData(message));
                     Main.pipeline.sendData(command.extractData(message));
                 }

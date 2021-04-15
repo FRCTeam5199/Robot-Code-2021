@@ -24,8 +24,8 @@ public class PlaySongCommand extends AbstractCommand {
     }
 
     @Override
-    public String getAliases() {
-        return "p";
+    public String[] getAliases() {
+        return new String[]{"p"};
     }
 
     public static class PlaySongCommandResponse extends AbstractCommandResponse {

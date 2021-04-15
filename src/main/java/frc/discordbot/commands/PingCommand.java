@@ -26,8 +26,8 @@ public class PingCommand extends AbstractCommand {
     }
 
     @Override
-    public String getAliases() {
-        return "";
+    public String[] getAliases() {
+        return new String[0];
     }
 
     public static class PingCommandResponse extends AbstractCommandResponse {

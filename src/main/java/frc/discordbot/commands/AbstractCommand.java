@@ -26,7 +26,7 @@ public abstract class AbstractCommand implements Serializable {
 
     public abstract String getCommand();
 
-    public abstract String getAliases();
+    public abstract String[] getAliases();
 
     /**
      * Every command is able to refine what they are sending on the server in order to save resouces on the robot. Also,
