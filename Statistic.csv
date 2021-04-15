@@ -3,7 +3,7 @@ src/main/java/frc/misc/PID.java,63 (0.7%),36,57.1%,18,28.6%,9,14.3%
 src/main/java/frc/misc/InitializationFailureException.java,43 (0.5%),15,34.9%,23,53.5%,5,11.6%
 src/main/java/frc/misc/UserInterface.java,98 (1.1%),71,72.4%,16,16.3%,11,11.2%
 src/main/java/frc/misc/SubsystemStatus.java,5 (0.1%),4,80.0%,0,0.0%,1,20.0%
-src/main/java/frc/misc/LEDs.java,92 (1.1%),75,81.5%,4,4.3%,13,14.1%
+src/main/java/frc/misc/LEDs.java,92 (1.1%),74,80.4%,5,5.4%,13,14.1%
 src/main/java/frc/misc/ISubsystem.java,96 (1.1%),20,20.8%,62,64.6%,14,14.6%
 src/main/java/frc/misc/UtilFunctions.java,35 (0.4%),9,25.7%,24,68.6%,2,5.7%
 src/main/java/frc/misc/ServerSide.java,4 (0.0%),3,75.0%,0,0.0%,1,25.0%
@@ -21,7 +21,7 @@ src/main/java/frc/ballstuff/intaking/Intake.java,157 (1.8%),109,69.4%,24,15.3%,2
 src/main/java/frc/ballstuff/intaking/IntakeControlStyles.java,8 (0.1%),4,50.0%,3,37.5%,1,12.5%
 src/main/java/frc/ballstuff/intaking/Hopper.java,187 (2.2%),132,70.6%,29,15.5%,26,13.9%
 src/main/java/frc/ballstuff/shooting/Turret.java,312 (3.6%),216,69.2%,67,21.5%,29,9.3%
-src/main/java/frc/ballstuff/shooting/ArticulatedHood.java,308 (3.5%),261,84.7%,24,7.8%,23,7.5%
+src/main/java/frc/ballstuff/shooting/ArticulatedHood.java,294 (3.4%),261,88.8%,10,3.4%,23,7.8%
 src/main/java/frc/ballstuff/shooting/ShootingEnums.java,104 (1.2%),84,80.8%,7,6.7%,13,12.5%
 src/main/java/frc/ballstuff/shooting/Shooter.java,372 (4.3%),280,75.3%,62,16.7%,30,8.1%
 src/main/java/frc/ballstuff/shooting/ShootingControlStyles.java,8 (0.1%),4,50.0%,3,37.5%,1,12.5%
@@ -87,4 +87,4 @@ src/main/java/frc/drive/auton/galacticsearch/GalacticSearchPaths.java,75 (0.9%),
 src/main/java/frc/drive/auton/followtrajectory/AutonManager.java,51 (0.6%),34,66.7%,3,5.9%,14,27.5%
 src/main/java/frc/drive/auton/followtrajectory/Trajectories.java,28 (0.3%),17,60.7%,6,21.4%,5,17.9%
 src/main/java/frc/drive/auton/galacticsearchscam/AutonManager.java,53 (0.6%),34,64.2%,3,5.7%,16,30.2%
-Total,8685,5793,0.6670120898100173,1754,0.20195739781232008,1138,0.13103051237766264
+Total,8671,5792,0.6679737054549648,1741,0.2007842232729789,1138,0.13124207127205628
