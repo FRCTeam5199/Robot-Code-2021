@@ -5,6 +5,7 @@ import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
 import frc.controllers.ButtonPanelController;
 import frc.controllers.ControllerEnums;
+import frc.controllers.DrumTimeController;
 import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
@@ -18,12 +19,15 @@ import frc.robot.Robot;
 import static frc.misc.UtilFunctions.weightedAverage;
 import static frc.robot.Robot.robotSettings;
 
+/**
+ * Articulated hood refers to the moving top section of {@link Shooter}.
+ */
 public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = false;
     public boolean unTargeted = true;
-    BaseController joystickController, panel;
     public double moveTo = 0.0;
     public AbstractMotorController hoodMotor;
+    BaseController joystickController, panel;
 
     public ArticulatedHood() {
         addToMetaList();
@@ -36,14 +40,14 @@ public class ArticulatedHood implements ISubsystem {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
-                joystickController = JoystickController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT);
-                panel = ButtonPanelController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT);
+                joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
                 break;
             case BOP_IT:
-                joystickController = BopItBasicController.createOrGet(1);
+                joystickController = BaseController.createOrGet(1, BopItBasicController.class);
                 break;
             case XBOX_CONTROLLER:
-                joystickController = XBoxController.createOrGet(1);
+                joystickController = BaseController.createOrGet(1, XBoxController.class);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the articulated hood. Please implement me");
@@ -225,6 +229,10 @@ public class ArticulatedHood implements ISubsystem {
         //return -2;
     }
 
+    /**
+     * Uses {@link ControllerEnums.ButtonPanelTapedButtons nonstandard mapping} and moves the hood based on those
+     * inputs
+     */
     private void moveToPosFromButtons() {
         if (panel.get(ControllerEnums.ButtonPanelTapedButtons.HOOD_POS_1) == ControllerEnums.ButtonStatus.DOWN) {
             moveTo = 0.05; //POS 1
@@ -243,6 +251,12 @@ public class ArticulatedHood implements ISubsystem {
         }
     }
 
+    /**
+     * Moves the hood to a specified point
+     *
+     * @param moveTo     where to move the hood to
+     * @param currentPos where the hood is now
+     */
     private void moveToPos(double moveTo, double currentPos) {
         if (DEBUG && robotSettings.DEBUG) {
             UserInterface.smartDashboardPutNumber("Moving to", moveTo);

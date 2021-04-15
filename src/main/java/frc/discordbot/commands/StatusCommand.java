@@ -6,12 +6,10 @@ import frc.robot.Robot;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 
+/**
+ * Returns a pretty listing of all activates subsystems and if they are working nominally
+ */
 public class StatusCommand extends AbstractCommand {
-    @Override
-    public boolean isServerSideCommand() {
-        return false;
-    }
-
     @Override
     public AbstractCommandResponse run(AbstractCommandData message) {
         StringBuilder statuses = new StringBuilder("```diff\n");
@@ -31,6 +29,10 @@ public class StatusCommand extends AbstractCommand {
         return new String[]{"stat"};
     }
 
+    /**
+     * Response requires an embed and this embed is held in peices at {@link #TITLE}, {@link #AUTHOR}, and {@link
+     * #REPLY_CONTENT}
+     */
     public static class StatusCommandResponse extends AbstractCommandResponse {
         private final String TITLE, AUTHOR, REPLY_CONTENT;
 

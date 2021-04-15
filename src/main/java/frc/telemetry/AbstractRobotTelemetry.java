@@ -31,8 +31,9 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
     }
 
     protected AbstractRobotTelemetry(AbstractDriveManager driver) {
+        if (this instanceof RobotTelemetrySwivel ^ (this.driver = driver) instanceof DriveManagerSwerve)
+            throw new IllegalArgumentException("Incompatible telem and drive combo");
         addToMetaList();
-        this.driver = driver;
         init();
     }
 
@@ -41,13 +42,7 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
         driver.resetDriveEncoders();
         if (!robotSettings.ENABLE_IMU)
             return;
-        switch (robotSettings.IMU_TYPE) {
-            case PIGEON:
-                imu = new WrappedPigeonIMU();
-                break;
-            case NAVX2:
-                imu = new WrappedNavX2IMU();
-        }
+        imu = AbstractIMU.createIMU(robotSettings.IMU_TYPE);
     }
 
     @Override

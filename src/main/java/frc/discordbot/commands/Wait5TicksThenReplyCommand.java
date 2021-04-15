@@ -6,11 +6,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class Wait5TicksThenReplyCommand extends AbstractCommand{
     @Override
-    public boolean isServerSideCommand() {
-        return false;
-    }
-
-    @Override
     public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
         if (++((Wait5TicksThenReplyData)message).ticksWaited == 5)
             return new Wait5TicksThenReplyResponse(message);

@@ -6,6 +6,7 @@ import frc.controllers.ButtonPanelController;
 import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
+import frc.controllers.DrumTimeController;
 import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
@@ -49,11 +50,11 @@ public class Turret implements ISubsystem {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
-                joy = JoystickController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT);
-                panel = ButtonPanelController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT);
+                joy = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
                 break;
             case BOP_IT:
-                joy = BopItBasicController.createOrGet(1);
+                joy = BaseController.createOrGet(1, BopItBasicController.class);
                 break;
             default:
                 throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");

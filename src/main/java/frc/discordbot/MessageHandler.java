@@ -26,14 +26,6 @@ public class MessageHandler extends ListenerAdapter {
     public static MessageHandler messageHandler;
     private static boolean LISTENING;
 
-    public static AbstractCommand getCommand(String message) {
-        if (commands.containsKey(message.substring(1).split(" ")[0]))
-            return commands.get(message.substring(1).split(" ")[0]);
-        if (commandsAlias.containsKey(message.substring(1).split(" ")[0]))
-            return commands.get(message.substring(1).split(" ")[0]);
-        return null;
-    }
-
     public static void loadCommands(boolean listening) {
         LISTENING = listening;
         List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class);
@@ -75,6 +67,17 @@ public class MessageHandler extends ListenerAdapter {
         }
     }
 
+    public static AbstractCommand getCommand(String message) {
+        if (commands.containsKey(message.substring(1).split(" ")[0]))
+            return commands.get(message.substring(1).split(" ")[0]);
+        if (commandsAlias.containsKey(message.substring(1).split(" ")[0]))
+            return commands.get(message.substring(1).split(" ")[0]);
+        return null;
+    }
+
+    /**
+     * Used on the robot to tick ongoing commands such as {@link Wait5TicksThenReplyCommand}
+     */
     @ClientSide
     public static void persistPendingCommands() {
         for (int i = pendingCommands.size() - 1; i >= 0; i--) {
@@ -88,6 +91,11 @@ public class MessageHandler extends ListenerAdapter {
 
     }
 
+    /**
+     * Called by the {@link DiscordBot#bot} when a new message is sent visible to the brobot
+     *
+     * @param message the incomming message
+     */
     @Override
     @ServerSide
     public void onMessageReceived(MessageReceivedEvent message) {
@@ -104,8 +112,9 @@ public class MessageHandler extends ListenerAdapter {
                 if (command.isServerSideCommand()) {
                     try {
                         command.run(command.extractData(message)).doYourWorst(DiscordBot.bot.getBotObject());
-                    }catch (NullPointerException ignored){}
-                }else {
+                    } catch (NullPointerException ignored) {
+                    }
+                } else {
                     System.out.println("Sending to bot " + command.extractData(message));
                     Main.pipeline.sendData(command.extractData(message));
                 }

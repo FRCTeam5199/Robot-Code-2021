@@ -2,7 +2,13 @@ package frc.discordbot.commands;
 
 import net.dv8tion.jda.core.JDA;
 
+/**
+ * Gets the ping between Discord and Server
+ */
 public class PingCommand extends AbstractCommand {
+    /**
+     * Used for fancy ping
+     */
     private static final String[] pingMessages = new String[]{
             ":ping_pong::white_small_square::black_small_square::black_small_square::ping_pong:",
             ":ping_pong::black_small_square::white_small_square::black_small_square::ping_pong:",
@@ -25,11 +31,9 @@ public class PingCommand extends AbstractCommand {
         return "ping";
     }
 
-    @Override
-    public String[] getAliases() {
-        return new String[0];
-    }
-
+    /**
+     * Only needed for {@link #doYourWorst(JDA)}
+     */
     public static class PingCommandResponse extends AbstractCommandResponse {
         public PingCommandResponse(AbstractCommandData message) {
             super(message);

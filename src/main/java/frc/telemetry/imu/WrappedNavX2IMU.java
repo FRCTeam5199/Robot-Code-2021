@@ -14,7 +14,7 @@ import static frc.robot.Robot.robotSettings;
 public class WrappedNavX2IMU extends AbstractIMU {
     private AHRS navX2IMU;
 
-    public WrappedNavX2IMU() {
+    protected WrappedNavX2IMU() {
         super();
     }
 
@@ -79,17 +79,6 @@ public class WrappedNavX2IMU extends AbstractIMU {
     }
 
     /**
-     * Returns the yaw
-     *
-     * @return yaw of robot in degrees
-     */
-    @Override
-    public double absoluteYaw() {
-        updateGeneric();
-        return ypr[0];
-    }
-
-    /**
      * Update the values for the IMU
      */
     @Override
@@ -103,16 +92,5 @@ public class WrappedNavX2IMU extends AbstractIMU {
     @Override
     public String getSubsystemName() {
         return "NavX2";
-    }
-
-    /**
-     * Returns the yaw in relativity to the last zeroing
-     *
-     * @return relative yaw
-     */
-    @Override
-    public double relativeYaw() {
-        updateGeneric();
-        return (ypr[0] - startYaw);
     }
 }

@@ -1,6 +1,7 @@
 package frc.discordbot;
 
 import frc.discordbot.commands.AbstractCommand;
+import frc.misc.ServerSide;
 import frc.robot.robotconfigs.DefaultConfig;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -12,6 +13,12 @@ public class DiscordBot {
     public static DiscordBot bot = null;
     private final JDA botObject;
 
+    /**
+     * Instaniates {@link #bot} if it hasnt already. Also checks for internet connection
+     *
+     * @param listening True if client, false if server bot object
+     * @return the created bot object (not needed since it is stored at {@link #bot}
+     */
     public static DiscordBot newInstance(boolean listening) {
         try {
             if (!InetAddress.getByName("google.com").isReachable(1000)) {
@@ -44,6 +51,7 @@ public class DiscordBot {
         botObject = holder;
     }
 
+    @ServerSide
     public JDA getBotObject() {
         return botObject;
     }

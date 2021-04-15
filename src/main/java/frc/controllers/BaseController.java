@@ -2,6 +2,8 @@ package frc.controllers;
 
 import edu.wpi.first.wpilibj.Joystick;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * for ANY CONTROLLER, put EVERY GET METHOD in here as well as in the proper class! This allows for the COMPLETE HOT
  * SWAPPING of controllers simply by changing the constructor used.
@@ -14,14 +16,14 @@ public abstract class BaseController {
      * same channel and to reduce memory impact by reducing redundant objects. To use, simply query the index
      * corresponding to the port desired and if null, create and set. Otherwise, verify controller type then use.
      *
-     * @see XBoxController#createOrGet(int)
+     * @see #createOrGet(int, Class)
      */
     protected static final BaseController[] allControllers = new BaseController[6];
-    protected final Joystick stick;
+    protected final Joystick controller;
     private final int JOYSTICK_CHANNEL;
 
     //TODO verify this:
-    /*public static BaseController createOrGet(int channel, Class<? extends BaseController> clazz) throws ArrayIndexOutOfBoundsException, ArrayStoreException, UnsupportedOperationException {
+    public static BaseController createOrGet(int channel, Class<? extends BaseController> clazz) throws ArrayIndexOutOfBoundsException, ArrayStoreException, UnsupportedOperationException {
         if (channel < 0 || channel >= 6)
             throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
         try {
@@ -33,17 +35,16 @@ public abstract class BaseController {
         if (clazz.isAssignableFrom(allControllers[channel].getClass()))
             return allControllers[channel];
         throw new ArrayStoreException("A different controller has already been made for channel " + channel);
-    }*/
+    }
 
     protected BaseController(Integer channel) {
-        stick = new Joystick(channel);
+        controller = new Joystick(channel);
         JOYSTICK_CHANNEL = channel;
-        allControllers[channel] = this;
     }
 
     @Deprecated
     public double get(int channel) {
-        return stick.getRawAxis(channel);
+        return controller.getRawAxis(channel);
     }
 
     public ControllerEnums.ButtonStatus get(ControllerEnums.ButtonPanelButtons n) {

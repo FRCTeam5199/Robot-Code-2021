@@ -10,23 +10,38 @@ public abstract class AbstractCommand implements Serializable {
     public static boolean DRIVEN;
 
     /**
+     * Executes the command using the provided data
+     *
+     * @param message the message and relevant data that triggered the command to run
+     * @return The result of executing the command. Should only return null if commnad {@link
+     * AbstractCommandData#isMultiTickCommand() is multi tick}
+     */
+    public abstract @Nullable AbstractCommandResponse run(AbstractCommandData message);
+
+    /**
+     * The name of the command that the user will use to reference it
+     *
+     * @return The command name without the prefix
+     */
+    public abstract String getCommand();
+
+    /**
+     * Returns secondary names that will be accepted if the user calls this command
+     *
+     * @return array of nicknames
+     */
+    public String[] getAliases() {
+        return new String[0];
+    }
+
+    /**
      * Simple enough, hardcoded because shouldnt be changing during runtime
      *
      * @return if the command should be run on the server instead of the client
      */
-    public abstract boolean isServerSideCommand();
-
-    /**
-     * Executes the command using the provided data
-     *
-     * @param message the message and relevant data that triggered the command to run
-     * @return The result of executing the command
-     */
-    public abstract @Nullable AbstractCommandResponse run(AbstractCommandData message);
-
-    public abstract String getCommand();
-
-    public abstract String[] getAliases();
+    public boolean isServerSideCommand() {
+        return false;
+    }
 
     /**
      * Every command is able to refine what they are sending on the server in order to save resouces on the robot. Also,
@@ -48,6 +63,8 @@ public abstract class AbstractCommand implements Serializable {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
 
+        public abstract boolean isMultiTickCommand();
+
         protected AbstractCommandData(MessageReceivedEvent message) {
             this(message.getMessage().getContentRaw(), message.getMessageId(), message.getAuthor().getId(), message.getGuild().getId(), message.getChannel().getId());
         }
@@ -59,8 +76,6 @@ public abstract class AbstractCommand implements Serializable {
             GUILD_ID = guild_id;
             CHANNEL_ID = channel_id;
         }
-
-        public abstract boolean isMultiTickCommand();
     }
 
     /**

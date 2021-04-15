@@ -39,10 +39,10 @@ public class Intake implements ISubsystem {
     public void init() throws IllegalStateException {
         switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case STANDARD:
-                joystick = JoystickController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT);
+                joystick = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
                 break;
             case BOPIT:
-                joystick = DrumTimeController.createOrGet(0);
+                joystick = BaseController.createOrGet(0, DrumTimeController.class);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");

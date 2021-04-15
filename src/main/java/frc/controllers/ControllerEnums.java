@@ -11,7 +11,6 @@ import static frc.robot.Robot.robotSettings;
  * @see BaseController
  */
 public class ControllerEnums {
-
     /**
      * @see WiiController
      */
@@ -74,20 +73,6 @@ public class ControllerEnums {
         public final int AXIS_VALUE;
         public final double DEADZONE;
 
-        /**
-         * @param id - the xbox axis id requested
-         * @return the {@link XboxAxes} enum with id mathing input
-         * @throws NoSuchFieldException if there is no mapped xbox axis with that id
-         * @deprecated Feature that should <b>never</b> be used. Gets the xbox axis from a provided int
-         */
-        @Deprecated
-        public static XboxAxes get(int id) throws NoSuchFieldException {
-            for (XboxAxes axis : XboxAxes.values()) {
-                if (axis.AXIS_VALUE == id) return axis;
-            }
-            throw new NoSuchFieldException("There is no Xbox axis with an ID of " + id);
-        }
-
         XboxAxes(int axis, double deadzone) {
             this.AXIS_VALUE = axis;
             this.DEADZONE = deadzone;
@@ -102,20 +87,6 @@ public class ControllerEnums {
 
         public final int AXIS_VALUE;
 
-        /**
-         * @param id - the xbox button id requested
-         * @return the {@link XBoxButtons} enum with id mathing input
-         * @throws NoSuchFieldException if there is no mapped xbox button with that id
-         * @deprecated Feature that should <b>never</b> be used. Gets the xbox button from a provided int
-         */
-        @Deprecated
-        public static XBoxButtons get(int id) throws NoSuchFieldException {
-            for (XBoxButtons axis : XBoxButtons.values()) {
-                if (axis.AXIS_VALUE == id) return axis;
-            }
-            throw new NoSuchFieldException("There is no Xbox button with an ID of " + id);
-        }
-
         XBoxButtons(int axis) {
             this.AXIS_VALUE = axis;
         }
@@ -128,20 +99,6 @@ public class ControllerEnums {
         X_AXIS(0), Y_AXIS(1), Z_ROTATE(2), SLIDER(3);
 
         public final int AXIS_VALUE;
-
-        /**
-         * @param id - the flight stick axis id requested
-         * @return the {@link JoystickAxis} enum with id mathing input
-         * @throws NoSuchFieldException if there is no mapped flight stick axis with that id
-         * @deprecated Feature that should <b>never</b> be used. Gets the flight stick axis from a provided int
-         */
-        @Deprecated
-        public static JoystickAxis get(int id) throws NoSuchFieldException {
-            for (JoystickAxis axis : JoystickAxis.values()) {
-                if (axis.AXIS_VALUE == id) return axis;
-            }
-            throw new NoSuchFieldException("There is no Controller axis with an ID of " + id);
-        }
 
         JoystickAxis(int value) {
             this.AXIS_VALUE = value;
@@ -169,20 +126,6 @@ public class ControllerEnums {
 
         public final int AXIS_VALUE;
 
-        /**
-         * @param id - the flight stick button id requested
-         * @return the {@link JoystickButtons} enum with id mathing input
-         * @throws NoSuchFieldException if there is no mapped flight stick button with that id
-         * @deprecated Feature that should <b>never</b> be used. Gets the flight stick button from a provided int
-         */
-        @Deprecated
-        public static JoystickButtons get(int id) throws NoSuchFieldException {
-            for (JoystickButtons axis : JoystickButtons.values()) {
-                if (axis.AXIS_VALUE == id) return axis;
-            }
-            throw new NoSuchFieldException("There is no Joystick Button with an ID of " + id);
-        }
-
         JoystickButtons(int value) {
             this.AXIS_VALUE = value;
         }
@@ -195,20 +138,6 @@ public class ControllerEnums {
         RAISE_CLIMBER(1), LOWER_CLIMBER(2), CLIMBER_LOCK(3), CLIMBER_UNLOCK(4), BUDDY_CLIMB(5), AUX_TOP(6), AUX_BOTTOM(7), INTAKE_UP(8), INTAKE_DOWN(9), HOPPER_IN(10), HOPPER_OUT(11), TARGET(12), SOLID_SPEED(13);
 
         public final int AXIS_VALUE;
-
-        /**
-         * @param id - the button panel button id requested
-         * @return the {@link ButtonPanelButtons} enum with id mathing input
-         * @throws NoSuchFieldException if there is no mapped button panel button with that id
-         * @deprecated Feature that should <b>never</b> be used. Gets the button panel button from a provided int
-         */
-        @Deprecated
-        public static ButtonPanelButtons get(int id) throws NoSuchFieldException {
-            for (ButtonPanelButtons axis : ButtonPanelButtons.values()) {
-                if (axis.AXIS_VALUE == id) return axis;
-            }
-            throw new NoSuchFieldException("There is no Button Panel Button with an ID of " + id);
-        }
 
         ButtonPanelButtons(int value) {
             this.AXIS_VALUE = value;
@@ -223,20 +152,6 @@ public class ControllerEnums {
 
         public final int AXIS_VALUE;
 
-        /**
-         * @param id - the button panel button id requested
-         * @return the {@link ButtonPanelTapedButtons} enum with id mathing input
-         * @throws NoSuchFieldException if there is no mapped button panel button with that id
-         * @deprecated Feature that should <b>never</b> be used. Gets the button panel button from a provided int
-         */
-        @Deprecated
-        public static ButtonPanelTapedButtons get(int id) throws NoSuchFieldException {
-            for (ButtonPanelTapedButtons axis : ButtonPanelTapedButtons.values()) {
-                if (axis.AXIS_VALUE == id) return axis;
-            }
-            throw new NoSuchFieldException("There is no Button Panel taped Button with an ID of " + id);
-        }
-
         ButtonPanelTapedButtons(int value) {
             this.AXIS_VALUE = value;
         }
@@ -247,20 +162,6 @@ public class ControllerEnums {
 
         public final int AXIS_VALUE;
 
-        /**
-         * @param id - the guitar button id requested
-         * @return the {@link SixKeyGuitarButtons} enum with id mathing input
-         * @throws NoSuchFieldException if there is no mapped guitar button with that id
-         * @deprecated Feature that should <b>never</b> be used. Gets the guitar button from a provided int
-         */
-        @Deprecated
-        public static SixKeyGuitarButtons get(int id) throws NoSuchFieldException {
-            for (SixKeyGuitarButtons axis : SixKeyGuitarButtons.values()) {
-                if (axis.AXIS_VALUE == id) return axis;
-            }
-            throw new NoSuchFieldException("There is no Button Panel Button with an ID of " + id);
-        }
-
         SixKeyGuitarButtons(int value) {
             this.AXIS_VALUE = value;
         }
@@ -270,20 +171,6 @@ public class ControllerEnums {
         STRUM(1), PITCH(2), WHAMMY(3);
 
         public final int AXIS_VALUE;
-
-        /**
-         * @param id - the guitar axis id requested
-         * @return the {@link SixKeyGuitarAxis} enum with id mathing input
-         * @throws NoSuchFieldException if there is no mapped guitar axis with that id
-         * @deprecated Feature that should <b>never</b> be used. Gets the guitar axis from a provided int
-         */
-        @Deprecated
-        public static SixKeyGuitarAxis get(int id) throws NoSuchFieldException {
-            for (SixKeyGuitarAxis axis : SixKeyGuitarAxis.values()) {
-                if (axis.AXIS_VALUE == id) return axis;
-            }
-            throw new NoSuchFieldException("There is no Button Panel Button with an ID of " + id);
-        }
 
         SixKeyGuitarAxis(int value) {
             this.AXIS_VALUE = value;
@@ -297,20 +184,6 @@ public class ControllerEnums {
         GREEN(2);
 
         public final int AXIS_VALUE;
-
-        /**
-         * @param id - the drum drum id requested
-         * @return the {@link Drums} enum with id mathing input
-         * @throws NoSuchFieldException if there is no mapped drum drum with that id
-         * @deprecated Feature that should <b>never</b> be used. Gets the drum drum from a provided int
-         */
-        @Deprecated
-        public static Drums get(int id) throws NoSuchFieldException {
-            for (Drums axis : Drums.values()) {
-                if (axis.AXIS_VALUE == id) return axis;
-            }
-            throw new NoSuchFieldException("There is no Button Panel Button with an ID of " + id);
-        }
 
         Drums(int value) {
             this.AXIS_VALUE = value;
@@ -328,20 +201,6 @@ public class ControllerEnums {
         HOME(13);
 
         public final int AXIS_VALUE;
-
-        /**
-         * @param id - the Drum button id requested
-         * @return the {@link DrumButton} enum with id mathing input
-         * @throws NoSuchFieldException if there is no mapped drum button with that id
-         * @deprecated Feature that should <b>never</b> be used. Gets the drum button from a provided int
-         */
-        @Deprecated
-        public static DrumButton get(int id) throws NoSuchFieldException {
-            for (DrumButton axis : DrumButton.values()) {
-                if (axis.AXIS_VALUE == id) return axis;
-            }
-            throw new NoSuchFieldException("There is no Button Panel Button with an ID of " + id);
-        }
 
         DrumButton(int value) {
             this.AXIS_VALUE = value;

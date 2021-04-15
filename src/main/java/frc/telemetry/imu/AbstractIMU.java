@@ -5,6 +5,8 @@ import frc.misc.SubsystemStatus;
 import frc.misc.UtilFunctions;
 import frc.selfdiagnostics.IMUNonOpIssue;
 
+import static frc.robot.Robot.robotSettings;
+
 /**
  * Bro chill out im literally just vibing here
  *
@@ -14,6 +16,17 @@ public abstract class AbstractIMU implements ISubsystem {
     protected double startYaw;
     protected double[] ypr = new double[3];
     protected double[] startypr = new double[3];
+
+    public static AbstractIMU createIMU(SupportedIMU imuType){
+        switch (imuType) {
+            case PIGEON:
+                return new WrappedPigeonIMU();
+            case NAVX2:
+                return new WrappedNavX2IMU();
+            default:
+                throw new IllegalArgumentException("Connot make a " + imuType.name());
+        }
+    }
 
     public abstract void resetOdometry();
 
@@ -27,7 +40,15 @@ public abstract class AbstractIMU implements ISubsystem {
         return absoluteYaw() != 0 ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
-    public abstract double absoluteYaw();
+    /**
+     * gets the absolute yaw of the pigeon since last zeroing event (startup)
+     *
+     * @return absolute yaw of pigeon
+     */
+    public double absoluteYaw(){
+        updateGeneric();
+        return ypr[0];
+    }
 
     @Override
     public void updateTest() {
@@ -46,10 +67,7 @@ public abstract class AbstractIMU implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        if (ypr[0] == 0)
-            IMUNonOpIssue.reportIssue(this, getSubsystemName());
-        else
-            IMUNonOpIssue.resolveIssue(this);
+        IMUNonOpIssue.handleIssue(this, getSubsystemName(), ypr[0] != 0);
     }
 
     @Override
@@ -66,5 +84,13 @@ public abstract class AbstractIMU implements ISubsystem {
         return UtilFunctions.mathematicalMod(relativeYaw() + 180, 360) - 180;
     }
 
-    public abstract double relativeYaw();
+    /**
+     * Yaw since last restart
+     *
+     * @return yaw since last restart
+     */
+    public double relativeYaw() {
+        updateGeneric();
+        return (ypr[0] - startYaw);
+    }
 }

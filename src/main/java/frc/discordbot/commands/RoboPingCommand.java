@@ -3,12 +3,10 @@ package frc.discordbot.commands;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+/**
+ * Gets the round trip ping from server to client, back to server, to discord and back to server
+ */
 public class RoboPingCommand extends AbstractCommand {
-    @Override
-    public boolean isServerSideCommand() {
-        return false;
-    }
-
     @Override
     public AbstractCommandResponse run(AbstractCommandData message) {
         return new RoboCommandResponse(message);
@@ -29,6 +27,9 @@ public class RoboPingCommand extends AbstractCommand {
         return new RoboPingCommand.RoboCommandData(message);
     }
 
+    /**
+     * Takes the timestamp when the message is recieved on the Server
+     */
     public static class RoboCommandData extends AbstractCommandData {
         private final long TIMESTAMP;
 
@@ -43,6 +44,9 @@ public class RoboPingCommand extends AbstractCommand {
         }
     }
 
+    /**
+     * Holds onto {@link RoboCommandData#TIMESTAMP original timestamp} and uses it in {@link #doYourWorst(JDA)}
+     */
     public static class RoboCommandResponse extends AbstractCommandResponse {
         private final long TIMESTAMP;
 

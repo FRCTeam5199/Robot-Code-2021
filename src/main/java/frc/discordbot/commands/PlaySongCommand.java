@@ -3,12 +3,10 @@ package frc.discordbot.commands;
 import frc.robot.Robot;
 import net.dv8tion.jda.core.JDA;
 
+/**
+ * Uses {@link Robot#chirp} to play the song of the user's choosing
+ */
 public class PlaySongCommand extends AbstractCommand {
-    @Override
-    public boolean isServerSideCommand() {
-        return false;
-    }
-
     @Override
     public AbstractCommandResponse run(AbstractCommandData message) {
         if (Robot.robotSettings.ENABLE_MUSIC) {
@@ -28,6 +26,9 @@ public class PlaySongCommand extends AbstractCommand {
         return new String[]{"p"};
     }
 
+    /**
+     * Special response that contains just a raw text to reply with
+     */
     public static class PlaySongCommandResponse extends AbstractCommandResponse {
         private final String RESPONSE;
 
