@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.Robot;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 import java.util.function.Consumer;
 
@@ -15,6 +16,7 @@ public class LEDs {
     private AddressableLED ledConfig;
     private AddressableLEDBuffer ledBuffer;
     private int chaseLastLEDSet = 0;
+
 
     public void init() {
         ledBuffer = new AddressableLEDBuffer(robotSettings.LED_STRAND_LENGTH);

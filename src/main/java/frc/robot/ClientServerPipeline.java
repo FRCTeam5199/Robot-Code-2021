@@ -5,6 +5,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.discordbot.DiscordBot;
 import frc.discordbot.MessageHandler;
 import frc.discordbot.commands.AbstractCommand;
+import frc.misc.ClientSide;
+import frc.misc.ServerSide;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,6 +31,7 @@ public class ClientServerPipeline implements Runnable {
      *
      * @return a stored server object. created and stored if not already stored
      */
+    @ServerSide
     public static ClientServerPipeline getServer() {
         return Objects.requireNonNullElseGet(SERVER_PIPELINE, () -> SERVER_PIPELINE = new ClientServerPipeline(true));
     }
@@ -39,6 +42,7 @@ public class ClientServerPipeline implements Runnable {
      *
      * @return a stored client object. created and stored if not already stored
      */
+    @ClientSide
     public static ClientServerPipeline getClient() {
         return Objects.requireNonNullElseGet(CLIENT_PIPELINE, () -> CLIENT_PIPELINE = new ClientServerPipeline(false));
     }
@@ -75,6 +79,7 @@ public class ClientServerPipeline implements Runnable {
      * @param outbound the data packet to send
      * @return true if data was changed, false otherwise
      */
+    @ServerSide
     public boolean sendData(AbstractCommand.AbstractCommandData outbound) {
         return sendData(outbound, false);
     }
@@ -88,13 +93,15 @@ public class ClientServerPipeline implements Runnable {
      *                       existing data is identical
      * @return true if data was changed, false otherwise
      */
+    @ServerSide
     public boolean sendData(AbstractCommand.AbstractCommandData outbound, boolean skipDirtyCheck) {
+        if (outbound == null)
+            return false;
         byte[] outboundPacket = writeToBytes(outbound);
         if (!skipDirtyCheck && checkDirty(outboundPacket, serverNetworkTable.getEntry("command").getRaw(new byte[0]))) {
             return false;
         }
         serverNetworkTable.getEntry("command").setRaw(outboundPacket);
-        //System.out.println(serverNetworkTable.getEntry("command").getRaw(new byte[0]).length);
         serverNetworkTable.getEntry("read_reciept_command").setBoolean(false);
         return true;
     }
@@ -140,6 +147,7 @@ public class ClientServerPipeline implements Runnable {
      * #SERVER_PIPELINE a dedicated pipeline}
      */
     @Override
+    @ServerSide
     public void run() {
         NetworkTableInstance.getDefault().startClientTeam(5199);  // where TEAM=190, 294, etc, or use inst.startClient("hostname") or similar
         while (true) {
@@ -176,6 +184,7 @@ public class ClientServerPipeline implements Runnable {
      * @return true if unread flag is set and reply is fresh
      * @see #checkMessage()
      */
+    @ServerSide
     public boolean checkReply() {
         return !serverNetworkTable.getEntry("read_reciept_data").getBoolean(false) && serverNetworkTable.getEntry("response").getRaw(new byte[0]).length != 0;
     }
@@ -186,6 +195,7 @@ public class ClientServerPipeline implements Runnable {
      *
      * @return The current reply from the client in the pipeline
      */
+    @ServerSide
     public AbstractCommand.AbstractCommandResponse readReply() {
         byte[] inboundPacket = serverNetworkTable.getEntry("response").getRaw(new byte[0]);
         serverNetworkTable.getEntry("read_reciept_data").setBoolean(true);
@@ -200,6 +210,7 @@ public class ClientServerPipeline implements Runnable {
      *
      * @return true if unread flag is set and data is fresh
      */
+    @ClientSide
     public boolean checkMessage() {
         return !serverNetworkTable.getEntry("read_reciept_command").getBoolean(false) && serverNetworkTable.getEntry("command").getRaw(new byte[0]).length != 0;
     }
@@ -210,6 +221,7 @@ public class ClientServerPipeline implements Runnable {
      *
      * @return The current reply from the client in the pipeline
      */
+    @ClientSide
     public AbstractCommand.AbstractCommandData readCommandData() {
         byte[] inboundPacket = serverNetworkTable.getEntry("command").getRaw(new byte[0]);
         serverNetworkTable.getEntry("read_reciept_command").setBoolean(true);
@@ -223,7 +235,7 @@ public class ClientServerPipeline implements Runnable {
      * Reads and returns an object as interpreted from the passed data
      *
      * @param rawdata serialized object data, represented in bytes (sorry if u have a string idk where u got it from but
-     *                put it bacK)
+     *                put it back)
      * @return the input, deserialized
      */
     private static Object readFromBytes(byte[] rawdata) {
@@ -244,6 +256,7 @@ public class ClientServerPipeline implements Runnable {
      * @param reply the command response to send
      * @return true if data was exchanged, false otherwise
      */
+    @ClientSide
     public boolean sendReply(AbstractCommand.AbstractCommandResponse reply) {
         return sendReply(reply, false);
     }
@@ -256,7 +269,10 @@ public class ClientServerPipeline implements Runnable {
      *                       existing data is identical
      * @return true if data was exchanged, false otherwise
      */
+    @ClientSide
     public boolean sendReply(AbstractCommand.AbstractCommandResponse reply, boolean skipDirtyCheck) {
+        if (reply == null)
+            return false;
         byte[] outboundPacket = writeToBytes(reply);
         if (!skipDirtyCheck && checkDirty(outboundPacket, serverNetworkTable.getEntry("response").getRaw(new byte[0]))) {
             return false;

@@ -9,6 +9,7 @@ import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.ArticulatedHood;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
+import frc.discordbot.MessageHandler;
 import frc.drive.AbstractDriveManager;
 import frc.drive.DriveBases;
 import frc.drive.DriveManagerStandard;
@@ -16,6 +17,7 @@ import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.misc.Chirp;
+import frc.misc.ClientSide;
 import frc.misc.ISubsystem;
 import frc.misc.LEDs;
 import frc.misc.QuoteOfTheDay;
@@ -37,6 +39,7 @@ import java.util.Random;
 /**
  * Welcome. Please enjoy your stay here in programmer fun time land. And remember, IntelliJ is king
  */
+@ClientSide
 public class Robot extends TimedRobot {
     /**
      * No son, I refuse to make a new, unseeded random everytime we want a new song. Besides, we have a random at home
@@ -240,6 +243,7 @@ public class Robot extends TimedRobot {
 
         ISimpleIssue.robotPeriodic();
         Main.pipeline.updatePipeline();
+        MessageHandler.persistPendingCommands();
     }
 
     @Override

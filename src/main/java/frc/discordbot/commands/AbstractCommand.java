@@ -2,6 +2,7 @@ package frc.discordbot.commands;
 
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
@@ -21,7 +22,7 @@ public abstract class AbstractCommand implements Serializable {
      * @param message the message and relevant data that triggered the command to run
      * @return The result of executing the command
      */
-    public abstract AbstractCommandResponse run(AbstractCommandData message);
+    public abstract @Nullable AbstractCommandResponse run(AbstractCommandData message);
 
     public abstract String getCommand();
 
@@ -58,6 +59,8 @@ public abstract class AbstractCommand implements Serializable {
             GUILD_ID = guild_id;
             CHANNEL_ID = channel_id;
         }
+
+        public abstract boolean isMultiTickCommand();
     }
 
     /**
@@ -99,6 +102,11 @@ public abstract class AbstractCommand implements Serializable {
     public static class GenericCommandData extends AbstractCommandData {
         public GenericCommandData(MessageReceivedEvent message) {
             super(message);
+        }
+
+        @Override
+        public boolean isMultiTickCommand() {
+            return false;
         }
     }
 }

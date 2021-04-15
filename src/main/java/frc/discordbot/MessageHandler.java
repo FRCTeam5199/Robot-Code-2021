@@ -5,12 +5,16 @@ import frc.discordbot.commands.PingCommand;
 import frc.discordbot.commands.PlaySongCommand;
 import frc.discordbot.commands.RoboPingCommand;
 import frc.discordbot.commands.StatusCommand;
+import frc.discordbot.commands.Wait5TicksThenReplyCommand;
+import frc.misc.ClientSide;
+import frc.misc.ServerSide;
 import frc.robot.Main;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -20,10 +24,11 @@ public class MessageHandler extends ListenerAdapter {
     private static final HashMap<String, AbstractCommand> commandsAlias = new HashMap<>();
     public static MessageHandler messageHandler;
     private static boolean LISTENING;
+    private static ArrayList<AbstractCommand.AbstractCommandData> pendingCommands = new ArrayList<>();
 
     public static void loadCommands(boolean listening) {
         LISTENING = listening;
-        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class);
+        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class);
         for (Class<? extends AbstractCommand> s : classes) {
             try {
                 if (Modifier.isAbstract(s.getModifiers())) {
@@ -48,14 +53,25 @@ public class MessageHandler extends ListenerAdapter {
      *
      * @param message the boiled-down data sent by the server
      */
+    @ClientSide
     public static void onMessageReceived(AbstractCommand.AbstractCommandData message) {
         System.out.println("Recieved Message: " + message.CONTENT);
         if (message.CONTENT.charAt(0) == '!' && commands.containsKey(message.CONTENT.substring(1).split(" ")[0])) {
             if (LISTENING) {
                 AbstractCommand command = commands.get(message.CONTENT.substring(1).split(" ")[0]);
+                pendingCommands.add(message);
                 Main.pipeline.sendReply(command.run(message));
             } else
                 throw new IllegalStateException("How did you get here as a client?");
+        }
+    }
+
+    @ClientSide
+    public static void persistPendingCommands() {
+        for (int i = pendingCommands.size() - 1; i >= 0; i--) {
+            if (Main.pipeline.sendReply(commands.get(pendingCommands.get(i).CONTENT.substring(1).split(" ")[0]).run(pendingCommands.get(i)))) {
+                pendingCommands.remove(i);
+            }
         }
     }
 
@@ -64,6 +80,7 @@ public class MessageHandler extends ListenerAdapter {
     }
 
     @Override
+    @ServerSide
     public void onMessageReceived(MessageReceivedEvent message) {
         if (message.getAuthor().isBot())
             return;

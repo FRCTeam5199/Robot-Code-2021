@@ -17,6 +17,7 @@ import java.io.File;
  */
 public final class Main {
     public static ClientServerPipeline pipeline;
+    public static boolean IS_DS;
 
     /**
      * Main initialization function. Do not perform any initialization here.
@@ -26,9 +27,11 @@ public final class Main {
      * @param args does nothing
      */
     public static void main(String... args) {
-        if (new File("/home/lvuser", "deploy").isDirectory())
+        IS_DS = (new File("/home/lvuser", "deploy")).isDirectory();
+        if (IS_DS)
             RobotBase.startRobot(Robot::new);
         else {
+            IS_DS = true;
             pipeline = ClientServerPipeline.getServer();
             pipeline.run();
         }
