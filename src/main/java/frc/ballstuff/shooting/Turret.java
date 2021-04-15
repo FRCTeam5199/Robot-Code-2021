@@ -27,9 +27,9 @@ import static frc.robot.Robot.robotSettings;
 public class Turret implements ISubsystem {
     private static final boolean DEBUG = false;
     private BaseController joy, panel;
-    private AbstractMotorController motor;
+    public AbstractMotorController turretMotor;
     private AbstractRobotTelemetry guidance;
-    private IVision visionCamera;
+    public IVision visionCamera;
     private int scanDirection = -1;
 
     public Turret() {
@@ -61,13 +61,13 @@ public class Turret implements ISubsystem {
 
         switch (robotSettings.TURRET_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
-                motor = new SparkMotorController(robotSettings.TURRET_YAW_ID);
-                motor.setSensorToRealDistanceFactor(robotSettings.TURRET_SPROCKET_SIZE * robotSettings.TURRET_GEAR_RATIO * Math.PI / 30);
+                turretMotor = new SparkMotorController(robotSettings.TURRET_YAW_ID);
+                turretMotor.setSensorToRealDistanceFactor(robotSettings.TURRET_SPROCKET_SIZE * robotSettings.TURRET_GEAR_RATIO * Math.PI / 30);
                 break;
             case TALON_FX:
-                motor = new TalonMotorController(robotSettings.TURRET_YAW_ID);
+                turretMotor = new TalonMotorController(robotSettings.TURRET_YAW_ID);
                 //TODO make a setting maybe
-                motor.setSensorToRealDistanceFactor(robotSettings.TURRET_SPROCKET_SIZE * robotSettings.TURRET_GEAR_RATIO * Math.PI / 30 * 600 / 2048);
+                turretMotor.setSensorToRealDistanceFactor(robotSettings.TURRET_SPROCKET_SIZE * robotSettings.TURRET_GEAR_RATIO * Math.PI / 30 * 600 / 2048);
                 break;
             default:
                 throw new UnsupportedOperationException("This motor is not supported here in TurretLand inc.");
@@ -75,14 +75,14 @@ public class Turret implements ISubsystem {
         if (robotSettings.ENABLE_VISION) {
             visionCamera = IVision.manufactureGoalCamera(robotSettings.GOAL_CAMERA_TYPE);
         }
-        motor.setInverted(false).setPid(robotSettings.TURRET_PID).setBrake(true);
+        turretMotor.setInverted(false).setPid(robotSettings.TURRET_PID).setBrake(true);
 
         setBrake(true);
     }
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return motor.failureFlag ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
+        return turretMotor.failureFlag ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
     }
 
     /**
@@ -110,7 +110,7 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        MotorDisconnectedIssue.handleIssue(this, motor);
+        MotorDisconnectedIssue.handleIssue(this, turretMotor);
         if (robotSettings.DEBUG && DEBUG) {
             System.out.println("Turret degrees:" + turretDegrees());
         }
@@ -188,7 +188,7 @@ public class Turret implements ISubsystem {
             //UserInterface.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
             UserInterface.smartDashboardPutNumber("Turret Omega", omegaSetpoint);
             UserInterface.smartDashboardPutNumber("Turret Position", turretDegrees());
-            UserInterface.smartDashboardPutNumber("Turret Speed", motor.getRotations());
+            UserInterface.smartDashboardPutNumber("Turret Speed", turretMotor.getRotations());
             UserInterface.smartDashboardPutBoolean("Turret Safe", isSafe());
             if (robotSettings.ENABLE_IMU && guidance != null) {
                 //no warranties
@@ -208,8 +208,8 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void initTeleop() {
-        motor.resetEncoder();
-        motor.setBrake(true);
+        turretMotor.resetEncoder();
+        turretMotor.setBrake(true);
     }
 
     @Override
@@ -222,7 +222,7 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void initDisabled() {
-        motor.setBrake(false);
+        turretMotor.setBrake(false);
     }
 
     @Override
@@ -239,7 +239,7 @@ public class Turret implements ISubsystem {
      * @return position of turret in degrees
      */
     private double turretDegrees() {
-        return motor.getRotations();
+        return turretMotor.getRotations();
     }
 
     /**
@@ -277,7 +277,7 @@ public class Turret implements ISubsystem {
         }
         //Dont overcook it pls
         //if (!Robot.shooter.isShooting) {
-        motor.moveAtPercent(speed * 0.15);
+        turretMotor.moveAtPercent(speed * 0.15);
         //}
     }
 
@@ -298,7 +298,7 @@ public class Turret implements ISubsystem {
      * @param brake should i brake when off? (Y/N)
      */
     public void setBrake(boolean brake) {
-        motor.setBrake(brake);
+        turretMotor.setBrake(brake);
     }
 
     /**

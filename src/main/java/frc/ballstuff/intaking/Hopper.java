@@ -19,10 +19,10 @@ import static frc.robot.Robot.robotSettings;
  * is ) to the {@link frc.ballstuff.shooting.Shooter}
  */
 public class Hopper implements ISubsystem {
-    private static final boolean DEBUG = true;
-    private AbstractMotorController agitator, indexer;
-    private IDistanceSensor indexSensor;
-    private boolean agitatorActive = false, indexerActive = false;
+    private static final boolean DEBUG = false;
+    public AbstractMotorController agitator, indexer;
+    public IDistanceSensor indexSensor;
+    public boolean agitatorActive = false, indexerActive = false;
 
     public Hopper() {
         addToMetaList();

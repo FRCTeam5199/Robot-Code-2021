@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import static frc.robot.Robot.robotSettings;
 
 public class LEDs {
-    private static final Random random = new Random(System.currentTimeMillis());
+    //private static final Random random = new Random(System.currentTimeMillis());
     private final boolean drawBackGround = true;
     private AddressableLED ledConfig;
     private AddressableLEDBuffer ledBuffer;
@@ -56,7 +56,7 @@ public class LEDs {
         //Oh boy, time to bleed.
         EYES_DESERVE_TO_BLEED((ignored) -> {
             for (int leaderIndex = 0; leaderIndex < Robot.leds.ledBuffer.getLength(); leaderIndex++) {
-                Robot.leds.ledBuffer.setRGB(leaderIndex, random.nextInt(255), random.nextInt(255), random.nextInt(255));
+                Robot.leds.ledBuffer.setRGB(leaderIndex, Robot.RANDOM.nextInt(255), Robot.RANDOM.nextInt(255), Robot.RANDOM.nextInt(255));
             }
         }),
 

@@ -22,22 +22,8 @@ public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = false;
     public boolean unTargeted = true;
     BaseController joystickController, panel;
-    /*
-    private final double[][] sizeEncoderPositionArray = {
-            {2.415, 0.05},
-            {1.466, 0.77},
-            {0.793, 0.95},
-            {0.481, 1.235},
-    };
-    private final double[][] sizeEncoderPositionArrayStraight = {
-            {2.415, 0.05},
-            {1.466, 0.77},
-            {0.925, 1.05},
-            {0.481, 1.135},
-    };
-     */
-    private double moveTo = 0.0;
-    private AbstractMotorController hoodMotor;
+    public double moveTo = 0.0;
+    public AbstractMotorController hoodMotor;
 
     public ArticulatedHood() {
         addToMetaList();

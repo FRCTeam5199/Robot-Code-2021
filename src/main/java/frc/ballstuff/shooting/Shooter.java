@@ -39,11 +39,11 @@ public class Shooter implements ISubsystem {
     public int ballsShot = 0, ticksPassed = 0;
     //Yes this needs to be package private
     boolean singleShot = false;
-    IVision goalCamera;
+    public IVision goalCamera;
     BaseController panel, joystickController;
-    private AbstractMotorController leader, follower;
+    public AbstractMotorController leader, follower;
     private PID lastPID = PID.EMPTY_PID;
-    private boolean isConstSpeed, isConstSpeedLast = false, shooting = false;
+    public boolean isConstSpeed, isConstSpeedLast = false, shooting = false;
 
     public Shooter() {
         addToMetaList();

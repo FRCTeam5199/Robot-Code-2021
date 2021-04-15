@@ -21,9 +21,9 @@ import static frc.robot.Robot.robotSettings;
  */
 public class Intake implements ISubsystem {
     private static final boolean DEBUG = false;
-    private AbstractMotorController intakeMotor;
-    private BaseController joystick;
-    private int intakeMult;
+    public AbstractMotorController intakeMotor;
+    public BaseController joystick;
+    public int intakeMult;
 
     public Intake() throws InitializationFailureException, IllegalStateException {
         addToMetaList();
