@@ -2,6 +2,9 @@ package frc.discordbot.commands;
 
 import frc.drive.DriveManagerStandard;
 import frc.drive.DriveManagerSwerve;
+import frc.drive.auton.Point;
+import frc.misc.ClientSide;
+import frc.misc.ServerSide;
 import frc.robot.Robot;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -15,21 +18,19 @@ public class DriveDistanceCommand extends AbstractCommand {
 
     @Override
     public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
-        double distTravelled = ((DriveDistanceThenReplyData) message).distanceTravelled;
-        switch (Robot.robotSettings.DRIVE_BASE) {
-            case SWIVEL:
-                distTravelled = ((DriveManagerSwerve) Robot.driver).driverFR.driver.getRotations();
-                Robot.driver.driveMPS(Integer.parseInt(message.CONTENT.split(" ")[2]), Integer.parseInt(message.CONTENT.split(" ")[2]), 0);
-                break;
-            case STANDARD:
-                distTravelled = ((DriveManagerStandard) Robot.driver).leaderL.getRotations();
-                ((DriveManagerStandard) Robot.driver).driveFPS(Double.parseDouble(message.CONTENT.split(" ")[2]), Double.parseDouble(message.CONTENT.split(" ")[2]));
-                break;
+        if (message instanceof DriveDistanceCommandData)
+            return runChecked((DriveDistanceCommandData) message);
+        throw new IllegalArgumentException("I cant use that data");
+    }
+
+    public AbstractCommandResponse runChecked(DriveDistanceCommandData message){
+        if (message.startingPoint == null){
+            message.startingPoint = new Point(Robot.driver.guidance.fieldX(),Robot.driver.guidance.fieldY());
         }
-        if (distTravelled >= Double.parseDouble(message.CONTENT.split(" ")[1])) {
+        Robot.driver.driveMPS(message.requestedSpeed, 0, 0);
+        if (!new Point(Robot.driver.guidance.fieldX(),Robot.driver.guidance.fieldY()).isWithin(message.requestedTravel, message.startingPoint)) {
             Robot.driver.driveMPS(0,0,0);
-            Robot.driver.resetDriveEncoders();
-            return new DriveDistanceThenReplyResponse(message);
+            return new DriveDistanceCommandResponse(message);
         }
         return null;
     }
@@ -46,19 +47,20 @@ public class DriveDistanceCommand extends AbstractCommand {
 
     @Override
     public AbstractCommandData extractData(MessageReceivedEvent message) {
-        return new DriveDistanceThenReplyData(message);
+        return new DriveDistanceCommandData(message);
     }
 
-    public static class DriveDistanceThenReplyData extends AbstractCommandData {
-        private double distanceTravelled = 0;
+    public static class DriveDistanceCommandData extends AbstractCommandData {
+        @ClientSide
+        private Point startingPoint;
+        private double requestedTravel = 1;
+        private double requestedSpeed = 1;
 
-        protected DriveDistanceThenReplyData(MessageReceivedEvent message) {
+        @ServerSide
+        protected DriveDistanceCommandData(MessageReceivedEvent message) {
             super(message);
-            if (Robot.robotSettings.ENABLE_DRIVE && Robot.robotSettings.ENABLE_IMU) {
-
-            } else {
-
-            }
+            requestedTravel = Double.parseDouble(CONTENT.split(" ")[1]);
+            requestedSpeed = Double.parseDouble(CONTENT.split(" ")[2]);
         }
 
         @Override
@@ -67,8 +69,8 @@ public class DriveDistanceCommand extends AbstractCommand {
         }
     }
 
-    public static class DriveDistanceThenReplyResponse extends AbstractCommandResponse {
-        protected DriveDistanceThenReplyResponse(AbstractCommandData originalData) {
+    public static class DriveDistanceCommandResponse extends AbstractCommandResponse {
+        protected DriveDistanceCommandResponse(AbstractCommandData originalData) {
             super(originalData);
         }
 
