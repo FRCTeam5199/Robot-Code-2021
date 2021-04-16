@@ -89,4 +89,5 @@
 |[DriveManagerStandard.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/drive/DriveManagerStandard.java)|389 (4.5%)|277|71.2%|78|20.1%|34|8.7%|
 |[ControllerEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/controllers/ControllerEnums.java)|221 (2.6%)|126|57.0%|50|22.6%|45|20.4%|
 |[DriveManagerSwerve.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/drive/DriveManagerSwerve.java)|330 (3.8%)|230|69.7%|44|13.3%|56|17.0%|
-|Total (88)|8615|5668|65.8%|1768| 20.5%|1179|13.7%| 
+|Average |97.9|64.4|X|20.1|X|13.4|X|
+|Total (88)|8615|5668|65.8%|1768| 20.5%|1179|13.7%|

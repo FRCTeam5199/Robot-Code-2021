@@ -89,4 +89,5 @@
 |[GoalLimelight.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/vision/camera/GoalLimelight.java)|154 (1.8%)|121|78.6%|6|3.9%|27|17.5%|
 |[VictorMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/motors/VictorMotorController.java)|151 (1.8%)|124|82.1%|5|3.3%|22|14.6%|
 |[Wait5TicksThenReplyCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/commands/Wait5TicksThenReplyCommand.java)|54 (0.6%)|43|79.6%|0|0.0%|11|20.4%|
-|Total (88)|8615|5668|65.8%|1768| 20.5%|1179|13.7%| 
+|Average |97.9|64.4|X|20.1|X|13.4|X|
+|Total (88)|8615|5668|65.8%|1768| 20.5%|1179|13.7%|

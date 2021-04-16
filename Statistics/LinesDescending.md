@@ -89,4 +89,5 @@
 |[IntakeControlStyles.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/ballstuff/intaking/IntakeControlStyles.java)|9 (0.1%)|4|44.4%|3|33.3%|2|22.2%|
 |[ShootingControlStyles.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/ballstuff/shooting/ShootingControlStyles.java)|9 (0.1%)|4|44.4%|3|33.3%|2|22.2%|
 |[SupportedIMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/telemetry/imu/SupportedIMU.java)|9 (0.1%)|4|44.4%|3|33.3%|2|22.2%|
-|Total (88)|8615|5668|65.8%|1768| 20.5%|1179|13.7%| 
+|Average |97.9|64.4|X|20.1|X|13.4|X|
+|Total (88)|8615|5668|65.8%|1768| 20.5%|1179|13.7%|

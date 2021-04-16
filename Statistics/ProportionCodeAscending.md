@@ -89,4 +89,5 @@
 |[Robot.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/robot/Robot.java)|290 (3.4%)|237|81.7%|33|11.4%|20|6.9%|
 |[VictorMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/motors/VictorMotorController.java)|151 (1.8%)|124|82.1%|5|3.3%|22|14.6%|
 |[ArticulatedHood.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/ballstuff/shooting/ArticulatedHood.java)|309 (3.6%)|262|84.8%|23|7.4%|24|7.8%|
-|Total (88)|8615|5668|65.8%|1768| 20.5%|1179|13.7%| 
+|Average |97.9|64.4|X|20.1|X|13.4|X|
+|Total (88)|8615|5668|65.8%|1768| 20.5%|1179|13.7%|
