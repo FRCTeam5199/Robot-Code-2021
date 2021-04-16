@@ -19,11 +19,11 @@ XBoxController.java,58 (2.8%),26,44.8%,26,44.8%,6,10.3%
 DiscordBot.java,58 (2.7%),45,77.6%,7,12.1%,6,10.3%
 MessageHandler.java,125 (5.5%),101,80.8%,14,11.2%,10,8.0%
 AbstractCommand.java,127 (5.3%),63,49.6%,45,35.4%,19,15.0%
-DriveDistanceCommand.java,80 (3.2%),67,83.8%,0,0.0%,13,16.3%
+DriveDistanceCommand.java,82 (3.3%),70,85.4%,0,0.0%,12,14.6%
 PingCommand.java,73 (2.9%),57,78.1%,9,12.3%,7,9.6%
 PlaySongCommand.java,45 (1.7%),32,71.1%,6,13.3%,7,15.6%
 RoboPingCommand.java,67 (2.5%),47,70.1%,9,13.4%,11,16.4%
-StatusCommand.java,53 (2.0%),39,73.6%,7,13.2%,7,13.2%
+StatusCommand.java,53 (1.9%),39,73.6%,7,13.2%,7,13.2%
 Wait5TicksThenReplyCommand.java,53 (1.9%),43,81.1%,0,0.0%,10,18.9%
 AbstractDriveManager.java,76 (2.7%),38,50.0%,26,34.2%,12,15.8%
 DriveBases.java,9 (0.3%),5,55.6%,3,33.3%,1,11.1%
@@ -42,7 +42,7 @@ AutonManager.java,53 (1.3%),34,64.2%,3,5.7%,16,30.2%
 Chirp.java,239 (5.5%),162,67.8%,48,20.1%,29,12.1%
 ClientSide.java,10 (0.2%),3,30.0%,6,60.0%,1,10.0%
 ISubsystem.java,96 (2.1%),20,20.8%,62,64.6%,14,14.6%
-InitializationFailureException.java,43 (1.0%),15,34.9%,23,53.5%,5,11.6%
+InitializationFailureException.java,43 (0.9%),15,34.9%,23,53.5%,5,11.6%
 LEDs.java,92 (2.0%),74,80.4%,5,5.4%,13,14.1%
 PID.java,63 (1.3%),36,57.1%,18,28.6%,9,14.3%
 QuoteOfTheDay.java,69 (1.5%),55,79.7%,11,15.9%,3,4.3%
@@ -88,4 +88,4 @@ SupportedVision.java,9 (0.1%),4,44.4%,3,33.3%,2,22.2%
 VisionLEDMode.java,20 (0.2%),6,30.0%,13,65.0%,1,5.0%
 IDistanceSensor.java,30 (0.4%),15,50.0%,11,36.7%,4,13.3%
 RevDistanceSensor.java,89 (1.0%),55,61.8%,11,12.4%,23,25.8%
-Total,8630,5735,0.7,1768,0.2,1127,0.1
+Total,8632,5738,0.7,1768,0.2,1126,0.1
