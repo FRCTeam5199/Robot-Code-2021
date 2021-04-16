@@ -4,9 +4,9 @@
 |[ClientServerPipeline.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/robot/ClientServerPipeline.java)|284 (3.3%)|153|53.9%|111|39.1%|20|7.0%|
 |[AbstractMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/motors/AbstractMotorController.java)|172 (2.0%)|49|28.5%|99|57.6%|24|14.0%|
 |[DriveManagerStandard.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/drive/DriveManagerStandard.java)|389 (4.5%)|277|71.2%|78|20.1%|34|8.7%|
-|[Turret.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/ballstuff/shooting/Turret.java)|313 (3.7%)|217|69.3%|67|21.4%|29|9.3%|
+|[Turret.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/ballstuff/shooting/Turret.java)|313 (3.6%)|217|69.3%|67|21.4%|29|9.3%|
 |[ISubsystem.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/misc/ISubsystem.java)|96 (1.1%)|20|20.8%|62|64.6%|14|14.6%|
-|[Shooter.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/ballstuff/shooting/Shooter.java)|373 (4.4%)|281|75.3%|62|16.6%|30|8.0%|
+|[Shooter.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/ballstuff/shooting/Shooter.java)|373 (4.3%)|281|75.3%|62|16.6%|30|8.0%|
 |[ControllerEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/controllers/ControllerEnums.java)|221 (2.6%)|126|57.0%|50|22.6%|45|20.4%|
 |[Chirp.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/misc/Chirp.java)|239 (2.8%)|162|67.8%|48|20.1%|29|12.1%|
 |[BallPhoton.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/vision/camera/BallPhoton.java)|181 (2.1%)|107|59.1%|47|26.0%|27|14.9%|
@@ -32,7 +32,7 @@
 |[WiiController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/controllers/WiiController.java)|36 (0.4%)|12|33.3%|21|58.3%|3|8.3%|
 |[ISimpleIssue.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/selfdiagnostics/ISimpleIssue.java)|40 (0.5%)|17|42.5%|20|50.0%|3|7.5%|
 |[AbstractIMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/telemetry/imu/AbstractIMU.java)|96 (1.1%)|61|63.5%|20|20.8%|15|15.6%|
-|[AbstractAutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/drive/auton/AbstractAutonManager.java)|125 (1.5%)|92|73.6%|19|15.2%|14|11.2%|
+|[AbstractAutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/drive/auton/AbstractAutonManager.java)|125 (1.4%)|92|73.6%|19|15.2%|14|11.2%|
 |[WrappedNavX2IMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/telemetry/imu/WrappedNavX2IMU.java)|96 (1.1%)|59|61.5%|19|19.8%|18|18.8%|
 |[PID.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/misc/PID.java)|63 (0.7%)|36|57.1%|18|28.6%|9|14.3%|
 |[SwerveMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/motors/SwerveMotorController.java)|57 (0.7%)|36|63.2%|17|29.8%|4|7.0%|
@@ -40,12 +40,12 @@
 |[UserInterface.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/misc/UserInterface.java)|98 (1.1%)|71|72.4%|16|16.3%|11|11.2%|
 |[BaseController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/controllers/BaseController.java)|123 (1.4%)|84|68.3%|15|12.2%|24|19.5%|
 |[ButtonPanelController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/controllers/ButtonPanelController.java)|33 (0.4%)|15|45.5%|14|42.4%|4|12.1%|
-|[MessageHandler.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/MessageHandler.java)|125 (1.5%)|101|80.8%|14|11.2%|10|8.0%|
+|[MessageHandler.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/MessageHandler.java)|125 (1.4%)|101|80.8%|14|11.2%|10|8.0%|
 |[SparkMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/motors/SparkMotorController.java)|195 (2.3%)|159|81.5%|14|7.2%|22|11.3%|
 |[VisionLEDMode.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/vision/camera/VisionLEDMode.java)|20 (0.2%)|6|30.0%|13|65.0%|1|5.0%|
 |[TalonMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/motors/TalonMotorController.java)|177 (2.1%)|142|80.2%|13|7.3%|22|12.4%|
 |[QuoteOfTheDay.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/misc/QuoteOfTheDay.java)|69 (0.8%)|55|79.7%|11|15.9%|3|4.3%|
-|[IDistanceSensor.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/vision/distancesensor/IDistanceSensor.java)|30 (0.4%)|15|50.0%|11|36.7%|4|13.3%|
+|[IDistanceSensor.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/vision/distancesensor/IDistanceSensor.java)|30 (0.3%)|15|50.0%|11|36.7%|4|13.3%|
 |[Robot2020.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/robot/robotconfigs/twentytwenty/Robot2020.java)|112 (1.3%)|83|74.1%|11|9.8%|18|16.1%|
 |[PracticeRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/robot/robotconfigs/twentyone/PracticeRobot2021.java)|119 (1.4%)|89|74.8%|11|9.2%|19|16.0%|
 |[RevDistanceSensor.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/vision/distancesensor/RevDistanceSensor.java)|89 (1.0%)|55|61.8%|11|12.4%|23|25.8%|
@@ -54,7 +54,7 @@
 |[SixButtonGuitarController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/controllers/SixButtonGuitarController.java)|27 (0.3%)|14|51.9%|10|37.0%|3|11.1%|
 |[CompetitionRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/robot/robotconfigs/twentyone/CompetitionRobot2021.java)|118 (1.4%)|91|77.1%|10|8.5%|17|14.4%|
 |[Swerve2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/robot/robotconfigs/twentyone/Swerve2021.java)|120 (1.4%)|93|77.5%|10|8.3%|17|14.2%|
-|[PingCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/commands/PingCommand.java)|73 (0.9%)|57|78.1%|9|12.3%|7|9.6%|
+|[PingCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/commands/PingCommand.java)|73 (0.8%)|57|78.1%|9|12.3%|7|9.6%|
 |[DistanceSensorNonOpIssue.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/selfdiagnostics/DistanceSensorNonOpIssue.java)|43 (0.5%)|26|60.5%|9|20.9%|8|18.6%|
 |[RoboPingCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/commands/RoboPingCommand.java)|67 (0.8%)|47|70.1%|9|13.4%|11|16.4%|
 |[BopItBasicController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/controllers/BopItBasicController.java)|20 (0.2%)|10|50.0%|8|40.0%|2|10.0%|
@@ -74,7 +74,7 @@
 |[GoalLimelight.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/vision/camera/GoalLimelight.java)|154 (1.8%)|121|78.6%|6|3.9%|27|17.5%|
 |[DriveTypes.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/drive/DriveTypes.java)|15 (0.2%)|9|60.0%|5|33.3%|1|6.7%|
 |[LEDs.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/misc/LEDs.java)|92 (1.1%)|74|80.4%|5|5.4%|13|14.1%|
-|[VictorMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/motors/VictorMotorController.java)|150 (1.8%)|124|82.7%|5|3.3%|21|14.0%|
+|[VictorMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/motors/VictorMotorController.java)|150 (1.7%)|124|82.7%|5|3.3%|21|14.0%|
 |[SubsystemStatus.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/misc/SubsystemStatus.java)|9 (0.1%)|4|44.4%|4|44.4%|1|11.1%|
 |[SupportedMotors.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/motors/SupportedMotors.java)|15 (0.2%)|8|53.3%|4|26.7%|3|20.0%|
 |[IntakeControlStyles.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/ballstuff/intaking/IntakeControlStyles.java)|8 (0.1%)|4|50.0%|3|37.5%|1|12.5%|
@@ -89,5 +89,6 @@
 |[AutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/drive/auton/followtrajectory/AutonManager.java)|51 (0.6%)|34|66.7%|3|5.9%|14|27.5%|
 |[AutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/drive/auton/galacticsearchscam/AutonManager.java)|53 (0.6%)|34|64.2%|3|5.7%|16|30.2%|
 |[Wait5TicksThenReplyCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/commands/Wait5TicksThenReplyCommand.java)|53 (0.6%)|43|81.1%|0|0.0%|10|18.9%|
-|Average |97.2|64.4|X|20.1|X|12.7|X|
-|Total (88)|8550|5668|66.3%|1768| 20.7%|1114|13.0%|
+|[DriveDistanceCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/discordbot/commands/DriveDistanceCommand.java)|80 (0.9%)|67|83.8%|0|0.0%|13|16.3%|
+|Average |97.0|64.4|X|19.9|X|12.7|X|
+|Total (89)|8630|5735|66.5%|1768| 20.5%|1127|13.1%|
