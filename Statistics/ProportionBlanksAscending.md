@@ -89,4 +89,4 @@
 |[WrappedPigeonIMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/telemetry/imu/WrappedPigeonIMU.java)|68 (0.8%)|43|63.2%|6|8.8%|19|27.9%|
 |[SupportedVision.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/vision/camera/SupportedVision.java)|10 (0.1%)|4|40.0%|3|30.0%|3|30.0%|
 |[AutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src/main/java/frc/drive/auton/galacticsearchscam/AutonManager.java)|53 (0.6%)|34|64.2%|3|5.7%|16|30.2%|
-|Total (88)|8615|5668|65.8%|1768| 20.5%|1179|13.7%|
+|Total (88)|8615|5668|65.8%|1768| 20.5%|1179|13.7%| 
