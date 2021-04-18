@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Code_Stats
-        uses: jojo2357/CodeStats@main
+        uses: jojo2357/CodeStats@LATEST
         with:
           root_dir: 'src/main/java/frc'
 
@@ -21,3 +21,4 @@ jobs:
           commit_message: Woooooooooo stats
           commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit_options: --force
