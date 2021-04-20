@@ -2,8 +2,13 @@ package frc.gpws;
 
 import frc.misc.InitializationFailureException;
 import frc.misc.ServerSide;
+import frc.robot.Main;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -11,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @ServerSide
-public class MusicStuff implements Runnable {
+public class SoundManager implements Runnable {
     public static ArrayList<Sound> queue = new ArrayList<>();
     // current status of clip
     private static String status;
@@ -88,6 +93,45 @@ public class MusicStuff implements Runnable {
         }
     }
 
+    public static void enqueueSound(Sound sound) {
+        if (queue.size() == 0) {
+            queue.add(sound);
+            stop();
+            try {
+                resetAudioStream();
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        } else {
+            queue.add(sound);
+        }
+    }
+
+    public static void stop() {
+        currentInput.stop();
+        currentInput.close();
+        currentFrame = 0L;
+        currentInput.setMicrosecondPosition(0);
+    }
+
+    @Override
+    public void run() {
+        init();
+        try {
+            resetAudioStream();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+        while (true) {
+            try {
+                Thread.sleep(20);
+                update();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @ServerSide
     public static void init() {
         System.out.println("Pulling from " + new File(".").getAbsolutePath());
@@ -121,46 +165,50 @@ public class MusicStuff implements Runnable {
         }
     }
 
-    public static void stop() {
-        currentInput.stop();
-        currentInput.close();
-        currentFrame = 0L;
-        currentInput.setMicrosecondPosition(0);
-    }
+    public enum SoundPacks implements Serializable {
+        Jojo, TTS, Random;
 
-    public static void enqueueSound(Sound sound) {
-        if (queue.size() == 0) {
-            queue.add(sound);
-            stop();
-            try {
-                resetAudioStream();
-            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                e.printStackTrace();
+        public String getFolder(){
+            if (this == Random){
+                return SoundPacks.values()[Main.RANDOM.nextInt(SoundPacks.values().length)].getFolder();
             }
-        } else {
-            queue.add(sound);
-        }
-    }
-
-    @Override
-    public void run() {
-        init();
-        try {
-            resetAudioStream();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-        while (true) {
-            try {
-                Thread.sleep(20);
-                update();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            return this.name() + "pack";
         }
     }
 
     public enum Sounds implements Serializable {
-        BATTERY, LOW, MOTOR, DISCONNECTED, RECONNECTED
+        AliStopBeingCringe,
+        Backward,
+        Battery,
+        Camera,
+        Disable,
+        Disconnected,
+        Distance,
+        Drive,
+        Failed,
+        Forward,
+        IMU,
+        Immediately,
+        Inspect,
+        Left,
+        Low,
+        Motor,
+        Moving,
+        NonOperational,
+        NonResponsive,
+        Now,
+        One,
+        Overheat,
+        Reconnect,
+        Reconnected,
+        Replace,
+        Right,
+        Robot,
+        Sensor,
+        Shooting,
+        System,
+        Three,
+        Turning,
+        Two,
     }
 }

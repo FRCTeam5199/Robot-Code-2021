@@ -1,8 +1,11 @@
 package frc.motors;
 
+import frc.gpws.Sound;
+import frc.gpws.SoundManager;
 import frc.misc.PID;
 import frc.misc.UserInterface;
 import frc.motors.followers.AbstractFollowerMotorController;
+import frc.robot.Main;
 import frc.robot.Robot;
 
 import java.util.ArrayList;
@@ -154,6 +157,7 @@ public abstract class AbstractMotorController {
         if (getMotorTemperature() >= Robot.robotSettings.OVERHEAT_THRESHOLD) {
             if (!isOverheated) {
                 UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), false);
+                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Overheat));
                 isOverheated = true;
             }
         } else if (isOverheated) {

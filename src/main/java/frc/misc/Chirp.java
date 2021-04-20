@@ -5,6 +5,7 @@ import com.ctre.phoenix.music.Orchestra;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.motors.TalonMotorController;
+import frc.robot.Main;
 import frc.robot.Robot;
 
 import java.io.File;
@@ -207,7 +208,7 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     public String getRandomSong() {
         String songName = "";
-        for (String str : songnames.get(songnames.keySet().toArray()[Robot.RANDOM.nextInt(songnames.keySet().toArray().length)])) {
+        for (String str : songnames.get(songnames.keySet().toArray()[Main.RANDOM.nextInt(songnames.keySet().toArray().length)])) {
             if (songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size())
                 songName = str;
             else if (!songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size() && Integer.parseInt(songName.split("_")[1]) < Integer.parseInt(str.split("_")[1]))

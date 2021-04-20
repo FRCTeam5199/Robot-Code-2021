@@ -1,0 +1,38 @@
+Nouns:
+Motor
+Battery
+IMU
+Camera
+Sensor
+Robot
+Drive(station)
+System
+
+Actions:
+Moving
+Shooting
+Turning
+Inspect
+Disable
+Replace
+Reconnect
+
+Modifiers:
+Low
+Disconnected
+Reconnected
+Distance
+Overheat
+Non-Responsive / Non-Operational
+Forward
+Back
+Left
+Right
+One
+Two
+Three
+Now/Immediately
+Failed
+
+Phrases (meme):
+Stop being cringe

@@ -42,11 +42,6 @@ import java.util.Random;
 @ClientSide
 public class Robot extends TimedRobot {
     /**
-     * No son, I refuse to make a new, unseeded random everytime we want a new song. Besides, we have a random at home
-     * already so you don't need another one
-     */
-    public static final Random RANDOM = new Random(System.currentTimeMillis());
-    /**
      * If you change this ONE SINGULAR VARIABLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
      * using from the list under robotconfigs
      */

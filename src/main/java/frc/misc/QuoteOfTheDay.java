@@ -1,5 +1,6 @@
 package frc.misc;
 
+import frc.robot.Main;
 import frc.robot.Robot;
 
 /**
@@ -64,6 +65,6 @@ public class QuoteOfTheDay {
      * @return a baller quote
      */
     public static String getRandomQuote() {
-        return quotes[Robot.RANDOM.nextInt(quotes.length)];
+        return quotes[Main.RANDOM.nextInt(quotes.length)];
     }
 }

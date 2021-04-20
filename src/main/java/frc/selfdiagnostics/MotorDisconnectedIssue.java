@@ -1,6 +1,6 @@
 package frc.selfdiagnostics;
 
-import frc.gpws.MusicStuff;
+import frc.gpws.SoundManager;
 import frc.gpws.Sound;
 import frc.misc.ISubsystem;
 import frc.motors.AbstractMotorController;
@@ -39,7 +39,7 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
         //System.out.println("Owner = " + owner.getSubsystemName() + "\nID = " + id + "\nFix = " + fix);
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)) {
             IssueHandler.issues.put(owner, new MotorDisconnectedIssue(id, fix));
-            Main.pipeline.sendSound(new Sound(MusicStuff.Sounds.MOTOR, MusicStuff.Sounds.DISCONNECTED));
+            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Motor, SoundManager.Sounds.Disconnected));
         }//else;
             //already reported
     }
@@ -47,7 +47,7 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
     private static void resolveIssue(ISubsystem owner, int fixedMotorID) {
         if (IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)
             if (((MotorDisconnectedIssue) IssueHandler.issues.get(owner)).faultedMotorID == fixedMotorID){
-                Main.pipeline.sendSound(new Sound(MusicStuff.Sounds.MOTOR, MusicStuff.Sounds.RECONNECTED));
+                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Motor, SoundManager.Sounds.Reconnected));
                 IssueHandler.issues.remove(owner);
             }
     }
@@ -60,6 +60,6 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
 
     @Override
     public String getRandomFix() {
-        return knownFix ? fix : "Not sure, " + String.format(RANDOM_FIXES[Robot.RANDOM.nextInt(RANDOM_FIXES.length)], faultedMotorID);
+        return knownFix ? fix : "Not sure, " + String.format(RANDOM_FIXES[Main.RANDOM.nextInt(RANDOM_FIXES.length)], faultedMotorID);
     }
 }

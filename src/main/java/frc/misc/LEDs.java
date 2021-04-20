@@ -2,6 +2,7 @@ package frc.misc;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import frc.robot.Main;
 import frc.robot.Robot;
 
 import javax.annotation.Nonnull;
@@ -56,7 +57,7 @@ public class LEDs {
         //Oh boy, time to bleed.
         EYES_DESERVE_TO_BLEED((ignored) -> {
             for (int leaderIndex = 0; leaderIndex < Robot.leds.ledBuffer.getLength(); leaderIndex++) {
-                Robot.leds.ledBuffer.setRGB(leaderIndex, Robot.RANDOM.nextInt(255), Robot.RANDOM.nextInt(255), Robot.RANDOM.nextInt(255));
+                Robot.leds.ledBuffer.setRGB(leaderIndex, Main.RANDOM.nextInt(255), Main.RANDOM.nextInt(255), Main.RANDOM.nextInt(255));
             }
         }),
 

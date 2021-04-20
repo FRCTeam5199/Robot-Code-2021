@@ -1,6 +1,9 @@
 package frc.selfdiagnostics;
 
+import frc.gpws.Sound;
+import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
+import frc.robot.Main;
 import frc.robot.Robot;
 
 /**
@@ -18,11 +21,17 @@ public class IMUNonOpIssue implements ISimpleIssue {
     }
 
     private static void reportIssue(ISubsystem owner, String imuName) {
-        IssueHandler.issues.put(owner, new IMUNonOpIssue(imuName));
+        if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof IMUNonOpIssue)) {
+            IssueHandler.issues.put(owner, new IMUNonOpIssue(imuName));
+            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.IMU, SoundManager.Sounds.NonOperational));
+        }
     }
 
     private static void resolveIssue(ISubsystem owner) {
-        IssueHandler.issues.remove(owner);
+        if (IssueHandler.issues.get(owner) instanceof IMUNonOpIssue) {
+            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.IMU, SoundManager.Sounds.Reconnected));
+            IssueHandler.issues.remove(owner);
+        }
     }
 
     private IMUNonOpIssue(String name) {
@@ -31,6 +40,6 @@ public class IMUNonOpIssue implements ISimpleIssue {
 
     @Override
     public String getRandomFix() {
-        return String.format(fixes[Robot.RANDOM.nextInt(fixes.length)], imuName);
+        return String.format(fixes[Main.RANDOM.nextInt(fixes.length)], imuName);
     }
 }
