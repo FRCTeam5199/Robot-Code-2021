@@ -89,6 +89,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverBR.driver.setSensorToRealDistanceFactor(robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60);
         driverFL.driver.setSensorToRealDistanceFactor(robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60);
         driverBL.driver.setSensorToRealDistanceFactor(robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60);
+        setupSteeringEncoders();
     }
 
     @Override

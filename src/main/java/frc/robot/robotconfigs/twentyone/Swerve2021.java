@@ -30,7 +30,7 @@ public class Swerve2021 extends DefaultConfig {
         //Misc
         ENABLE_VISION = false;
         USE_PHOTONVISION = false;
-        ENABLE_IMU = false;
+        ENABLE_IMU = true;
         IMU_NAVX_PORT = I2C.Port.kMXP;
 
         //SHOOTER

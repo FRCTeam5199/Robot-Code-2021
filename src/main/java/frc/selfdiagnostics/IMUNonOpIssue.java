@@ -22,6 +22,7 @@ public class IMUNonOpIssue implements ISimpleIssue {
 
     private static void reportIssue(ISubsystem owner, String imuName) {
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof IMUNonOpIssue)) {
+            System.out.println("Cringe ahhahahahahahaa nonop");
             IssueHandler.issues.put(owner, new IMUNonOpIssue(imuName));
             Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.IMU, SoundManager.Sounds.NonOperational));
         }
@@ -29,6 +30,7 @@ public class IMUNonOpIssue implements ISimpleIssue {
 
     private static void resolveIssue(ISubsystem owner) {
         if (IssueHandler.issues.get(owner) instanceof IMUNonOpIssue) {
+            System.out.println("Cringe ahhahahahahahaa op");
             Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.IMU, SoundManager.Sounds.Reconnected));
             IssueHandler.issues.remove(owner);
         }

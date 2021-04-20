@@ -1,7 +1,7 @@
 package frc.pdp;
 
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.selfdiagnostics.BrownoutIssue;
@@ -18,13 +18,13 @@ public class PDP implements ISubsystem {
     //otherEnergy = UserInterface.PDP_OTHER_ENERGY.getEntry(),
     peakPower = UserInterface.PDP_PEAK_POWER.getEntry();
 */
-    private final PowerDistributionPanel powerDistributionPanel;
+    //private final PowerDistributionPanel powerDistributionPanel;
     private double peakCurrentVal = 0;
     private double peakPowerVal = 0;
 
     public PDP(int channelID) {
         addToMetaList();
-        powerDistributionPanel = new PowerDistributionPanel(channelID);
+        //powerDistributionPanel = new PowerDistributionPanel(channelID);
     }
 
     @Override
@@ -54,9 +54,8 @@ public class PDP implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        System.out.println("Voltage: " + RobotController.getBatteryVoltage());
         BrownoutIssue.handleIssue(this, RobotController.getBatteryVoltage() < 9 && RobotController.getBatteryVoltage() > 0);
-        UndervoltageIssue.handleIssue(this, RobotController.getBatteryVoltage() >= 9 && RobotController.getBatteryVoltage() < 9.5);
+        UndervoltageIssue.handleIssue(this, RobotController.getBatteryVoltage() >= 9 && RobotController.getBatteryVoltage() < 9);
     }
 
     @Override

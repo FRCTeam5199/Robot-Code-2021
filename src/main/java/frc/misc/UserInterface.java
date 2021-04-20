@@ -89,7 +89,7 @@ public class UserInterface {
             MUSIC_SELECTOR = MUSICK_TAB.add("SongSelector", Chirp.MUSIC_SELECTION).withWidget(BuiltInWidgets.kComboBoxChooser);
         }
         if (robotSettings.ENABLE_PDP) {
-            PDP_DISPLAY = PDP_TAB.add("PDPDisplay", new PowerDistributionPanel(robotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
+            //PDP_DISPLAY = PDP_TAB.add("PDPDisplay", new PowerDistributionPanel(robotSettings.PDP_ID)).withWidget(BuiltInWidgets.kPowerDistributionPanel);
         }
         if (robotSettings.ENABLE_SHOOTER) {
             SHOOTER_RPM = SHOOTER_TAB.add("RPM", 0); //TODO Edit shooter line 195
