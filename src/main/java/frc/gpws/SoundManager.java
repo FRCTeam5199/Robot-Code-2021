@@ -55,7 +55,7 @@ public class SoundManager implements Runnable {
     // Method to reset audio stream
     public static void resetAudioStream() throws UnsupportedAudioFileException, IOException,
             LineUnavailableException {
-        currentInput.open(AudioSystem.getAudioInputStream(new File("sounds/" + queue.get(0).getCurrentSound() + ".wav").getAbsoluteFile()));
+        currentInput.open(AudioSystem.getAudioInputStream(new File("sounds/" + queue.get(0).soundPack + "/" + queue.get(0).getCurrentSound() + ".wav").getAbsoluteFile()));
         currentInput.loop(0);
     }
 

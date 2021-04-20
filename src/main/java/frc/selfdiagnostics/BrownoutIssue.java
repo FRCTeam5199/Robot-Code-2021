@@ -7,7 +7,7 @@ import frc.robot.Main;
 
 public class BrownoutIssue implements ISimpleIssue{
     public static void handleIssue(ISubsystem owner, boolean report) {
-        if (report)
+        if (!report)
             resolveIssue(owner);
         else
             reportIssue(owner);

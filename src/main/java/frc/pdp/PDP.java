@@ -2,11 +2,8 @@ package frc.pdp;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import frc.gpws.Sound;
-import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
-import frc.robot.Main;
 import frc.selfdiagnostics.BrownoutIssue;
 import frc.selfdiagnostics.UndervoltageIssue;
 
