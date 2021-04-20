@@ -36,7 +36,7 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
 
     private static void reportIssue(ISubsystem owner, int id, String fix) {
         System.out.println("Issue reported!");
-        if (IssueHandler.issues.containsKey(owner) && !(IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)) {
+        if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)) {
             IssueHandler.issues.put(owner, new MotorDisconnectedIssue(id, fix));
             Main.pipeline.sendSound(new Sound(MusicStuff.Sounds.MOTOR, MusicStuff.Sounds.DISCONNECTED));
         }else;

@@ -30,7 +30,8 @@ public abstract class BaseController {
             if (allControllers[channel] == null)
                 return allControllers[channel] = clazz.getConstructor(Integer.class).newInstance(channel);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            throw new UnsupportedOperationException("Create a constructor in " + clazz.getName() + " that has ONLY and Integer parameter (not int)");
+            throw new RuntimeException("Haha:" + e);
+            //throw new UnsupportedOperationException("Create a constructor in " + clazz.getName() + " that has ONLY and Integer parameter (not int)");
         }
         if (clazz.isAssignableFrom(allControllers[channel].getClass()))
             return allControllers[channel];
