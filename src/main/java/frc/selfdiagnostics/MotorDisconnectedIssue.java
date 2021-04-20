@@ -1,8 +1,11 @@
 package frc.selfdiagnostics;
 
+import frc.gpws.MusicStuff;
+import frc.gpws.Sound;
 import frc.misc.ISubsystem;
 import frc.motors.AbstractMotorController;
 import frc.motors.followers.AbstractFollowerMotorController;
+import frc.robot.Main;
 import frc.robot.Robot;
 
 /**
@@ -33,7 +36,11 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
 
     private static void reportIssue(ISubsystem owner, int id, String fix) {
         System.out.println("Issue reported!");
-        IssueHandler.issues.put(owner, new MotorDisconnectedIssue(id, fix));
+        if (IssueHandler.issues.containsKey(owner) && !(IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)) {
+            IssueHandler.issues.put(owner, new MotorDisconnectedIssue(id, fix));
+            Main.pipeline.sendSound(new Sound(MusicStuff.Sounds.MOTOR, MusicStuff.Sounds.DISCONNECTED));
+        }else;
+            //already reported
     }
 
     private static void resolveIssue(ISubsystem owner, int fixedMotorID) {

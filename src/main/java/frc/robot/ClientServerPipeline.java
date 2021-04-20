@@ -5,6 +5,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.discordbot.DiscordBot;
 import frc.discordbot.MessageHandler;
 import frc.discordbot.commands.AbstractCommand;
+import frc.gpws.MusicStuff;
+import frc.gpws.Sound;
 import frc.misc.ClientSide;
 import frc.misc.ServerSide;
 
@@ -24,6 +26,8 @@ public class ClientServerPipeline implements Runnable {
     public static boolean SERVER;
     private static NetworkTable serverNetworkTable;
     private static ClientServerPipeline SERVER_PIPELINE, CLIENT_PIPELINE;
+    @ServerSide
+    public static MusicStuff soundManager;
 
     /**
      * This is why we use getters, kids. It means that we <i>should</i> only create a server if requested, or a client
@@ -150,9 +154,11 @@ public class ClientServerPipeline implements Runnable {
     @ServerSide
     public void run() {
         NetworkTableInstance.getDefault().startClientTeam(5199);  // where TEAM=190, 294, etc, or use inst.startClient("hostname") or similar
+        MusicStuff.init();
         while (true) {
             try {
                 Thread.sleep(20);
+                MusicStuff.update();
                 updatePipeline();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -168,6 +174,9 @@ public class ClientServerPipeline implements Runnable {
             if (checkReply()) {
                 readReply().doYourWorst(DiscordBot.bot.getBotObject());
                 System.out.println("Recieved message from teddy");
+            }
+            if (checkSound()){
+                MusicStuff.queue.add(readSound());
             }
         } else {
             if (checkMessage()) {
@@ -280,5 +289,57 @@ public class ClientServerPipeline implements Runnable {
         serverNetworkTable.getEntry("response").setRaw(outboundPacket);
         serverNetworkTable.getEntry("read_reciept_data").setBoolean(false);
         return true;
+    }
+
+    /**
+     * Posts the results of a command to the server from the client.
+     *
+     * @param sound          the command response to send
+     * @param skipDirtyCheck activating this flag will bypass the redundancy check that skips uploading when the
+     *                       existing data is identical
+     * @return true if data was exchanged, false otherwise
+     */
+    @ClientSide
+    public boolean sendSound(Sound sound, boolean skipDirtyCheck) {
+        if (sound == null)
+            return false;
+        byte[] outboundPacket = writeToBytes(sound);
+        if (!skipDirtyCheck && checkDirty(outboundPacket, serverNetworkTable.getEntry("sound").getRaw(new byte[0]))) {
+            return false;
+        }
+        serverNetworkTable.getEntry("sound").setRaw(outboundPacket);
+        serverNetworkTable.getEntry("read_reciept_sound").setBoolean(false);
+        return true;
+    }
+
+    @ClientSide
+    public boolean sendSound(Sound sound) {
+        return sendSound(sound, false);
+    }
+
+    /**
+     * Checks if the server has posted new data yet and if they posted anything meaningful (null check and blank check
+     * only)
+     *
+     * @return true if unread flag is set and data is fresh
+     */
+    @ServerSide
+    public boolean checkSound() {
+        return !serverNetworkTable.getEntry("read_reciept_sound").getBoolean(false) && serverNetworkTable.getEntry("sound").getRaw(new byte[0]).length != 0;
+    }
+
+    /**
+     * Reads the client reply currently in the pipeline, regardless of whether or not the {@link #checkReply() reply is
+     * fresh}
+     *
+     * @return The current reply from the client in the pipeline
+     */
+    @ServerSide
+    public Sound readSound() {
+        byte[] inboundPacket = serverNetworkTable.getEntry("sound").getRaw(new byte[0]);
+        serverNetworkTable.getEntry("read_reciept_sound").setBoolean(true);
+        if (readFromBytes(inboundPacket) instanceof Sound)
+            return (Sound) readFromBytes(inboundPacket);
+        throw new IllegalStateException("Not sure what happened but the command that I read isnt a known command");
     }
 }
