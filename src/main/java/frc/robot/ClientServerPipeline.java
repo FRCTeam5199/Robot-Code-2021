@@ -155,9 +155,11 @@ public class ClientServerPipeline implements Runnable {
         SoundManager.init();
         if (DiscordBot.detectedInternet() && Main.RANDOM.nextInt(4) == 0) {
             try {
-                Runtime.getRuntime().exec(new String[]{"cmd", "/c","start brave https://www.youtube.com/watch?v=bxqLsrlakK8"});
+                Runtime.getRuntime().exec(new String[]{"cmd", "/c","start chrome https://www.youtube.com/watch?v=bxqLsrlakK8"});
             } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    Runtime.getRuntime().exec(new String[]{"cmd", "/c","start brave https://www.youtube.com/watch?v=bxqLsrlakK8"});
+                } catch (IOException ex) {}
             }
         }
         while (true) {

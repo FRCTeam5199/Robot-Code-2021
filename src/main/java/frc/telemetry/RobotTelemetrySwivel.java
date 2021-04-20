@@ -29,7 +29,7 @@ public class RobotTelemetrySwivel extends AbstractRobotTelemetry {
     public void init() {
         super.init();
         if (imu != null) {
-            odometer = new SwerveDriveOdometry(((DriveManagerSwerve) driver).kinematics, Rotation2d.fromDegrees(imu.absoluteYaw()));
+            odometer = new SwerveDriveOdometry(((DriveManagerSwerve) driver).getKinematics(), Rotation2d.fromDegrees(imu.absoluteYaw()));
             robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), ((DriveManagerSwerve) driver).getStates());
         }
     }

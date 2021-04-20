@@ -16,6 +16,8 @@ import frc.motors.SupportedMotors;
 import frc.motors.SwerveMotorController;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 
+import java.util.Objects;
+
 import static frc.robot.Robot.robotSettings;
 
 /*
@@ -35,9 +37,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     private final Translation2d frontRightLocation = new Translation2d(-trackLength / 2 / 39.3701, -trackWidth / 2 / 39.3701);
     private final Translation2d backLeftLocation = new Translation2d(trackLength / 2 / 39.3701, trackWidth / 2 / 39.3701);
     private final Translation2d backRightLocation = new Translation2d(trackLength / 2 / 39.3701, -trackWidth / 2 / 39.3701);
-    public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-            frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation
-    );
+    private SwerveDriveKinematics kinematics;
     public SwerveModuleState[] moduleStates;
     public SwerveMotorController driverFR, driverBR, driverBL, driverFL;
     private PIDController FRpid, BRpid, BLpid, FLpid;
@@ -335,5 +335,9 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         return new SwerveModuleState[]{
                 driverFL.getState(), driverFR.getState(), driverBL.getState(), driverBR.getState()
         };
+    }
+
+    public SwerveDriveKinematics getKinematics() {
+        return Objects.requireNonNullElseGet(kinematics, () -> kinematics = new SwerveDriveKinematics(frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation));
     }
 }
