@@ -180,6 +180,7 @@ public class SoundManager implements Runnable {
         AliStopBeingCringe,
         Backward,
         Battery,
+        Brownout,
         Camera,
         Disable,
         Disconnected,
