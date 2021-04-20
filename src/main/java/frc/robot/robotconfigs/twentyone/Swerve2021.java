@@ -95,6 +95,7 @@ public class Swerve2021 extends DefaultConfig {
         BALL_CAM_NAME = "BallCamera";
 
         //PDP
+        ENABLE_PDP = true;
         PDP_ID = 0;
 
         //Drive Motors

@@ -1,6 +1,6 @@
 package frc.pdp;
 
-import edu.wpi.first.hal.simulation.RoboRioDataJNI;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import frc.gpws.Sound;
 import frc.gpws.SoundManager;
@@ -57,8 +57,9 @@ public class PDP implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        BrownoutIssue.handleIssue(this, RoboRioDataJNI.getVInVoltage() < 9 && RoboRioDataJNI.getVInVoltage() > 0);
-        UndervoltageIssue.handleIssue(this, RoboRioDataJNI.getVInVoltage() >= 9 && RoboRioDataJNI.getVInVoltage() < 9.5);
+        System.out.println("Voltage: " + RobotController.getBatteryVoltage());
+        BrownoutIssue.handleIssue(this, RobotController.getBatteryVoltage() < 9 && RobotController.getBatteryVoltage() > 0);
+        UndervoltageIssue.handleIssue(this, RobotController.getBatteryVoltage() >= 9 && RobotController.getBatteryVoltage() < 9.5);
     }
 
     @Override
