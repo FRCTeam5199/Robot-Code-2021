@@ -3,11 +3,7 @@ package frc.gpws;
 import frc.misc.InitializationFailureException;
 import frc.misc.ServerSide;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -59,7 +55,7 @@ public class MusicStuff implements Runnable {
     // Method to reset audio stream
     public static void resetAudioStream() throws UnsupportedAudioFileException, IOException,
             LineUnavailableException {
-        currentInput.open(ALL_SOUNDS.get(queue.get(0).currentSound));
+        currentInput.open(AudioSystem.getAudioInputStream(new File("sounds/" + queue.get(0).getCurrentSound() + ".wav").getAbsoluteFile()));
         currentInput.loop(0);
     }
 
@@ -92,6 +88,60 @@ public class MusicStuff implements Runnable {
         }
     }
 
+    @ServerSide
+    public static void init() {
+        System.out.println("Pulling from " + new File(".").getAbsolutePath());
+        ALL_SOUNDS = new HashMap<>();
+        for (Sounds sound : Sounds.values()) {
+            try {
+                ALL_SOUNDS.put(sound, AudioSystem.getAudioInputStream(new File("sounds/" + sound + ".wav").getAbsoluteFile()));
+            } catch (Exception e) {
+                throw new InitializationFailureException("Failed to load " + sound, "Just load it smh");
+            }
+        }
+    }
+
+    public static void update() {
+        if (queue.size() > 0 && currentInput.getMicrosecondLength() <= currentInput.getMicrosecondPosition()) {
+            try {
+                System.out.println(queue.get(0).toString() + " (" + currentInput.getMicrosecondLength() + ", " + currentInput.getMicrosecondPosition() + ")");
+                if (queue.get(0).goNext() == null) {
+                    queue.remove(0);
+                    if (queue.size() > 0) {
+                        stop();
+                        resetAudioStream();
+                    }
+                } else {
+                    stop();
+                    resetAudioStream();
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void stop() {
+        currentInput.stop();
+        currentInput.close();
+        currentFrame = 0L;
+        currentInput.setMicrosecondPosition(0);
+    }
+
+    public static void enqueueSound(Sound sound) {
+        if (queue.size() == 0) {
+            queue.add(sound);
+            stop();
+            try {
+                resetAudioStream();
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        } else {
+            queue.add(sound);
+        }
+    }
+
     @Override
     public void run() {
         init();
@@ -110,45 +160,7 @@ public class MusicStuff implements Runnable {
         }
     }
 
-    @ServerSide
-    public static void init() {
-        System.out.println("Pulling from " + new File(".").getAbsolutePath());
-        ALL_SOUNDS = new HashMap<>();
-        for (Sounds sound : Sounds.values()) {
-            try {
-                ALL_SOUNDS.put(sound, AudioSystem.getAudioInputStream(new File("sounds/" + sound + ".wav").getAbsoluteFile()));
-            } catch (Exception e) {
-                throw new InitializationFailureException("Failed to load " + sound, "Just load it smh");
-            }
-        }
-    }
-
-    public static void update() {
-        if (queue.size() > 0 && currentInput.getMicrosecondLength() <= currentInput.getMicrosecondPosition()) {
-            try {
-                if (queue.get(0).goNext() == null) {
-                    queue.remove(0);
-                    if (queue.size() > 0) {
-                        stop();
-                        resetAudioStream();
-                    }
-                } else {
-                    stop();
-                    resetAudioStream();
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    public static void stop() {
-        currentFrame = 0L;
-        currentInput.stop();
-        currentInput.close();
-    }
-
     public enum Sounds implements Serializable {
-        BATTERY, LOW, MOTOR, DISCONNECTED
+        BATTERY, LOW, MOTOR, DISCONNECTED, RECONNECTED
     }
 }

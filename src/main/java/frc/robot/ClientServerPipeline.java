@@ -176,7 +176,7 @@ public class ClientServerPipeline implements Runnable {
                 System.out.println("Recieved message from teddy");
             }
             if (checkSound()){
-                MusicStuff.queue.add(readSound());
+                MusicStuff.enqueueSound(readSound());
             }
         } else {
             if (checkMessage()) {
@@ -308,7 +308,6 @@ public class ClientServerPipeline implements Runnable {
             return false;
         }
         serverNetworkTable.getEntry("sound").setRaw(outboundPacket);
-        serverNetworkTable.getEntry("read_reciept_sound").setBoolean(false);
         return true;
     }
 
@@ -325,7 +324,7 @@ public class ClientServerPipeline implements Runnable {
      */
     @ServerSide
     public boolean checkSound() {
-        return !serverNetworkTable.getEntry("read_reciept_sound").getBoolean(false) && serverNetworkTable.getEntry("sound").getRaw(new byte[0]).length != 0;
+        return serverNetworkTable.getEntry("sound").getRaw(new byte[0]).length != 0;
     }
 
     /**
@@ -337,9 +336,10 @@ public class ClientServerPipeline implements Runnable {
     @ServerSide
     public Sound readSound() {
         byte[] inboundPacket = serverNetworkTable.getEntry("sound").getRaw(new byte[0]);
-        serverNetworkTable.getEntry("read_reciept_sound").setBoolean(true);
-        if (readFromBytes(inboundPacket) instanceof Sound)
+        serverNetworkTable.getEntry("sound").setRaw(new byte[0]);
+        if (readFromBytes(inboundPacket) instanceof Sound) {
             return (Sound) readFromBytes(inboundPacket);
+        }
         throw new IllegalStateException("Not sure what happened but the command that I read isnt a known command");
     }
 }

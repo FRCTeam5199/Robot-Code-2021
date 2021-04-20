@@ -35,18 +35,21 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
     }
 
     private static void reportIssue(ISubsystem owner, int id, String fix) {
-        System.out.println("Issue reported!");
+        //System.out.println("Issue reported!");
+        //System.out.println("Owner = " + owner.getSubsystemName() + "\nID = " + id + "\nFix = " + fix);
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)) {
             IssueHandler.issues.put(owner, new MotorDisconnectedIssue(id, fix));
             Main.pipeline.sendSound(new Sound(MusicStuff.Sounds.MOTOR, MusicStuff.Sounds.DISCONNECTED));
-        }else;
+        }//else;
             //already reported
     }
 
     private static void resolveIssue(ISubsystem owner, int fixedMotorID) {
         if (IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)
-            if (((MotorDisconnectedIssue) IssueHandler.issues.get(owner)).faultedMotorID == fixedMotorID)
+            if (((MotorDisconnectedIssue) IssueHandler.issues.get(owner)).faultedMotorID == fixedMotorID){
+                Main.pipeline.sendSound(new Sound(MusicStuff.Sounds.MOTOR, MusicStuff.Sounds.RECONNECTED));
                 IssueHandler.issues.remove(owner);
+            }
     }
 
     private MotorDisconnectedIssue(int motorID, String theFix) {
