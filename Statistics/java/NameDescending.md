@@ -64,7 +64,7 @@
 |[GalacticSearchPaths.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2Fauton%2Fgalacticsearch%2FGalacticSearchPaths.java)|75 (0.8%)|62|82.7%|6|8.0%|7|9.3%|
 |[DrumTimeController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fcontrollers%2FDrumTimeController.java)|27 (0.3%)|14|51.9%|10|37.0%|3|11.1%|
 |[DriveTypes.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2FDriveTypes.java)|15 (0.2%)|9|60.0%|5|33.3%|1|6.7%|
-|[DriveManagerSwerve.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2FDriveManagerSwerve.java)|329 (3.7%)|230|69.9%|44|13.4%|55|16.7%|
+|[DriveManagerSwerve.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2FDriveManagerSwerve.java)|339 (3.8%)|241|71.1%|44|13.0%|54|15.9%|
 |[DriveManagerStandard.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2FDriveManagerStandard.java)|389 (4.4%)|277|71.2%|78|20.1%|34|8.7%|
 |[DriveDistanceCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdiscordbot%2Fcommands%2FDriveDistanceCommand.java)|82 (0.9%)|70|85.4%|0|0.0%|12|14.6%|
 |[DriveBases.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2FDriveBases.java)|9 (0.1%)|5|55.6%|3|33.3%|1|11.1%|
@@ -92,5 +92,5 @@
 |[AbstractDriveManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2FAbstractDriveManager.java)|76 (0.9%)|38|50.0%|26|34.2%|12|15.8%|
 |[AbstractCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdiscordbot%2Fcommands%2FAbstractCommand.java)|127 (1.4%)|63|49.6%|45|35.4%|19|15.0%|
 |[AbstractAutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2Fauton%2FAbstractAutonManager.java)|125 (1.4%)|92|73.6%|19|15.2%|14|11.2%|
-|Average |97.5|65.2|X|19.7|X|12.6|X|
-|Total (91)|8874|5930|66.8%|1795| 20.2%|1149|12.9%|
+|Average |97.6|65.3|X|19.7|X|12.6|X|
+|Total (91)|8884|5941|66.9%|1795| 20.2%|1148|12.9%|
