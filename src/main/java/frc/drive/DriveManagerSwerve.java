@@ -93,7 +93,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        if (driverFR.driver.failureFlag || driverBR.driver.failureFlag || driverFL.driver.failureFlag || driverBL.driver.failureFlag || driverFR.steering.failureFlag || driverBR.steering.failureFlag || driverFL.steering.failureFlag || driverBL.steering.failureFlag)
+        if (driverFR.driver.isFailed() || driverBR.driver.isFailed() || driverFL.driver.isFailed() || driverBL.driver.isFailed() || driverFR.steering.isFailed() || driverBR.steering.isFailed() || driverFL.steering.isFailed() || driverBL.steering.isFailed())
             return SubsystemStatus.FAILED;
         return SubsystemStatus.NOMINAL;
     }

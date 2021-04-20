@@ -28,7 +28,7 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
     public static void handleIssue(ISubsystem owner, AbstractMotorController...motors){
         for (AbstractMotorController motor : motors)
             if (motor != null)
-                if (motor.failureFlag)
+                if (motor.isFailed())
                     reportIssue(owner, motor.getID(), motor.getSuggestedFix());
                 else
                     resolveIssue(owner, motor.getID());

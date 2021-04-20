@@ -5,7 +5,6 @@ import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
 import frc.controllers.ButtonPanelController;
 import frc.controllers.ControllerEnums;
-import frc.controllers.DrumTimeController;
 import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
@@ -57,7 +56,7 @@ public class ArticulatedHood implements ISubsystem {
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return hoodMotor.failureFlag ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
+        return hoodMotor.isFailed() ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
     }
 
     @Override

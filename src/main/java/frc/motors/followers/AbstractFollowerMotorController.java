@@ -67,7 +67,7 @@ public abstract class AbstractFollowerMotorController {
 
     public boolean failureFlag() {
         for (AbstractMotorController motor : motors)
-            if (motor.failureFlag)
+            if (motor.isFailed())
                 return true;
         return false;
     }

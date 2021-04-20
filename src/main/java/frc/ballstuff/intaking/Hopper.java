@@ -43,7 +43,7 @@ public class Hopper implements ISubsystem {
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return !indexer.failureFlag && !agitator.failureFlag ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+        return !indexer.isFailed() && !agitator.isFailed() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     @Override

@@ -8,7 +8,6 @@ import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickButtons;
-import frc.controllers.DrumTimeController;
 import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
@@ -80,7 +79,7 @@ public class Shooter implements ISubsystem {
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return !leader.failureFlag && !follower.failureFlag ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+        return !leader.isFailed() && !follower.isFailed() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     /**

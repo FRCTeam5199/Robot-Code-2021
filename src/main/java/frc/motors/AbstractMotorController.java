@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public abstract class AbstractMotorController {
     public static final ArrayList<AbstractMotorController> motorList = new ArrayList<>();
-    public boolean failureFlag = false;
+    protected boolean failureFlag = false;
     /**
      * Value to convert from sensor position to real units (this will vary between motors so know your units!)
      * Destination units are RPM that include the gearing on the motor
@@ -169,4 +169,6 @@ public abstract class AbstractMotorController {
      * @return the temperature in celcius
      */
     public abstract double getMotorTemperature();
+
+    public abstract boolean isFailed();
 }

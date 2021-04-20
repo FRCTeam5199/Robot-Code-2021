@@ -192,4 +192,9 @@ public class SparkMotorController extends AbstractMotorController {
     public double getMotorTemperature() {
         return motor.getMotorTemperature();
     }
+
+    @Override
+    public boolean isFailed() {
+        return motor.getFaults() != 0 || failureFlag;
+    }
 }

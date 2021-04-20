@@ -52,7 +52,7 @@ public class Intake implements ISubsystem {
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return intakeMotor.failureFlag ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
+        return intakeMotor.isFailed() ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
     }
 
     /**

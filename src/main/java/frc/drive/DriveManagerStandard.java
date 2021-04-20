@@ -72,7 +72,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return !leaderL.failureFlag && !leaderR.failureFlag && !followerL.failureFlag() && !followerR.failureFlag() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+        return !leaderL.isFailed() && !leaderR.isFailed() && !followerL.failureFlag() && !followerR.failureFlag() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     /**

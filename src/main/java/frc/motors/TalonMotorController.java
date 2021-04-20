@@ -158,6 +158,13 @@ public class TalonMotorController extends AbstractMotorController {
     }
 
     @Override
+    public boolean isFailed() {
+        Faults falts = new Faults();
+        motor.getFaults(falts);
+        return falts.hasAnyFault() || failureFlag;
+    }
+
+    @Override
     public String getSuggestedFix() {
         Faults foundFaults = new Faults();
         motor.getFaults(foundFaults);

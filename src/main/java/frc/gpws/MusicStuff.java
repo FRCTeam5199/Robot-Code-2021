@@ -110,6 +110,7 @@ public class MusicStuff implements Runnable {
         }
     }
 
+    @ServerSide
     public static void init() {
         System.out.println("Pulling from " + new File(".").getAbsolutePath());
         ALL_SOUNDS = new HashMap<>();
