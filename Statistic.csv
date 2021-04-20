@@ -28,9 +28,9 @@ Wait5TicksThenReplyCommand.java,53 (1.9%),43,81.1%,0,0.0%,10,18.9%
 AbstractDriveManager.java,76 (2.7%),38,50.0%,26,34.2%,12,15.8%
 DriveBases.java,9 (0.3%),5,55.6%,3,33.3%,1,11.1%
 DriveManagerStandard.java,389 (12.0%),277,71.2%,78,20.1%,34,8.7%
-DriveManagerSwerve.java,343 (9.6%),243,70.8%,44,12.8%,56,16.3%
+DriveManagerSwerve.java,344 (9.6%),244,70.9%,44,12.8%,56,16.3%
 DriveTypes.java,15 (0.4%),9,60.0%,5,33.3%,1,6.7%
-AbstractAutonManager.java,125 (3.4%),92,73.6%,19,15.2%,14,11.2%
+AbstractAutonManager.java,125 (3.3%),92,73.6%,19,15.2%,14,11.2%
 AutonType.java,11 (0.3%),4,36.4%,6,54.5%,1,9.1%
 IAutonEnumPath.java,15 (0.4%),4,26.7%,10,66.7%,1,6.7%
 Point.java,59 (1.5%),25,42.4%,27,45.8%,7,11.9%
@@ -51,18 +51,18 @@ PID.java,63 (1.3%),36,57.1%,18,28.6%,9,14.3%
 QuoteOfTheDay.java,70 (1.4%),56,80.0%,11,15.7%,3,4.3%
 ServerSide.java,10 (0.2%),3,30.0%,6,60.0%,1,10.0%
 SubsystemStatus.java,9 (0.2%),4,44.4%,4,44.4%,1,11.1%
-UserInterface.java,98 (1.9%),71,72.4%,16,16.3%,11,11.2%
+UserInterface.java,98 (1.9%),70,71.4%,17,17.3%,11,11.2%
 UtilFunctions.java,35 (0.7%),9,25.7%,24,68.6%,2,5.7%
 AbstractMotorController.java,178 (3.3%),54,30.3%,99,55.6%,25,14.0%
 SparkMotorController.java,200 (3.6%),163,81.5%,14,7.0%,23,11.5%
 SupportedMotors.java,15 (0.3%),8,53.3%,4,26.7%,3,20.0%
-SwerveMotorController.java,57 (1.0%),36,63.2%,17,29.8%,4,7.0%
+SwerveMotorController.java,59 (1.1%),38,64.4%,17,28.8%,4,6.8%
 TalonMotorController.java,184 (3.2%),148,80.4%,13,7.1%,23,12.5%
 VictorMotorController.java,157 (2.6%),130,82.8%,5,3.2%,22,14.0%
 AbstractFollowerMotorController.java,81 (1.3%),36,44.4%,35,43.2%,10,12.3%
 SparkFollowerMotorsController.java,21 (0.3%),15,71.4%,3,14.3%,3,14.3%
 TalonFollowerMotorController.java,21 (0.3%),15,71.4%,3,14.3%,3,14.3%
-PDP.java,91 (1.5%),60,65.9%,10,11.0%,21,23.1%
+PDP.java,90 (1.5%),57,63.3%,12,13.3%,21,23.3%
 ClientServerPipeline.java,352 (5.4%),197,56.0%,131,37.2%,24,6.8%
 Main.java,49 (0.7%),21,42.9%,21,42.9%,7,14.3%
 Robot.java,285 (4.2%),236,82.8%,29,10.2%,20,7.0%
@@ -73,7 +73,7 @@ Swerve2021.java,121 (1.6%),94,77.7%,10,8.3%,17,14.0%
 Robot2020.java,112 (1.5%),83,74.1%,11,9.8%,18,16.1%
 BrownoutIssue.java,37 (0.5%),31,83.8%,0,0.0%,6,16.2%
 DistanceSensorNonOpIssue.java,51 (0.7%),35,68.6%,9,17.6%,7,13.7%
-IMUNonOpIssue.java,45 (0.6%),35,77.8%,3,6.7%,7,15.6%
+IMUNonOpIssue.java,47 (0.6%),37,78.7%,3,6.4%,7,14.9%
 ISimpleIssue.java,40 (0.5%),17,42.5%,20,50.0%,3,7.5%
 IssueHandler.java,17 (0.2%),6,35.3%,8,47.1%,3,17.6%
 MotorDisconnectedIssue.java,62 (0.8%),51,82.3%,3,4.8%,8,12.9%
@@ -93,4 +93,4 @@ SupportedVision.java,9 (0.1%),4,44.4%,3,33.3%,2,22.2%
 VisionLEDMode.java,20 (0.2%),6,30.0%,13,65.0%,1,5.0%
 IDistanceSensor.java,30 (0.3%),15,50.0%,11,36.7%,4,13.3%
 RevDistanceSensor.java,89 (1.0%),55,61.8%,11,12.4%,23,25.8%
-Total,9134,6168,0.7,1778,0.2,1188,0.1
+Total,9138,6169,0.7,1781,0.2,1188,0.1
