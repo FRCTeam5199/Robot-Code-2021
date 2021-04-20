@@ -227,7 +227,7 @@ public class Robot extends TimedRobot {
             throw new RuntimeException("Deleted deploy dir contents");
         }
         if (robotSettings.ENABLE_PDP) {
-            pdp.update();
+            pdp.updateGeneric();
         }
 
         for (AbstractMotorController motor : AbstractMotorController.motorList) {

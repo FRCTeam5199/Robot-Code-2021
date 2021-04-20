@@ -1,10 +1,8 @@
 package frc.gpws;
 
-import frc.misc.InitializationFailureException;
 import frc.misc.ServerSide;
 import frc.robot.Main;
 
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
@@ -13,14 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 @ServerSide
 public class SoundManager implements Runnable {
     public static ArrayList<Sound> queue = new ArrayList<>();
     // current status of clip
     private static String status;
-    private static HashMap<Sounds, AudioInputStream> ALL_SOUNDS = new HashMap<>();
     private static Long currentFrame;
     private static Clip currentInput;
 
@@ -47,8 +43,7 @@ public class SoundManager implements Runnable {
     public static void resumeAudio() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
         if (status.equals("play")) {
-            System.out.println("Audio is already " +
-                    "being played");
+            System.out.println("Audio is already " + "being played");
             return;
         }
         currentInput.close();
@@ -134,15 +129,6 @@ public class SoundManager implements Runnable {
 
     @ServerSide
     public static void init() {
-        System.out.println("Pulling from " + new File(".").getAbsolutePath());
-        ALL_SOUNDS = new HashMap<>();
-        for (Sounds sound : Sounds.values()) {
-            try {
-                ALL_SOUNDS.put(sound, AudioSystem.getAudioInputStream(new File("sounds/" + sound + ".wav").getAbsoluteFile()));
-            } catch (Exception e) {
-                throw new InitializationFailureException("Failed to load " + sound, "Just load it smh");
-            }
-        }
     }
 
     public static void update() {
@@ -168,8 +154,8 @@ public class SoundManager implements Runnable {
     public enum SoundPacks implements Serializable {
         Jojo, TTS, Random;
 
-        public String getFolder(){
-            if (this == Random){
+        public String getFolder() {
+            if (this == Random) {
                 return SoundPacks.values()[Main.RANDOM.nextInt(SoundPacks.values().length)].getFolder();
             }
             return this.name() + "pack";

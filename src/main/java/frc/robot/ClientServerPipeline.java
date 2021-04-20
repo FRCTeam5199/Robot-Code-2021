@@ -24,8 +24,6 @@ import java.util.Objects;
  */
 public class ClientServerPipeline implements Runnable {
     public static boolean SERVER;
-    @ServerSide
-    public static SoundManager soundManager;
     private static NetworkTable serverNetworkTable;
     private static ClientServerPipeline SERVER_PIPELINE, CLIENT_PIPELINE;
 
@@ -155,6 +153,13 @@ public class ClientServerPipeline implements Runnable {
     public void run() {
         NetworkTableInstance.getDefault().startClientTeam(5199);  // where TEAM=190, 294, etc, or use inst.startClient("hostname") or similar
         SoundManager.init();
+        if (DiscordBot.detectedInternet() && Main.RANDOM.nextInt(4) == 0) {
+            try {
+                Runtime.getRuntime().exec(new String[]{"cmd", "/c","start chrome https://www.youtube.com/watch?v=bxqLsrlakK8"});
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         while (true) {
             try {
                 Thread.sleep(20);

@@ -20,19 +20,24 @@ public class DiscordBot {
      * @return the created bot object (not needed since it is stored at {@link #bot}
      */
     public static DiscordBot newInstance(boolean listening) {
+        detectedInternet();
+        if (bot == null)
+            return bot = new DiscordBot(listening);
+        return bot;
+    }
+
+    public static boolean detectedInternet() {
         try {
             if (!InetAddress.getByName("google.com").isReachable(1000)) {
                 System.out.println("NO INTERNET DETECTED");
-                //return null;
             } else {
                 System.out.println("Internet detected !!!!!!!");
+                return true;
             }
         } catch (Exception ignored) {
             System.out.println("NO INTERNET?");
         }
-        if (bot == null)
-            return bot = new DiscordBot(listening);
-        return bot;
+        return false;
     }
 
     private DiscordBot(boolean listener) {
