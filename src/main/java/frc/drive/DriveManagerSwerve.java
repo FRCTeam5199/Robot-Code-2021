@@ -14,6 +14,7 @@ import frc.misc.PID;
 import frc.misc.SubsystemStatus;
 import frc.motors.SupportedMotors;
 import frc.motors.SwerveMotorController;
+import frc.selfdiagnostics.MotorDisconnectedIssue;
 
 import static frc.robot.Robot.robotSettings;
 
@@ -99,6 +100,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
     @Override
     public void updateTest() {
+        updateGeneric();
         if (robotSettings.DEBUG && DEBUG) {
             System.out.println(FRcoder.getAbsolutePosition() + " FR " + driverFR.steering.getRotations());
             System.out.println(FLcoder.getAbsolutePosition() + " FL " + driverFL.steering.getRotations());
@@ -111,6 +113,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
     @Override
     public void updateTeleop() {
+        updateGeneric();
         driveSwerve();
         if (xbox.get(ControllerEnums.XBoxButtons.LEFT_BUMPER) == ControllerEnums.ButtonStatus.DOWN) {
             guidance.imu.resetOdometry();
@@ -125,7 +128,14 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
     @Override
     public void updateGeneric() {
-
+        MotorDisconnectedIssue.handleIssue(this, driverFL.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverFL.steering);
+        MotorDisconnectedIssue.handleIssue(this, driverBL.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverBL.steering);
+        MotorDisconnectedIssue.handleIssue(this, driverFR.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverFR.steering);
+        MotorDisconnectedIssue.handleIssue(this, driverBR.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverBR.steering);
     }
 
     @Override
