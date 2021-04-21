@@ -10,8 +10,6 @@ import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.telemetry.imu.AbstractIMU;
-import frc.telemetry.imu.WrappedNavX2IMU;
-import frc.telemetry.imu.WrappedPigeonIMU;
 
 import static frc.robot.Robot.robotSettings;
 

@@ -1,7 +1,6 @@
 package frc.misc;
 
 import frc.robot.Main;
-import frc.robot.Robot;
 
 /**
  * Lets keep things fun and fresh by providing some of our best quotes.

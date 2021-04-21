@@ -4,10 +4,10 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Nullable;
 
-public class Wait5TicksThenReplyCommand extends AbstractCommand{
+public class Wait5TicksThenReplyCommand extends AbstractCommand {
     @Override
     public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
-        if (++((Wait5TicksThenReplyData)message).ticksWaited == 5)
+        if (++((Wait5TicksThenReplyData) message).ticksWaited == 5)
             return new Wait5TicksThenReplyResponse(message);
         return null;
     }
@@ -23,11 +23,11 @@ public class Wait5TicksThenReplyCommand extends AbstractCommand{
     }
 
     @Override
-    public AbstractCommandData extractData(MessageReceivedEvent message){
+    public AbstractCommandData extractData(MessageReceivedEvent message) {
         return new Wait5TicksThenReplyData(message);
     }
 
-    public static class Wait5TicksThenReplyData extends AbstractCommandData{
+    public static class Wait5TicksThenReplyData extends AbstractCommandData {
         private int ticksWaited = 0;
 
         protected Wait5TicksThenReplyData(MessageReceivedEvent message) {
@@ -40,7 +40,7 @@ public class Wait5TicksThenReplyCommand extends AbstractCommand{
         }
     }
 
-    public static class Wait5TicksThenReplyResponse extends AbstractCommandResponse{
+    public static class Wait5TicksThenReplyResponse extends AbstractCommandResponse {
         protected Wait5TicksThenReplyResponse(AbstractCommandData originalData) {
             super(originalData);
         }

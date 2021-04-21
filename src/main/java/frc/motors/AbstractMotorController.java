@@ -23,7 +23,6 @@ import java.util.ArrayList;
  */
 public abstract class AbstractMotorController {
     public static final ArrayList<AbstractMotorController> motorList = new ArrayList<>();
-    protected boolean failureFlag = false;
     /**
      * Value to convert from sensor position to real units (this will vary between motors so know your units!)
      * Destination units are RPM that include the gearing on the motor
@@ -32,6 +31,7 @@ public abstract class AbstractMotorController {
      * dont want to actually fix the issue, just change to double
      */
     public Double sensorToRealDistanceFactor;
+    protected boolean failureFlag = false;
     protected String potentialFix;
     protected boolean isOverheated;
 
@@ -44,8 +44,6 @@ public abstract class AbstractMotorController {
     public abstract AbstractMotorController setInverted(boolean invert);
 
     public abstract String getName();
-
-    public abstract int getID();
 
     /**
      * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
@@ -68,7 +66,6 @@ public abstract class AbstractMotorController {
      * @see AbstractFollowerMotorController
      */
     public abstract AbstractMotorController follow(AbstractMotorController leader, boolean invert);
-
 
     /**
      * Sets current encoder position to be the zero position. If you are absolutely crazy and want to set the encoder to
@@ -140,6 +137,8 @@ public abstract class AbstractMotorController {
 
     public abstract String getSuggestedFix();
 
+    public abstract boolean isFailed();
+
     protected AbstractMotorController() {
         motorList.add(this);
     }
@@ -174,5 +173,5 @@ public abstract class AbstractMotorController {
      */
     public abstract double getMotorTemperature();
 
-    public abstract boolean isFailed();
+    public abstract int getID();
 }

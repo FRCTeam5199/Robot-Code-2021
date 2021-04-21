@@ -47,7 +47,7 @@ public class TalonMotorController extends AbstractMotorController {
     }
 
     @Override
-    public int getID(){
+    public int getID() {
         return motor.getDeviceID();
     }
 

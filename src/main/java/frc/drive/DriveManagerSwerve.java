@@ -33,13 +33,13 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     private final Translation2d driftOffset = new Translation2d(-0.6, 0);
     private final double trackWidth = 13.25;
     private final double trackLength = 21.5;
+    public SwerveModuleState[] moduleStates;
+    public SwerveMotorController driverFR, driverBR, driverBL, driverFL;
     private Translation2d frontLeftLocation = new Translation2d(-trackLength / 2 / 39.3701, trackWidth / 2 / 39.3701);
     private Translation2d frontRightLocation = new Translation2d(-trackLength / 2 / 39.3701, -trackWidth / 2 / 39.3701);
     private Translation2d backLeftLocation = new Translation2d(trackLength / 2 / 39.3701, trackWidth / 2 / 39.3701);
     private Translation2d backRightLocation = new Translation2d(trackLength / 2 / 39.3701, -trackWidth / 2 / 39.3701);
     private SwerveDriveKinematics kinematics;
-    public SwerveModuleState[] moduleStates;
-    public SwerveMotorController driverFR, driverBR, driverBL, driverFL;
     private PIDController FRpid, BRpid, BLpid, FLpid;
     private BaseController xbox;
     private CANCoder FRcoder, BRcoder, BLcoder, FLcoder;
@@ -176,17 +176,6 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverBL.steering.resetEncoder();
     }
 
-    /**
-     * set steering motors to return their encoder position in degrees
-     */
-    private void setupSteeringEncoders() {
-        //12.8:1
-        driverFR.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
-        driverBR.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
-        driverFL.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
-        driverBL.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
-    }
-
     private void driveSwerve() {
         double forwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_Y) * (-1);
         double leftwards = xbox.get(ControllerEnums.XboxAxes.LEFT_JOY_X) * (1);
@@ -198,7 +187,6 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     private boolean useFieldOriented() {
         return xbox.get(ControllerEnums.XboxAxes.LEFT_TRIGGER) < 0.1;
     }
-
 
     private boolean dorifto() {
         return xbox.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1;
@@ -246,6 +234,17 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverBR.driver.moveAtPercent(BR / num);
         driverFL.driver.moveAtPercent(FL / num);
         driverBL.driver.moveAtPercent(BL / num);
+    }
+
+    /**
+     * set steering motors to return their encoder position in degrees
+     */
+    private void setupSteeringEncoders() {
+        //12.8:1
+        driverFR.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
+        driverBR.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
+        driverFL.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
+        driverBL.steering.setSensorToRealDistanceFactor((1 / 12.8) * 360);
     }
 
     //TODO implement this in regard to telem

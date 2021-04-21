@@ -30,11 +30,11 @@ import frc.robot.robotconfigs.twentyone.PracticeRobot2021;
 import frc.robot.robotconfigs.twentyone.Swerve2021;
 import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.selfdiagnostics.ISimpleIssue;
+import frc.selfdiagnostics.IssueHandler;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Welcome. Please enjoy your stay here in programmer fun time land. And remember, IntelliJ is king
@@ -234,6 +234,11 @@ public class Robot extends TimedRobot {
             if (motor.getMotorTemperature() > 5) {
                 UserInterface.motorTemperatureMonitors.get(motor).getEntry().setNumber(motor.getMotorTemperature());
             }
+        }
+
+        if (UserInterface.CLEAR_WARNINGS.getEntry().getBoolean(false)){
+            Main.pipeline.wipeSounds();
+            IssueHandler.issues.clear();
         }
 
         ISimpleIssue.robotPeriodic();

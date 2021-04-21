@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.Main;
 import frc.robot.Robot;
 
-import javax.annotation.Nonnull;
-import java.util.Random;
 import java.util.function.Consumer;
 
 import static frc.robot.Robot.robotSettings;

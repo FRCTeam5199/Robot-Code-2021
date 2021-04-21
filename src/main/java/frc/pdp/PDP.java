@@ -1,6 +1,5 @@
 package frc.pdp;
 
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
@@ -19,8 +18,8 @@ public class PDP implements ISubsystem {
     peakPower = UserInterface.PDP_PEAK_POWER.getEntry();
 */
     //private final PowerDistributionPanel powerDistributionPanel;
-    private double peakCurrentVal = 0;
-    private double peakPowerVal = 0;
+    private final double peakCurrentVal = 0;
+    private final double peakPowerVal = 0;
 
     public PDP(int channelID) {
         addToMetaList();

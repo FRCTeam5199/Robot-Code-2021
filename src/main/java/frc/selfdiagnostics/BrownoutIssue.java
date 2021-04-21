@@ -5,17 +5,10 @@ import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
 import frc.robot.Main;
 
-public class BrownoutIssue implements ISimpleIssue{
+public class BrownoutIssue implements ISimpleIssue {
     public static void handleIssue(ISubsystem owner, boolean report) {
-        if (!report)
-            resolveIssue(owner);
-        else
+        if (report) {
             reportIssue(owner);
-    }
-
-    private static void resolveIssue(ISubsystem owner) {
-        if (IssueHandler.issues.get(owner) instanceof BrownoutIssue) {
-            IssueHandler.issues.remove(owner);
         }
     }
 
@@ -27,11 +20,18 @@ public class BrownoutIssue implements ISimpleIssue{
         }
     }
 
+    private static void resolveIssue(ISubsystem owner) {
+        if (IssueHandler.issues.get(owner) instanceof BrownoutIssue) {
+            IssueHandler.issues.remove(owner);
+        }
+    }
+
     private BrownoutIssue() {
 
     }
+
     @Override
     public String getRandomFix() {
-        return null;
+        return "Replace battery";
     }
 }

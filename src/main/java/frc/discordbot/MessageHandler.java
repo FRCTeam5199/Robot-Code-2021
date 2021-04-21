@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MessageHandler extends ListenerAdapter {
-    private static final HashMap<String, AbstractCommand> commands = new HashMap<>();
+    public static final HashMap<String, AbstractCommand> commands = new HashMap<>();
     private static final HashMap<String, AbstractCommand> commandsAlias = new HashMap<>();
     private static final ArrayList<AbstractCommand.AbstractCommandData> pendingCommands = new ArrayList<>();
     public static MessageHandler messageHandler;
@@ -23,7 +23,7 @@ public class MessageHandler extends ListenerAdapter {
 
     public static void loadCommands(boolean listening) {
         LISTENING = listening;
-        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class);
+        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class, VibingCommand.class, HelpCommand.class);
         for (Class<? extends AbstractCommand> s : classes) {
             try {
                 if (Modifier.isAbstract(s.getModifiers())) {

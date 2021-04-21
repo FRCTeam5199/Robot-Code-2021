@@ -1,12 +1,11 @@
 package frc.selfdiagnostics;
 
-import frc.gpws.SoundManager;
 import frc.gpws.Sound;
+import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
 import frc.motors.AbstractMotorController;
 import frc.motors.followers.AbstractFollowerMotorController;
 import frc.robot.Main;
-import frc.robot.Robot;
 
 /**
  * Pretty self explanatory. This issue is regarding an non operational Motor
@@ -17,21 +16,12 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
     private final boolean knownFix;
     private final String fix;
 
-    public static void handleIssue(ISubsystem owner, AbstractFollowerMotorController...motors){
+    public static void handleIssue(ISubsystem owner, AbstractFollowerMotorController... motors) {
         for (AbstractFollowerMotorController motor : motors)
             if (motor.failureFlag())
                 reportIssue(owner, motor.getBundleID(), motor.getSuggestedFix());
             else
                 resolveIssue(owner, motor.getBundleID());
-    }
-
-    public static void handleIssue(ISubsystem owner, AbstractMotorController...motors){
-        for (AbstractMotorController motor : motors)
-            if (motor != null)
-                if (motor.isFailed())
-                    reportIssue(owner, motor.getID(), motor.getSuggestedFix());
-                else
-                    resolveIssue(owner, motor.getID());
     }
 
     private static void reportIssue(ISubsystem owner, int id, String fix) {
@@ -43,10 +33,19 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
 
     private static void resolveIssue(ISubsystem owner, int fixedMotorID) {
         if (IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)
-            if (((MotorDisconnectedIssue) IssueHandler.issues.get(owner)).faultedMotorID == fixedMotorID){
+            if (((MotorDisconnectedIssue) IssueHandler.issues.get(owner)).faultedMotorID == fixedMotorID) {
                 Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Motor, SoundManager.Sounds.Reconnected));
                 IssueHandler.issues.remove(owner);
             }
+    }
+
+    public static void handleIssue(ISubsystem owner, AbstractMotorController... motors) {
+        for (AbstractMotorController motor : motors)
+            if (motor != null)
+                if (motor.isFailed())
+                    reportIssue(owner, motor.getID(), motor.getSuggestedFix());
+                else
+                    resolveIssue(owner, motor.getID());
     }
 
     private MotorDisconnectedIssue(int motorID, String theFix) {

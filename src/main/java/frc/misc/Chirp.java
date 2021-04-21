@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.motors.TalonMotorController;
 import frc.robot.Main;
 import frc.robot.Robot;
+import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -223,18 +224,18 @@ public class Chirp extends Orchestra implements ISubsystem {
             return songname;
         }
         String winningSong = "";
-        int winningScore = Integer.MAX_VALUE;
+        int winningScore = 0;
         for (String song : songnames.keySet()) {
-            int matchingScore = 0;
-            for (int i = 0; i < Math.min(songname.length(), song.toLowerCase().split("_")[0].length()); i++) {
-                if (songname.charAt(i) != song.toLowerCase().split("_")[0].charAt(i))
-                    matchingScore++;
-            }
-            if (matchingScore < winningScore) {
-                winningScore = matchingScore;
+            int thiscore = FuzzySearch.partialRatio(songname, song);
+            if (thiscore > winningScore) {
+                winningScore = thiscore;
                 winningSong = song;
             }
         }
+        if (winningScore < 50) {
+            return "";
+        }
+        loadMusic(winningSong);
         return winningSong;
     }
 }

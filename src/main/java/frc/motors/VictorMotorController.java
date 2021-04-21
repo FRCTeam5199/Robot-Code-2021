@@ -42,7 +42,7 @@ public class VictorMotorController extends AbstractMotorController {
     }
 
     @Override
-    public int getID(){
+    public int getID() {
         return motor.getDeviceID();
     }
 

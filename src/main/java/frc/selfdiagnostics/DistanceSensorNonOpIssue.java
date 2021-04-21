@@ -4,7 +4,6 @@ import frc.gpws.Sound;
 import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
 import frc.robot.Main;
-import frc.robot.Robot;
 
 /**
  * Use this when the {@link frc.vision.distancesensor.IDistanceSensor Distance sensor} appears to be

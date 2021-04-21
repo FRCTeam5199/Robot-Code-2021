@@ -1,7 +1,5 @@
 package frc.discordbot.commands;
 
-import frc.drive.DriveManagerStandard;
-import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.Point;
 import frc.misc.ClientSide;
 import frc.misc.ServerSide;
@@ -12,25 +10,20 @@ import org.jetbrains.annotations.Nullable;
 
 public class DriveDistanceCommand extends AbstractCommand {
     @Override
-    public boolean isServerSideCommand() {
-        return false;
-    }
-
-    @Override
     public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
         if (message instanceof DriveDistanceCommandData)
             return runChecked((DriveDistanceCommandData) message);
         throw new IllegalArgumentException("I cant use that data");
     }
 
-    public AbstractCommandResponse runChecked(DriveDistanceCommandData message){
-        if (message.startingPoint == null){
-            message.startingPoint = new Point(Robot.driver.guidance.fieldX(),Robot.driver.guidance.fieldY());
+    public AbstractCommandResponse runChecked(DriveDistanceCommandData message) {
+        if (message.startingPoint == null) {
+            message.startingPoint = new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY());
         }
         System.out.println("Driving " + message.requestedSpeed);
         Robot.driver.driveMPS(message.requestedSpeed, 0, 0);
-        if (!new Point(Robot.driver.guidance.fieldX(),Robot.driver.guidance.fieldY()).isWithin(message.requestedTravel, message.startingPoint)) {
-            Robot.driver.driveMPS(0,0,0);
+        if (!new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY()).isWithin(message.requestedTravel, message.startingPoint)) {
+            Robot.driver.driveMPS(0, 0, 0);
             return new DriveDistanceCommandResponse(message);
         }
         return null;
@@ -41,9 +34,18 @@ public class DriveDistanceCommand extends AbstractCommand {
         return "drive";
     }
 
+    public String getArgs() {
+        return "<distance in meters> <speed in meters per second>";
+    }
+
     @Override
     public String[] getAliases() {
-        return new String[]{"move","forward"};
+        return new String[]{"move", "forward"};
+    }
+
+    @Override
+    public boolean isServerSideCommand() {
+        return false;
     }
 
     @Override

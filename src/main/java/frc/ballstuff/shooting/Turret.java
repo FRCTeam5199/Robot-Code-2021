@@ -26,10 +26,10 @@ import static frc.robot.Robot.robotSettings;
  */
 public class Turret implements ISubsystem {
     private static final boolean DEBUG = false;
-    private BaseController joy, panel;
     public AbstractMotorController turretMotor;
-    private AbstractRobotTelemetry guidance;
     public IVision visionCamera;
+    private BaseController joy, panel;
+    private AbstractRobotTelemetry guidance;
     private int scanDirection = -1;
 
     public Turret() {

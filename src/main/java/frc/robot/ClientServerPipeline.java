@@ -27,6 +27,8 @@ public class ClientServerPipeline implements Runnable {
     private static NetworkTable serverNetworkTable;
     private static ClientServerPipeline SERVER_PIPELINE, CLIENT_PIPELINE;
 
+    private static int bytesRecieved = 0, bytesSent = 0;
+
     /**
      * This is why we use getters, kids. It means that we <i>should</i> only create a server if requested, or a client
      * if requested
@@ -47,6 +49,30 @@ public class ClientServerPipeline implements Runnable {
     @ClientSide
     public static ClientServerPipeline getClient() {
         return Objects.requireNonNullElseGet(CLIENT_PIPELINE, () -> CLIENT_PIPELINE = new ClientServerPipeline(false));
+    }
+
+    private static void readBytes(int length) {
+        bytesRecieved += length;
+        System.out.println("Bytes sent: " + length + " (" + stringifyBytes(bytesRecieved) + ")");
+    }
+
+    /**
+     * Reads and returns an object as interpreted from the passed data
+     *
+     * @param rawdata serialized object data, represented in bytes (sorry if u have a string idk where u got it from but
+     *                put it back)
+     * @return the input, deserialized
+     */
+    private static Object readFromBytes(byte[] rawdata) {
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream(rawdata);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            Object objectOut = ois.readObject();
+            ois.close();
+            return objectOut;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -105,6 +131,7 @@ public class ClientServerPipeline implements Runnable {
         }
         serverNetworkTable.getEntry("command").setRaw(outboundPacket);
         serverNetworkTable.getEntry("read_reciept_command").setBoolean(false);
+        sentBytes(outboundPacket.length);
         return true;
     }
 
@@ -138,14 +165,27 @@ public class ClientServerPipeline implements Runnable {
             return false;
         for (int i = 0; i < newData.length; i++) {
             if (oldData[i] != newData[i])
-                return true;
+                return false;
         }
-        return false;
+        return true;
+    }
+
+    private static void sentBytes(int length) {
+        bytesSent += length;
+        System.out.println("Bytes sent: " + length + " (" + stringifyBytes(bytesSent) + ")");
+    }
+
+    private static String stringifyBytes(double bytes) {
+        if (bytes > 1024) {
+            bytes /= 1024;
+            return ((int) (bytes * 10) / 10.0) + "kb";
+        }
+        return (int) bytes + "b";
     }
 
     /**
      * Creates a new {@link Thread} and runs this code on it. Due to sync stuff, it is just like starting anew. We here
-     * at jojo2357 inc do NOT mess with java sync for it is too messy. Only use this when running {@link
+     * at jojo2357 inc do NOT mess with java async for it is too messy. Only use this when running {@link
      * #SERVER_PIPELINE a dedicated pipeline}
      */
     @Override
@@ -153,9 +193,9 @@ public class ClientServerPipeline implements Runnable {
     public void run() {
         NetworkTableInstance.getDefault().startClientTeam(5199);  // where TEAM=190, 294, etc, or use inst.startClient("hostname") or similar
         SoundManager.init();
-        if (DiscordBot.detectedInternet() && Main.RANDOM.nextInt(4) == 0) {
+        if (DiscordBot.detectedInternet() && Main.RANDOM.nextInt(5) == 0) {
             try {
-                Runtime.getRuntime().exec(new String[]{"cmd", "/c","start https://www.youtube.com/watch?v=bxqLsrlakK8"});
+                Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start https://www.youtube.com/watch?v=bxqLsrlakK8"});
             } catch (IOException e) {
                 System.out.println("Exception: " + e);
             }
@@ -182,6 +222,9 @@ public class ClientServerPipeline implements Runnable {
             }
             if (checkSound()) {
                 SoundManager.enqueueSound(readSound());
+            }
+            if (wipeSounds()){
+                SoundManager.queue.clear();
             }
         } else {
             if (checkMessage()) {
@@ -213,6 +256,7 @@ public class ClientServerPipeline implements Runnable {
     public AbstractCommand.AbstractCommandResponse readReply() {
         byte[] inboundPacket = serverNetworkTable.getEntry("response").getRaw(new byte[0]);
         serverNetworkTable.getEntry("read_reciept_data").setBoolean(true);
+        readBytes(inboundPacket.length);
         if (readFromBytes(inboundPacket) instanceof AbstractCommand.AbstractCommandResponse)
             return (AbstractCommand.AbstractCommandResponse) readFromBytes(inboundPacket);
         throw new IllegalStateException("Not sure what happened but the command that I read isnt a known command");
@@ -239,6 +283,7 @@ public class ClientServerPipeline implements Runnable {
     public Sound readSound() {
         byte[] inboundPacket = serverNetworkTable.getEntry("sound").getRaw(new byte[0]);
         serverNetworkTable.getEntry("sound").setRaw(new byte[0]);
+        readBytes(inboundPacket.length);
         if (readFromBytes(inboundPacket) instanceof Sound) {
             return (Sound) readFromBytes(inboundPacket);
         }
@@ -266,29 +311,10 @@ public class ClientServerPipeline implements Runnable {
     public AbstractCommand.AbstractCommandData readCommandData() {
         byte[] inboundPacket = serverNetworkTable.getEntry("command").getRaw(new byte[0]);
         serverNetworkTable.getEntry("read_reciept_command").setBoolean(true);
-        System.out.println("I read the command data. Length:" + inboundPacket.length);
+        readBytes(inboundPacket.length);
         if (readFromBytes(inboundPacket) instanceof AbstractCommand.AbstractCommandData)
             return (AbstractCommand.AbstractCommandData) readFromBytes(inboundPacket);
         throw new IllegalStateException("Not sure what happened but the command that I read isnt a known command");
-    }
-
-    /**
-     * Reads and returns an object as interpreted from the passed data
-     *
-     * @param rawdata serialized object data, represented in bytes (sorry if u have a string idk where u got it from but
-     *                put it back)
-     * @return the input, deserialized
-     */
-    private static Object readFromBytes(byte[] rawdata) {
-        try {
-            ByteArrayInputStream bais = new ByteArrayInputStream(rawdata);
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            Object objectOut = ois.readObject();
-            ois.close();
-            return objectOut;
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
@@ -320,6 +346,7 @@ public class ClientServerPipeline implements Runnable {
         }
         serverNetworkTable.getEntry("response").setRaw(outboundPacket);
         serverNetworkTable.getEntry("read_reciept_data").setBoolean(false);
+        sentBytes(outboundPacket.length);
         return true;
     }
 
@@ -345,6 +372,21 @@ public class ClientServerPipeline implements Runnable {
             return false;
         }
         serverNetworkTable.getEntry("sound").setRaw(outboundPacket);
+        sentBytes(outboundPacket.length);
         return true;
+    }
+
+    @ServerSide
+    @ClientSide
+    public boolean wipeSounds(){
+        if (SERVER) {
+            if(serverNetworkTable.getEntry("wipealarmqueue").getBoolean(false)) {
+                serverNetworkTable.getEntry("wipealarmqueue").setBoolean(false);
+                return true;
+            }
+            return false;
+        }else {
+            return serverNetworkTable.getEntry("wipealarmqueue").setBoolean(true);
+        }
     }
 }

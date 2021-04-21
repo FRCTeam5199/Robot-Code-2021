@@ -17,11 +17,6 @@ public class PingCommand extends AbstractCommand {
     };
 
     @Override
-    public boolean isServerSideCommand() {
-        return true;
-    }
-
-    @Override
     public AbstractCommandResponse run(AbstractCommandData message) {
         return new PingCommandResponse(message);
     }
@@ -29,6 +24,11 @@ public class PingCommand extends AbstractCommand {
     @Override
     public String getCommand() {
         return "ping";
+    }
+
+    @Override
+    public boolean isServerSideCommand() {
+        return true;
     }
 
     /**

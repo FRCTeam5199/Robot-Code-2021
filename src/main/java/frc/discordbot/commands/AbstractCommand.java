@@ -26,6 +26,15 @@ public abstract class AbstractCommand implements Serializable {
     public abstract String getCommand();
 
     /**
+     * This returns a textual representation of the arguments.
+     *
+     * @return a textual representation of the arguments.
+     */
+    public String getArgs() {
+        return "";
+    }
+
+    /**
      * Returns secondary names that will be accepted if the user calls this command
      *
      * @return array of nicknames
@@ -62,7 +71,6 @@ public abstract class AbstractCommand implements Serializable {
     public static abstract class AbstractCommandData implements Serializable {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
-        private final long timein = System.currentTimeMillis();
 
         public abstract boolean isMultiTickCommand();
 
@@ -77,6 +85,10 @@ public abstract class AbstractCommand implements Serializable {
             GUILD_ID = guild_id;
             CHANNEL_ID = channel_id;
         }
+
+        public String toString() {
+            return this.getClass().getSimpleName() + ": " + CONTENT;
+        }
     }
 
     /**
@@ -86,7 +98,6 @@ public abstract class AbstractCommand implements Serializable {
     public static abstract class AbstractCommandResponse implements Serializable {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
-        private final long timein = System.currentTimeMillis();
 
         public abstract void doYourWorst(JDA client);
 

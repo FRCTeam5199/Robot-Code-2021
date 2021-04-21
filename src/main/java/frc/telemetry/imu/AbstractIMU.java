@@ -5,8 +5,6 @@ import frc.misc.SubsystemStatus;
 import frc.misc.UtilFunctions;
 import frc.selfdiagnostics.IMUNonOpIssue;
 
-import static frc.robot.Robot.robotSettings;
-
 /**
  * Bro chill out im literally just vibing here
  *
@@ -17,7 +15,9 @@ public abstract class AbstractIMU implements ISubsystem {
     protected double[] ypr = new double[3];
     protected double[] startypr = new double[3];
 
-    public static AbstractIMU createIMU(SupportedIMU imuType){
+    public abstract void resetOdometry();
+
+    public static AbstractIMU createIMU(SupportedIMU imuType) {
         switch (imuType) {
             case PIGEON:
                 return new WrappedPigeonIMU();
@@ -27,8 +27,6 @@ public abstract class AbstractIMU implements ISubsystem {
                 throw new IllegalArgumentException("Connot make a " + imuType.name());
         }
     }
-
-    public abstract void resetOdometry();
 
     protected AbstractIMU() {
         init();
@@ -45,7 +43,7 @@ public abstract class AbstractIMU implements ISubsystem {
      *
      * @return absolute yaw of pigeon
      */
-    public double absoluteYaw(){
+    public double absoluteYaw() {
         updateGeneric();
         return ypr[0];
     }

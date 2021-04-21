@@ -37,13 +37,13 @@ public class Shooter implements ISubsystem {
             calibratePID = UserInterface.SHOOTER_CALIBRATE_PID.getEntry();
     public double speed = 4200;
     public int ballsShot = 0, ticksPassed = 0;
+    public IVision goalCamera;
+    public AbstractMotorController leader, follower;
+    public boolean isConstSpeed, isConstSpeedLast = false, shooting = false;
     //Yes this needs to be package private
     boolean singleShot = false;
-    public IVision goalCamera;
     BaseController panel, joystickController;
-    public AbstractMotorController leader, follower;
     private PID lastPID = PID.EMPTY_PID;
-    public boolean isConstSpeed, isConstSpeedLast = false, shooting = false;
 
     public Shooter() {
         addToMetaList();
