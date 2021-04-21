@@ -15,7 +15,12 @@ public class VibingCommand extends AbstractCommand {
 
     @Override
     public String getCommand() {
-        return "vibetime";
+        return "url";
+    }
+
+    @Override
+    public String[] getAliases() {
+        return new String[]{"rickroll", "troll", "vibetime"};
     }
 
     @Override
@@ -24,15 +29,17 @@ public class VibingCommand extends AbstractCommand {
     }
 
     public static class VibingCommandResponse extends AbstractCommandResponse {
+        private final String url;
         public VibingCommandResponse(AbstractCommandData data) {
             super(data);
+            url = CONTENT.split(" ").length > 1 ? CONTENT.split(" ")[1] : "https://www.youtube.com/watch?v=bxqLsrlakK8";
         }
 
         @Override
         public void doYourWorst(JDA client) {
-            client.getTextChannelById(CHANNEL_ID).sendMessage("I am simply vibing").queue();
+            client.getTextChannelById(CHANNEL_ID).sendMessage("I am simply vibing. Opened url <" + url + ">").queue();
             try {
-                Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start https://www.youtube.com/watch?v=bxqLsrlakK8"});
+                Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start " + url});
             } catch (IOException e) {
                 System.out.println("Exception: " + e);
             }

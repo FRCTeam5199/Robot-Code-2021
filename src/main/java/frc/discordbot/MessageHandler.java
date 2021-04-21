@@ -23,7 +23,7 @@ public class MessageHandler extends ListenerAdapter {
 
     public static void loadCommands(boolean listening) {
         LISTENING = listening;
-        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class, VibingCommand.class, HelpCommand.class, ShutdownServerCommand.class);
+        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class, VibingCommand.class, HelpCommand.class, RandomQuoteCommand.class, ShutdownServerCommand.class);
         for (Class<? extends AbstractCommand> s : classes) {
             try {
                 if (Modifier.isAbstract(s.getModifiers())) {
@@ -33,9 +33,11 @@ public class MessageHandler extends ListenerAdapter {
                 if (!commands.containsKey(c.getCommand())) {
                     commands.put(c.getCommand(), c);
                 }
-                for (String alias : c.getAliases())
-                    if (!commandsAlias.containsKey(alias))
+                for (String alias : c.getAliases()) {
+                    if (!commandsAlias.containsKey(alias)) {
                         commandsAlias.put(alias, c);
+                    }
+                }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }

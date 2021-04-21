@@ -19,7 +19,7 @@ public class UserInterface {
     //TABS
     public static final ShuffleboardTab SHOOTER_TAB = Shuffleboard.getTab("Shooter"),
             DRIVE_TAB = Shuffleboard.getTab("drive"),
-            PDP_TAB = Shuffleboard.getTab("Lectricity"),
+            //PDP_TAB = Shuffleboard.getTab("Lectricity"),
             MUSICK_TAB = Shuffleboard.getTab("musick"),
             ROBOT_TAB = Shuffleboard.getTab("DANGER!"),
             WARNINGS_TAB = Shuffleboard.getTab("Warnings");

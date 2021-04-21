@@ -55,7 +55,8 @@ public class QuoteOfTheDay {
             "I did it! I plugged in the magic numbers.",
             "It may or may not work.",
             "Africa, Default Pi.. \nWhere's Africa? \n... Amica..",
-            "Fix your software!!"
+            "Fix your software!!",
+            "Oh no, it rickrolled me. Oh no! Kill the server!"
     };
 
     /**
