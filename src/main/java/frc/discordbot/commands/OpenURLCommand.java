@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 
 @ServerSide
-public class VibingCommand extends AbstractCommand {
+public class OpenURLCommand extends AbstractCommand {
     @Override
     public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
         return new VibingCommandResponse(message);
@@ -16,6 +16,10 @@ public class VibingCommand extends AbstractCommand {
     @Override
     public String getCommand() {
         return "url";
+    }
+
+    public String getArgs() {
+        return "<url to open>";
     }
 
     @Override

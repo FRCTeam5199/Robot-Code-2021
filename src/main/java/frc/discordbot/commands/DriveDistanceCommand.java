@@ -1,5 +1,6 @@
 package frc.discordbot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.drive.auton.Point;
 import frc.misc.ClientSide;
 import frc.misc.ServerSide;
@@ -17,14 +18,18 @@ public class DriveDistanceCommand extends AbstractCommand {
     }
 
     public AbstractCommandResponse runChecked(DriveDistanceCommandData message) {
-        if (message.startingPoint == null) {
-            message.startingPoint = new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY());
-        }
-        System.out.println("Driving " + message.requestedSpeed);
-        Robot.driver.driveMPS(message.requestedSpeed, 0, 0);
-        if (!new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY()).isWithin(message.requestedTravel, message.startingPoint)) {
-            Robot.driver.driveMPS(0, 0, 0);
+        if (DriverStation.getInstance().isDisabled()){
             return new DriveDistanceCommandResponse(message);
+        } else {
+            if (message.startingPoint == null) {
+                message.startingPoint = new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY());
+            }
+            System.out.println("Driving " + message.requestedSpeed);
+            Robot.driver.driveMPS(message.requestedSpeed, 0, 0);
+            if (!new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY()).isWithin(message.requestedTravel, message.startingPoint)) {
+                Robot.driver.driveMPS(0, 0, 0);
+                return new DriveDistanceCommandResponse(message);
+            }
         }
         return null;
     }
@@ -79,7 +84,7 @@ public class DriveDistanceCommand extends AbstractCommand {
 
         @Override
         public void doYourWorst(JDA client) {
-            client.getTextChannelById(CHANNEL_ID).sendMessage("Awaited and replied").submit();
+            client.getTextChannelById(CHANNEL_ID).sendMessage("I finished driving.").submit();
         }
     }
 }

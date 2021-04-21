@@ -23,10 +23,6 @@ public class RandomQuoteCommand extends AbstractCommand {
         return new String[]{"awisemanoncesaid", "wiseman", "quote", "rq"};
     }
 
-    public String getArgs() {
-        return "<url to open>";
-    }
-
     @Override
     public boolean isServerSideCommand() {
         return true;
