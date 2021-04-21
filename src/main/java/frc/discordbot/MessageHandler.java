@@ -23,7 +23,7 @@ public class MessageHandler extends ListenerAdapter {
 
     public static void loadCommands(boolean listening) {
         LISTENING = listening;
-        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class, VibingCommand.class, HelpCommand.class);
+        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class, VibingCommand.class, HelpCommand.class, ShutdownServerCommand.class);
         for (Class<? extends AbstractCommand> s : classes) {
             try {
                 if (Modifier.isAbstract(s.getModifiers())) {
@@ -66,7 +66,7 @@ public class MessageHandler extends ListenerAdapter {
         if (commands.containsKey(message.substring(1).split(" ")[0]))
             return commands.get(message.substring(1).split(" ")[0]);
         if (commandsAlias.containsKey(message.substring(1).split(" ")[0]))
-            return commands.get(message.substring(1).split(" ")[0]);
+            return commandsAlias.get(message.substring(1).split(" ")[0]);
         return null;
     }
 

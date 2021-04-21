@@ -17,6 +17,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Scanner;
 
 /**
  * Acts as a bridge between the internet-connected bot and the terrible robot. Implements {@link Runnable} because the
@@ -200,13 +201,15 @@ public class ClientServerPipeline implements Runnable {
                 System.out.println("Exception: " + e);
             }
         }
+        Scanner kb = new Scanner(System.in);
         while (true) {
             try {
                 Thread.sleep(20);
-                SoundManager.update();
-                updatePipeline();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            } finally{
+                SoundManager.update();
+                updatePipeline();
             }
         }
     }
@@ -223,8 +226,11 @@ public class ClientServerPipeline implements Runnable {
             if (checkSound()) {
                 SoundManager.enqueueSound(readSound());
             }
+            if (checkAlarm()){
+                SoundManager.addAlarm(readAlarm());
+            }
             if (wipeSounds()){
-                SoundManager.queue.clear();
+                SoundManager.cutItOut();
             }
         } else {
             if (checkMessage()) {
@@ -283,6 +289,34 @@ public class ClientServerPipeline implements Runnable {
     public Sound readSound() {
         byte[] inboundPacket = serverNetworkTable.getEntry("sound").getRaw(new byte[0]);
         serverNetworkTable.getEntry("sound").setRaw(new byte[0]);
+        readBytes(inboundPacket.length);
+        if (readFromBytes(inboundPacket) instanceof Sound) {
+            return (Sound) readFromBytes(inboundPacket);
+        }
+        throw new IllegalStateException("Not sure what happened but the command that I read isnt a known command");
+    }
+
+    /**
+     * Checks if the server has posted new data yet and if they posted anything meaningful (null check and blank check
+     * only)
+     *
+     * @return true if unread flag is set and data is fresh
+     */
+    @ServerSide
+    public boolean checkAlarm() {
+        return serverNetworkTable.getEntry("alarm").getRaw(new byte[0]).length != 0;
+    }
+
+    /**
+     * Reads the client reply currently in the pipeline, regardless of whether or not the {@link #checkReply() reply is
+     * fresh}
+     *
+     * @return The current reply from the client in the pipeline
+     */
+    @ServerSide
+    public Sound readAlarm() {
+        byte[] inboundPacket = serverNetworkTable.getEntry("alarm").getRaw(new byte[0]);
+        serverNetworkTable.getEntry("alarm").setRaw(new byte[0]);
         readBytes(inboundPacket.length);
         if (readFromBytes(inboundPacket) instanceof Sound) {
             return (Sound) readFromBytes(inboundPacket);
@@ -372,6 +406,32 @@ public class ClientServerPipeline implements Runnable {
             return false;
         }
         serverNetworkTable.getEntry("sound").setRaw(outboundPacket);
+        sentBytes(outboundPacket.length);
+        return true;
+    }
+
+    @ClientSide
+    public boolean sendAlarm(Sound sound) {
+        return sendSound(sound, false);
+    }
+
+    /**
+     * Posts the results of a command to the server from the client.
+     *
+     * @param alarm          the command response to send
+     * @param skipDirtyCheck activating this flag will bypass the redundancy check that skips uploading when the
+     *                       existing data is identical
+     * @return true if data was exchanged, false otherwise
+     */
+    @ClientSide
+    public boolean sendAlarm(Sound alarm, boolean skipDirtyCheck) {
+        if (alarm == null)
+            return false;
+        byte[] outboundPacket = writeToBytes(alarm);
+        if (!skipDirtyCheck && checkDirty(outboundPacket, serverNetworkTable.getEntry("alarm").getRaw(new byte[0]))) {
+            return false;
+        }
+        serverNetworkTable.getEntry("alarm").setRaw(outboundPacket);
         sentBytes(outboundPacket.length);
         return true;
     }

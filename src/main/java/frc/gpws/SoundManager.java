@@ -14,11 +14,13 @@ import java.util.ArrayList;
 
 @ServerSide
 public class SoundManager implements Runnable {
-    public static ArrayList<Sound> queue = new ArrayList<>();
-    // current status of clip
+    public static ArrayList<Sound> liveMessages = new ArrayList<>();
+    public static ArrayList<Sound> liveAlarms = new ArrayList<>();
+    private static Sound currentSound;
     private static String status;
     private static Long currentFrame;
     private static Clip currentInput;
+    private static int currentAlarmIndex = 0;
 
     static {
         try {
@@ -47,16 +49,9 @@ public class SoundManager implements Runnable {
             return;
         }
         currentInput.close();
-        resetAudioStream();
+        //resetAudioStream();
         currentInput.setMicrosecondPosition(currentFrame);
         play();
-    }
-
-    // Method to reset audio stream
-    public static void resetAudioStream() throws UnsupportedAudioFileException, IOException,
-            LineUnavailableException {
-        currentInput.open(AudioSystem.getAudioInputStream(new File("sounds/" + queue.get(0).soundPack + "/" + queue.get(0).getCurrentSound() + ".wav").getAbsoluteFile()));
-        currentInput.loop(0);
     }
 
     public static void play() {
@@ -69,7 +64,7 @@ public class SoundManager implements Runnable {
             UnsupportedAudioFileException {
         currentInput.stop();
         currentInput.close();
-        resetAudioStream();
+        //resetAudioStream();
         currentFrame = 0L;
         currentInput.setMicrosecondPosition(0);
         play();
@@ -81,7 +76,7 @@ public class SoundManager implements Runnable {
         if (c > 0 && c < currentInput.getMicrosecondLength()) {
             currentInput.stop();
             currentInput.close();
-            resetAudioStream();
+            //resetAudioStream();
             currentFrame = c;
             currentInput.setMicrosecondPosition(c);
             play();
@@ -89,16 +84,14 @@ public class SoundManager implements Runnable {
     }
 
     public static void enqueueSound(Sound sound) {
-        if (queue.size() == 0) {
-            queue.add(sound);
+        liveMessages.add(sound);
+        if (liveMessages.size() == 1) {
             stop();
             try {
-                resetAudioStream();
+                resetAudioStream(liveMessages.get(0));
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
                 e.printStackTrace();
             }
-        } else {
-            queue.add(sound);
         }
     }
 
@@ -109,14 +102,47 @@ public class SoundManager implements Runnable {
         currentInput.setMicrosecondPosition(0);
     }
 
+    // Method to reset audio stream
+    public static void resetAudioStream(Sound soundToPlay) throws UnsupportedAudioFileException, IOException,
+            LineUnavailableException {
+        currentSound = soundToPlay;
+        currentInput.open(AudioSystem.getAudioInputStream(new File("sounds/" + soundToPlay.soundPack + "pack/" + soundToPlay.getCurrentSound() + ".wav").getAbsoluteFile()));
+        currentInput.loop(0);
+    }
+
+    public static void soundAlarm(Sound sound) {
+        liveAlarms.add(sound);
+        if (liveAlarms.size() == 1 && liveMessages.size() == 0) {
+            currentAlarmIndex = 0;
+            stop();
+            try {
+                resetAudioStream(liveAlarms.get(currentAlarmIndex));
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void addAlarm(Sound alarm) {
+        if (!liveAlarms.contains(alarm))
+            liveAlarms.add(alarm);
+    }
+
+    public static void cutItOut() {
+        stop();
+        currentAlarmIndex = 0;
+        liveMessages.clear();
+        liveAlarms.clear();
+    }
+
     @Override
     public void run() {
         init();
-        try {
+        /*try {
             resetAudioStream();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
-        }
+        }*/
         while (true) {
             try {
                 Thread.sleep(20);
@@ -132,21 +158,42 @@ public class SoundManager implements Runnable {
     }
 
     public static void update() {
-        if (queue.size() > 0 && currentInput.getMicrosecondLength() <= currentInput.getMicrosecondPosition()) {
-            try {
-                System.out.println(queue.get(0).toString() + " (" + currentInput.getMicrosecondLength() + ", " + currentInput.getMicrosecondPosition() + ")");
-                if (queue.get(0).goNext() == null) {
-                    queue.remove(0);
-                    if (queue.size() > 0) {
+        if (liveMessages.size() > 0 && (currentSound == null || liveMessages.contains(currentSound))) {
+            if (currentInput.getMicrosecondLength() <= currentInput.getMicrosecondPosition()) {
+                try {
+                    System.out.println(liveMessages.get(0).toString() + " (" + currentInput.getMicrosecondLength() + ", " + currentInput.getMicrosecondPosition() + ")");
+                    if (liveMessages.get(0).goNext() == null) {
+                        liveMessages.remove(0);
+                        if (liveMessages.size() > 0) {
+                            stop();
+                            resetAudioStream(liveMessages.get(0));
+                        }
+                    } else {
                         stop();
-                        resetAudioStream();
+                        resetAudioStream(liveMessages.get(0));
                     }
-                } else {
-                    stop();
-                    resetAudioStream();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            }
+        } else if (liveAlarms.size() > 0) {
+            if (currentInput.getMicrosecondLength() <= currentInput.getMicrosecondPosition()) {
+                try {
+                    currentAlarmIndex = Math.min(currentAlarmIndex, liveAlarms.size() - 1);
+                    System.out.println(liveAlarms.get(currentAlarmIndex).toString() + " (" + currentInput.getMicrosecondLength() + ", " + currentInput.getMicrosecondPosition() + ")");
+                    if (liveAlarms.get(currentAlarmIndex).goNext() == null) {
+                        liveAlarms.get(currentAlarmIndex).reset();
+                        currentAlarmIndex = (currentAlarmIndex + 1) % liveAlarms.size();
+                    }
+                    stop();
+                    if (liveMessages.size() > 0) {
+                        resetAudioStream(liveMessages.get(0));
+                    } else {
+                        resetAudioStream(liveAlarms.get(currentAlarmIndex));
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

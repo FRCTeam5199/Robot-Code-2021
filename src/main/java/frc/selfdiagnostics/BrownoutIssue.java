@@ -13,8 +13,8 @@ public class BrownoutIssue implements ISimpleIssue {
     }
 
     private static void reportIssue(ISubsystem owner) {
-        Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Brownout, SoundManager.Sounds.Brownout, SoundManager.Sounds.Brownout, SoundManager.Sounds.Replace, SoundManager.Sounds.Battery, SoundManager.Sounds.Replace, SoundManager.Sounds.Battery));
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof BrownoutIssue)) {
+            Main.pipeline.sendAlarm(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Brownout, SoundManager.Sounds.Brownout, SoundManager.Sounds.Brownout, SoundManager.Sounds.Replace, SoundManager.Sounds.Battery, SoundManager.Sounds.Replace, SoundManager.Sounds.Battery));
             System.err.println(">>>>>>>BROWNOUT DETECTED<<<<<<<");
             IssueHandler.issues.put(owner, new BrownoutIssue());
         }
