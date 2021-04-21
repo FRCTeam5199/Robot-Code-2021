@@ -11,7 +11,7 @@ import frc.controllers.ControllerEnums.ButtonPanelButtons;
  * @see ControllerEnums.ButtonStatus
  */
 public class ButtonPanelController extends BaseController {
-    private ButtonPanelController(Integer n) {
+    public ButtonPanelController(Integer n) {
         super(n);
     }
 

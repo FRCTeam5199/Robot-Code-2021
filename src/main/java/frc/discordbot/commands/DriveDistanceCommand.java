@@ -27,6 +27,7 @@ public class DriveDistanceCommand extends AbstractCommand {
         if (message.startingPoint == null){
             message.startingPoint = new Point(Robot.driver.guidance.fieldX(),Robot.driver.guidance.fieldY());
         }
+        System.out.println("Driving " + message.requestedSpeed);
         Robot.driver.driveMPS(message.requestedSpeed, 0, 0);
         if (!new Point(Robot.driver.guidance.fieldX(),Robot.driver.guidance.fieldY()).isWithin(message.requestedTravel, message.startingPoint)) {
             Robot.driver.driveMPS(0,0,0);
@@ -59,8 +60,8 @@ public class DriveDistanceCommand extends AbstractCommand {
         @ServerSide
         protected DriveDistanceCommandData(MessageReceivedEvent message) {
             super(message);
-            requestedTravel = Double.parseDouble(CONTENT.split(" ")[1]);
-            requestedSpeed = Double.parseDouble(CONTENT.split(" ")[2]);
+            requestedTravel = Double.parseDouble(CONTENT.split(" ").length > 1 ? CONTENT.split(" ")[1] : "1");
+            requestedSpeed = Double.parseDouble(CONTENT.split(" ").length > 2 ? CONTENT.split(" ")[2] : "1");
         }
 
         @Override

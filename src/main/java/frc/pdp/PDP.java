@@ -55,7 +55,7 @@ public class PDP implements ISubsystem {
     @Override
     public void updateGeneric() {
         BrownoutIssue.handleIssue(this, RobotController.getBatteryVoltage() < 9 && RobotController.getBatteryVoltage() > 0);
-        UndervoltageIssue.handleIssue(this, RobotController.getBatteryVoltage() >= 9 && RobotController.getBatteryVoltage() < 9);
+        UndervoltageIssue.handleIssue(this, RobotController.getBatteryVoltage() >= 9 && RobotController.getBatteryVoltage() <= 9.5);
     }
 
     @Override

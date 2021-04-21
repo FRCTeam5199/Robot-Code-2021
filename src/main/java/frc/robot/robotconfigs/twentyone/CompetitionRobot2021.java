@@ -21,6 +21,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
+        ENABLE_PDP = true;
         ENABLE_HOOD_ARTICULATION = false;
 
         DRIVE_USE_6_MOTORS = false;

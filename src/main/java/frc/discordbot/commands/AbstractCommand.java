@@ -62,6 +62,7 @@ public abstract class AbstractCommand implements Serializable {
     public static abstract class AbstractCommandData implements Serializable {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
+        private final long timein = System.currentTimeMillis();
 
         public abstract boolean isMultiTickCommand();
 
@@ -85,6 +86,7 @@ public abstract class AbstractCommand implements Serializable {
     public static abstract class AbstractCommandResponse implements Serializable {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
+        private final long timein = System.currentTimeMillis();
 
         public abstract void doYourWorst(JDA client);
 

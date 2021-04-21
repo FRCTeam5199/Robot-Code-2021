@@ -19,7 +19,7 @@ public class JoystickController extends BaseController {
      *
      * @param n - an integer
      */
-    private JoystickController(Integer n) {
+    public JoystickController(Integer n) {
         super(n);
     }
 
