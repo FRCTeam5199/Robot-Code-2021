@@ -45,7 +45,7 @@
 |[PID.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fmisc%2FPID.java)|63 (0.7%)|36|57.1%|18|28.6%|9|14.3%|
 |[PDP.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fpdp%2FPDP.java)|90 (1.0%)|57|63.3%|12|13.3%|21|23.3%|
 |[MotorDisconnectedIssue.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fselfdiagnostics%2FMotorDisconnectedIssue.java)|62 (0.7%)|51|82.3%|3|4.8%|8|12.9%|
-|[MessageHandler.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdiscordbot%2FMessageHandler.java)|125 (1.4%)|101|80.8%|14|11.2%|10|8.0%|
+|[MessageHandler.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdiscordbot%2FMessageHandler.java)|120 (1.3%)|96|80.0%|14|11.7%|10|8.3%|
 |[Main.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Frobot%2FMain.java)|49 (0.5%)|21|42.9%|21|42.9%|7|14.3%|
 |[LEDs.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fmisc%2FLEDs.java)|93 (1.0%)|75|80.6%|5|5.4%|13|14.0%|
 |[JoystickController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fcontrollers%2FJoystickController.java)|85 (0.9%)|34|40.0%|44|51.8%|7|8.2%|
@@ -96,4 +96,4 @@
 |[AbstractCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdiscordbot%2Fcommands%2FAbstractCommand.java)|127 (1.4%)|63|49.6%|45|35.4%|19|15.0%|
 |[AbstractAutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/souper-secret-contraband/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2Fauton%2FAbstractAutonManager.java)|125 (1.4%)|92|73.6%|19|15.2%|14|11.2%|
 |Average |97.2|65.6|X|18.9|X|12.6|X|
-|Total (94)|9138|6169|67.5%|1781| 19.5%|1188|13.0%|
+|Total (94)|9133|6164|67.5%|1781| 19.5%|1188|13.0%|
