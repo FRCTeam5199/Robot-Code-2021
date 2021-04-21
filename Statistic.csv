@@ -19,15 +19,15 @@ XBoxController.java,58 (2.8%),26,44.8%,26,44.8%,6,10.3%
 DiscordBot.java,62 (2.9%),49,79.0%,6,9.7%,7,11.3%
 MessageHandler.java,122 (5.4%),98,80.3%,14,11.5%,10,8.2%
 AbstractCommand.java,140 (5.8%),69,49.3%,50,35.7%,21,15.0%
-DriveDistanceCommand.java,85 (3.4%),72,84.7%,0,0.0%,13,15.3%
+DriveDistanceCommand.java,90 (3.6%),77,85.6%,0,0.0%,13,14.4%
 HelpCommand.java,42 (1.7%),36,85.7%,0,0.0%,6,14.3%
-PingCommand.java,73 (2.8%),57,78.1%,9,12.3%,7,9.6%
+OpenURLCommand.java,52 (2.0%),43,82.7%,0,0.0%,9,17.3%
+PingCommand.java,73 (2.7%),57,78.1%,9,12.3%,7,9.6%
 PlaySongCommand.java,45 (1.7%),32,71.1%,6,13.3%,7,15.6%
-RandomQuoteCommand.java,45 (1.7%),36,80.0%,0,0.0%,9,20.0%
+RandomQuoteCommand.java,41 (1.5%),33,80.5%,0,0.0%,8,19.5%
 RoboPingCommand.java,67 (2.4%),47,70.1%,9,13.4%,11,16.4%
 ShutdownServerCommand.java,34 (1.2%),28,82.4%,0,0.0%,6,17.6%
-StatusCommand.java,53 (1.9%),39,73.6%,7,13.2%,7,13.2%
-VibingCommand.java,48 (1.7%),40,83.3%,0,0.0%,8,16.7%
+StatusCommand.java,53 (1.8%),39,73.6%,7,13.2%,7,13.2%
 Wait5TicksThenReplyCommand.java,53 (1.8%),43,81.1%,0,0.0%,10,18.9%
 AbstractDriveManager.java,76 (2.5%),38,50.0%,26,34.2%,12,15.8%
 DriveBases.java,9 (0.3%),5,55.6%,3,33.3%,1,11.1%
@@ -49,7 +49,7 @@ Chirp.java,241 (4.9%),164,68.0%,48,19.9%,29,12.0%
 ClientSide.java,10 (0.2%),3,30.0%,6,60.0%,1,10.0%
 HoodPositions.txt,4 (0.1%),4,100.0%,0,0.0%,0,0.0%
 ISubsystem.java,96 (1.9%),20,20.8%,62,64.6%,14,14.6%
-InitializationFailureException.java,43 (0.9%),15,34.9%,23,53.5%,5,11.6%
+InitializationFailureException.java,43 (0.8%),15,34.9%,23,53.5%,5,11.6%
 LEDs.java,91 (1.8%),73,80.2%,5,5.5%,13,14.3%
 PID.java,63 (1.2%),36,57.1%,18,28.6%,9,14.3%
 QuoteOfTheDay.java,70 (1.3%),56,80.0%,11,15.7%,3,4.3%
@@ -84,7 +84,7 @@ MotorDisconnectedIssue.java,61 (0.7%),50,82.0%,3,4.9%,8,13.1%
 UndervoltageIssue.java,38 (0.5%),31,81.6%,0,0.0%,7,18.4%
 AbstractRobotTelemetry.java,83 (1.0%),63,75.9%,8,9.6%,12,14.5%
 RobotTelemetryStandard.java,140 (1.7%),74,52.9%,43,30.7%,23,16.4%
-RobotTelemetrySwivel.java,84 (1.0%),56,66.7%,8,9.5%,20,23.8%
+RobotTelemetrySwivel.java,84 (1.0%),57,67.9%,8,9.5%,19,22.6%
 AbstractIMU.java,94 (1.1%),60,63.8%,20,21.3%,14,14.9%
 SupportedIMU.java,8 (0.1%),4,50.0%,3,37.5%,1,12.5%
 WrappedNavX2IMU.java,96 (1.1%),59,61.5%,19,19.8%,18,18.8%
@@ -97,4 +97,4 @@ SupportedVision.java,9 (0.1%),4,44.4%,3,33.3%,2,22.2%
 VisionLEDMode.java,20 (0.2%),6,30.0%,13,65.0%,1,5.0%
 IDistanceSensor.java,30 (0.3%),15,50.0%,11,36.7%,4,13.3%
 RevDistanceSensor.java,89 (0.9%),55,61.8%,11,12.4%,23,25.8%
-Total,9501,6440,0.7,1826,0.2,1235,0.1
+Total,9506,6446,0.7,1826,0.2,1234,0.1
