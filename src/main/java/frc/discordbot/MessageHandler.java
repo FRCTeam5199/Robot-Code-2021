@@ -1,11 +1,6 @@
 package frc.discordbot;
 
-import frc.discordbot.commands.AbstractCommand;
-import frc.discordbot.commands.PingCommand;
-import frc.discordbot.commands.PlaySongCommand;
-import frc.discordbot.commands.RoboPingCommand;
-import frc.discordbot.commands.StatusCommand;
-import frc.discordbot.commands.Wait5TicksThenReplyCommand;
+import frc.discordbot.commands.*;
 import frc.misc.ClientSide;
 import frc.misc.ServerSide;
 import frc.robot.Main;
@@ -28,7 +23,7 @@ public class MessageHandler extends ListenerAdapter {
 
     public static void loadCommands(boolean listening) {
         LISTENING = listening;
-        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class);
+        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class);
         for (Class<? extends AbstractCommand> s : classes) {
             try {
                 if (Modifier.isAbstract(s.getModifiers())) {
