@@ -39,6 +39,10 @@ deploy {
 
 repositories {
     jcenter()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
 }
 
 // Set this to true to enable desktop support.
@@ -68,7 +72,7 @@ dependencies {
     // simulation wpi.deps.sim.ws_server(wpi.platforms.desktop, false)
     // simulation wpi.deps.sim.ws_client(wpi.platforms.desktop, false)
 
-    compile ('net.dv8tion:JDA:3.8.1_457'){
+    compile("net.dv8tion:JDA:4.2.1_253"){
         exclude module: 'opus-java'
     }
     // Add ntcore-java

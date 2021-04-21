@@ -3,8 +3,8 @@ package frc.discordbot.commands;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.robot.Robot;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 
 /**
  * Returns a pretty listing of all activates subsystems and if they are working nominally

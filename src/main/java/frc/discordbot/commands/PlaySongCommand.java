@@ -1,7 +1,7 @@
 package frc.discordbot.commands;
 
 import frc.robot.Robot;
-import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.api.JDA;
 
 /**
  * Uses {@link Robot#chirp} to play the song of the user's choosing

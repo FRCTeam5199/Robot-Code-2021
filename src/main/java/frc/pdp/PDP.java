@@ -34,7 +34,7 @@ public class PDP implements ISubsystem {
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return SubsystemStatus.FAILED;
+        return RobotController.getBatteryVoltage() > 12 ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     @Override

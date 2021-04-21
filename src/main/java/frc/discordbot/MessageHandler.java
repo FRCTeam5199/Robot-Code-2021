@@ -4,8 +4,8 @@ import frc.discordbot.commands.*;
 import frc.misc.ClientSide;
 import frc.misc.ServerSide;
 import frc.robot.Main;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;

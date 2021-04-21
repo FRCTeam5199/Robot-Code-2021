@@ -76,7 +76,7 @@ public class ClientServerPipeline implements Runnable {
 
     /**
      * {@link frc.discordbot.commands.AbstractCommand.AbstractCommandData Data} is just a stripped down way of sending a
-     * {@link net.dv8tion.jda.core.events.message.MessageReceivedEvent message from the bot}
+     * {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent message from the bot}
      *
      * @param outbound the data packet to send
      * @return true if data was changed, false otherwise
@@ -88,7 +88,7 @@ public class ClientServerPipeline implements Runnable {
 
     /**
      * {@link frc.discordbot.commands.AbstractCommand.AbstractCommandData Data} is just a stripped down way of sending a
-     * {@link net.dv8tion.jda.core.events.message.MessageReceivedEvent message from the bot}
+     * {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent message from the bot}
      *
      * @param outbound       the data packet to send
      * @param skipDirtyCheck activating this flag will bypass the redundancy check that skips uploading when the
