@@ -3,6 +3,7 @@ package frc.pdp;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
+import frc.misc.UserInterface;
 import frc.selfdiagnostics.BrownoutIssue;
 import frc.selfdiagnostics.UndervoltageIssue;
 
@@ -33,7 +34,7 @@ public class PDP implements ISubsystem {
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return RobotController.getBatteryVoltage() > 12 ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+        return RobotController.getBatteryVoltage() > 8 ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
     }
 
     @Override
@@ -53,8 +54,9 @@ public class PDP implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        BrownoutIssue.handleIssue(this, RobotController.getBatteryVoltage() < 9 && RobotController.getBatteryVoltage() > 0);
-        UndervoltageIssue.handleIssue(this, RobotController.getBatteryVoltage() >= 9 && RobotController.getBatteryVoltage() <= 9.5);
+        double BatteryMinVoltage = UserInterface.PDP_BROWNOUT_MIN_OVERRIDE.getEntry().getBoolean(false) ? UserInterface.PDP_BROWNOUT_MIN_VAL.getEntry().getDouble(9) : 9;
+        BrownoutIssue.handleIssue(this, RobotController.getBatteryVoltage() < BatteryMinVoltage && RobotController.getBatteryVoltage() > 0);
+        UndervoltageIssue.handleIssue(this, RobotController.getBatteryVoltage() >= BatteryMinVoltage && RobotController.getBatteryVoltage() <= (BatteryMinVoltage + 0.5));
     }
 
     @Override

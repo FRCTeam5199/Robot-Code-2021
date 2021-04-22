@@ -237,6 +237,7 @@ public class Robot extends TimedRobot {
         }
 
         if (UserInterface.CLEAR_WARNINGS.getEntry().getBoolean(false)){
+            UserInterface.CLEAR_WARNINGS.getEntry().setBoolean(false);
             Main.pipeline.wipeSounds();
             IssueHandler.issues.clear();
         }

@@ -226,9 +226,7 @@ public class ClientServerPipeline implements Runnable {
             if (checkSound()) {
                 SoundManager.enqueueSound(readSound());
             }
-            if (checkAlarm()){
-                readAlarms();
-            }
+            readAlarms();
             if (wipeSounds()){
                 SoundManager.resolveAllAlarms();
             }
@@ -297,24 +295,13 @@ public class ClientServerPipeline implements Runnable {
     }
 
     /**
-     * Checks if the server has posted new data yet and if they posted anything meaningful (null check and blank check
-     * only)
-     *
-     * @return true if unread flag is set and data is fresh
-     */
-    @ServerSide
-    public boolean checkAlarm() {
-        return serverNetworkTable.getEntry("alarm").getRaw(new byte[0]).length != 0;
-    }
-
-    /**
      * Reads the client reply currently in the pipeline, regardless of whether or not the {@link #checkReply() reply is
      * fresh}
      */
     @ServerSide
     public void readAlarms() {
         for (Alarms alarm : Alarms.values()){
-            alarm.setActive(serverNetworkTable.getEntry("alarm:" + alarm).getBoolean(false));
+            alarm.setActive(serverNetworkTable.getEntry("alarm:" + alarm.name()).getBoolean(false));
         }
    }
 
@@ -414,8 +401,8 @@ public class ClientServerPipeline implements Runnable {
     public boolean sendAlarm(Alarms alarm) {
         if (alarm == null)
             return false;
-        serverNetworkTable.getEntry("alarm:" + alarm).setBoolean(true);
-        sentBytes(("alarm:" + alarm).length() + 1);
+        serverNetworkTable.getEntry("alarm:" + alarm.name()).setBoolean(true);
+        sentBytes(("alarm:" + alarm.name()).length() + 1);
         return true;
     }
 
@@ -430,7 +417,7 @@ public class ClientServerPipeline implements Runnable {
             return false;
         }else {
             for (Alarms alarm : Alarms.values()){
-                alarm.setActive(serverNetworkTable.getEntry("alarm:" + alarm).setBoolean(false));
+                alarm.setActive(serverNetworkTable.getEntry("alarm:" + alarm.name()).setBoolean(false));
             }
             return serverNetworkTable.getEntry("wipealarmqueue").setBoolean(true);
         }
