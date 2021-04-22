@@ -56,7 +56,7 @@ PID.java,63 (1.2%),36,57.1%,18,28.6%,9,14.3%
 QuoteOfTheDay.java,70 (1.3%),56,80.0%,11,15.7%,3,4.3%
 ServerSide.java,10 (0.2%),3,30.0%,6,60.0%,1,10.0%
 SubsystemStatus.java,9 (0.2%),4,44.4%,4,44.4%,1,11.1%
-UserInterface.java,98 (1.8%),69,70.4%,18,18.4%,11,11.2%
+UserInterface.java,96 (1.8%),66,68.8%,19,19.8%,11,11.5%
 UtilFunctions.java,35 (0.6%),9,25.7%,24,68.6%,2,5.7%
 AbstractMotorController.java,177 (3.1%),54,30.5%,99,55.9%,24,13.6%
 SparkMotorController.java,200 (3.4%),163,81.5%,14,7.0%,23,11.5%
@@ -67,10 +67,10 @@ VictorMotorController.java,157 (2.5%),130,82.8%,5,3.2%,22,14.0%
 AbstractFollowerMotorController.java,81 (1.3%),36,44.4%,35,43.2%,10,12.3%
 SparkFollowerMotorsController.java,21 (0.3%),15,71.4%,3,14.3%,3,14.3%
 TalonFollowerMotorController.java,21 (0.3%),15,71.4%,3,14.3%,3,14.3%
-PDP.java,89 (1.4%),56,62.9%,12,13.5%,21,23.6%
-ClientServerPipeline.java,438 (6.3%),258,58.9%,148,33.8%,32,7.3%
+PDP.java,91 (1.4%),58,63.7%,12,13.2%,21,23.1%
+ClientServerPipeline.java,425 (6.1%),252,59.3%,142,33.4%,31,7.3%
 Main.java,49 (0.7%),21,42.9%,21,42.9%,7,14.3%
-Robot.java,290 (4.0%),240,82.8%,29,10.0%,21,7.2%
+Robot.java,291 (4.0%),241,82.8%,29,10.0%,21,7.2%
 DefaultConfig.java,208 (2.8%),156,75.0%,33,15.9%,19,9.1%
 CompetitionRobot2021.java,119 (1.6%),92,77.3%,10,8.4%,17,14.3%
 PracticeRobot2021.java,119 (1.5%),89,74.8%,11,9.2%,19,16.0%
@@ -98,4 +98,4 @@ SupportedVision.java,9 (0.1%),4,44.4%,3,33.3%,2,22.2%
 VisionLEDMode.java,20 (0.2%),6,30.0%,13,65.0%,1,5.0%
 IDistanceSensor.java,30 (0.3%),15,50.0%,11,36.7%,4,13.3%
 RevDistanceSensor.java,89 (0.9%),55,61.8%,11,12.4%,23,25.8%
-Total,9551,6485,0.7,1823,0.2,1243,0.1
+Total,9539,6479,0.7,1818,0.2,1242,0.1
