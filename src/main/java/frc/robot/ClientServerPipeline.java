@@ -18,7 +18,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.Scanner;
 
 /**
  * Acts as a bridge between the internet-connected bot and the terrible robot. Implements {@link Runnable} because the
@@ -203,8 +202,6 @@ public class ClientServerPipeline implements Runnable {
             }
         }
         //Scanner kb = new Scanner(System.in);
-        Alarms.Brownout.setActive(true);
-        Alarms.Overheat.setActive(true);
         while (true) {
             try {
                 Thread.sleep(20);
@@ -230,7 +227,7 @@ public class ClientServerPipeline implements Runnable {
                 SoundManager.enqueueSound(readSound());
             }
             if (checkAlarm()){
-                SoundManager.resolveAlarm(readAlarm());
+                readAlarms();
             }
             if (wipeSounds()){
                 SoundManager.resolveAllAlarms();
@@ -313,19 +310,13 @@ public class ClientServerPipeline implements Runnable {
     /**
      * Reads the client reply currently in the pipeline, regardless of whether or not the {@link #checkReply() reply is
      * fresh}
-     *
-     * @return The current reply from the client in the pipeline
      */
     @ServerSide
-    public Alarms readAlarm() {
-        byte[] inboundPacket = serverNetworkTable.getEntry("alarm").getRaw(new byte[0]);
-        serverNetworkTable.getEntry("alarm").setRaw(new byte[0]);
-        readBytes(inboundPacket.length);
-        if (readFromBytes(inboundPacket) instanceof Alarms) {
-            return (Alarms) readFromBytes(inboundPacket);
+    public void readAlarms() {
+        for (Alarms alarm : Alarms.values()){
+            alarm.setActive(serverNetworkTable.getEntry("alarm:" + alarm).getBoolean(false));
         }
-        throw new IllegalStateException("Not sure what happened but the command that I read isnt a known command");
-    }
+   }
 
     /**
      * Checks if the server has posted new data yet and if they posted anything meaningful (null check and blank check
@@ -413,29 +404,18 @@ public class ClientServerPipeline implements Runnable {
         return true;
     }
 
-    @ClientSide
-    public boolean sendAlarm(Alarms sound) {
-        return sendAlarm(sound, false);
-    }
-
     /**
      * Posts the results of a command to the server from the client.
      *
      * @param alarm          the command response to send
-     * @param skipDirtyCheck activating this flag will bypass the redundancy check that skips uploading when the
-     *                       existing data is identical
      * @return true if data was exchanged, false otherwise
      */
     @ClientSide
-    public boolean sendAlarm(Alarms alarm, boolean skipDirtyCheck) {
+    public boolean sendAlarm(Alarms alarm) {
         if (alarm == null)
             return false;
-        byte[] outboundPacket = writeToBytes(alarm);
-        if (!skipDirtyCheck && checkDirty(outboundPacket, serverNetworkTable.getEntry("alarm").getRaw(new byte[0]))) {
-            return false;
-        }
-        serverNetworkTable.getEntry("alarm").setRaw(outboundPacket);
-        sentBytes(outboundPacket.length);
+        serverNetworkTable.getEntry("alarm:" + alarm).setBoolean(true);
+        sentBytes(("alarm:" + alarm).length() + 1);
         return true;
     }
 
@@ -449,6 +429,9 @@ public class ClientServerPipeline implements Runnable {
             }
             return false;
         }else {
+            for (Alarms alarm : Alarms.values()){
+                alarm.setActive(serverNetworkTable.getEntry("alarm:" + alarm).setBoolean(false));
+            }
             return serverNetworkTable.getEntry("wipealarmqueue").setBoolean(true);
         }
     }

@@ -1,8 +1,6 @@
 package frc.selfdiagnostics;
 
 import frc.gpws.Alarms;
-import frc.gpws.Sound;
-import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
 import frc.robot.Main;
 
