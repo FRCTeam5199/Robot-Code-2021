@@ -38,10 +38,6 @@ public class RoboPingCommand extends AbstractCommand {
             TIMESTAMP = System.currentTimeMillis();
         }
 
-        @Override
-        public boolean isMultiTickCommand() {
-            return false;
-        }
     }
 
     /**

@@ -13,8 +13,8 @@ public abstract class AbstractCommand implements Serializable {
      * Executes the command using the provided data
      *
      * @param message the message and relevant data that triggered the command to run
-     * @return The result of executing the command. Should only return null if commnad {@link
-     * AbstractCommandData#isMultiTickCommand() is multi tick}
+     * @return The result of executing the command. Should only return null if commnad {@link #isMultiTickCommand() is
+     * multi tick}
      */
     public abstract @Nullable AbstractCommandResponse run(AbstractCommandData message);
 
@@ -24,6 +24,10 @@ public abstract class AbstractCommand implements Serializable {
      * @return The command name without the prefix
      */
     public abstract String getCommand();
+
+    public boolean isMultiTickCommand() {
+        return false;
+    }
 
     /**
      * This returns a textual representation of the arguments.
@@ -72,8 +76,6 @@ public abstract class AbstractCommand implements Serializable {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
 
-        public abstract boolean isMultiTickCommand();
-
         protected AbstractCommandData(MessageReceivedEvent message) {
             this(message.getMessage().getContentRaw(), message.getMessageId(), message.getAuthor().getId(), message.getGuild().getId(), message.getChannel().getId());
         }
@@ -111,16 +113,26 @@ public abstract class AbstractCommand implements Serializable {
     }
 
     /**
-     * Nothing special, just an instantiatable {@link AbstractCommandResponse} with no callback
+     * Nothing special, just an instantiatable {@link AbstractCommandResponse} with an optional callback. Passing no
+     * {@link #response} will skip the callback
      */
     public static class GenericCommandResponse extends AbstractCommandResponse {
+        private final String response;
+
         public GenericCommandResponse(AbstractCommandData message) {
             super(message);
+            response = "";
+        }
+
+        public GenericCommandResponse(AbstractCommandData message, String responseText) {
+            super(message);
+            response = responseText;
         }
 
         @Override
         public void doYourWorst(JDA client) {
-            //pass
+            if (response.length() > 0)
+                client.getTextChannelById(CHANNEL_ID).sendMessage(response).queue();
         }
     }
 
@@ -130,11 +142,6 @@ public abstract class AbstractCommand implements Serializable {
     public static class GenericCommandData extends AbstractCommandData {
         public GenericCommandData(MessageReceivedEvent message) {
             super(message);
-        }
-
-        @Override
-        public boolean isMultiTickCommand() {
-            return false;
         }
     }
 }

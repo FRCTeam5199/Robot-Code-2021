@@ -67,11 +67,6 @@ public class TalonMotorController extends AbstractMotorController {
     }
 
     @Override
-    public AbstractMotorController follow(AbstractMotorController leader) {
-        return follow(leader, false);
-    }
-
-    @Override
     public void resetEncoder() {
         if (motor.setSelectedSensorPosition(0) != ErrorCode.OK)
             if (!Robot.SECOND_TRY)

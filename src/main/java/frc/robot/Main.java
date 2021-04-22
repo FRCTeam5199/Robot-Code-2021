@@ -15,6 +15,8 @@ import java.util.Random;
 /**
  * Do NOT add any static variables to this class, or any initialization at all. Unless you know what you are doing, do
  * not modify this file except to change the parameter class to the startRobot call.
+ * <p>
+ * Piss off ik what im doing WPILib
  */
 public final class Main {
     /**
@@ -22,14 +24,16 @@ public final class Main {
      * already so you don't need another one
      */
     public static final Random RANDOM = new Random(System.currentTimeMillis());
-
+    /**
+     * The way the robot and ds server (not drivestation proper, but a second instance running on the ds)
+     */
     public static ClientServerPipeline pipeline;
     public static boolean IS_DS;
 
     /**
      * Main initialization function. Do not perform any initialization here.
-     *
-     * <p>If you change your main robot class, change the parameter type.
+     * <p>
+     * If you change your main robot class, change the parameter type.
      *
      * @param args does nothing
      */

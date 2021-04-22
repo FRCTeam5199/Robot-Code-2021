@@ -13,7 +13,7 @@ public class BrownoutIssue implements ISimpleIssue {
 
     private static void reportIssue(ISubsystem owner) {
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof BrownoutIssue)) {
-            Main.pipeline.sendAlarm(Alarms.Brownout);
+            Main.pipeline.sendAlarm(Alarms.Brownout, true);
             System.err.println(">>>>>>>BROWNOUT DETECTED<<<<<<<");
             IssueHandler.issues.put(owner, new BrownoutIssue());
         }

@@ -33,22 +33,16 @@ public class VictorMotorController extends AbstractMotorController {
     }
 
     @Override
-    public AbstractMotorController follow(AbstractMotorController leader) {
-        if (leader instanceof VictorMotorController) {
-            motor.follow(((VictorMotorController) leader).motor);
-        } else
-            throw new IllegalArgumentException("I cant follow that!");
-        return this;
-    }
-
-    @Override
     public int getID() {
         return motor.getDeviceID();
     }
 
     @Override
     public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
-        follow(leader);
+        if (leader instanceof VictorMotorController) {
+            motor.follow(((VictorMotorController) leader).motor);
+        } else
+            throw new IllegalArgumentException("I cant follow that!");
         setInverted(invert);
         return this;
     }

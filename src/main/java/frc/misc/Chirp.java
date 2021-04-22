@@ -19,6 +19,7 @@ import java.util.List;
  * This is where we play our gnarly tunez. Although it cant be seen from here, there is a delete deploy directory method
  * in {@link frc.robot.Robot} that will help remove ghost files. Use this like an {@link Orchestra} with extra steps
  */
+@ClientSide
 public class Chirp extends Orchestra implements ISubsystem {
     /**
      * Contains all of the talons created in {@link TalonMotorController#TalonMotorController(int)} that can be used to

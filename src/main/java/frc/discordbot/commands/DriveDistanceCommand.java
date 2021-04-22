@@ -5,7 +5,6 @@ import frc.drive.auton.Point;
 import frc.misc.ClientSide;
 import frc.misc.ServerSide;
 import frc.robot.Robot;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,8 +17,8 @@ public class DriveDistanceCommand extends AbstractCommand {
     }
 
     public AbstractCommandResponse runChecked(DriveDistanceCommandData message) {
-        if (DriverStation.getInstance().isDisabled()){
-            return new DriveDistanceCommandResponse(message);
+        if (DriverStation.getInstance().isDisabled()) {
+            return new GenericCommandResponse(message, "Im disabled. F. Cannot drive. Urbad");
         } else {
             if (message.startingPoint == null) {
                 message.startingPoint = new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY());
@@ -28,7 +27,7 @@ public class DriveDistanceCommand extends AbstractCommand {
             Robot.driver.driveMPS(message.requestedSpeed, 0, 0);
             if (!new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY()).isWithin(message.requestedTravel, message.startingPoint)) {
                 Robot.driver.driveMPS(0, 0, 0);
-                return new DriveDistanceCommandResponse(message);
+                return new GenericCommandResponse(message, "I finnished driving");
             }
         }
         return null;
@@ -39,6 +38,12 @@ public class DriveDistanceCommand extends AbstractCommand {
         return "drive";
     }
 
+    @Override
+    public boolean isMultiTickCommand() {
+        return true;
+    }
+
+    @Override
     public String getArgs() {
         return "<distance in meters> <speed in meters per second>";
     }
@@ -49,42 +54,25 @@ public class DriveDistanceCommand extends AbstractCommand {
     }
 
     @Override
-    public boolean isServerSideCommand() {
-        return false;
-    }
-
-    @Override
     public AbstractCommandData extractData(MessageReceivedEvent message) {
         return new DriveDistanceCommandData(message);
     }
 
+    /**
+     * Holds onto special data like {@link #startingPoint} and parses {@link #requestedSpeed} and {@link
+     * #requestedTravel} from the message
+     */
     public static class DriveDistanceCommandData extends AbstractCommandData {
         @ClientSide
-        private Point startingPoint;
+        private transient Point startingPoint;
         private double requestedTravel = 1;
         private double requestedSpeed = 1;
 
         @ServerSide
         protected DriveDistanceCommandData(MessageReceivedEvent message) {
             super(message);
-            requestedTravel = Double.parseDouble(CONTENT.split(" ").length > 1 ? CONTENT.split(" ")[1] : "1");
-            requestedSpeed = Double.parseDouble(CONTENT.split(" ").length > 2 ? CONTENT.split(" ")[2] : "1");
-        }
-
-        @Override
-        public boolean isMultiTickCommand() {
-            return true;
-        }
-    }
-
-    public static class DriveDistanceCommandResponse extends AbstractCommandResponse {
-        protected DriveDistanceCommandResponse(AbstractCommandData originalData) {
-            super(originalData);
-        }
-
-        @Override
-        public void doYourWorst(JDA client) {
-            client.getTextChannelById(CHANNEL_ID).sendMessage("I finished driving.").submit();
+            requestedTravel = CONTENT.split(" ").length > 1 ? Double.parseDouble(CONTENT.split(" ")[1]) : requestedTravel;
+            requestedSpeed = CONTENT.split(" ").length > 2 ? Double.parseDouble(CONTENT.split(" ")[2]) : requestedSpeed;
         }
     }
 }

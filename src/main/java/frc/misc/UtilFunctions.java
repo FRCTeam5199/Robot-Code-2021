@@ -32,4 +32,18 @@ public class UtilFunctions {
     public static double mathematicalMod(double value, double modulo) {
         return (value - Math.floor(value / modulo) * modulo);
     }
+
+    /**
+     * Takes in some number of bytes and then returns a string representation either in bytes or kilobytes.
+     *
+     * @param bytes The number of bytes to stringify
+     * @return If more than one kb, string representing passed bytes as kilobytes. Otherwise bytes
+     */
+    public static String stringifyBytes(double bytes) {
+        if (bytes > 1024) {
+            bytes /= 1024;
+            return ((int) (bytes * 10) / 10.0) + "kb";
+        }
+        return (int) bytes + "b";
+    }
 }

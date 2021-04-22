@@ -1,5 +1,6 @@
 package frc.motors;
 
+import frc.gpws.Alarms;
 import frc.gpws.Sound;
 import frc.gpws.SoundManager;
 import frc.misc.PID;
@@ -44,28 +45,6 @@ public abstract class AbstractMotorController {
     public abstract AbstractMotorController setInverted(boolean invert);
 
     public abstract String getName();
-
-    /**
-     * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
-     * the passed motor will be the leader
-     *
-     * @param leader motor to follow
-     * @return this object for factory style construction
-     * @see AbstractFollowerMotorController
-     */
-    @Deprecated
-    public abstract AbstractMotorController follow(AbstractMotorController leader);
-
-    /**
-     * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
-     * the passed motor will be the leader
-     *
-     * @param leader motor to follow
-     * @param invert whether to invert this follower
-     * @return this object for factory style construction
-     * @see AbstractFollowerMotorController
-     */
-    public abstract AbstractMotorController follow(AbstractMotorController leader, boolean invert);
 
     /**
      * Sets current encoder position to be the zero position. If you are absolutely crazy and want to set the encoder to
@@ -135,13 +114,47 @@ public abstract class AbstractMotorController {
      */
     public abstract AbstractMotorController setOpenLoopRampRate(double timeToMax);
 
+    /**
+     * Used for {@link frc.selfdiagnostics.ISimpleIssue issues} and gives a potential fix based on built in failure
+     * reported issue
+     *
+     * @return A possible fix to what ails the motor
+     */
     public abstract String getSuggestedFix();
 
+    /**
+     * Active failure check that uses motor built in failure checks to determine viability of the motor
+     *
+     * @return true if the motor is failed, false if nominal
+     */
     public abstract boolean isFailed();
 
     protected AbstractMotorController() {
         motorList.add(this);
     }
+
+    /**
+     * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
+     * the passed motor will be the leader
+     *
+     * @param leader motor to follow
+     * @return this object for factory style construction
+     * @see AbstractFollowerMotorController
+     */
+    public AbstractMotorController follow(AbstractMotorController leader) {
+        return follow(leader, false);
+    }
+
+    /**
+     * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
+     * the passed motor will be the leader
+     *
+     * @param leader motor to follow
+     * @param invert whether to invert this follower
+     * @return this object for factory style construction
+     * @see AbstractFollowerMotorController
+     */
+    public abstract AbstractMotorController follow(AbstractMotorController leader, boolean invert);
 
     /**
      * see docs for {@link #sensorToRealDistanceFactor} for full explanation
@@ -152,14 +165,20 @@ public abstract class AbstractMotorController {
         sensorToRealDistanceFactor = s2rf;
     }
 
+    /**
+     * Self explanatory. Takes into account {@link #getMotorTemperature() motor temp} and {@link frc.robot.robotconfigs.DefaultConfig#OVERHEAT_THRESHOLD} to
+     * @return invert {@link #isOverheated}
+     */
     protected boolean isTemperatureAcceptable() {
         if (getMotorTemperature() >= Robot.robotSettings.OVERHEAT_THRESHOLD) {
             if (!isOverheated) {
                 UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), false);
-                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Overheat));
+                Main.pipeline.sendAlarm(Alarms.Overheat, true);
                 isOverheated = true;
             }
-        } else if (isOverheated) {
+        } //wait 5 degrees to unoverheat
+        else if (isOverheated && getMotorTemperature() < Robot.robotSettings.OVERHEAT_THRESHOLD - 5) {
+            Main.pipeline.sendAlarm(Alarms.Overheat, false);
             isOverheated = false;
             UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), true);
         }
@@ -173,5 +192,10 @@ public abstract class AbstractMotorController {
      */
     public abstract double getMotorTemperature();
 
+    /**
+     * Gets the device id based on the motor's built in function. <b>DOES NOT STORE CONSTRUCTED MOTOR ID</b>
+     *
+     * @return the device id this object controls
+     */
     public abstract int getID();
 }

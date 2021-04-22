@@ -12,6 +12,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Literally everything here is serverside. For clientside audio support, please refer to {@link frc.misc.Chirp}.
+ *
+ * @see Alarms
+ * @see Sound
+ */
 @ServerSide
 public class SoundManager implements Runnable {
     public static ArrayList<Sound> liveMessages = new ArrayList<>();
@@ -125,12 +131,6 @@ public class SoundManager implements Runnable {
     @Override
     public void run() {
         init();
-        /*try {
-            resetAudioStream();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }*/
-        Alarms.Brownout.setActive(true);
         while (true) {
             try {
                 Thread.sleep(20);
@@ -177,10 +177,10 @@ public class SoundManager implements Runnable {
         if (alarm != null && !playingMessage) {
             if (currentInput.getMicrosecondLength() <= currentInput.getMicrosecondPosition()) {
                 try {
-                    if (alarm.getMySound().goNext() == null){
+                    if (alarm.getMySound().goNext() == null) {
                         alarm.getMySound().reset();
                         return false;
-                    }else {
+                    } else {
                         stop();
                         resetAudioStream(alarm.getMySound());
                     }

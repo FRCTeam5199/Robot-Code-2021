@@ -10,6 +10,7 @@ import frc.gpws.Sound;
 import frc.gpws.SoundManager;
 import frc.misc.ClientSide;
 import frc.misc.ServerSide;
+import frc.misc.UtilFunctions;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,10 +25,12 @@ import java.util.Objects;
  * {@link #run()} method will create a new thread and prevent exiting.
  */
 public class ClientServerPipeline implements Runnable {
+    /**
+     * True if running on Drive Station, False if on robot
+     */
     public static boolean SERVER;
     private static NetworkTable serverNetworkTable;
     private static ClientServerPipeline SERVER_PIPELINE, CLIENT_PIPELINE;
-
     private static int bytesRecieved = 0, bytesSent = 0;
 
     /**
@@ -50,30 +53,6 @@ public class ClientServerPipeline implements Runnable {
     @ClientSide
     public static ClientServerPipeline getClient() {
         return Objects.requireNonNullElseGet(CLIENT_PIPELINE, () -> CLIENT_PIPELINE = new ClientServerPipeline(false));
-    }
-
-    private static void readBytes(int length) {
-        bytesRecieved += length;
-        System.out.println("Bytes sent: " + length + " (" + stringifyBytes(bytesRecieved) + ")");
-    }
-
-    /**
-     * Reads and returns an object as interpreted from the passed data
-     *
-     * @param rawdata serialized object data, represented in bytes (sorry if u have a string idk where u got it from but
-     *                put it back)
-     * @return the input, deserialized
-     */
-    private static Object readFromBytes(byte[] rawdata) {
-        try {
-            ByteArrayInputStream bais = new ByteArrayInputStream(rawdata);
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            Object objectOut = ois.readObject();
-            ois.close();
-            return objectOut;
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
@@ -171,17 +150,15 @@ public class ClientServerPipeline implements Runnable {
         return true;
     }
 
+    /**
+     * Used to log transferred bytes. Prints fresh bytes sent and {@link UtilFunctions#stringifyBytes(double) total
+     * bytes sent}
+     *
+     * @param length number of new bytes transferred
+     */
     private static void sentBytes(int length) {
         bytesSent += length;
-        System.out.println("Bytes sent: " + length + " (" + stringifyBytes(bytesSent) + ")");
-    }
-
-    private static String stringifyBytes(double bytes) {
-        if (bytes > 1024) {
-            bytes /= 1024;
-            return ((int) (bytes * 10) / 10.0) + "kb";
-        }
-        return (int) bytes + "b";
+        System.out.println("Bytes sent: " + length + " (" + UtilFunctions.stringifyBytes(bytesSent) + ")");
     }
 
     /**
@@ -207,7 +184,7 @@ public class ClientServerPipeline implements Runnable {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            } finally{
+            } finally {
                 SoundManager.update();
                 updatePipeline();
             }
@@ -215,8 +192,15 @@ public class ClientServerPipeline implements Runnable {
     }
 
     /**
-     * Based on if the current pipeline is a {@link #SERVER}, checks for, and handles new data.
+     * Runs differently on client and server.
+     * <p>
+     * Client: listens for command messages and handles them with {@link MessageHandler#onMessageReceived(AbstractCommand.AbstractCommandData)}
+     * <p>
+     * Server: {@link #checkReply() Checks for bot replies}, {@link #checkSound() checks for new warnings}, {@link
+     * #readAlarms() updates alarm statuses}, and {@link #wipeSounds() listens for resets}
      */
+    @ServerSide
+    @ClientSide
     public void updatePipeline() {
         if (SERVER) {
             if (checkReply()) {
@@ -227,7 +211,7 @@ public class ClientServerPipeline implements Runnable {
                 SoundManager.enqueueSound(readSound());
             }
             readAlarms();
-            if (wipeSounds()){
+            if (wipeSounds()) {
                 SoundManager.resolveAllAlarms();
             }
         } else {
@@ -300,10 +284,43 @@ public class ClientServerPipeline implements Runnable {
      */
     @ServerSide
     public void readAlarms() {
-        for (Alarms alarm : Alarms.values()){
+        for (Alarms alarm : Alarms.values()) {
             alarm.setActive(serverNetworkTable.getEntry("alarm:" + alarm.name()).getBoolean(false));
         }
-   }
+    }
+
+    /**
+     * Runs different on server and on client.
+     * <p>
+     * On server: unsets all alarms and all but the current message playing.
+     * <p>
+     * On client: notifies the server and unsets all alarm flags
+     *
+     * @return Server: true if sounds wiped.
+     * <p>
+     * Client: {@link edu.wpi.first.networktables.NetworkTableEntry#setBoolean(boolean)}
+     */
+    @ServerSide
+    @ClientSide
+    public boolean wipeSounds() {
+        if (SERVER) {
+            if (serverNetworkTable.getEntry("wipealarmqueue").getBoolean(false)) {
+                while (SoundManager.liveMessages.size() > 1)
+                    SoundManager.liveMessages.remove(1);
+                for (Alarms alarm : Alarms.values()) {
+                    alarm.setActive(false);
+                }
+                serverNetworkTable.getEntry("wipealarmqueue").setBoolean(false);
+                return true;
+            }
+            return false;
+        } else {
+            for (Alarms alarm : Alarms.values()) {
+                serverNetworkTable.getEntry("alarm:" + alarm).setBoolean(false);
+            }
+            return serverNetworkTable.getEntry("wipealarmqueue").setBoolean(true);
+        }
+    }
 
     /**
      * Checks if the server has posted new data yet and if they posted anything meaningful (null check and blank check
@@ -333,7 +350,38 @@ public class ClientServerPipeline implements Runnable {
     }
 
     /**
-     * Posts the results of a command to the server from the client.
+     * Used to log transferred bytes. Prints fresh bytes read and {@link UtilFunctions#stringifyBytes(double) total
+     * bytes read}
+     *
+     * @param length number of new bytes transferred
+     */
+    private static void readBytes(int length) {
+        bytesRecieved += length;
+        System.out.println("Bytes sent: " + length + " (" + UtilFunctions.stringifyBytes(bytesRecieved) + ")");
+    }
+
+    /**
+     * Reads and returns an object as interpreted from the passed data
+     *
+     * @param rawdata serialized object data, represented in bytes (sorry if u have a string idk where u got it from but
+     *                put it back)
+     * @return the input, deserialized
+     */
+    private static Object readFromBytes(byte[] rawdata) {
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream(rawdata);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            Object objectOut = ois.readObject();
+            ois.close();
+            return objectOut;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Overload of {@link #sendReply(AbstractCommand.AbstractCommandResponse, boolean)} with default to run the dirty
+     * check
      *
      * @param reply the command response to send
      * @return true if data was exchanged, false otherwise
@@ -365,6 +413,12 @@ public class ClientServerPipeline implements Runnable {
         return true;
     }
 
+    /**
+     * Overload of {@link #sendSound(Sound, boolean)} with default to run the dirty check
+     *
+     * @param sound The fully constructed warning sound
+     * @return True if data was written
+     */
     @ClientSide
     public boolean sendSound(Sound sound) {
         return sendSound(sound, false);
@@ -394,32 +448,13 @@ public class ClientServerPipeline implements Runnable {
     /**
      * Posts the results of a command to the server from the client.
      *
-     * @param alarm          the command response to send
-     * @return true if data was exchanged, false otherwise
+     * @param alarm the command response to update
      */
     @ClientSide
-    public boolean sendAlarm(Alarms alarm) {
+    public void sendAlarm(Alarms alarm, boolean active) {
         if (alarm == null)
-            return false;
-        serverNetworkTable.getEntry("alarm:" + alarm.name()).setBoolean(true);
+            return;
+        serverNetworkTable.getEntry("alarm:" + alarm.name()).setBoolean(active);
         sentBytes(("alarm:" + alarm.name()).length() + 1);
-        return true;
-    }
-
-    @ServerSide
-    @ClientSide
-    public boolean wipeSounds(){
-        if (SERVER) {
-            if(serverNetworkTable.getEntry("wipealarmqueue").getBoolean(false)) {
-                serverNetworkTable.getEntry("wipealarmqueue").setBoolean(false);
-                return true;
-            }
-            return false;
-        }else {
-            for (Alarms alarm : Alarms.values()){
-                alarm.setActive(serverNetworkTable.getEntry("alarm:" + alarm.name()).setBoolean(false));
-            }
-            return serverNetworkTable.getEntry("wipealarmqueue").setBoolean(true);
-        }
     }
 }

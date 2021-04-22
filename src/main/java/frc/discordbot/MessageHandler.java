@@ -57,8 +57,12 @@ public class MessageHandler extends ListenerAdapter {
             if (LISTENING) {
                 AbstractCommand command = getCommand(message.CONTENT);
                 pendingCommands.add(message);
-                if (command != null)
-                    Main.pipeline.sendReply(command.run(message));
+                if (command != null){
+                    AbstractCommand.AbstractCommandResponse response = command.run(message);
+                    if (response == null && !command.isMultiTickCommand())
+                        throw new IllegalStateException("Cannot run single tick command and get no response. Return an empty GenericCommand instead");
+                    Main.pipeline.sendReply(response);
+                }
             } else
                 throw new IllegalStateException("How did you get here as a client?");
         }
