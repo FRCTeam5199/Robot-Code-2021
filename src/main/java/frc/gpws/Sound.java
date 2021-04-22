@@ -7,7 +7,8 @@ import java.util.Objects;
 public class Sound implements Serializable {
     public final SoundManager.Sounds[] mySounds;
     public final SoundManager.SoundPacks soundPack;
-    private transient int windex = 0;
+    private transient int windex = -1;
+    transient boolean isPlaying = false;
 
     public Sound(SoundManager.SoundPacks soundPack, SoundManager.Sounds... sounds) {
         this.soundPack = soundPack;
@@ -15,13 +16,11 @@ public class Sound implements Serializable {
     }
 
     public SoundManager.Sounds goNext() {
-        if (++windex == mySounds.length)
+        if (++windex == mySounds.length) {
+            isPlaying = false;
             return null;
+        }
         return mySounds[windex];
-    }
-
-    public SoundManager.Sounds goNextWrapped() {
-        return mySounds[(windex = (windex + 1) % mySounds.length)];
     }
 
     public SoundManager.Sounds getCurrentSound() {
@@ -66,6 +65,11 @@ public class Sound implements Serializable {
     }
 
     public void reset() {
-        windex = 0;
+        windex = -1;
+        isPlaying = false;
+    }
+
+    public void beginPlaying(){
+        isPlaying = true;
     }
 }

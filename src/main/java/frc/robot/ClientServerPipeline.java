@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.discordbot.DiscordBot;
 import frc.discordbot.MessageHandler;
 import frc.discordbot.commands.AbstractCommand;
+import frc.gpws.Alarms;
 import frc.gpws.Sound;
 import frc.gpws.SoundManager;
 import frc.misc.ClientSide;
@@ -201,7 +202,9 @@ public class ClientServerPipeline implements Runnable {
                 System.out.println("Exception: " + e);
             }
         }
-        Scanner kb = new Scanner(System.in);
+        //Scanner kb = new Scanner(System.in);
+        Alarms.Brownout.setActive(true);
+        Alarms.Overheat.setActive(true);
         while (true) {
             try {
                 Thread.sleep(20);
@@ -227,10 +230,10 @@ public class ClientServerPipeline implements Runnable {
                 SoundManager.enqueueSound(readSound());
             }
             if (checkAlarm()){
-                SoundManager.addAlarm(readAlarm());
+                SoundManager.resolveAlarm(readAlarm());
             }
             if (wipeSounds()){
-                SoundManager.cutItOut();
+                SoundManager.resolveAllAlarms();
             }
         } else {
             if (checkMessage()) {
@@ -314,12 +317,12 @@ public class ClientServerPipeline implements Runnable {
      * @return The current reply from the client in the pipeline
      */
     @ServerSide
-    public Sound readAlarm() {
+    public Alarms readAlarm() {
         byte[] inboundPacket = serverNetworkTable.getEntry("alarm").getRaw(new byte[0]);
         serverNetworkTable.getEntry("alarm").setRaw(new byte[0]);
         readBytes(inboundPacket.length);
-        if (readFromBytes(inboundPacket) instanceof Sound) {
-            return (Sound) readFromBytes(inboundPacket);
+        if (readFromBytes(inboundPacket) instanceof Alarms) {
+            return (Alarms) readFromBytes(inboundPacket);
         }
         throw new IllegalStateException("Not sure what happened but the command that I read isnt a known command");
     }
@@ -411,8 +414,8 @@ public class ClientServerPipeline implements Runnable {
     }
 
     @ClientSide
-    public boolean sendAlarm(Sound sound) {
-        return sendSound(sound, false);
+    public boolean sendAlarm(Alarms sound) {
+        return sendAlarm(sound, false);
     }
 
     /**
@@ -424,7 +427,7 @@ public class ClientServerPipeline implements Runnable {
      * @return true if data was exchanged, false otherwise
      */
     @ClientSide
-    public boolean sendAlarm(Sound alarm, boolean skipDirtyCheck) {
+    public boolean sendAlarm(Alarms alarm, boolean skipDirtyCheck) {
         if (alarm == null)
             return false;
         byte[] outboundPacket = writeToBytes(alarm);

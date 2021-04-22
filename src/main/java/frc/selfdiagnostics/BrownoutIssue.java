@@ -1,5 +1,6 @@
 package frc.selfdiagnostics;
 
+import frc.gpws.Alarms;
 import frc.gpws.Sound;
 import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
@@ -14,7 +15,7 @@ public class BrownoutIssue implements ISimpleIssue {
 
     private static void reportIssue(ISubsystem owner) {
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof BrownoutIssue)) {
-            Main.pipeline.sendAlarm(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Brownout, SoundManager.Sounds.Brownout, SoundManager.Sounds.Brownout, SoundManager.Sounds.Replace, SoundManager.Sounds.Battery, SoundManager.Sounds.Replace, SoundManager.Sounds.Battery));
+            Main.pipeline.sendAlarm(Alarms.Brownout);
             System.err.println(">>>>>>>BROWNOUT DETECTED<<<<<<<");
             IssueHandler.issues.put(owner, new BrownoutIssue());
         }

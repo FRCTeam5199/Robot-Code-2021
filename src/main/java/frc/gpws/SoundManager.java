@@ -15,8 +15,7 @@ import java.util.ArrayList;
 @ServerSide
 public class SoundManager implements Runnable {
     public static ArrayList<Sound> liveMessages = new ArrayList<>();
-    public static ArrayList<Sound> liveAlarms = new ArrayList<>();
-    private static Sound currentSound;
+    private static boolean playingMessage = false;
     private static String status;
     private static Long currentFrame;
     private static Clip currentInput;
@@ -105,34 +104,22 @@ public class SoundManager implements Runnable {
     // Method to reset audio stream
     public static void resetAudioStream(Sound soundToPlay) throws UnsupportedAudioFileException, IOException,
             LineUnavailableException {
-        currentSound = soundToPlay;
-        currentInput.open(AudioSystem.getAudioInputStream(new File("sounds/" + soundToPlay.soundPack + "pack/" + soundToPlay.getCurrentSound() + ".wav").getAbsoluteFile()));
+        soundToPlay.beginPlaying();
+        currentInput.open(AudioSystem.getAudioInputStream(new File("sounds/" + soundToPlay.soundPack.getFolder() + "/" + soundToPlay.getCurrentSound() + ".wav").getAbsoluteFile()));
         currentInput.loop(0);
     }
 
-    public static void soundAlarm(Sound sound) {
-        liveAlarms.add(sound);
-        if (liveAlarms.size() == 1 && liveMessages.size() == 0) {
-            currentAlarmIndex = 0;
-            stop();
-            try {
-                resetAudioStream(liveAlarms.get(currentAlarmIndex));
-            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                e.printStackTrace();
-            }
-        }
+    public static void soundAlarm(Alarms alarms) {
+        alarms.setActive(true);
     }
 
-    public static void addAlarm(Sound alarm) {
-        if (!liveAlarms.contains(alarm))
-            liveAlarms.add(alarm);
+    public static void resolveAlarm(Alarms alarm) {
+        alarm.setActive(false);
     }
 
-    public static void cutItOut() {
-        stop();
-        currentAlarmIndex = 0;
-        liveMessages.clear();
-        liveAlarms.clear();
+    public static void resolveAllAlarms() {
+        for (Alarms alarm : Alarms.values())
+            alarm.setActive(false);
     }
 
     @Override
@@ -143,6 +130,7 @@ public class SoundManager implements Runnable {
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }*/
+        Alarms.Brownout.setActive(true);
         while (true) {
             try {
                 Thread.sleep(20);
@@ -158,15 +146,20 @@ public class SoundManager implements Runnable {
     }
 
     public static void update() {
-        if (liveMessages.size() > 0 && (currentSound == null || liveMessages.contains(currentSound))) {
+        if (!playAlarm() && liveMessages.size() > 0) {
+            playingMessage = true;
             if (currentInput.getMicrosecondLength() <= currentInput.getMicrosecondPosition()) {
                 try {
                     System.out.println(liveMessages.get(0).toString() + " (" + currentInput.getMicrosecondLength() + ", " + currentInput.getMicrosecondPosition() + ")");
                     if (liveMessages.get(0).goNext() == null) {
                         liveMessages.remove(0);
-                        if (liveMessages.size() > 0) {
-                            stop();
-                            resetAudioStream(liveMessages.get(0));
+                        playingMessage = false;
+                        if (!playAlarm()) {
+                            playingMessage = true;
+                            if (liveMessages.size() > 0) {
+                                stop();
+                                resetAudioStream(liveMessages.get(0));
+                            }
                         }
                     } else {
                         stop();
@@ -176,26 +169,28 @@ public class SoundManager implements Runnable {
                     throw new RuntimeException(e);
                 }
             }
-        } else if (liveAlarms.size() > 0) {
+        }
+    }
+
+    private static boolean playAlarm() {
+        Alarms alarm = Alarms.getAlarmToPlay();
+        if (alarm != null && !playingMessage) {
             if (currentInput.getMicrosecondLength() <= currentInput.getMicrosecondPosition()) {
                 try {
-                    currentAlarmIndex = Math.min(currentAlarmIndex, liveAlarms.size() - 1);
-                    System.out.println(liveAlarms.get(currentAlarmIndex).toString() + " (" + currentInput.getMicrosecondLength() + ", " + currentInput.getMicrosecondPosition() + ")");
-                    if (liveAlarms.get(currentAlarmIndex).goNext() == null) {
-                        liveAlarms.get(currentAlarmIndex).reset();
-                        currentAlarmIndex = (currentAlarmIndex + 1) % liveAlarms.size();
-                    }
-                    stop();
-                    if (liveMessages.size() > 0) {
-                        resetAudioStream(liveMessages.get(0));
-                    } else {
-                        resetAudioStream(liveAlarms.get(currentAlarmIndex));
+                    if (alarm.getMySound().goNext() == null){
+                        alarm.getMySound().reset();
+                        return false;
+                    }else {
+                        stop();
+                        resetAudioStream(alarm.getMySound());
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
+            return true;
         }
+        return false;
     }
 
     public enum SoundPacks implements Serializable {
