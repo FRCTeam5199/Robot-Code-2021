@@ -82,6 +82,9 @@ public class Robot extends TimedRobot {
             else if (robotSettings.DRIVE_BASE == DriveBases.SWIVEL)
                 driver = new DriveManagerSwerve();
         }
+        if (robotSettings.ENABLE_LEDS){
+            leds = new LEDs();
+        }
         if (robotSettings.ENABLE_INTAKE) {
             intake = new Intake();
         }

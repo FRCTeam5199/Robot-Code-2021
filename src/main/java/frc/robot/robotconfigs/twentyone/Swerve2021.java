@@ -23,6 +23,11 @@ public class Swerve2021 extends DefaultConfig {
         ENABLE_INDEXER = false;
         ENABLE_MUSIC = false;
 
+        //LEDS
+        ENABLE_LEDS = true;
+        LED_STRAND_LENGTH = 300; //strand of 300, suggested 100
+        LED_STRAND_PORT_ID = 0;
+
         DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
