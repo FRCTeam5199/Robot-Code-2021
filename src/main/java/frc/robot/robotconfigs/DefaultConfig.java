@@ -3,13 +3,12 @@ package frc.robot.robotconfigs;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
-import frc.ballstuff.intaking.IntakeControlStyles;
-import frc.ballstuff.shooting.ShootingControlStyles;
+import frc.ballstuff.intaking.Intake;
+import frc.ballstuff.shooting.Shooter;
 import frc.drive.AbstractDriveManager;
-import frc.drive.DriveControlStyles;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
-import frc.motors.SupportedMotors;
+import frc.motors.AbstractMotorController;
 import frc.telemetry.imu.AbstractIMU;
 import frc.vision.camera.IVision;
 
@@ -59,14 +58,14 @@ public abstract class DefaultConfig {
     public int INDEXER_DETECTION_CUTOFF_DISTANCE = -2;
 
     //UI Styles
-    public DriveControlStyles DRIVE_STYLE = DriveControlStyles.STANDARD;
-    public ShootingControlStyles SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
-    public IntakeControlStyles INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
+    public AbstractDriveManager.DriveControlStyles DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
+    public Shooter.ShootingControlStyles SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD;
+    public Intake.IntakeControlStyles INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
 
-    public SupportedMotors SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
-    public SupportedMotors HOOD_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
-    public SupportedMotors DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
-    public SupportedMotors TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
+    public AbstractMotorController.SupportedMotors SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
+    public AbstractMotorController.SupportedMotors HOOD_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
+    public AbstractMotorController.SupportedMotors DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
+    public AbstractMotorController.SupportedMotors TURRET_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
     public AbstractIMU.SupportedIMU IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
     public AutonType AUTON_TYPE = AutonType.FOLLOW_PATH;
     public AbstractDriveManager.DriveBases DRIVE_BASE = AbstractDriveManager.DriveBases.STANDARD;

@@ -2,8 +2,13 @@ package frc.discordbot.commands;
 
 import frc.misc.QuoteOfTheDay;
 import frc.misc.ServerSide;
+import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Returns a random quote and replies with {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse#doYourWorst(JDA)
+ * standard callback}
+ */
 @ServerSide
 public class RandomQuoteCommand extends AbstractCommand {
     @Override

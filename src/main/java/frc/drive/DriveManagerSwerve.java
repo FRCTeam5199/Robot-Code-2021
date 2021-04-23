@@ -12,7 +12,7 @@ import frc.controllers.ControllerEnums;
 import frc.controllers.XBoxController;
 import frc.misc.PID;
 import frc.misc.SubsystemStatus;
-import frc.motors.SupportedMotors;
+import frc.motors.AbstractMotorController;
 import frc.motors.SwerveMotorController;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 
@@ -63,10 +63,10 @@ public class DriveManagerSwerve extends AbstractDriveManager {
 
         xbox = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, XBoxController.class);
 
-        driverFR = new SwerveMotorController(1, SupportedMotors.CAN_SPARK_MAX, 2, SupportedMotors.CAN_SPARK_MAX);
-        driverBR = new SwerveMotorController(4, SupportedMotors.CAN_SPARK_MAX, 3, SupportedMotors.CAN_SPARK_MAX);
-        driverBL = new SwerveMotorController(6, SupportedMotors.CAN_SPARK_MAX, 5, SupportedMotors.CAN_SPARK_MAX);
-        driverFL = new SwerveMotorController(7, SupportedMotors.CAN_SPARK_MAX, 8, SupportedMotors.CAN_SPARK_MAX);
+        driverFR = new SwerveMotorController(1, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX, 2, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX);
+        driverBR = new SwerveMotorController(4, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX, 3, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX);
+        driverBL = new SwerveMotorController(6, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX, 5, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX);
+        driverFL = new SwerveMotorController(7, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX, 8, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX);
 
         driverFR.driver.setBrake(true);
         driverFL.driver.setInverted(true).setBrake(true);

@@ -6,6 +6,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
+/**
+ * Opens a URL on the server. Useful for fun, sharing docs, but can be used for evil. Please dont.
+ */
 @ServerSide
 public class OpenURLCommand extends AbstractCommand {
     @Override
@@ -32,8 +35,12 @@ public class OpenURLCommand extends AbstractCommand {
         return true;
     }
 
+    /**
+     * Holds a url and then opens it when being processed
+     */
     public static class VibingCommandResponse extends AbstractCommandResponse {
         private final String url;
+
         public VibingCommandResponse(AbstractCommandData data) {
             super(data);
             url = CONTENT.split(" ").length > 1 ? CONTENT.split(" ")[1] : "https://www.youtube.com/watch?v=bxqLsrlakK8";
@@ -41,11 +48,15 @@ public class OpenURLCommand extends AbstractCommand {
 
         @Override
         public void doYourWorst(JDA client) {
-            client.getTextChannelById(CHANNEL_ID).sendMessage("I am simply vibing. Opened url <" + url + ">").queue();
-            try {
-                Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start " + url});
-            } catch (IOException e) {
-                System.out.println("Exception: " + e);
+            if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                client.getTextChannelById(CHANNEL_ID).sendMessage("Invalid url <" + url + ">");
+            } else {
+                client.getTextChannelById(CHANNEL_ID).sendMessage("I am simply vibing. Opened url <" + url + ">").queue();
+                try {
+                    Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start " + url});
+                } catch (IOException e) {
+                    System.out.println("Exception: " + e);
+                }
             }
         }
     }

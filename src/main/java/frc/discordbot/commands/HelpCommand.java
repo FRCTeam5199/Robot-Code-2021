@@ -6,6 +6,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Simple command to list all the commands, their arguments, and where they run
+ */
 @ServerSide
 public class HelpCommand extends AbstractCommand {
     @Override
@@ -23,6 +26,9 @@ public class HelpCommand extends AbstractCommand {
         return true;
     }
 
+    /**
+     * Manufactues and embed and does all of the heavy lifting from here
+     */
     public static class HelpCommandResponse extends AbstractCommandResponse {
         public HelpCommandResponse(AbstractCommandData data) {
             super(data);

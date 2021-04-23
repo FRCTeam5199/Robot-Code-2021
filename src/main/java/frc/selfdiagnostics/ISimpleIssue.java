@@ -1,17 +1,17 @@
 package frc.selfdiagnostics;
 
+import frc.misc.ClientSide;
 import frc.misc.ISubsystem;
 import frc.misc.UserInterface;
 
 /**
  * The purpose of an Issue is to help the user to detect and rectify problems ASAP. When something is not working
- * nominally, it should {@link IMUNonOpIssue#reportIssue(ISubsystem, String) report it}. If the issue resolves itself,
- * remove it with {@link IMUNonOpIssue#resolveIssue(ISubsystem)} (note these are not inherited because in java static
- * methods arent inherited but use the template so that you can use {@link #robotPeriodic()} and {@link
- * #getRandomFix()}
+ * nominally, it should report it. If the issue resolves itself, remove it. The reason for the interface is to allow
+ * {@link #robotPeriodic()} to tick all systems and to ensure {@link #getRandomFix()} is implemented.
  *
  * @author jojo2357
  */
+@ClientSide
 public interface ISimpleIssue {
     /**
      * This should run every tick to detect a user's request for a random fix and then provides it upon request

@@ -154,4 +154,11 @@ public class Intake implements ISubsystem {
     public enum IntakeDirection {
         OUT, OFF, IN
     }
+
+    /**
+     * Determines how the {@link Intake} uses user input and what controllers to use
+     */
+    public enum IntakeControlStyles {
+        STANDARD, BOPIT
+    }
 }

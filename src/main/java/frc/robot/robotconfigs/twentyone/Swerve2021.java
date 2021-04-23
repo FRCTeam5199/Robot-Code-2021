@@ -1,13 +1,12 @@
 package frc.robot.robotconfigs.twentyone;
 
 import edu.wpi.first.wpilibj.I2C;
-import frc.ballstuff.intaking.IntakeControlStyles;
-import frc.ballstuff.shooting.ShootingControlStyles;
+import frc.ballstuff.intaking.Intake;
+import frc.ballstuff.shooting.Shooter;
 import frc.drive.AbstractDriveManager;
-import frc.drive.DriveControlStyles;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
-import frc.motors.SupportedMotors;
+import frc.motors.AbstractMotorController;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.telemetry.imu.AbstractIMU;
 import frc.vision.camera.IVision;
@@ -39,7 +38,7 @@ public class Swerve2021 extends DefaultConfig {
         IMU_NAVX_PORT = I2C.Port.kMXP;
 
         //SHOOTER
-        SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;//SupportedMotors.TALON_FX;
+        SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;//SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = IVision.SupportedVision.LIMELIGHT;
@@ -50,10 +49,10 @@ public class Swerve2021 extends DefaultConfig {
         ENABLE_INDEXER_AUTO_INDEX = false;
 
         //UI Styles
-        DRIVE_STYLE = DriveControlStyles.STANDARD;
-        SHOOTER_CONTROL_STYLE = ShootingControlStyles.ACCURACY_2021;//ShootingControlStyles.ACCURACY_2021;
-        INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
-        DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
+        DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
+        SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.ACCURACY_2021;//ShootingControlStyles.ACCURACY_2021;
+        INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
+        DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
         IMU_TYPE = AbstractIMU.SupportedIMU.NAVX2;
         DRIVE_BASE = AbstractDriveManager.DriveBases.SWIVEL;
 
@@ -88,7 +87,7 @@ public class Swerve2021 extends DefaultConfig {
         TURRET_GEAR_RATIO = 7;
         TURRET_MAX_POS = 520;
         TURRET_MIN_POS = -2;
-        TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
+        TURRET_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
         AUTON_TOLERANCE = 0.1;
         AUTO_SPEED = 3;
         AUTO_ROTATION_SPEED = 1;

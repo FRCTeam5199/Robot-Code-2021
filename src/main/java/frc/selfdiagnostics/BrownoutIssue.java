@@ -1,10 +1,21 @@
 package frc.selfdiagnostics;
 
 import frc.gpws.Alarms;
+import frc.misc.ClientSide;
 import frc.misc.ISubsystem;
 import frc.robot.Main;
 
+/**
+ *
+ */
+@ClientSide
 public class BrownoutIssue implements ISimpleIssue {
+    /**
+     * Unresolved issues from your childhood? no matter! just use a brownout issue!
+     *
+     * @param owner  should be {@link frc.pdp.PDP}
+     * @param report true to report
+     */
     public static void handleIssue(ISubsystem owner, boolean report) {
         if (report) {
             reportIssue(owner);

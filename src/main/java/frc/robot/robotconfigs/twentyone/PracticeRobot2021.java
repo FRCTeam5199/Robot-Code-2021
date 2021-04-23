@@ -1,11 +1,11 @@
 package frc.robot.robotconfigs.twentyone;
 
-import frc.ballstuff.intaking.IntakeControlStyles;
-import frc.ballstuff.shooting.ShootingControlStyles;
-import frc.drive.DriveControlStyles;
+import frc.ballstuff.intaking.Intake;
+import frc.ballstuff.shooting.Shooter;
+import frc.drive.AbstractDriveManager;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
-import frc.motors.SupportedMotors;
+import frc.motors.AbstractMotorController;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.telemetry.imu.AbstractIMU;
 import frc.vision.camera.IVision;
@@ -32,7 +32,7 @@ public class PracticeRobot2021 extends DefaultConfig {
         ENABLE_IMU = false;
 
         //SHOOTER
-        SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
+        SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = IVision.SupportedVision.LIMELIGHT;
@@ -43,12 +43,12 @@ public class PracticeRobot2021 extends DefaultConfig {
         ENABLE_INDEXER_AUTO_INDEX = true;
 
         //UI Styles
-        DRIVE_STYLE = DriveControlStyles.STANDARD;
-        SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
-        INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
-        DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
+        DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
+        SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD;
+        INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
+        DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
         IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
-        TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
+        TURRET_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
 
         AUTON_TYPE = AutonType.FOLLOW_PATH;
 

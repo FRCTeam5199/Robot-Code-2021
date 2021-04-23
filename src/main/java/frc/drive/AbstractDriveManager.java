@@ -81,4 +81,18 @@ public abstract class AbstractDriveManager implements ISubsystem {
         STANDARD,
         SWIVEL
     }
+
+    /**
+     * See {@link DriveManagerStandard#updateTeleop() updateTeleop} for implementation of each drive style
+     *
+     * @author jojo2357
+     */
+    public enum DriveControlStyles {
+        STANDARD,
+        EXPERIMENTAL,
+        MARIO_KART,
+        DRUM_TIME,
+        GUITAR,
+        BOP_IT
+    }
 }

@@ -12,14 +12,14 @@ public class SwerveMotorController {
     public AbstractMotorController driver, steering;
 
     /**
-     * Creates a new swerve drive module with any motors in {@link SupportedMotors#values()}
+     * Creates a new swerve drive module with any motors in {@link AbstractMotorController.SupportedMotors#values()}
      *
      * @param driverID          the id of the driver motor to instantiate
      * @param driverMotorType   the type of motor to create. If null, then no driving will be made
      * @param steeringID        the id of the steering motor to instantiate
      * @param steeringMotorType the type of motor to create. If null, then no steering will be made
      */
-    public SwerveMotorController(int driverID, @Nullable SupportedMotors driverMotorType, int steeringID, @Nullable SupportedMotors steeringMotorType) {
+    public SwerveMotorController(int driverID, @Nullable AbstractMotorController.SupportedMotors driverMotorType, int steeringID, @Nullable AbstractMotorController.SupportedMotors steeringMotorType) {
         if (driverMotorType != null) {
             switch (driverMotorType) {
                 case VICTOR:

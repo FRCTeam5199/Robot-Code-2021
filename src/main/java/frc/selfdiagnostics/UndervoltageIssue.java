@@ -5,6 +5,10 @@ import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
 import frc.robot.Main;
 
+/**
+ * Not a {@link BrownoutIssue}. Activates sooner, is resolvable and does not use {@link frc.gpws.Alarms} but rather a
+ * standard {@link frc.robot.ClientServerPipeline#sendSound(Sound)} to pass a simple message
+ */
 public class UndervoltageIssue implements ISimpleIssue {
     public static void handleIssue(ISubsystem owner, boolean report) {
         if (!report)
