@@ -91,4 +91,11 @@ public abstract class AbstractIMU implements ISubsystem {
         updateGeneric();
         return (ypr[0] - startYaw);
     }
+
+    /**
+     * What dont you get about SIMPLY VIBING?
+     */
+    public enum SupportedIMU {
+        NAVX2, PIGEON
+    }
 }

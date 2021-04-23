@@ -3,14 +3,14 @@ package frc.robot.robotconfigs.twentyone;
 import edu.wpi.first.wpilibj.I2C;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
-import frc.drive.DriveBases;
-import frc.drive.DriveTypes;
+import frc.drive.AbstractDriveManager;
+import frc.drive.DriveControlStyles;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
-import frc.telemetry.imu.SupportedIMU;
-import frc.vision.camera.SupportedVision;
+import frc.telemetry.imu.AbstractIMU;
+import frc.vision.camera.IVision;
 
 public class Swerve2021 extends DefaultConfig {
     public Swerve2021() {
@@ -42,7 +42,7 @@ public class Swerve2021 extends DefaultConfig {
         SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;//SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
-        GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
+        GOAL_CAMERA_TYPE = IVision.SupportedVision.LIMELIGHT;
         ENABLE_HOOD_ARTICULATION = false;
         INDEXER_DETECTION_CUTOFF_DISTANCE = 5;
 
@@ -50,12 +50,12 @@ public class Swerve2021 extends DefaultConfig {
         ENABLE_INDEXER_AUTO_INDEX = false;
 
         //UI Styles
-        DRIVE_STYLE = DriveTypes.STANDARD;
+        DRIVE_STYLE = DriveControlStyles.STANDARD;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.ACCURACY_2021;//ShootingControlStyles.ACCURACY_2021;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
-        IMU_TYPE = SupportedIMU.NAVX2;
-        DRIVE_BASE = DriveBases.SWIVEL;
+        IMU_TYPE = AbstractIMU.SupportedIMU.NAVX2;
+        DRIVE_BASE = AbstractDriveManager.DriveBases.SWIVEL;
 
         AUTON_TYPE = AutonType.GALACTIC_SEARCH;
 

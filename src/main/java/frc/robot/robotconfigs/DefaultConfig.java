@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
-import frc.drive.DriveBases;
-import frc.drive.DriveTypes;
+import frc.drive.AbstractDriveManager;
+import frc.drive.DriveControlStyles;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
-import frc.telemetry.imu.SupportedIMU;
-import frc.vision.camera.SupportedVision;
+import frc.telemetry.imu.AbstractIMU;
+import frc.vision.camera.IVision;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,14 +52,14 @@ public abstract class DefaultConfig {
     //SHOOTER
     public boolean SHOOTER_USE_TWO_MOTORS = true;
     public boolean SHOOTER_INVERTED = true;
-    public SupportedVision GOAL_CAMERA_TYPE = SupportedVision.PHOTON;
+    public IVision.SupportedVision GOAL_CAMERA_TYPE = IVision.SupportedVision.PHOTON;
 
     //INTAKE
     public boolean ENABLE_INDEXER_AUTO_INDEX = true;
     public int INDEXER_DETECTION_CUTOFF_DISTANCE = -2;
 
     //UI Styles
-    public DriveTypes DRIVE_STYLE = DriveTypes.STANDARD;
+    public DriveControlStyles DRIVE_STYLE = DriveControlStyles.STANDARD;
     public ShootingControlStyles SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
     public IntakeControlStyles INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
 
@@ -67,9 +67,9 @@ public abstract class DefaultConfig {
     public SupportedMotors HOOD_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
     public SupportedMotors DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
     public SupportedMotors TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
-    public SupportedIMU IMU_TYPE = SupportedIMU.PIGEON;
+    public AbstractIMU.SupportedIMU IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
     public AutonType AUTON_TYPE = AutonType.FOLLOW_PATH;
-    public DriveBases DRIVE_BASE = DriveBases.STANDARD;
+    public AbstractDriveManager.DriveBases DRIVE_BASE = AbstractDriveManager.DriveBases.STANDARD;
 
     public int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
     public double DRIVEBASE_DISTANCE_BETWEEN_WHEELS = -2; //Distance in meters between wheels

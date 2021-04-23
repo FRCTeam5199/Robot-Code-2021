@@ -2,13 +2,13 @@ package frc.robot.robotconfigs.twentytwenty;
 
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
-import frc.drive.DriveTypes;
+import frc.drive.DriveControlStyles;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
 import frc.motors.SupportedMotors;
 import frc.robot.robotconfigs.DefaultConfig;
-import frc.telemetry.imu.SupportedIMU;
-import frc.vision.camera.SupportedVision;
+import frc.telemetry.imu.AbstractIMU;
+import frc.vision.camera.IVision;
 
 public class Robot2020 extends DefaultConfig {
     public Robot2020() {
@@ -33,7 +33,7 @@ public class Robot2020 extends DefaultConfig {
         SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
-        GOAL_CAMERA_TYPE = SupportedVision.PHOTON;
+        GOAL_CAMERA_TYPE = IVision.SupportedVision.PHOTON;
         ENABLE_HOOD_ARTICULATION = false;
 
         //INTAKE
@@ -41,11 +41,11 @@ public class Robot2020 extends DefaultConfig {
         INDEXER_DETECTION_CUTOFF_DISTANCE = 9;
 
         //UI Style
-        DRIVE_STYLE = DriveTypes.STANDARD;
+        DRIVE_STYLE = DriveControlStyles.STANDARD;
         SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
-        IMU_TYPE = SupportedIMU.PIGEON;
+        IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
         AUTON_TYPE = AutonType.FOLLOW_PATH;
 
         DRIVEBASE_PID = new PID(0, 0, 0.000005, 0.00002);

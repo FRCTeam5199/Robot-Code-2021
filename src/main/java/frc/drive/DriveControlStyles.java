@@ -5,7 +5,7 @@ package frc.drive;
  *
  * @author jojo2357
  */
-public enum DriveTypes {
+public enum DriveControlStyles {
     STANDARD,
     EXPERIMENTAL,
     MARIO_KART,

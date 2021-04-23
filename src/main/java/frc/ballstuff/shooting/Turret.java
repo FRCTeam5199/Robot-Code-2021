@@ -17,7 +17,6 @@ import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.AbstractRobotTelemetry;
 import frc.vision.camera.IVision;
-import frc.vision.camera.VisionLEDMode;
 
 import static frc.robot.Robot.robotSettings;
 
@@ -133,7 +132,7 @@ public class Turret implements ISubsystem {
             case STANDARD:
                 if (robotSettings.ENABLE_VISION) {
                     if (panel.get(ButtonPanelButtons.BUDDY_CLIMB) == ButtonStatus.DOWN) {
-                        visionCamera.setLedMode(VisionLEDMode.BLINK); //haha suffer
+                        visionCamera.setLedMode(IVision.VisionLEDMode.BLINK); //haha suffer
                     } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && !Robot.shooter.isShooting()) {
                         if (robotSettings.DEBUG && DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
@@ -151,9 +150,9 @@ public class Turret implements ISubsystem {
                         } else {
                             omegaSetpoint = scan();
                         }
-                        visionCamera.setLedMode(VisionLEDMode.ON); //If targeting, then use the LL
+                        visionCamera.setLedMode(IVision.VisionLEDMode.ON); //If targeting, then use the LL
                     } else {
-                        visionCamera.setLedMode(VisionLEDMode.OFF); //If not targeting, then stop using the LL
+                        visionCamera.setLedMode(IVision.VisionLEDMode.OFF); //If not targeting, then stop using the LL
                     }
                 }
                 //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.

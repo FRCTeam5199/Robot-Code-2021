@@ -73,4 +73,12 @@ public abstract class AbstractDriveManager implements ISubsystem {
     protected double adjustedRotation(double input) {
         return input * robotSettings.MAX_ROTATION * driveRotMult.getDouble(robotSettings.TURN_SCALE);
     }
+
+    /**
+     * How many times will i have to say it: vibing only
+     */
+    public enum DriveBases {
+        STANDARD,
+        SWIVEL
+    }
 }

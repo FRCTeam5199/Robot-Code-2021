@@ -11,7 +11,6 @@ import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
 import frc.discordbot.MessageHandler;
 import frc.drive.AbstractDriveManager;
-import frc.drive.DriveBases;
 import frc.drive.DriveManagerStandard;
 import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
@@ -77,9 +76,9 @@ public class Robot extends TimedRobot {
         Main.pipeline = ClientServerPipeline.getClient();
 
         if (robotSettings.ENABLE_DRIVE) {
-            if (robotSettings.DRIVE_BASE == DriveBases.STANDARD)
+            if (robotSettings.DRIVE_BASE == AbstractDriveManager.DriveBases.STANDARD)
                 driver = new DriveManagerStandard();
-            else if (robotSettings.DRIVE_BASE == DriveBases.SWIVEL)
+            else if (robotSettings.DRIVE_BASE == AbstractDriveManager.DriveBases.SWIVEL)
                 driver = new DriveManagerSwerve();
         }
         if (robotSettings.ENABLE_LEDS){
