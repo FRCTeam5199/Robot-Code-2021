@@ -1,6 +1,7 @@
 package frc.motors;
 
 import frc.gpws.Alarms;
+import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.misc.UserInterface;
 import frc.motors.followers.AbstractFollowerMotorController;

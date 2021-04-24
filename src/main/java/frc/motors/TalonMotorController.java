@@ -164,8 +164,8 @@ public class TalonMotorController extends AbstractMotorController {
         Faults foundFaults = new Faults();
         motor.getFaults(foundFaults);
         failureFlag = foundFaults.hasAnyFault();
-        if (foundFaults.UnderVoltage) ;
-            //report to PDP
+        if (foundFaults.UnderVoltage)
+            potentialFix = "More power";
         else if (foundFaults.RemoteLossOfSignal)
             potentialFix = "Ensure that motor %d is plugged into can AND power";
         else if (foundFaults.APIError)

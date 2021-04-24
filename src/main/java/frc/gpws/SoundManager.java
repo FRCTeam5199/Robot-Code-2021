@@ -49,6 +49,7 @@ public class SoundManager implements Runnable {
         } catch (Exception e) {
             throw new RuntimeException("Something bad has happened and i dont know why. Good luck fixing it");
         }
+        currentInput.start();
     }
 
     /**

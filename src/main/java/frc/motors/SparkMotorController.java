@@ -6,6 +6,7 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.EncoderType;
+import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.robot.Robot;
 

@@ -357,7 +357,7 @@ public class ClientServerPipeline implements Runnable {
      */
     private static void readBytes(int length) {
         bytesRecieved += length;
-        System.out.println("Bytes sent: " + length + " (" + UtilFunctions.stringifyBytes(bytesRecieved) + ")");
+        System.out.println("Bytes read: " + length + " (" + UtilFunctions.stringifyBytes(bytesRecieved) + ")");
     }
 
     /**

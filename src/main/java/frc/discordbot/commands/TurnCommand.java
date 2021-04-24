@@ -12,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
  * This very nice command will make the robot drive! Similar to a point-to-point auton, this command does not steer, it
  * just drives in a straight line and it is up to the user to command turns and remain clear of obstacles
  */
-public class DriveDistanceCommand extends AbstractCommand {
+public class TurnCommand extends AbstractCommand {
     @Override
     public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
-        if (message instanceof DriveDistanceCommandData)
-            return runChecked((DriveDistanceCommandData) message);
+        if (message instanceof TurnCommandData)
+            return runChecked((TurnCommandData) message);
         throw new IllegalArgumentException("I cant use that data");
     }
 
@@ -26,18 +26,18 @@ public class DriveDistanceCommand extends AbstractCommand {
      * @param message the data associated with this command
      * @return A {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse} when completed, null otherwise.
      */
-    public AbstractCommandResponse runChecked(DriveDistanceCommandData message) {
+    public AbstractCommandResponse runChecked(TurnCommandData message) {
         if (DriverStation.getInstance().isDisabled()) {
             return new GenericCommandResponse(message, "Im disabled. F. Cannot drive. Urbad");
         } else {
             if (message.startingPoint == null) {
-                message.startingPoint = new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY());
+                message.startingPoint = Robot.driver.guidance.imu.absoluteYaw();
             }
-            System.out.println("Driving " + message.requestedSpeed + " from " + message.startingPoint + " to " + new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY()));
-            Robot.driver.driveMPS(message.requestedSpeed, 0, 0);
-            if (!new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY()).isWithin(message.requestedTravel, message.startingPoint)) {
+            System.out.println(message.startingPoint + ", " + message.requestedTurn + ", " + Robot.driver.guidance.imu.absoluteYaw());
+            Robot.driver.driveMPS(0, 0, (message.startingPoint + message.requestedTurn - Robot.driver.guidance.imu.absoluteYaw() > 0 ? 1 : -1) * Math.min(Math.abs(message.startingPoint + message.requestedTurn - Robot.driver.guidance.imu.absoluteYaw()) * 10, 5));
+            if (Math.abs(message.startingPoint + message.requestedTurn - Robot.driver.guidance.imu.absoluteYaw()) < 1) {
                 Robot.driver.driveMPS(0, 0, 0);
-                return new GenericCommandResponse(message, "I finnished driving");
+                return new GenericCommandResponse(message, "I finnished turning");
             }
         }
         return null;
@@ -45,7 +45,7 @@ public class DriveDistanceCommand extends AbstractCommand {
 
     @Override
     public String getCommand() {
-        return "drive";
+        return "turn";
     }
 
     @Override
@@ -55,34 +55,30 @@ public class DriveDistanceCommand extends AbstractCommand {
 
     @Override
     public String getArgs() {
-        return "<distance in meters> <speed in meters per second>";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"move", "forward"};
+        return "<distance in degrees>";
     }
 
     @Override
     public AbstractCommandData extractData(MessageReceivedEvent message) {
-        return new DriveDistanceCommandData(message);
+        return new TurnCommandData(message);
     }
 
     /**
      * Holds onto special data like {@link #startingPoint} and parses {@link #requestedSpeed} and {@link
-     * #requestedTravel} from the message
+     * #requestedTurn} from the message
      */
-    public static class DriveDistanceCommandData extends AbstractCommandData {
+    public static class TurnCommandData extends AbstractCommandData {
         @ClientSide
-        private transient Point startingPoint;
-        private double requestedTravel = 1;
+        private transient Double startingPoint;
+        private double requestedTurn = 1;
         private double requestedSpeed = 1;
 
         @ServerSide
-        protected DriveDistanceCommandData(MessageReceivedEvent message) {
+        protected TurnCommandData(MessageReceivedEvent message) {
             super(message);
-            requestedTravel = CONTENT.split(" ").length > 1 ? Double.parseDouble(CONTENT.split(" ")[1]) : requestedTravel;
+            requestedTurn = CONTENT.split(" ").length > 1 ? Double.parseDouble(CONTENT.split(" ")[1]) : requestedTurn;
             requestedSpeed = CONTENT.split(" ").length > 2 ? Double.parseDouble(CONTENT.split(" ")[2]) : requestedSpeed;
         }
     }
 }
+

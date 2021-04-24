@@ -54,9 +54,10 @@ public class PDP implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        double BatteryMinVoltage = UserInterface.PDP_BROWNOUT_MIN_OVERRIDE.getEntry().getBoolean(false) ? UserInterface.PDP_BROWNOUT_MIN_VAL.getEntry().getDouble(9) : 9;
+        double BatteryMinVoltage = UserInterface.PDP_BROWNOUT_MIN_OVERRIDE.getEntry().getBoolean(false) ? UserInterface.PDP_BROWNOUT_MIN_VAL.getEntry().getDouble(7) : 7;
+        //System.out.println("Read voltage: " + RobotController.getBatteryVoltage() + "V");
         BrownoutIssue.handleIssue(this, RobotController.getBatteryVoltage() < BatteryMinVoltage && RobotController.getBatteryVoltage() > 0);
-        UndervoltageIssue.handleIssue(this, RobotController.getBatteryVoltage() >= BatteryMinVoltage && RobotController.getBatteryVoltage() <= (BatteryMinVoltage + 0.5));
+        UndervoltageIssue.handleIssue(this, RobotController.getBatteryVoltage() >= BatteryMinVoltage && RobotController.getBatteryVoltage() <= (BatteryMinVoltage + 2));
     }
 
     @Override

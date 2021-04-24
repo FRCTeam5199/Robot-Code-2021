@@ -30,6 +30,7 @@ import frc.robot.robotconfigs.twentyone.Swerve2021;
 import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.selfdiagnostics.ISimpleIssue;
 import frc.selfdiagnostics.IssueHandler;
+import frc.selfdiagnostics.MotorDisconnectedIssue;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -121,6 +122,7 @@ public class Robot extends TimedRobot {
         }
 
         for (AbstractMotorController motor : AbstractMotorController.motorList) {
+            MotorDisconnectedIssue.handleIssue(driver, motor);
             if (motor.getMotorTemperature() > 5) {
                 UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", Robot.robotSettings.OVERHEAT_THRESHOLD)));
             }

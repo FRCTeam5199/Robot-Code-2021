@@ -21,9 +21,13 @@ public class MessageHandler extends ListenerAdapter {
     public static MessageHandler messageHandler;
     private static boolean LISTENING;
 
+    public static boolean persistingCommands(){
+        return pendingCommands.size() > 0;
+    }
+
     public static void loadCommands(boolean listening) {
         LISTENING = listening;
-        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class, OpenURLCommand.class, HelpCommand.class, RandomQuoteCommand.class, ShutdownServerCommand.class);
+        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class, OpenURLCommand.class, HelpCommand.class, RandomQuoteCommand.class, ShutdownServerCommand.class, TurnCommand.class);
         for (Class<? extends AbstractCommand> s : classes) {
             try {
                 if (Modifier.isAbstract(s.getModifiers())) {
@@ -56,12 +60,14 @@ public class MessageHandler extends ListenerAdapter {
         if (message.CONTENT.charAt(0) == '!' && getCommand(message.CONTENT) != null) {
             if (LISTENING) {
                 AbstractCommand command = getCommand(message.CONTENT);
-                pendingCommands.add(message);
                 if (command != null){
                     AbstractCommand.AbstractCommandResponse response = command.run(message);
                     if (response == null && !command.isMultiTickCommand())
                         throw new IllegalStateException("Cannot run single tick command and get no response. Return an empty GenericCommand instead");
-                    Main.pipeline.sendReply(response);
+                    if (response == null)
+                        pendingCommands.add(message);
+                    else
+                        Main.pipeline.sendReply(response);
                 }
             } else
                 throw new IllegalStateException("How did you get here as a client?");
@@ -82,7 +88,9 @@ public class MessageHandler extends ListenerAdapter {
     @ClientSide
     public static void persistPendingCommands() {
         for (int i = pendingCommands.size() - 1; i >= 0; i--) {
-            if (Main.pipeline.sendReply(commands.get(pendingCommands.get(i).CONTENT.substring(1).split(" ")[0]).run(pendingCommands.get(i)))) {
+            AbstractCommand.AbstractCommandResponse result = commands.get(pendingCommands.get(i).CONTENT.substring(1).split(" ")[0]).run(pendingCommands.get(i));
+            if (result != null) {
+                Main.pipeline.sendReply(result);
                 pendingCommands.remove(i);
             }
         }

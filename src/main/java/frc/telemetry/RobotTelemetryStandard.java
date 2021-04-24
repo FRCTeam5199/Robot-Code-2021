@@ -58,7 +58,7 @@ public class RobotTelemetryStandard extends AbstractRobotTelemetry implements IS
      */
     @Override
     public void updateTest() {
-        //updateGeneric();
+        updateGeneric();
     }
 
     /**
