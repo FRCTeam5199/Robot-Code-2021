@@ -21,6 +21,7 @@ public abstract class AbstractCommand implements Serializable {
      * @return The result of executing the command. Should only return null if commnad {@link #isMultiTickCommand() is
      * multi tick}
      */
+    //todo make this not nullable and simple make a special return
     public abstract @Nullable AbstractCommandResponse run(AbstractCommandData message);
 
     /**

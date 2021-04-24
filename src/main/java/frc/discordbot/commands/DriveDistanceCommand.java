@@ -8,6 +8,10 @@ import frc.robot.Robot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * This very nice command will make the robot drive! Similar to a point-to-point auton, this command does not steer, it
+ * just drives in a straight line and it is up to the user to command turns and remain clear of obstacles
+ */
 public class DriveDistanceCommand extends AbstractCommand {
     @Override
     public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
@@ -16,6 +20,12 @@ public class DriveDistanceCommand extends AbstractCommand {
         throw new IllegalArgumentException("I cant use that data");
     }
 
+    /**
+     * In order to reduce the ugliness of casting, we chose to make a different copy of {@link #run(AbstractCommandData)}
+     *
+     * @param message the data associated with this command
+     * @return A {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse} when completed, null otherwise.
+     */
     public AbstractCommandResponse runChecked(DriveDistanceCommandData message) {
         if (DriverStation.getInstance().isDisabled()) {
             return new GenericCommandResponse(message, "Im disabled. F. Cannot drive. Urbad");

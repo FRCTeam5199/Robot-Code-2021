@@ -208,6 +208,14 @@ public class ArticulatedHood implements ISubsystem {
         return "ShooterHood";
     }
 
+    /**
+     * This method is supposed to take in camera size and run some math to determine the optimal hood articulation to
+     * fire at that target.
+     *
+     * @param size              The percieved size of the target
+     * @param articulationArray the metadata where the array is formatted [len = number of entries][size, articulation]
+     * @return the optimal articulation given passed inputs
+     */
     public double requiredArticulationForTargetSize(double size, double[][] articulationArray) {
         System.out.println("SIZE:" + size);
         if (size <= articulationArray[articulationArray.length - 1][0]) {
