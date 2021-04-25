@@ -31,13 +31,13 @@ public class TurnCommand extends AbstractCommand {
             return new GenericCommandResponse(message, "Im disabled. F. Cannot drive. Urbad");
         } else {
             if (message.startingPoint == null) {
-                message.startingPoint = Robot.driver.guidance.imu.absoluteYaw();
+                message.reInit();
             }
-            System.out.println(message.startingPoint + ", " + message.requestedTurn + ", " + Robot.driver.guidance.imu.absoluteYaw());
-            Robot.driver.driveMPS(0, 0, (message.startingPoint + message.requestedTurn - Robot.driver.guidance.imu.absoluteYaw() > 0 ? 1 : -1) * Math.min(Math.abs(message.startingPoint + message.requestedTurn - Robot.driver.guidance.imu.absoluteYaw()) * 10, 5));
-            if (Math.abs(message.startingPoint + message.requestedTurn - Robot.driver.guidance.imu.absoluteYaw()) < 1) {
+            System.out.println(message.startingPoint + ", " + message.requestedTurn + ", " + Robot.driver.guidance.imu.relativeYaw());
+            Robot.driver.driveMPS(0, 0, (message.startingPoint + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw() > 0 ? 1 : -1) * Math.min(Math.abs(message.startingPoint + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw()) * 10, 5));
+            if (Math.abs(message.startingPoint + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw()) < 1) {
                 Robot.driver.driveMPS(0, 0, 0);
-                return new GenericCommandResponse(message, "I finnished turning");
+                return new GenericCommandResponse(message, String.format("I turned from %.1f to %.1f", message.startingPoint, Robot.driver.guidance.imu.relativeYaw()));
             }
         }
         return null;
@@ -70,14 +70,18 @@ public class TurnCommand extends AbstractCommand {
     public static class TurnCommandData extends AbstractCommandData {
         @ClientSide
         private transient Double startingPoint;
-        private double requestedTurn = 1;
-        private double requestedSpeed = 1;
+        private transient double requestedTurn = 1;
+        private transient double requestedSpeed = 1;
 
         @ServerSide
         protected TurnCommandData(MessageReceivedEvent message) {
             super(message);
+        }
+
+        private void reInit(){
             requestedTurn = CONTENT.split(" ").length > 1 ? Double.parseDouble(CONTENT.split(" ")[1]) : requestedTurn;
             requestedSpeed = CONTENT.split(" ").length > 2 ? Double.parseDouble(CONTENT.split(" ")[2]) : requestedSpeed;
+            startingPoint = Robot.driver.guidance.imu.relativeYaw();
         }
     }
 }

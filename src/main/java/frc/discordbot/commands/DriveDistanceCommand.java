@@ -21,23 +21,29 @@ public class DriveDistanceCommand extends AbstractCommand {
     }
 
     /**
-     * In order to reduce the ugliness of casting, we chose to make a different copy of {@link #run(AbstractCommandData)}
+     * In order to reduce the ugliness of casting, we chose to make a different copy of {@link
+     * #run(AbstractCommandData)}
      *
      * @param message the data associated with this command
      * @return A {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse} when completed, null otherwise.
      */
     public AbstractCommandResponse runChecked(DriveDistanceCommandData message) {
         if (DriverStation.getInstance().isDisabled()) {
-            return new GenericCommandResponse(message, "Im disabled. F. Cannot drive. Urbad");
+            if (message.startingPoint != null)
+                return new GenericCommandResponse(message, "Im disabled. F. Cannot drive. Urbad");
         } else {
             if (message.startingPoint == null) {
-                message.startingPoint = new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY());
+                message.reInit();
             }
-            System.out.println("Driving " + message.requestedSpeed + " from " + message.startingPoint + " to " + new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY()));
+            System.out.println("Driving " + message.requestedSpeed + " from " + message.startingPoint + " to " + Robot.driver.guidance.getLocation());
             Robot.driver.driveMPS(message.requestedSpeed, 0, 0);
-            if (!new Point(Robot.driver.guidance.fieldX(), Robot.driver.guidance.fieldY()).isWithin(message.requestedTravel, message.startingPoint)) {
-                Robot.driver.driveMPS(0, 0, 0);
-                return new GenericCommandResponse(message, "I finnished driving");
+            if (!Robot.driver.guidance.getLocation().isWithin(message.requestedTravel, message.startingPoint)) {
+                if (Math.abs(message.initialYaw + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw()) > 1) {
+                    Robot.driver.driveMPS(0, 0, (message.initialYaw + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw() > 0 ? 1 : -1) * Math.min(Math.abs(message.initialYaw + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw()) * 10, 5));
+                } else {
+                    Robot.driver.driveMPS(0, 0, 0);
+                    return new GenericCommandResponse(message, "I finnished driving from " + message.startingPoint + " with heading of " + message.initialYaw + " to " + Robot.driver.guidance.getLocation() + " and heading " + Robot.driver.guidance.imu.relativeYaw());
+                }
             }
         }
         return null;
@@ -74,15 +80,25 @@ public class DriveDistanceCommand extends AbstractCommand {
      */
     public static class DriveDistanceCommandData extends AbstractCommandData {
         @ClientSide
+        private transient double initialYaw;
         private transient Point startingPoint;
-        private double requestedTravel = 1;
-        private double requestedSpeed = 1;
+        private transient double requestedTravel;
+        private transient double requestedSpeed;
+        private transient double requestedTurn;
 
         @ServerSide
         protected DriveDistanceCommandData(MessageReceivedEvent message) {
             super(message);
+        }
+
+        @ClientSide
+        private void reInit() {
+            startingPoint = Robot.driver.guidance.getLocation();
+            initialYaw = Robot.driver.guidance.imu.relativeYaw();
             requestedTravel = CONTENT.split(" ").length > 1 ? Double.parseDouble(CONTENT.split(" ")[1]) : requestedTravel;
             requestedSpeed = CONTENT.split(" ").length > 2 ? Double.parseDouble(CONTENT.split(" ")[2]) : requestedSpeed;
+            requestedTurn = CONTENT.split(" ").length > 3 ? Double.parseDouble(CONTENT.split(" ")[3]) : requestedTurn;
+            System.out.println("Going " + requestedTravel + " at " + requestedSpeed + " with " + requestedTurn);
         }
     }
 }

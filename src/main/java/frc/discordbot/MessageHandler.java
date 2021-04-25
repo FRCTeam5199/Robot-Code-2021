@@ -27,7 +27,7 @@ public class MessageHandler extends ListenerAdapter {
 
     public static void loadCommands(boolean listening) {
         LISTENING = listening;
-        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class, OpenURLCommand.class, HelpCommand.class, RandomQuoteCommand.class, ShutdownServerCommand.class, TurnCommand.class);
+        List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class, OpenURLCommand.class, HelpCommand.class, RandomQuoteCommand.class, ShutdownServerCommand.class, TurnCommand.class, CurrentTelemetryCommand.class, QueueCommand.class, ShootCommand.class);
         for (Class<? extends AbstractCommand> s : classes) {
             try {
                 if (Modifier.isAbstract(s.getModifiers())) {
@@ -61,13 +61,14 @@ public class MessageHandler extends ListenerAdapter {
             if (LISTENING) {
                 AbstractCommand command = getCommand(message.CONTENT);
                 if (command != null){
-                    AbstractCommand.AbstractCommandResponse response = command.run(message);
-                    if (response == null && !command.isMultiTickCommand())
-                        throw new IllegalStateException("Cannot run single tick command and get no response. Return an empty GenericCommand instead");
-                    if (response == null)
+                    if (command.isMultiTickCommand()){
                         pendingCommands.add(message);
-                    else
+                    } else {
+                        AbstractCommand.AbstractCommandResponse response = command.run(message);
+                        if (response == null && !command.isMultiTickCommand())
+                            throw new IllegalStateException("Cannot run single tick command and get no response. Return an empty GenericCommand instead");
                         Main.pipeline.sendReply(response);
+                    }
                 }
             } else
                 throw new IllegalStateException("How did you get here as a client?");
@@ -87,11 +88,12 @@ public class MessageHandler extends ListenerAdapter {
      */
     @ClientSide
     public static void persistPendingCommands() {
-        for (int i = pendingCommands.size() - 1; i >= 0; i--) {
-            AbstractCommand.AbstractCommandResponse result = commands.get(pendingCommands.get(i).CONTENT.substring(1).split(" ")[0]).run(pendingCommands.get(i));
+        if (pendingCommands.size() > 0){
+            AbstractCommand.AbstractCommandResponse result = commands.get(pendingCommands.get(0).CONTENT.substring(1).split(" ")[0]).run(pendingCommands.get(0));
             if (result != null) {
                 Main.pipeline.sendReply(result);
-                pendingCommands.remove(i);
+                pendingCommands.remove(0);
+                persistPendingCommands();
             }
         }
     }

@@ -43,7 +43,7 @@ public enum ShootingEnums {
         if (robotSettings.ENABLE_HOPPER) {
             shooter.ticksPassed = (shooter.isAtSpeed() ? Robot.shooter.ticksPassed + 1 : 0);
             if (shooter.ticksPassed >= 50) {
-                hopper.setAgitator(true);
+                hopper.setIndexer(true);
             }
             if (!hopper.isIndexed()) {
                 shooter.singleShot = false;

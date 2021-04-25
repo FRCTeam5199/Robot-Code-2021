@@ -22,7 +22,6 @@ public class PracticeRobot2021 extends DefaultConfig {
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
 
-        DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 

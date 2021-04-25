@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import frc.drive.AbstractDriveManager;
 import frc.drive.DriveManagerStandard;
 import frc.drive.DriveManagerSwerve;
+import frc.drive.auton.Point;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
@@ -79,5 +80,9 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
      */
     public double fieldX() {
         return robotPose.getTranslation().getX();
+    }
+
+    public Point getLocation(){
+        return new Point(fieldX(), fieldY());
     }
 }

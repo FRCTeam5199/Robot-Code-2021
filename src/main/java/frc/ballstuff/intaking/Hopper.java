@@ -48,6 +48,12 @@ public class Hopper implements ISubsystem {
 
     @Override
     public void updateTest() {
+        if (robotSettings.ENABLE_INDEXER) {
+            indexer.moveAtPercent(indexerActive ? 0.9 : 0);
+        }
+        if (robotSettings.ENABLE_AGITATOR) {
+            agitator.moveAtPercent(agitatorActive ? 0.6 : 0);
+        }
     }
 
     @Override

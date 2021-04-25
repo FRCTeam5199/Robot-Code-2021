@@ -20,7 +20,6 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
 
-        DRIVE_USE_6_MOTORS = true;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 

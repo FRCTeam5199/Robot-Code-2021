@@ -39,7 +39,6 @@ public abstract class DefaultConfig {
     public boolean ENABLE_PDP = false;
     public boolean ENABLE_LEDS = false;
     public boolean ENABLE_TURRET = false;
-    public boolean DRIVE_USE_6_MOTORS = false;
     public boolean DRIVE_INVERT_LEFT = true;
     public boolean DRIVE_INVERT_RIGHT = false;
 
@@ -163,7 +162,6 @@ public abstract class DefaultConfig {
         System.out.println("              IMU " + ENABLE_IMU);
         System.out.println("              IMU " + IMU_TYPE.name());
         System.out.println("     Drive motors " + DRIVE_MOTOR_TYPE.name());
-        System.out.println("   Drive 6 motors " + DRIVE_USE_6_MOTORS);
         System.out.println("   Shooter motors " + SHOOTER_MOTOR_TYPE.name());
         System.out.println("     Shoot with 2 " + SHOOTER_USE_TWO_MOTORS);
         System.out.println("      Drive style " + DRIVE_STYLE.name());

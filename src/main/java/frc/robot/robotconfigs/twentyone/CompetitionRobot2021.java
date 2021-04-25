@@ -15,16 +15,15 @@ public class CompetitionRobot2021 extends DefaultConfig {
     public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
-        ENABLE_TURRET = true;
+        ENABLE_TURRET = false;
         ENABLE_SHOOTER = true;
         ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
-        ENABLE_PDP = true;
+        ENABLE_PDP = false;
         ENABLE_HOOD_ARTICULATION = false;
 
-        DRIVE_USE_6_MOTORS = false;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 

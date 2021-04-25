@@ -78,7 +78,7 @@ public abstract class AbstractCommand implements Serializable {
      * Computations that require more than the basic stored here should be done on the server or a new class made to
      * suit the needs of the situation
      */
-    public static abstract class AbstractCommandData implements Serializable {
+    public static abstract class AbstractCommandData implements Serializable, Comparable<AbstractCommandData> {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
 
@@ -94,10 +94,10 @@ public abstract class AbstractCommand implements Serializable {
         /**
          * Universal constructor, dont make public
          *
-         * @param content the raw text in the message
+         * @param content    the raw text in the message
          * @param message_id the unique id of the message that will allow the server to find the message on return
-         * @param author_id the unique id of the author that will allow the server to find the author on return
-         * @param guild_id the unique id of the guild that will allow the server to find the guild on return
+         * @param author_id  the unique id of the author that will allow the server to find the author on return
+         * @param guild_id   the unique id of the guild that will allow the server to find the guild on return
          * @param channel_id the unique id of the channel that will allow the server to find the channel on return
          */
         private AbstractCommandData(String content, String message_id, String author_id, String guild_id, String channel_id) {
@@ -106,6 +106,11 @@ public abstract class AbstractCommand implements Serializable {
             AUTHOR_ID = author_id;
             GUILD_ID = guild_id;
             CHANNEL_ID = channel_id;
+        }
+
+        @Override
+        public int compareTo(AbstractCommandData other) {
+            return MESSAGE_ID.compareTo(other.MESSAGE_ID);
         }
 
         /**
@@ -122,7 +127,7 @@ public abstract class AbstractCommand implements Serializable {
      * Very important. Holds the information that the server need to execute according to the {@link #doYourWorst(JDA)
      * callback}. For generic commands that dont need anything, use {@link GenericCommandResponse}
      */
-    public static abstract class AbstractCommandResponse implements Serializable {
+    public static abstract class AbstractCommandResponse implements Serializable, Comparable<AbstractCommandResponse> {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
 
@@ -141,6 +146,11 @@ public abstract class AbstractCommand implements Serializable {
             AUTHOR_ID = originalData.AUTHOR_ID;
             GUILD_ID = originalData.GUILD_ID;
             CHANNEL_ID = originalData.CHANNEL_ID;
+        }
+
+        @Override
+        public int compareTo(AbstractCommandResponse other) {
+            return MESSAGE_ID.compareTo(other.MESSAGE_ID);
         }
     }
 

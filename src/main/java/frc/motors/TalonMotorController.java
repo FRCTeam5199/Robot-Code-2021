@@ -87,8 +87,9 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtVelocity(double realAmount) {
-        if (isTemperatureAcceptable())
+        if (isTemperatureAcceptable()) {
             motor.set(Velocity, realAmount / sensorToRealDistanceFactor);
+        }
         else
             motor.set(Velocity, 0);
         /// sensorToRealDistanceFactor);

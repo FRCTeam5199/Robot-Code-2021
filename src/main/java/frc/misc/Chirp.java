@@ -225,7 +225,7 @@ public class Chirp extends Orchestra implements ISubsystem {
 
     @Override
     public void updateTeleop() {
-
+        stop();
     }
 
     @Override
@@ -302,5 +302,20 @@ public class Chirp extends Orchestra implements ISubsystem {
             play();
         }
         return winningSong;
+    }
+
+    public String getQueue() {
+        if (queue.size() == 0){
+            if (isPlaying()){
+                return "playing " + Robot.lastFoundSong.split("_")[0];
+            }else{
+                return "nothing playing sob";
+            }
+        }
+        StringBuilder out = new StringBuilder("```nim\n0) " + Robot.lastFoundSong.split("_")[0] + "\n");
+        for (int i = 0; i < queue.size(); i++){
+            out.append(i + 1).append(") ").append(queue.get(i)).append('\n');
+        }
+        return out.append("```").toString();
     }
 }

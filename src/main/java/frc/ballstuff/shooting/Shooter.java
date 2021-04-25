@@ -158,7 +158,7 @@ public class Shooter implements ISubsystem {
                     ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
                     isConstSpeed = false;
                 } else {
-                    shooterDefault();
+                    //shooterDefault();
                 }
                 break;
             }
@@ -281,7 +281,7 @@ public class Shooter implements ISubsystem {
      * @return if the shooter is actually at the requested speed
      */
     public boolean isAtSpeed() {
-        return Math.abs(leader.getSpeed() - speed) < 50;
+        return Math.abs(leader.getSpeed() - speed) < 200;
     }
 
     /**
@@ -349,15 +349,6 @@ public class Shooter implements ISubsystem {
     }
 
     /**
-     * Moves the shooter at a -1 to 1 percent speed
-     *
-     * @param percentSpeed percent from -1 to 1 to move the shooter at
-     */
-    public void setPercentSpeed(double percentSpeed) {
-        leader.moveAtPercent(percentSpeed);
-    }
-
-    /**
      * Getter for {@link #shooting}
      *
      * @return whether the shooter is shooting or not
@@ -368,6 +359,29 @@ public class Shooter implements ISubsystem {
 
     void setShooting(boolean shooting) {
         this.shooting = shooting;
+    }
+
+    public boolean fireSingleShot() {
+        singleShot = true;
+        shooting = true;
+        ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
+        isConstSpeed = !singleShot;
+        if (!singleShot) {
+            shooting = false;
+            setPercentSpeed(0);
+            hopper.setAll(false);
+        }
+        updateShuffleboard();
+        return !singleShot;
+    }
+
+    /**
+     * Moves the shooter at a -1 to 1 percent speed
+     *
+     * @param percentSpeed percent from -1 to 1 to move the shooter at
+     */
+    public void setPercentSpeed(double percentSpeed) {
+        leader.moveAtPercent(percentSpeed);
     }
 
     /**
