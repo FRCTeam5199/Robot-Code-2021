@@ -25,6 +25,11 @@ public class StatusCommand extends AbstractCommand {
     }
 
     @Override
+    public String sendHelp() {
+        return "Returns a list of all the active subsystems and their status.";
+    }
+
+    @Override
     public String[] getAliases() {
         return new String[]{"stat"};
     }

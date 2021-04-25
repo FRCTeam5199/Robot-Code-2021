@@ -22,6 +22,11 @@ public class ShootCommand extends AbstractCommand {
     }
 
     @Override
+    public String sendHelp() {
+        return "Shoots one ball from the shooter";
+    }
+
+    @Override
     public boolean isMultiTickCommand() {
         return true;
     }

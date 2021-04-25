@@ -31,6 +31,8 @@ public abstract class AbstractCommand implements Serializable {
      */
     public abstract String getCommand();
 
+    public abstract String sendHelp();
+
     public boolean isMultiTickCommand() {
         return false;
     }

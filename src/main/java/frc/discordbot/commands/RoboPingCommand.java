@@ -18,6 +18,11 @@ public class RoboPingCommand extends AbstractCommand {
     }
 
     @Override
+    public String sendHelp() {
+        return "Gets the full ping from server to robot to server to discord and back to server";
+    }
+
+    @Override
     public String[] getAliases() {
         return new String[]{"rp"};
     }

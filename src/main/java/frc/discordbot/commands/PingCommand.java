@@ -27,6 +27,11 @@ public class PingCommand extends AbstractCommand {
     }
 
     @Override
+    public String sendHelp() {
+        return "Pings the server to get the discord-server ping";
+    }
+
+    @Override
     public boolean isServerSideCommand() {
         return true;
     }

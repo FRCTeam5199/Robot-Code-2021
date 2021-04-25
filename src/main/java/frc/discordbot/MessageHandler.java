@@ -7,6 +7,7 @@ import frc.robot.Main;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -75,11 +76,13 @@ public class MessageHandler extends ListenerAdapter {
         }
     }
 
+    @Nullable
     public static AbstractCommand getCommand(String message) {
-        if (commands.containsKey(message.substring(1).split(" ")[0]))
-            return commands.get(message.substring(1).split(" ")[0]);
-        if (commandsAlias.containsKey(message.substring(1).split(" ")[0]))
-            return commandsAlias.get(message.substring(1).split(" ")[0]);
+        message = message.replace("!", "").split(" ")[0];
+        if (commands.containsKey(message))
+            return commands.get(message);
+        if (commandsAlias.containsKey(message))
+            return commandsAlias.get(message);
         return null;
     }
 

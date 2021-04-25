@@ -22,7 +22,6 @@ public abstract class BaseController {
     protected final Joystick controller;
     private final int JOYSTICK_CHANNEL;
 
-    //TODO verify this:
     public static BaseController createOrGet(int channel, Class<? extends BaseController> clazz) throws ArrayIndexOutOfBoundsException, ArrayStoreException, UnsupportedOperationException {
         if (channel < 0 || channel >= 6)
             throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);

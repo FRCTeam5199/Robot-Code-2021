@@ -27,6 +27,11 @@ public class PlaySongCommand extends AbstractCommand {
     }
 
     @Override
+    public String sendHelp() {
+        return "Enqueues the provided song. If none is provided, then returns a list of playable songs";
+    }
+
+    @Override
     public String[] getAliases() {
         return new String[]{"p"};
     }

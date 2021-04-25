@@ -20,6 +20,11 @@ public class Wait5TicksThenReplyCommand extends AbstractCommand {
     }
 
     @Override
+    public String sendHelp() {
+        return "Mostly used to test server-client connection.";
+    }
+
+    @Override
     public boolean isMultiTickCommand() {
         return true;
     }

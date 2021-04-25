@@ -3,10 +3,10 @@ package frc.discordbot.commands;
 import frc.robot.Robot;
 import org.jetbrains.annotations.Nullable;
 
-public class QueueCommand extends AbstractCommand{
+public class QueueCommand extends AbstractCommand {
     @Override
     public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
-        if (!Robot.robotSettings.ENABLE_MUSIC){
+        if (!Robot.robotSettings.ENABLE_MUSIC) {
             return new GenericCommandResponse(message, "Music is disabled you goon");
         }
         return new GenericCommandResponse(message, Robot.chirp.getQueue());
@@ -15,5 +15,10 @@ public class QueueCommand extends AbstractCommand{
     @Override
     public String getCommand() {
         return "queue";
+    }
+
+    @Override
+    public String sendHelp() {
+        return "Returns the music queue held on the robot";
     }
 }

@@ -21,6 +21,11 @@ public class OpenURLCommand extends AbstractCommand {
         return "url";
     }
 
+    @Override
+    public String sendHelp() {
+        return "Opens a provided url on the drive station. Good for sharing documentation or videos on the main computer.";
+    }
+
     public String getArgs() {
         return "<url to open>";
     }

@@ -35,11 +35,12 @@ public class DriveDistanceCommand extends AbstractCommand {
             if (message.startingPoint == null) {
                 message.reInit();
             }
-            System.out.println("Driving " + message.requestedSpeed + " from " + message.startingPoint + " to " + Robot.driver.guidance.getLocation());
+            //System.out.println("Driving " + message.requestedSpeed + " from " + message.startingPoint + " to " + Robot.driver.guidance.getLocation());
             Robot.driver.driveMPS(message.requestedSpeed, 0, 0);
             if (!Robot.driver.guidance.getLocation().isWithin(message.requestedTravel, message.startingPoint)) {
                 if (Math.abs(message.initialYaw + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw()) > 1) {
-                    Robot.driver.driveMPS(0, 0, (message.initialYaw + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw() > 0 ? 1 : -1) * Math.min(Math.abs(message.initialYaw + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw()) * 10, 5));
+                    //todo hone this
+                    Robot.driver.driveMPS(0, 0, (message.initialYaw + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw() > 0 ? 1 : -1) * Math.min(Math.abs(message.initialYaw + message.requestedTurn - Robot.driver.guidance.imu.relativeYaw()) / 10, 5));
                 } else {
                     Robot.driver.driveMPS(0, 0, 0);
                     return new GenericCommandResponse(message, "I finnished driving from " + message.startingPoint + " with heading of " + message.initialYaw + " to " + Robot.driver.guidance.getLocation() + " and heading " + Robot.driver.guidance.imu.relativeYaw());
@@ -52,6 +53,11 @@ public class DriveDistanceCommand extends AbstractCommand {
     @Override
     public String getCommand() {
         return "drive";
+    }
+
+    @Override
+    public String sendHelp() {
+        return "Drives the robot the given distance at the given speed. Optionally contains a turn at the end.\nUsage: !drive <dist (meters)> <speed (m/s> <rotation (deg)>";
     }
 
     @Override

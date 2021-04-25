@@ -65,7 +65,6 @@ public class Turret implements ISubsystem {
                 break;
             case TALON_FX:
                 turretMotor = new TalonMotorController(robotSettings.TURRET_YAW_ID);
-                //TODO make a setting maybe
                 turretMotor.setSensorToRealDistanceFactor(robotSettings.TURRET_SPROCKET_SIZE * robotSettings.TURRET_GEAR_RATIO * Math.PI / 30 * 600 / 2048);
                 break;
             default:

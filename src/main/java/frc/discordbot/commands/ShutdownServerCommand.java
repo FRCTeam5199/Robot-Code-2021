@@ -18,6 +18,11 @@ public class ShutdownServerCommand extends AbstractCommand {
     }
 
     @Override
+    public String sendHelp() {
+        return "Kills the server";
+    }
+
+    @Override
     public boolean isServerSideCommand() {
         return true;
     }
