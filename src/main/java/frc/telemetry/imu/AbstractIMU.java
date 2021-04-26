@@ -15,9 +15,19 @@ public abstract class AbstractIMU implements ISubsystem {
     protected double[] ypr = new double[3];
     protected double[] startypr = new double[3];
 
+    /**
+     * Attempts to reset the absolute yaw, and re zeros the relative yaw
+     */
     public abstract void resetOdometry();
 
-    public static AbstractIMU createIMU(SupportedIMU imuType) {
+    /**
+     * Creates a new IMU based on the passed type.
+     *
+     * @param imuType the {@link SupportedIMU imu type} to be created
+     * @return a new imu
+     * @throws IllegalArgumentException when the supported IMU cannot be constructed
+     */
+    public static AbstractIMU createIMU(SupportedIMU imuType) throws IllegalArgumentException {
         switch (imuType) {
             case PIGEON:
                 return new WrappedPigeonIMU();
@@ -28,6 +38,9 @@ public abstract class AbstractIMU implements ISubsystem {
         }
     }
 
+    /**
+     * Adds this IMU to the {@link frc.robot.Robot#subsystems} and {@link #init() makes the init call}
+     */
     protected AbstractIMU() {
         init();
         addToMetaList();
@@ -39,9 +52,9 @@ public abstract class AbstractIMU implements ISubsystem {
     }
 
     /**
-     * gets the absolute yaw of the pigeon since last zeroing event (startup)
+     * gets the absolute yaw of the imu since last zeroing event (startup)
      *
-     * @return absolute yaw of pigeon
+     * @return absolute yaw as read directly from the imu
      */
     public double absoluteYaw() {
         updateGeneric();

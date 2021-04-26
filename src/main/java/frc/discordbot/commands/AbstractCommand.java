@@ -44,8 +44,8 @@ public abstract class AbstractCommand implements Serializable {
      * processing required before the command goes stale {@link MessageHandler#persistPendingCommands() while waiting to
      * persist}. Such reasons may include rejecting a command based on settings, acknowledging a command is valid,
      *
-     * @param message
-     * @return
+     * @param message the data from the message that caused the message
+     * @return A response in accordance with the return of {@link #run(AbstractCommandData)}
      */
     public AbstractCommandResponse runOnServerArrival(AbstractCommandData message) {
         return ContinuePersistingCommandResponse.PASS;

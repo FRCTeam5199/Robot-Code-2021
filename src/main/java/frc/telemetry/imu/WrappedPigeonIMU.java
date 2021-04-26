@@ -4,6 +4,10 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 
 import static frc.robot.Robot.robotSettings;
 
+/**
+ * This is a class to interface the Pigeon Inertial Measurement Unit (IMU) but allowing versatility in swapping between
+ * different IMU's
+ */
 public class WrappedPigeonIMU extends AbstractIMU {
     private PigeonIMU pigeon;
 

@@ -113,7 +113,7 @@ public class Robot extends TimedRobot {
                     autonManager = new frc.drive.auton.followtrajectory.AutonManager(Trajectories.SLALOM2, driver);//Trajectories.TEST_PATH, driver);
                     break;
                 case GALACTIC_SCAM:
-                    autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);
+                    autonManager = new frc.drive.auton.galacticsearchtest.AutonManager(driver);
                     break;
             }
         }
@@ -188,6 +188,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        AbstractMotorController.resetAllMotors();
         for (ISubsystem system : subsystems) {
             system.initAuton();
         }
@@ -195,6 +196,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        AbstractMotorController.resetAllMotors();
         for (ISubsystem system : subsystems) {
             system.initTeleop();
         }
@@ -202,6 +204,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
+        AbstractMotorController.resetAllMotors();
         for (ISubsystem system : subsystems) {
             system.initTest();
         }

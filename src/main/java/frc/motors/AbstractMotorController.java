@@ -26,8 +26,8 @@ public abstract class AbstractMotorController {
      * Value to convert from sensor position to real units (this will vary between motors so know your units!)
      * Destination units are RPM that include the gearing on the motor
      * <p>
-     * This is a Double (object, not value). If required but not set, will throw a NPE If it is giving you hell and you
-     * dont want to actually fix the issue, just change to double
+     * This is a Double (object, not value). If a requiring method is called and s2rf is not set, will throw a NPE, If
+     * it is giving you hell and you dont want to actually fix the issue, just change to double (value, not object)
      */
     public Double sensorToRealDistanceFactor;
     protected boolean failureFlag = false;
@@ -42,6 +42,11 @@ public abstract class AbstractMotorController {
      */
     public abstract AbstractMotorController setInverted(boolean invert);
 
+    /**
+     * The name is a unique motor identifier that includes the motor type and the id
+     *
+     * @return A unique, identifiable name for this motor
+     */
     public abstract String getName();
 
     /**
@@ -86,6 +91,11 @@ public abstract class AbstractMotorController {
      */
     public abstract double getRotations();
 
+    /**
+     * Gets the current speed of the motor after taking into account {@link #sensorToRealDistanceFactor s2rf}.
+     *
+     * @return The current speed of the motor
+     */
     public abstract double getSpeed();
 
     /**
@@ -95,13 +105,6 @@ public abstract class AbstractMotorController {
      * @return this object for factory style construction
      */
     public abstract AbstractMotorController setCurrentLimit(int limit);
-
-    /**
-     * Sets the motor output on a percent output basis
-     *
-     * @param percent -1 to 1 output requested
-     */
-    public abstract void moveAtPercent(double percent);
 
     /**
      * Sets the ramp rate for open loop control modes. This is the maximum rate at which the motor controller's output
@@ -126,6 +129,23 @@ public abstract class AbstractMotorController {
      * @return true if the motor is failed, false if nominal
      */
     public abstract boolean isFailed();
+
+    /**
+     * In order to prevent out of control PID loops from emerging, especially coming out of a disable in test mde, we
+     * set all motors to idle. If we really want them to move then this method will take no effect because
+     */
+    public static void resetAllMotors() {
+        for (AbstractMotorController motor : motorList) {
+            motor.moveAtPercent(0);
+        }
+    }
+
+    /**
+     * Sets the motor output on a percent output basis
+     *
+     * @param percent -1 to 1 output requested
+     */
+    public abstract void moveAtPercent(double percent);
 
     protected AbstractMotorController() {
         motorList.add(this);
@@ -204,8 +224,12 @@ public abstract class AbstractMotorController {
      * create settings to switch between motor implementations
      */
     public enum SupportedMotors {
-        CAN_SPARK_MAX(11710), TALON_FX(6380), VICTOR(18730); //Spark = Neo 550, Talon = Falcon 500, Victor = 775pros
+        //Spark = Neo 550, Talon = Falcon 500, Victor = 775pros
+        CAN_SPARK_MAX(11710), TALON_FX(6380), VICTOR(18730);
 
+        /**
+         * Read the name!
+         */
         public final int MAX_SPEED_RPM;
 
         SupportedMotors(int speed) {

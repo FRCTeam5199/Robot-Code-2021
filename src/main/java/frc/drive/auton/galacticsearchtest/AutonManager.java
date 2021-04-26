@@ -1,4 +1,4 @@
-package frc.drive.auton.galacticsearchscam;
+package frc.drive.auton.galacticsearchtest;
 
 import frc.drive.AbstractDriveManager;
 import frc.drive.auton.AbstractAutonManager;
