@@ -66,12 +66,8 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
         driver.resetDriveEncoders();
     }
 
-    /**
-     * @return the robot's Y position in relation to its starting position(away positive) typically facing away from
-     * opposing alliance station
-     */
-    public double fieldY() {
-        return robotPose.getTranslation().getY();
+    public Point getLocation() {
+        return new Point(fieldX(), fieldY());
     }
 
     /**
@@ -82,7 +78,11 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
         return robotPose.getTranslation().getX();
     }
 
-    public Point getLocation(){
-        return new Point(fieldX(), fieldY());
+    /**
+     * @return the robot's Y position in relation to its starting position(away positive) typically facing away from
+     * opposing alliance station
+     */
+    public double fieldY() {
+        return robotPose.getTranslation().getY();
     }
 }

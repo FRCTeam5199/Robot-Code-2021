@@ -1,28 +1,28 @@
 package frc.discordbot.commands;
 
 import frc.discordbot.DiscordBot;
+import frc.discordbot.MessageHandler;
 import frc.misc.ServerSide;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
 /**
- * The template for a command driven by
+ * The template for a command from a brobot
  */
 public abstract class AbstractCommand implements Serializable {
-    public static boolean DRIVEN;
-
     /**
      * Executes the command using the provided data
      *
      * @param message the message and relevant data that triggered the command to run
-     * @return The result of executing the command. Should only return null if commnad {@link #isMultiTickCommand() is
-     * multi tick}
+     * @return The result of executing the command. If the command would like to persist, it should return {@link
+     * ContinuePersistingCommandResponse#PASS} or make a new one with a message to send to the bois in discord
      */
     //todo make this not nullable and simple make a special return
-    public abstract @Nullable AbstractCommandResponse run(AbstractCommandData message);
+    @NotNull
+    public abstract AbstractCommandResponse run(AbstractCommandData message);
 
     /**
      * The name of the command that the user will use to reference it
@@ -31,8 +31,31 @@ public abstract class AbstractCommand implements Serializable {
      */
     public abstract String getCommand();
 
+    /**
+     * Gets a little blurb for {@link HelpCommand} to use when a user asks how to use this command. Should also include
+     * information about arguments, if any
+     *
+     * @return A lil help blurb, discord markdown supported
+     */
     public abstract String sendHelp();
 
+    /**
+     * Different from {@link #run}, should only ever be redefined by multitick commands and should only contain initial
+     * processing required before the command goes stale {@link MessageHandler#persistPendingCommands() while waiting to
+     * persist}. Such reasons may include rejecting a command based on settings, acknowledging a command is valid,
+     *
+     * @param message
+     * @return
+     */
+    public AbstractCommandResponse runOnServerArrival(AbstractCommandData message) {
+        return ContinuePersistingCommandResponse.PASS;
+    }
+
+    /**
+     * Do I even need to explain?
+     *
+     * @return True if the command should be persisted, false if it should be executed and returned immediately
+     */
     public boolean isMultiTickCommand() {
         return false;
     }
@@ -65,8 +88,8 @@ public abstract class AbstractCommand implements Serializable {
     }
 
     /**
-     * Every command is able to refine what they are sending on the server in order to save resouces on the robot. Also,
-     * wifi can be an issue so the less that gets sent, the better. By default, uses {@link GenericCommandData}
+     * Every command is able to refine what they are sending on the server in order to save resources on the robot.
+     * Also, wifi can be an issue so the less that gets sent, the better. By default, uses {@link GenericCommandData}
      *
      * @param message the message from {@link frc.discordbot.MessageHandler#onMessageReceived(MessageReceivedEvent)}
      * @return the required data extracted from the passed data wrapped in a {@link AbstractCommandData packet}
@@ -87,7 +110,7 @@ public abstract class AbstractCommand implements Serializable {
         /**
          * Extracts {@link #CONTENT}, {@link #MESSAGE_ID}, {@link #AUTHOR_ID}, {@link #GUILD_ID}, {@link #CHANNEL_ID}
          *
-         * @param message message as recieved from {@link frc.discordbot.MessageHandler#onMessageReceived(MessageReceivedEvent)}
+         * @param message message as received from {@link frc.discordbot.MessageHandler#onMessageReceived(MessageReceivedEvent)}
          */
         protected AbstractCommandData(MessageReceivedEvent message) {
             this(message.getMessage().getContentRaw(), message.getMessageId(), message.getAuthor().getId(), message.getGuild().getId(), message.getChannel().getId());
@@ -150,6 +173,10 @@ public abstract class AbstractCommand implements Serializable {
             CHANNEL_ID = originalData.CHANNEL_ID;
         }
 
+        protected AbstractCommandResponse() {
+            CONTENT = MESSAGE_ID = AUTHOR_ID = GUILD_ID = CHANNEL_ID = "";
+        }
+
         @Override
         public int compareTo(AbstractCommandResponse other) {
             return MESSAGE_ID.compareTo(other.MESSAGE_ID);
@@ -191,6 +218,38 @@ public abstract class AbstractCommand implements Serializable {
     public static class GenericCommandData extends AbstractCommandData {
         public GenericCommandData(MessageReceivedEvent message) {
             super(message);
+        }
+    }
+
+    /**
+     * This is halfway to being an enum, hence the private constructor and public static final field.
+     */
+    public static class ContinuePersistingCommandResponse extends AbstractCommandResponse {
+        public static final ContinuePersistingCommandResponse PASS = new ContinuePersistingCommandResponse();
+        private String responseMessage = "";
+
+        private ContinuePersistingCommandResponse() {
+            super();
+        }
+
+        /**
+         * This is the constructor similar to {@link GenericCommandResponse} that has an optional callback
+         *
+         * @param message    Message data
+         * @param blurbToSay What to respond with
+         */
+        public ContinuePersistingCommandResponse(AbstractCommandData message, String blurbToSay) {
+            super(message);
+            responseMessage = blurbToSay;
+            if (blurbToSay.equals(""))
+                throw new IllegalArgumentException("No I cant let you do that. Use PASS instead of a new one.");
+        }
+
+        @Override
+        public void doYourWorst(JDA client) {
+            if (!responseMessage.equals("")) {
+                client.getTextChannelById(CHANNEL_ID).sendMessage(responseMessage).queue();
+            }
         }
     }
 }

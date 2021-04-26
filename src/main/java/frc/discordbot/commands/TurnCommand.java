@@ -5,7 +5,7 @@ import frc.misc.ClientSide;
 import frc.misc.ServerSide;
 import frc.robot.Robot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This very nice command will make the robot drive! Similar to a point-to-point auton, this command does not steer, it
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TurnCommand extends AbstractCommand {
     @Override
-    public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         if (message instanceof TurnCommandData)
             return runChecked((TurnCommandData) message);
         throw new IllegalArgumentException("I cant use that data");
@@ -24,9 +24,10 @@ public class TurnCommand extends AbstractCommand {
      * #run(AbstractCommandData)}
      *
      * @param message the data associated with this command
-     * @return A {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse} when completed, null otherwise.
+     * @return A {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse} when completed, {@link
+     * frc.discordbot.commands.AbstractCommand.ContinuePersistingCommandResponse#PASS} otherwise.
      */
-    public AbstractCommandResponse runChecked(TurnCommandData message) {
+    public @NotNull AbstractCommandResponse runChecked(TurnCommandData message) {
         if (DriverStation.getInstance().isDisabled()) {
             return new GenericCommandResponse(message, "Im disabled. F. Cannot drive. Urbad");
         } else {
@@ -41,7 +42,7 @@ public class TurnCommand extends AbstractCommand {
                 return new GenericCommandResponse(message, String.format("I turned from %.1f to %.1f", message.startingPoint, Robot.driver.guidance.imu.relativeYaw()));
             }
         }
-        return null;
+        return ContinuePersistingCommandResponse.PASS;
     }
 
     @Override

@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
             else if (robotSettings.DRIVE_BASE == AbstractDriveManager.DriveBases.SWIVEL)
                 driver = new DriveManagerSwerve();
         }
-        if (robotSettings.ENABLE_LEDS){
+        if (robotSettings.ENABLE_LEDS) {
             leds = new LEDs();
         }
         if (robotSettings.ENABLE_INTAKE) {
@@ -240,7 +240,7 @@ public class Robot extends TimedRobot {
             }
         }
 
-        if (UserInterface.CLEAR_WARNINGS.getEntry().getBoolean(false)){
+        if (UserInterface.CLEAR_WARNINGS.getEntry().getBoolean(false)) {
             UserInterface.CLEAR_WARNINGS.getEntry().setBoolean(false);
             Main.pipeline.wipeSounds();
             IssueHandler.issues.clear();

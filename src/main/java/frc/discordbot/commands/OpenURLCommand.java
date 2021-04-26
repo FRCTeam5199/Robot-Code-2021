@@ -2,7 +2,7 @@ package frc.discordbot.commands;
 
 import frc.misc.ServerSide;
 import net.dv8tion.jda.api.JDA;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ import java.io.IOException;
 @ServerSide
 public class OpenURLCommand extends AbstractCommand {
     @Override
-    public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         return new VibingCommandResponse(message);
     }
 
@@ -54,7 +54,7 @@ public class OpenURLCommand extends AbstractCommand {
         @Override
         public void doYourWorst(JDA client) {
             if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                client.getTextChannelById(CHANNEL_ID).sendMessage("Invalid url <" + url + ">");
+                client.getTextChannelById(CHANNEL_ID).sendMessage("Invalid url <" + url + ">").queue();
             } else {
                 client.getTextChannelById(CHANNEL_ID).sendMessage("I am simply vibing. Opened url <" + url + ">").queue();
                 try {

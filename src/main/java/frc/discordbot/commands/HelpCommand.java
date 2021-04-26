@@ -1,10 +1,11 @@
 package frc.discordbot.commands;
 
+import frc.discordbot.DiscordBot;
 import frc.discordbot.MessageHandler;
 import frc.misc.ServerSide;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Simple command to list all the commands, their arguments, and where they run
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @ServerSide
 public class HelpCommand extends AbstractCommand {
     @Override
-    public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         return new HelpCommandResponse(message);
     }
 
@@ -32,13 +33,20 @@ public class HelpCommand extends AbstractCommand {
     }
 
     /**
-     * Manufactues and embed and does all of the heavy lifting from here
+     * Manufactures embed and does all of the heavy lifting from here
      */
     public static class HelpCommandResponse extends AbstractCommandResponse {
         public HelpCommandResponse(AbstractCommandData data) {
             super(data);
         }
 
+        /**
+         * Theres a bit going on here but heres the important stuff. If no message args, returns a list of loaded
+         * commands. If one arg, attempts to get and send the help text for that command. If no scuh, returns the list
+         * of commands. If more than 1 arg, it will console your sad sad self.
+         *
+         * @param client {@link DiscordBot#getBotObject() the bot object}
+         */
         @Override
         public void doYourWorst(JDA client) {
             StringBuilder out = new StringBuilder();
@@ -49,7 +57,7 @@ public class HelpCommand extends AbstractCommand {
                     return;
                 }
                 out.append("**Could not find command** ").append(CONTENT.split(" ")[1]).append('\n');
-            }else if (CONTENT.split(" ").length > 2){
+            } else if (CONTENT.split(" ").length > 2) {
                 client.getTextChannelById(CHANNEL_ID).sendMessage("Sorry bro, I feel for you and hope that whatever gremlins or voodoo responsible for it fixes it soon.").queue();
                 return;
             }
@@ -58,7 +66,7 @@ public class HelpCommand extends AbstractCommand {
             for (AbstractCommand command : MessageHandler.commands.values()) {
                 out.append('\n').append(command.getCommand()).append(": ").append(command.getArgs()).append(" (").append(command.isServerSideCommand() ? "Server" : "Robot").append(")");
             }
-            builder.setTitle("Commnds").setDescription(out.toString());
+            builder.setTitle("Commands").setDescription(out.toString());
             client.getTextChannelById(CHANNEL_ID).sendMessage(builder.build()).submit();
         }
     }

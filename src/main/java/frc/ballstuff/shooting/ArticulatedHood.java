@@ -19,7 +19,8 @@ import static frc.misc.UtilFunctions.weightedAverage;
 import static frc.robot.Robot.robotSettings;
 
 /**
- * Articulated hood refers to the moving top section of {@link Shooter}.
+ * Articulated hood refers to the moving top section of {@link Shooter}. Theres a lot going on here so maybe check out
+ * the settings.
  */
 public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = false;
@@ -270,12 +271,8 @@ public class ArticulatedHood implements ISubsystem {
         }
         if (moveTo != -2 && moveTo != -1) {
             double distanceNeededToTravel = currentPos - moveTo;
-            //double hoodPercent = distanceNeededToTravel > 0 ? 0.3 : -0.3;
             double hoodPercent = Math.min(Math.abs(distanceNeededToTravel), 0.3);
             hoodPercent *= distanceNeededToTravel > 0 ? 1 : -1;
-            /*if (Math.abs(distanceNeededToTravel) < 0.035) {
-                hoodPercent = 0;
-            }*/
             hoodMotor.moveAtPercent(hoodPercent);
             if (DEBUG && robotSettings.DEBUG) {
                 UserInterface.smartDashboardPutNumber("Moving to", moveTo);

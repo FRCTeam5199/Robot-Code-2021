@@ -1,7 +1,6 @@
 package frc.motors;
 
 import frc.gpws.Alarms;
-import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.misc.UserInterface;
 import frc.motors.followers.AbstractFollowerMotorController;
@@ -165,7 +164,9 @@ public abstract class AbstractMotorController {
     }
 
     /**
-     * Self explanatory. Takes into account {@link #getMotorTemperature() motor temp} and {@link frc.robot.robotconfigs.DefaultConfig#OVERHEAT_THRESHOLD} to
+     * Self explanatory. Takes into account {@link #getMotorTemperature() motor temp} and {@link
+     * frc.robot.robotconfigs.DefaultConfig#OVERHEAT_THRESHOLD} to
+     *
      * @return invert {@link #isOverheated}
      */
     protected boolean isTemperatureAcceptable() {
@@ -199,8 +200,8 @@ public abstract class AbstractMotorController {
     public abstract int getID();
 
     /**
-     * This should be one-for-one replicated for each {@link AbstractMotorController motor controller} in order to create
-     * settings to switch between motor implementations
+     * This should be one-for-one replicated for each {@link AbstractMotorController motor controller} in order to
+     * create settings to switch between motor implementations
      */
     public enum SupportedMotors {
         CAN_SPARK_MAX(11710), TALON_FX(6380), VICTOR(18730); //Spark = Neo 550, Talon = Falcon 500, Victor = 775pros

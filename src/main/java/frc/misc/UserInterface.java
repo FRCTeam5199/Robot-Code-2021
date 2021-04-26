@@ -1,6 +1,12 @@
 package frc.misc;
 
-import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.motors.AbstractMotorController;
 
@@ -13,8 +19,8 @@ public class UserInterface {
     //TABS
     public static final ShuffleboardTab SHOOTER_TAB = Shuffleboard.getTab("Shooter"),
             DRIVE_TAB = Shuffleboard.getTab("drive"),
-            //PDP_TAB = Shuffleboard.getTab("Lectricity"),
-            MUSICK_TAB = Shuffleboard.getTab("musick"),
+    //PDP_TAB = Shuffleboard.getTab("Lectricity"),
+    MUSICK_TAB = Shuffleboard.getTab("musick"),
             ROBOT_TAB = Shuffleboard.getTab("DANGER!"),
             WARNINGS_TAB = Shuffleboard.getTab("Warnings");
 
@@ -59,7 +65,7 @@ public class UserInterface {
             CLEAR_WARNINGS = WARNINGS_TAB.add("Stop Alarms", false).withWidget(BuiltInWidgets.kToggleButton),
     //PDP
     PDP_BROWNOUT_MIN_OVERRIDE = PDP_SETTINGS_LAYOUT.add("Settings Override", false).withWidget(BuiltInWidgets.kToggleSwitch),
-    PDP_BROWNOUT_MIN_VAL = PDP_SETTINGS_LAYOUT.add("Minimum Brownout Voltage", 9),
+            PDP_BROWNOUT_MIN_VAL = PDP_SETTINGS_LAYOUT.add("Minimum Brownout Voltage", 9),
     //DANGER PANEL
     GET_RANDOM_FIX = ROBOT_TAB.add("Get random fix", false).withWidget(BuiltInWidgets.kToggleButton);
     public static final HashMap<AbstractMotorController, SimpleWidget> motorTemperatureMonitors = new HashMap<>();

@@ -6,7 +6,6 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.EncoderType;
-import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.robot.Robot;
 
@@ -54,23 +53,6 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public String getName() {
         return "Spark: " + motor.getDeviceId();
-    }
-
-    @Override
-    public int getID() {
-        return motor.getDeviceId();
-    }
-
-    @Override
-    public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
-        if (!(leader instanceof SparkMotorController))
-            throw new IllegalArgumentException("I cant follow that!!");
-        if (motor.follow(((SparkMotorController) leader).motor, invert) != CANError.kOk)
-            if (!Robot.SECOND_TRY)
-                throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not follow the leader");
-            else
-                failureFlag = true;
-        return this;
     }
 
     @Override
@@ -185,12 +167,29 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
+    public boolean isFailed() {
+        return motor.getFaults() != 0 || failureFlag;
+    }
+
+    @Override
+    public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
+        if (!(leader instanceof SparkMotorController))
+            throw new IllegalArgumentException("I cant follow that!!");
+        if (motor.follow(((SparkMotorController) leader).motor, invert) != CANError.kOk)
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not follow the leader");
+            else
+                failureFlag = true;
+        return this;
+    }
+
+    @Override
     public double getMotorTemperature() {
         return motor.getMotorTemperature();
     }
 
     @Override
-    public boolean isFailed() {
-        return motor.getFaults() != 0 || failureFlag;
+    public int getID() {
+        return motor.getDeviceId();
     }
 }

@@ -204,7 +204,7 @@ public class ClientServerPipeline implements Runnable {
     public void updatePipeline() {
         if (SERVER) {
             if (checkReply()) {
-                readReply().doYourWorst(DiscordBot.bot.getBotObject());
+                readReply().doYourWorst(DiscordBot.getBotObject());
                 System.out.println("Recieved message from teddy");
             }
             if (checkSound()) {

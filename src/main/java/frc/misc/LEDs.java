@@ -9,8 +9,10 @@ import java.util.function.Consumer;
 
 import static frc.robot.Robot.robotSettings;
 
+/**
+ * Light Emitting Diodes, or LED's for short, emit light and we can do some cool stuff with em
+ */
 public class LEDs implements ISubsystem {
-    //private static final Random random = new Random(System.currentTimeMillis());
     private final boolean drawBackGround = true;
     private AddressableLED ledConfig;
     private AddressableLEDBuffer ledBuffer;
@@ -52,15 +54,6 @@ public class LEDs implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        //LEDEnums.CHASE_RGB.runLightFunction(new int[][]{{22, 71, 142}, {0, 0, 0}});
-        //LEDEnums.BRANDON_FUN_TIME_LAND.runLightFunction();
-        //LEDEnums.EYES_DESERVE_TO_BLEED.runLightFunction();
-        //LEDEnums.SOLID_COLOR_RGB.runLightFunction(new int[][]{{22, 71, 142}});
-
-        //MATCH STUFF
-        //LEDEnums.CHASE_RGB.runLightFunction(new int[][]{{0, 255, 0}, {0, 38, 77}}); //GREEN CHASE (GOOD!)
-        //LEDEnums.CHASE_RGB.runLightFunction(new int[][]{{255, 0, 0}, {0, 38, 77}}); //RED CHASE (BAD?)
-
         LEDEnums.RAINBOW_CHASE.runLightFunction();
         ledConfig.setData(ledBuffer);
     }
@@ -82,7 +75,7 @@ public class LEDs implements ISubsystem {
 
     @Override
     public void initDisabled() {
-        LEDEnums.SOLID_COLOR_RGB.runLightFunction(new int[][]{{0,0,0}});
+        LEDEnums.SOLID_COLOR_RGB.runLightFunction(new int[][]{{0, 0, 0}});
         ledConfig.setData(ledBuffer);
     }
 
@@ -124,12 +117,12 @@ public class LEDs implements ISubsystem {
             for (int leaderIndex = 0; leaderIndex < Robot.leds.ledBuffer.getLength(); leaderIndex++) {
                 if (leaderIndex + 2 < Robot.leds.chaseLastLEDSet) {
                     Robot.leds.ledBuffer.setRGB(leaderIndex, RGB[0][0], RGB[0][1], RGB[0][2]);
-                    Robot.leds.ledBuffer.setRGB(leaderIndex+1, RGB[0][0], RGB[0][1], RGB[0][2]);
-                    Robot.leds.ledBuffer.setRGB(leaderIndex+2, RGB[0][0], RGB[0][1], RGB[0][2]);
+                    Robot.leds.ledBuffer.setRGB(leaderIndex + 1, RGB[0][0], RGB[0][1], RGB[0][2]);
+                    Robot.leds.ledBuffer.setRGB(leaderIndex + 2, RGB[0][0], RGB[0][1], RGB[0][2]);
                 } else {
                     Robot.leds.ledBuffer.setRGB(leaderIndex, RGB[1][0], RGB[1][1], RGB[1][2]);
-                    Robot.leds.ledBuffer.setRGB(leaderIndex+1, RGB[1][0], RGB[1][1], RGB[1][2]);
-                    Robot.leds.ledBuffer.setRGB(leaderIndex+2, RGB[1][0], RGB[1][1], RGB[1][2]);
+                    Robot.leds.ledBuffer.setRGB(leaderIndex + 1, RGB[1][0], RGB[1][1], RGB[1][2]);
+                    Robot.leds.ledBuffer.setRGB(leaderIndex + 2, RGB[1][0], RGB[1][1], RGB[1][2]);
                 }
             }
             Robot.leds.chaseLastLEDSet++;
@@ -184,6 +177,10 @@ public class LEDs implements ISubsystem {
             Robot.leds.ledBuffer.setRGB((Robot.leds.chaseLastLEDSet + Robot.leds.ledBuffer.getLength() - 24) % Robot.leds.ledBuffer.getLength(), 0, 0, 0); //Nothing (back)
         });
 
+        /**
+         * This bad boy is basically a fancy way of doing inheritence on the cheap. It is less messy than using an
+         * interface and works in mostly the same way
+         */
         private final Consumer<int[][]> ledFunction;
 
         LEDEnums(Consumer<int[][]> function) {

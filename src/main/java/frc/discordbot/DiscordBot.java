@@ -1,6 +1,5 @@
 package frc.discordbot;
 
-import frc.discordbot.commands.AbstractCommand;
 import frc.misc.ServerSide;
 import frc.robot.robotconfigs.DefaultConfig;
 import net.dv8tion.jda.api.JDA;
@@ -8,8 +7,11 @@ import net.dv8tion.jda.api.JDABuilder;
 
 import java.net.InetAddress;
 
+/**
+ * Our special JDA manager, this is where the fun starts
+ */
 public class DiscordBot {
-    public static DiscordBot bot = null;
+    private static DiscordBot bot = null;
     private final JDA botObject;
 
     /**
@@ -25,13 +27,18 @@ public class DiscordBot {
         return bot;
     }
 
+    /**
+     * Ok this doesnt actually detect internet, what it does is sees if it can resolve and ping google
+     *
+     * @return if there is likely a connection to the internet
+     */
     public static boolean detectedInternet() {
         try {
-            if (!InetAddress.getByName("google.com").isReachable(1000)) {
-                System.out.println("NO INTERNET DETECTED");
-            } else {
+            if (InetAddress.getByName("google.com").isReachable(1000)) {
                 System.out.println("Internet detected !!!!!!!");
                 return true;
+            } else {
+                System.out.println("NO INTERNET DETECTED");
             }
         } catch (Exception ignored) {
             System.out.println("NO INTERNET?");
@@ -39,8 +46,23 @@ public class DiscordBot {
         return false;
     }
 
+    /**
+     * Returns the JDA (real bot object, not the DiscordBot instance)
+     *
+     * @return the only JDA constructed by the only discord bot
+     */
+    @ServerSide
+    public static JDA getBotObject() {
+        return bot.botObject;
+    }
+
+    /**
+     * Creates a new DiscordBot (not to be confused with a new {@link JDA} which is the actual discord api wrapper)
+     *
+     * @param listener allows {@link MessageHandler#loadCommands(boolean)} to be run without attempting to create a bot
+     *                 on the client
+     */
     private DiscordBot(boolean listener) {
-        AbstractCommand.DRIVEN = listener;
         MessageHandler.loadCommands(listener);
         JDA holder = null;
         if (!listener) {
@@ -53,10 +75,5 @@ public class DiscordBot {
             }
         }
         botObject = holder;
-    }
-
-    @ServerSide
-    public JDA getBotObject() {
-        return botObject;
     }
 }

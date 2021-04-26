@@ -6,7 +6,7 @@ import frc.misc.ClientSide;
 import frc.misc.ServerSide;
 import frc.robot.Robot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This very nice command will make the robot drive! Similar to a point-to-point auton, this command does not steer, it
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class DriveDistanceCommand extends AbstractCommand {
     @Override
-    public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         if (message instanceof DriveDistanceCommandData)
             return runChecked((DriveDistanceCommandData) message);
         throw new IllegalArgumentException("I cant use that data");
@@ -47,7 +47,7 @@ public class DriveDistanceCommand extends AbstractCommand {
                 }
             }
         }
-        return null;
+        return ContinuePersistingCommandResponse.PASS;
     }
 
     @Override

@@ -70,6 +70,14 @@ public class Chirp extends Orchestra implements ISubsystem {
         return listObject;
     }
 
+    public static String getAllSongs() {
+        StringBuilder out = new StringBuilder("```\nSongs:");
+        for (String name : songnames.keySet()) {
+            out.append('\n').append(name);
+        }
+        return out.append("```").toString();
+    }
+
     public Chirp() {
         init();
         addToMetaList();
@@ -102,19 +110,11 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     @Override
     public void updateTest() {
-        if (remoteCommand || MessageHandler.persistingCommands()) {
+        if (remoteCommand || MessageHandler.canPersistCommands()) {
             handleRemoteUpdate();
         } else {
             handleLocalUpdate();
         }
-    }
-
-    public static String getAllSongs(){
-        StringBuilder out = new StringBuilder("```\nSongs:");
-        for (String name : songnames.keySet()){
-            out.append('\n').append(name);
-        }
-        return out.append("```").toString();
     }
 
     private void handleRemoteUpdate() {
@@ -269,7 +269,7 @@ public class Chirp extends Orchestra implements ISubsystem {
     }
 
     public String playSongMostNearlyMatching(String songname) {
-        if (!remoteCommand){
+        if (!remoteCommand) {
             stop();
         }
         remoteCommand = true;
@@ -304,16 +304,27 @@ public class Chirp extends Orchestra implements ISubsystem {
         return winningSong;
     }
 
-    public String getQueue() {
-        if (queue.size() == 0){
-            if (isPlaying()){
+    public int getQueueLength() {
+        return queue.size();
+    }
+
+    public void skipSong() {
+        if (queue.size() > 0) {
+            queue.remove(0);
+            stop();
+        }
+    }
+
+    public String getQueueAsString() {
+        if (queue.size() == 0) {
+            if (isPlaying()) {
                 return "playing " + Robot.lastFoundSong.split("_")[0];
-            }else{
+            } else {
                 return "nothing playing sob";
             }
         }
         StringBuilder out = new StringBuilder("```nim\n0) " + Robot.lastFoundSong.split("_")[0] + "\n");
-        for (int i = 0; i < queue.size(); i++){
+        for (int i = 0; i < queue.size(); i++) {
             out.append(i + 1).append(") ").append(queue.get(i)).append('\n');
         }
         return out.append("```").toString();

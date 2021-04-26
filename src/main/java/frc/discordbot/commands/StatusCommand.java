@@ -5,13 +5,14 @@ import frc.misc.SubsystemStatus;
 import frc.robot.Robot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Returns a pretty listing of all activates subsystems and if they are working nominally
  */
 public class StatusCommand extends AbstractCommand {
     @Override
-    public AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         StringBuilder statuses = new StringBuilder("```diff\n");
         for (ISubsystem system : Robot.subsystems)
             statuses.append(system.getSubsystemStatus() == SubsystemStatus.FAILED ? "- " : "+ ").append(system.getSubsystemName()).append(": ").append(system.getSubsystemStatus().name()).append('\n');
@@ -35,7 +36,7 @@ public class StatusCommand extends AbstractCommand {
     }
 
     /**
-     * Response requires an embed and this embed is held in peices at {@link #TITLE}, {@link #AUTHOR}, and {@link
+     * Response requires an embed and this embed is held in pieces at {@link #TITLE}, {@link #AUTHOR}, and {@link
      * #REPLY_CONTENT}
      */
     public static class StatusCommandResponse extends AbstractCommandResponse {

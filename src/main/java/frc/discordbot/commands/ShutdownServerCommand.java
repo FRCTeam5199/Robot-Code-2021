@@ -1,14 +1,14 @@
 package frc.discordbot.commands;
 
 import net.dv8tion.jda.api.JDA;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Kills the server, leaves the robot unaffected
  */
 public class ShutdownServerCommand extends AbstractCommand {
     @Override
-    public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         return new ShutdownServerCommandResponse(message);
     }
 

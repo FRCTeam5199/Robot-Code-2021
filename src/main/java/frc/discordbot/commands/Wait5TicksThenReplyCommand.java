@@ -1,17 +1,17 @@
 package frc.discordbot.commands;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Simple clientside multitick command to test connection and persistance.
  */
 public class Wait5TicksThenReplyCommand extends AbstractCommand {
     @Override
-    public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         if (++((Wait5TicksThenReplyData) message).ticksWaited == 5)
             return new GenericCommandResponse(message, "Awaited and replied");
-        return null;
+        return ContinuePersistingCommandResponse.PASS;
     }
 
     @Override

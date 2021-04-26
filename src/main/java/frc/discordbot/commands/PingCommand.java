@@ -1,6 +1,7 @@
 package frc.discordbot.commands;
 
 import net.dv8tion.jda.api.JDA;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Gets the ping between Discord and Server
@@ -17,7 +18,7 @@ public class PingCommand extends AbstractCommand {
     };
 
     @Override
-    public AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         return new PingCommandResponse(message);
     }
 

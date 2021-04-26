@@ -3,13 +3,14 @@ package frc.discordbot.commands;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.misc.Chirp;
 import frc.robot.Robot;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Uses {@link Robot#chirp} to play the song of the user's choosing
  */
 public class PlaySongCommand extends AbstractCommand {
     @Override
-    public AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         if (!message.CONTENT.contains(" ")) {
             return new GenericCommandResponse(message, Chirp.getAllSongs());
         } else if (DriverStation.getInstance().isDisabled()) {

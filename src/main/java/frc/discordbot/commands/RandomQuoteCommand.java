@@ -3,7 +3,7 @@ package frc.discordbot.commands;
 import frc.misc.QuoteOfTheDay;
 import frc.misc.ServerSide;
 import net.dv8tion.jda.api.JDA;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Returns a random quote and replies with {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse#doYourWorst(JDA)
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 @ServerSide
 public class RandomQuoteCommand extends AbstractCommand {
     @Override
-    public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         return new GenericCommandResponse(message, "A wise man once said:\n" + QuoteOfTheDay.getRandomQuote());
     }
 

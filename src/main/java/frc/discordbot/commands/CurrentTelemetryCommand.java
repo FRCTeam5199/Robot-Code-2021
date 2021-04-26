@@ -1,11 +1,15 @@
 package frc.discordbot.commands;
 
 import frc.robot.Robot;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Simple command that works with {@link frc.telemetry.AbstractRobotTelemetry} to get the current location and heading
+ * of the robot
+ */
 public class CurrentTelemetryCommand extends AbstractCommand {
     @Override
-    public @Nullable AbstractCommandResponse run(AbstractCommandData message) {
+    public @NotNull AbstractCommandResponse run(AbstractCommandData message) {
         return new GenericCommandResponse(message, "Currently at **" + Robot.driver.guidance.getLocation() + "** facing " + String.format("%.1f", Robot.driver.guidance.imu.relativeYaw()));
     }
 

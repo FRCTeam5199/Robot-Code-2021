@@ -89,8 +89,7 @@ public class TalonMotorController extends AbstractMotorController {
     public void moveAtVelocity(double realAmount) {
         if (isTemperatureAcceptable()) {
             motor.set(Velocity, realAmount / sensorToRealDistanceFactor);
-        }
-        else
+        } else
             motor.set(Velocity, 0);
         /// sensorToRealDistanceFactor);
         //System.out.println("I'm crying. RealAmount: " + realAmount + "\nSensortoDist: " + sensorToRealDistanceFactor + "\nSetting motors to " + realAmount / sensorToRealDistanceFactor);
