@@ -13,19 +13,22 @@ import frc.vision.camera.SupportedVision;
 public class Robot2020 extends DefaultConfig {
     public Robot2020() {
         //Subsystems
-        ENABLE_DRIVE = false;
-        ENABLE_INTAKE = false;
+        ENABLE_DRIVE = true;
+        ENABLE_INTAKE = true;
+        ENABLE_TURRET = true;
         ENABLE_SHOOTER = true;
         ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
+        ENABLE_MUSIC = false;
+        ENABLE_HOOD_ARTICULATION = false;
 
         DRIVE_USE_6_MOTORS = true;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = false;
+        ENABLE_VISION = true;
         USE_PHOTONVISION = true;
         ENABLE_IMU = false;
 
