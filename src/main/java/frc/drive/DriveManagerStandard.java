@@ -24,7 +24,6 @@ import frc.motors.TalonMotorController;
 import frc.motors.followers.AbstractFollowerMotorController;
 import frc.motors.followers.SparkFollowerMotorsController;
 import frc.motors.followers.TalonFollowerMotorController;
-import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetry;
 
@@ -47,7 +46,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
             F = UserInterface.DRIVE_F.getEntry(),
             calibratePid = UserInterface.DRIVE_CALIBRATE_PID.getEntry(),
             coast = UserInterface.DRIVE_COAST.getEntry(),
-            rumblecontroller = UserInterface.DRIVE_RUMBLE_NEAR_MAX.getEntry();
+            rumbleController = UserInterface.DRIVE_RUMBLE_NEAR_MAX.getEntry();
     public AbstractMotorController leaderL, leaderR;
     public AbstractFollowerMotorController followerL, followerR;
     private BaseController controller;
@@ -212,7 +211,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
                     System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                     //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                 }
-                if (rumblecontroller.getBoolean(false)) {
+                if (rumbleController.getBoolean(false)) {
                     controller.rumble(Math.max(0, Math.min(1, (avgSpeedInFPS - robotSettings.RUMBLE_TOLERANCE_FPS) / (robotSettings.MAX_SPEED - robotSettings.RUMBLE_TOLERANCE_FPS))));
                 }
                 drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
@@ -226,7 +225,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
                     System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                     //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
                 }
-                if (rumblecontroller.getBoolean(false)) {
+                if (rumbleController.getBoolean(false)) {
                     controller.rumble(Math.max(0, Math.min(1, (avgSpeedInFPS - robotSettings.RUMBLE_TOLERANCE_FPS) / (robotSettings.MAX_SPEED - robotSettings.RUMBLE_TOLERANCE_FPS))));
                 }
                 drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
