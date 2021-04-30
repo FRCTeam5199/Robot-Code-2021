@@ -1,5 +1,6 @@
 package frc.robot.robotconfigs.twentytwenty;
 
+import edu.wpi.first.wpilibj.I2C;
 import frc.ballstuff.intaking.IntakeControlStyles;
 import frc.ballstuff.shooting.ShootingControlStyles;
 import frc.drive.DriveTypes;
@@ -12,7 +13,6 @@ import frc.vision.camera.SupportedVision;
 
 public class Robot2020 extends DefaultConfig {
     public Robot2020() {
-        //Subsystems
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
         ENABLE_TURRET = true;
@@ -30,18 +30,18 @@ public class Robot2020 extends DefaultConfig {
         //Misc
         ENABLE_VISION = true;
         USE_PHOTONVISION = true;
-        ENABLE_IMU = false;
+        ENABLE_IMU = true;
+        IMU_NAVX_PORT = I2C.Port.kMXP;
 
         //SHOOTER
         SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = SupportedVision.PHOTON;
-        ENABLE_HOOD_ARTICULATION = false;
+        INDEXER_DETECTION_CUTOFF_DISTANCE = 9;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
-        INDEXER_DETECTION_CUTOFF_DISTANCE = 9;
 
         //UI Style
         DRIVE_STYLE = DriveTypes.STANDARD;
@@ -53,7 +53,9 @@ public class Robot2020 extends DefaultConfig {
 
         DRIVEBASE_PID = new PID(0, 0, 0.000005, 0.00002);
         SHOOTER_PID = new PID(0.001, 0.000009, 0.0001, 0.023);
+        SHOOTER_CONST_SPEED_PID = SHOOTER_PID;
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
+        TURRET_PID = new PID(0.006, 0.00001, 0.001);
         HEADING_PID = new PID(0.08, 0.000005, 0.0003);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.5588;
@@ -78,6 +80,7 @@ public class Robot2020 extends DefaultConfig {
         TURRET_GEAR_RATIO = 7;
         TURRET_MAX_POS = 270;
         TURRET_MIN_POS = 0;
+        TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
         AUTON_TOLERANCE = 0.1;
         AUTO_SPEED = 3;
         AUTO_ROTATION_SPEED = 1;

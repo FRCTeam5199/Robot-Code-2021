@@ -34,7 +34,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         IMU_NAVX_PORT = I2C.Port.kMXP;
 
         //SHOOTER
-        SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;//SupportedMotors.TALON_FX;
+        SHOOTER_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = SupportedVision.LIMELIGHT;
@@ -49,7 +49,6 @@ public class CompetitionRobot2021 extends DefaultConfig {
         INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
         IMU_TYPE = SupportedIMU.PIGEON;
-
         AUTON_TYPE = AutonType.GALACTIC_SEARCH;
 
         DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
