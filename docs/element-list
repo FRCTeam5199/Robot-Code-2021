@@ -7,7 +7,7 @@ frc.drive
 frc.drive.auton
 frc.drive.auton.followtrajectory
 frc.drive.auton.galacticsearch
-frc.drive.auton.galacticsearchscam
+frc.drive.auton.galacticsearchtest
 frc.gpws
 frc.misc
 frc.motors
