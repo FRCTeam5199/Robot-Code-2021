@@ -1,6 +1,7 @@
-package frc.discordbot;
+package frc.discordslackbot;
 
-import frc.discordbot.commands.*;
+import com.slack.api.model.event.MessageEvent;
+import frc.discordslackbot.commands.*;
 import frc.misc.ClientSide;
 import frc.misc.ServerSide;
 import frc.robot.Main;
@@ -45,6 +46,7 @@ public class MessageHandler extends ListenerAdapter {
      * @param listening a debug var that should be the negation of {@link Main#IS_DS}
      */
     public static void loadCommands(boolean listening) {
+        if (commands.keySet().size() > 0) return;
         LISTENING = listening;
         List<Class<? extends AbstractCommand>> classes = Arrays.asList(PlaySongCommand.class, PingCommand.class, StatusCommand.class, RoboPingCommand.class, Wait5TicksThenReplyCommand.class, DriveDistanceCommand.class, OpenURLCommand.class, HelpCommand.class, RandomQuoteCommand.class, ShutdownServerCommand.class, TurnCommand.class, CurrentTelemetryCommand.class, QueueCommand.class, ShootCommand.class);
         for (Class<? extends AbstractCommand> s : classes) {
@@ -147,7 +149,7 @@ public class MessageHandler extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent message) {
         if (message.getAuthor().isBot())
             return;
-        if (message.getGuild() == null)
+        if (!message.isFromGuild())
             return;
         if (message.getMessage().getContentRaw().charAt(0) == '!' && getCommand(message.getMessage().getContentRaw()) != null) {
             System.out.println("Recieved Message: " + message.getMessage().getContentRaw());
@@ -166,6 +168,25 @@ public class MessageHandler extends ListenerAdapter {
                 }
             } else
                 throw new IllegalStateException("How did you get here as a client?");
+        }
+    }
+
+    public static void onMessageReceived(MessageEvent message) {
+        if (message.getChannel().equals("") || message.getBotId() != null){
+            return;
+        }
+        if (message.getText().charAt(0) == '!' && getCommand(message.getText()) != null) {
+            System.out.println("Recieved Message: " + message.getText());
+            if (!LISTENING){
+                AbstractCommand command = getCommand(message.getText());
+                if (command.isServerSideCommand()) {
+                    System.out.println("Running serverside " + command.extractData(message));
+                    command.run(command.extractData(message)).doYourWorst(SlackBot.getBotObject());
+                } else {
+                    System.out.println("Sending to bot " + command.extractData(message));
+                    Main.pipeline.sendData(command.extractData(message));
+                }
+            }
         }
     }
 }

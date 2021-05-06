@@ -1,4 +1,4 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;

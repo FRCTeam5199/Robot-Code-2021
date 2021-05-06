@@ -23,7 +23,9 @@ import java.util.Scanner;
  * @author jojo2357
  */
 public abstract class DefaultConfig {
-    public static final String BOTKEY = loadBotToken();
+    public static final String BOTKEY = loadEnvVariable("bottoken");
+    public static final String SLACKBOTKEY = loadEnvVariable("slackbottoken");
+    public static final String SLACKSOCKETKEY = loadEnvVariable("slacksockettoken");
     public final boolean DEBUG = false;
     public String AUTON_COMPLETE_NOISE = "";
     public boolean autonComplete = false;
@@ -139,12 +141,12 @@ public abstract class DefaultConfig {
      */
     public Object IMU_NAVX_PORT = I2C.Port.kMXP;
 
-    private static String loadBotToken() {
+    private static String loadEnvVariable(String filename) {
         try {
-            Scanner fis = new Scanner(new File("bottoken.env"));
+            Scanner fis = new Scanner(new File(filename + ".env"));
             return fis.nextLine();
         } catch (IOException e) {
-            System.err.println("Could not load " + new File("bottoken.env"));
+            System.err.println("Could not load " + new File(filename + ".env"));
             return "";
         }
     }

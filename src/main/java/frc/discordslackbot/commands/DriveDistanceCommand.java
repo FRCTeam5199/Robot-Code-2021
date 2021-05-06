@@ -1,4 +1,4 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.drive.auton.Point;
@@ -25,7 +25,7 @@ public class DriveDistanceCommand extends AbstractCommand {
      * #run(AbstractCommandData)}
      *
      * @param message the data associated with this command
-     * @return A {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse} when completed, null otherwise.
+     * @return A {@link frc.discordslackbot.commands.AbstractCommand.GenericCommandResponse} when completed, null otherwise.
      */
     public AbstractCommandResponse runChecked(DriveDistanceCommandData message) {
         if (DriverStation.getInstance().isDisabled()) {

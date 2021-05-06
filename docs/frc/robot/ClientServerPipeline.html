@@ -272,7 +272,7 @@ byte[]&nbsp;oldData)</code></th>
 </td>
 </tr>
 <tr class="altColor" id="i8">
-<td class="colFirst"><code><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a></code></td>
+<td class="colFirst"><code><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readCommandData()">readCommandData</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Reads the server command currently in the pipeline, regardless of whether or not the <a href="#checkMessage()"><code>reply
@@ -287,7 +287,7 @@ byte[]&nbsp;oldData)</code></th>
 </td>
 </tr>
 <tr class="altColor" id="i10">
-<td class="colFirst"><code><a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandResponse</a></code></td>
+<td class="colFirst"><code><a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandResponse</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readReply()">readReply</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Reads the client reply currently in the pipeline, regardless of whether or not the <a href="#checkReply()"><code>reply is
@@ -319,24 +319,24 @@ boolean&nbsp;active)</code></th>
 </tr>
 <tr class="altColor" id="i14">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sendData(frc.discordbot.commands.AbstractCommand.AbstractCommandData)">sendData</a></span>&#8203;(<a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;outbound)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sendData(frc.discordbot.commands.AbstractCommand.AbstractCommandData)">sendData</a></span>&#8203;(<a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;outbound)</code></th>
 <td class="colLast">
-<div class="block"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands"><code>Data</code></a> is just a stripped down way of sending a
+<div class="block"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands"><code>Data</code></a> is just a stripped down way of sending a
  <code>message from the bot</code></div>
 </td>
 </tr>
 <tr class="rowColor" id="i15">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sendData(frc.discordbot.commands.AbstractCommand.AbstractCommandData,boolean)">sendData</a></span>&#8203;(<a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;outbound,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sendData(frc.discordbot.commands.AbstractCommand.AbstractCommandData,boolean)">sendData</a></span>&#8203;(<a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;outbound,
 boolean&nbsp;skipDirtyCheck)</code></th>
 <td class="colLast">
-<div class="block"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands"><code>Data</code></a> is just a stripped down way of sending a
+<div class="block"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands"><code>Data</code></a> is just a stripped down way of sending a
  <code>message from the bot</code></div>
 </td>
 </tr>
 <tr class="altColor" id="i16">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sendReply(frc.discordbot.commands.AbstractCommand.AbstractCommandResponse)">sendReply</a></span>&#8203;(<a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandResponse</a>&nbsp;reply)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sendReply(frc.discordbot.commands.AbstractCommand.AbstractCommandResponse)">sendReply</a></span>&#8203;(<a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandResponse</a>&nbsp;reply)</code></th>
 <td class="colLast">
 <div class="block">Overload of <a href="#sendReply(frc.discordbot.commands.AbstractCommand.AbstractCommandResponse,boolean)"><code>sendReply(AbstractCommand.AbstractCommandResponse, boolean)</code></a> with default to run the dirty
  check</div>
@@ -344,7 +344,7 @@ boolean&nbsp;skipDirtyCheck)</code></th>
 </tr>
 <tr class="rowColor" id="i17">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sendReply(frc.discordbot.commands.AbstractCommand.AbstractCommandResponse,boolean)">sendReply</a></span>&#8203;(<a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandResponse</a>&nbsp;reply,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sendReply(frc.discordbot.commands.AbstractCommand.AbstractCommandResponse,boolean)">sendReply</a></span>&#8203;(<a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandResponse</a>&nbsp;reply,
 boolean&nbsp;skipDirtyCheck)</code></th>
 <td class="colLast">
 <div class="block">Posts the results of a command to the server from the client.</div>
@@ -530,8 +530,8 @@ boolean&nbsp;skipDirtyCheck)</code></th>
 <li class="blockList">
 <section class="detail">
 <h3><a id="sendData(frc.discordbot.commands.AbstractCommand.AbstractCommandData)">sendData</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">sendData</span>&#8203;(<span class="arguments"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;outbound)</span></div>
-<div class="block"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands"><code>Data</code></a> is just a stripped down way of sending a
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">sendData</span>&#8203;(<span class="arguments"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;outbound)</span></div>
+<div class="block"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands"><code>Data</code></a> is just a stripped down way of sending a
  <code>message from the bot</code></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -544,9 +544,9 @@ boolean&nbsp;skipDirtyCheck)</code></th>
 <li class="blockList">
 <section class="detail">
 <h3><a id="sendData(frc.discordbot.commands.AbstractCommand.AbstractCommandData,boolean)">sendData</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">sendData</span>&#8203;(<span class="arguments"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;outbound,
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">sendData</span>&#8203;(<span class="arguments"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;outbound,
 boolean&nbsp;skipDirtyCheck)</span></div>
-<div class="block"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands"><code>Data</code></a> is just a stripped down way of sending a
+<div class="block"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands"><code>Data</code></a> is just a stripped down way of sending a
  <code>message from the bot</code></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -638,7 +638,7 @@ byte[]&nbsp;oldData)</span></div>
 <li class="blockList">
 <section class="detail">
 <h3><a id="readReply()">readReply</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandResponse</a></span>&nbsp;<span class="memberName">readReply</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandResponse</a></span>&nbsp;<span class="memberName">readReply</span>()</div>
 <div class="block">Reads the client reply currently in the pipeline, regardless of whether or not the <a href="#checkReply()"><code>reply is
  fresh</code></a></div>
 <dl>
@@ -711,7 +711,7 @@ byte[]&nbsp;oldData)</span></div>
 <li class="blockList">
 <section class="detail">
 <h3><a id="readCommandData()">readCommandData</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a></span>&nbsp;<span class="memberName">readCommandData</span>()</div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="../discordbot/commands/AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a></span>&nbsp;<span class="memberName">readCommandData</span>()</div>
 <div class="block">Reads the server command currently in the pipeline, regardless of whether or not the <a href="#checkMessage()"><code>reply
  is fresh</code></a></div>
 <dl>
@@ -749,7 +749,7 @@ byte[]&nbsp;oldData)</span></div>
 <li class="blockList">
 <section class="detail">
 <h3><a id="sendReply(frc.discordbot.commands.AbstractCommand.AbstractCommandResponse)">sendReply</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">sendReply</span>&#8203;(<span class="arguments"><a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandResponse</a>&nbsp;reply)</span></div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">sendReply</span>&#8203;(<span class="arguments"><a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandResponse</a>&nbsp;reply)</span></div>
 <div class="block">Overload of <a href="#sendReply(frc.discordbot.commands.AbstractCommand.AbstractCommandResponse,boolean)"><code>sendReply(AbstractCommand.AbstractCommandResponse, boolean)</code></a> with default to run the dirty
  check</div>
 <dl>
@@ -763,7 +763,7 @@ byte[]&nbsp;oldData)</span></div>
 <li class="blockList">
 <section class="detail">
 <h3><a id="sendReply(frc.discordbot.commands.AbstractCommand.AbstractCommandResponse,boolean)">sendReply</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">sendReply</span>&#8203;(<span class="arguments"><a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandResponse</a>&nbsp;reply,
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">sendReply</span>&#8203;(<span class="arguments"><a href="../discordbot/commands/AbstractCommand.AbstractCommandResponse.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandResponse</a>&nbsp;reply,
 boolean&nbsp;skipDirtyCheck)</span></div>
 <div class="block">Posts the results of a command to the server from the client.</div>
 <dl>

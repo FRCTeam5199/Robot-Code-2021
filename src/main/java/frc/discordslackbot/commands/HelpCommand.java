@@ -1,7 +1,9 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
-import frc.discordbot.DiscordBot;
-import frc.discordbot.MessageHandler;
+import com.slack.api.bolt.App;
+import frc.discordslackbot.DiscordBot;
+import frc.discordslackbot.MessageHandler;
+import frc.discordslackbot.SlackBot;
 import frc.misc.ServerSide;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -68,6 +70,27 @@ public class HelpCommand extends AbstractCommand {
             }
             builder.setTitle("Commands").setDescription(out.toString());
             client.getTextChannelById(CHANNEL_ID).sendMessage(builder.build()).submit();
+        }
+
+        @Override
+        public void doYourWorst(App client) {
+            StringBuilder out = new StringBuilder();
+            if (CONTENT.split(" ").length == 2) {
+                AbstractCommand command = MessageHandler.getCommand(CONTENT.split(" ")[1]);
+                if (command != null) {
+                    SlackBot.sendSlackMessage(CHANNEL_ID, command.sendHelp());
+                    return;
+                }
+                out.append("**Could not find command** ").append(CONTENT.split(" ")[1]).append('\n');
+            } else if (CONTENT.split(" ").length > 2) {
+                SlackBot.sendSlackMessage(CHANNEL_ID, "Sorry bro, I feel for you and hope that whatever gremlins or voodoo responsible for it fixes it soon.");
+                return;
+            }
+            out.append("Command name: <args> (Runs on Server/Robot)");
+            for (AbstractCommand command : MessageHandler.commands.values()) {
+                out.append('\n').append(command.getCommand()).append(": ").append(command.getArgs()).append(" (").append(command.isServerSideCommand() ? "Server" : "Robot").append(")");
+            }
+            SlackBot.sendSlackMessage(CHANNEL_ID, out.toString());
         }
     }
 }

@@ -6,7 +6,7 @@
 <title>AbstractCommand.AbstractCommandData</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="dc.created" content="2021-04-26">
-<meta name="description" content="declaration: package: frc.discordbot.commands, class: AbstractCommand, class: AbstractCommandData">
+<meta name="description" content="declaration: package: frc.discordslackbot.commands, class: AbstractCommand, class: AbstractCommandData">
 <meta name="generator" content="javadoc/ClassWriterImpl">
 <link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../script-dir/jquery-ui.css" title="Style">
@@ -88,30 +88,30 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">frc.discordbot.commands</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">frc.discordslackbot.commands</a></div>
 <h1 title="Class AbstractCommand.AbstractCommandData" class="title">Class AbstractCommand.AbstractCommandData</h1>
 </div>
 <div class="contentContainer">
 <div class="inheritance" title="Inheritance Tree">java.lang.Object
-<div class="inheritance">frc.discordbot.commands.AbstractCommand.AbstractCommandData</div>
+<div class="inheritance">frc.discordslackbot.commands.AbstractCommand.AbstractCommandData</div>
 </div>
 <section class="description">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code>java.io.Serializable</code>, <code>java.lang.Comparable&lt;<a href="AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a>&gt;</code></dd>
+<dd><code>java.io.Serializable</code>, <code>java.lang.Comparable&lt;<a href="AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a>&gt;</code></dd>
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="AbstractCommand.GenericCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.GenericCommandData</a></code>, <code><a href="DriveDistanceCommand.DriveDistanceCommandData.html" title="class in frc.discordbot.commands">DriveDistanceCommand.DriveDistanceCommandData</a></code>, <code><a href="RoboPingCommand.RoboCommandData.html" title="class in frc.discordbot.commands">RoboPingCommand.RoboCommandData</a></code>, <code><a href="TurnCommand.TurnCommandData.html" title="class in frc.discordbot.commands">TurnCommand.TurnCommandData</a></code>, <code><a href="Wait5TicksThenReplyCommand.Wait5TicksThenReplyData.html" title="class in frc.discordbot.commands">Wait5TicksThenReplyCommand.Wait5TicksThenReplyData</a></code></dd>
+<dd><code><a href="AbstractCommand.GenericCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.GenericCommandData</a></code>, <code><a href="DriveDistanceCommand.DriveDistanceCommandData.html" title="class in frc.discordslackbot.commands">DriveDistanceCommand.DriveDistanceCommandData</a></code>, <code><a href="RoboPingCommand.RoboCommandData.html" title="class in frc.discordslackbot.commands">RoboPingCommand.RoboCommandData</a></code>, <code><a href="TurnCommand.TurnCommandData.html" title="class in frc.discordslackbot.commands">TurnCommand.TurnCommandData</a></code>, <code><a href="Wait5TicksThenReplyCommand.Wait5TicksThenReplyData.html" title="class in frc.discordslackbot.commands">Wait5TicksThenReplyCommand.Wait5TicksThenReplyData</a></code></dd>
 </dl>
 <dl>
 <dt>Enclosing class:</dt>
-<dd><a href="AbstractCommand.html" title="class in frc.discordbot.commands">AbstractCommand</a></dd>
+<dd><a href="AbstractCommand.html" title="class in frc.discordslackbot.commands">AbstractCommand</a></dd>
 </dl>
 <hr>
 <pre>public abstract static class <span class="typeNameLabel">AbstractCommand.AbstractCommandData</span>
 extends java.lang.Object
-implements java.io.Serializable, java.lang.Comparable&lt;<a href="AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a>&gt;</pre>
+implements java.io.Serializable, java.lang.Comparable&lt;<a href="AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a>&gt;</pre>
 <div class="block">Very important. Holds the base information that a command would need to run when back on the client (for output).
  Computations that require more than the basic stored here should be done on the server or a new class made to
  suit the needs of the situation</div>
@@ -229,7 +229,7 @@ java.lang.String&nbsp;channel_id)</code></th>
 <tbody>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#compareTo(frc.discordbot.commands.AbstractCommand.AbstractCommandData)">compareTo</a></span>&#8203;(<a href="AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;other)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#compareTo(frc.discordbot.commands.AbstractCommand.AbstractCommandData)">compareTo</a></span>&#8203;(<a href="AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;other)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i1">
@@ -344,10 +344,10 @@ java.lang.String&nbsp;channel_id)</span></div>
 <li class="blockList">
 <section class="detail">
 <h3><a id="compareTo(frc.discordbot.commands.AbstractCommand.AbstractCommandData)">compareTo</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">compareTo</span>&#8203;(<span class="arguments"><a href="AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;other)</span></div>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">compareTo</span>&#8203;(<span class="arguments"><a href="AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a>&nbsp;other)</span></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>compareTo</code>&nbsp;in interface&nbsp;<code>java.lang.Comparable&lt;<a href="AbstractCommand.AbstractCommandData.html" title="class in frc.discordbot.commands">AbstractCommand.AbstractCommandData</a>&gt;</code></dd>
+<dd><code>compareTo</code>&nbsp;in interface&nbsp;<code>java.lang.Comparable&lt;<a href="AbstractCommand.AbstractCommandData.html" title="class in frc.discordslackbot.commands">AbstractCommand.AbstractCommandData</a>&gt;</code></dd>
 </dl>
 </section>
 </li>

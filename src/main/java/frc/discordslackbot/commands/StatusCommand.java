@@ -1,5 +1,7 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
+import com.slack.api.bolt.App;
+import frc.discordslackbot.SlackBot;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.robot.Robot;
@@ -54,6 +56,11 @@ public class StatusCommand extends AbstractCommand {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTitle(TITLE).setDescription(REPLY_CONTENT).setAuthor(AUTHOR);
             client.getTextChannelById(CHANNEL_ID).sendMessage(builder.build()).submit();
+        }
+
+        @Override
+        public void doYourWorst(App client) {
+            SlackBot.sendSlackMessage(CHANNEL_ID, REPLY_CONTENT);
         }
     }
 }

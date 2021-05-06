@@ -1,12 +1,12 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Robot;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Shoots a single ball with no regard to safety because screw that. Uses {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse}
- * and {@link frc.discordbot.commands.AbstractCommand.GenericCommandData} for comms
+ * Shoots a single ball with no regard to safety because screw that. Uses {@link frc.discordslackbot.commands.AbstractCommand.GenericCommandResponse}
+ * and {@link frc.discordslackbot.commands.AbstractCommand.GenericCommandData} for comms
  */
 public class ShootCommand extends AbstractCommand {
     @Override

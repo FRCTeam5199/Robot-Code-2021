@@ -1,4 +1,4 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.misc.Chirp;

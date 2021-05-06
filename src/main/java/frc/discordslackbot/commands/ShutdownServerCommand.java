@@ -1,5 +1,7 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
+import com.slack.api.bolt.App;
+import frc.discordslackbot.SlackBot;
 import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +30,7 @@ public class ShutdownServerCommand extends AbstractCommand {
     }
 
     /**
-     * Extra callback needed so {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse} will not suffice.
+     * Extra callback needed so {@link frc.discordslackbot.commands.AbstractCommand.GenericCommandResponse} will not suffice.
      * When replying we must do {@code System.exit(0)}
      */
     public static class ShutdownServerCommandResponse extends AbstractCommandResponse {
@@ -41,6 +43,12 @@ public class ShutdownServerCommand extends AbstractCommand {
             client.getTextChannelById(CHANNEL_ID).sendMessage("I died of cringe").queue(
                     msg -> System.exit(0)
             );
+        }
+
+        @Override
+        public void doYourWorst(App client) {
+            SlackBot.sendSlackMessage(CHANNEL_ID, "I died of cringe");
+            System.exit(0);
         }
     }
 }

@@ -1,5 +1,7 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
+import com.slack.api.bolt.App;
+import frc.discordslackbot.SlackBot;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -64,6 +66,11 @@ public class RoboPingCommand extends AbstractCommand {
         public void doYourWorst(JDA client) {
             client.getTextChannelById(CHANNEL_ID).sendMessage(":outbox_tray: checking ping").queue(
                     msg -> msg.editMessage(":inbox_tray: ping is " + (System.currentTimeMillis() - TIMESTAMP) + "ms").submit());
+        }
+
+        @Override
+        public void doYourWorst(App client) {
+            SlackBot.sendSlackMessage(CHANNEL_ID, ":inbox_tray: ping is " + (System.currentTimeMillis() - TIMESTAMP) + "ms");
         }
     }
 }

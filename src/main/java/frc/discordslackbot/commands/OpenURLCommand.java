@@ -1,5 +1,8 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
+import com.slack.api.bolt.App;
+import com.slack.api.methods.request.chat.ChatPostMessageRequest;
+import frc.discordslackbot.SlackBot;
 import frc.misc.ServerSide;
 import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.NotNull;
@@ -58,9 +61,25 @@ public class OpenURLCommand extends AbstractCommand {
             } else {
                 client.getTextChannelById(CHANNEL_ID).sendMessage("I am simply vibing. Opened url <" + url + ">").queue();
                 try {
+
                     Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start " + url});
                 } catch (IOException e) {
                     System.out.println("Exception: " + e);
+                }
+            }
+        }
+
+        @Override
+        public void doYourWorst(App client) {
+            String newUrl = url.replace("<", "").replace(">", "");
+            if (!newUrl.startsWith("https://") && !newUrl.startsWith("http://")) {
+                SlackBot.sendSlackMessage(CHANNEL_ID, "Invalid url " + newUrl);
+            } else {
+                SlackBot.sendSlackMessage(CHANNEL_ID, "I am simply vibing. Opened url " + newUrl);
+                try {
+                    Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start " + newUrl});
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

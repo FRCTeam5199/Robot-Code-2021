@@ -1,4 +1,4 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.misc.ClientSide;
@@ -24,8 +24,8 @@ public class TurnCommand extends AbstractCommand {
      * #run(AbstractCommandData)}
      *
      * @param message the data associated with this command
-     * @return A {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse} when completed, {@link
-     * frc.discordbot.commands.AbstractCommand.ContinuePersistingCommandResponse#PASS} otherwise.
+     * @return A {@link frc.discordslackbot.commands.AbstractCommand.GenericCommandResponse} when completed, {@link
+     * frc.discordslackbot.commands.AbstractCommand.ContinuePersistingCommandResponse#PASS} otherwise.
      */
     public @NotNull AbstractCommandResponse runChecked(TurnCommandData message) {
         if (DriverStation.getInstance().isDisabled()) {

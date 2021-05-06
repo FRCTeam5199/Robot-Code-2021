@@ -1,4 +1,4 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
 import frc.misc.QuoteOfTheDay;
 import frc.misc.ServerSide;
@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Returns a random quote and replies with {@link frc.discordbot.commands.AbstractCommand.GenericCommandResponse#doYourWorst(JDA)
+ * Returns a random quote and replies with {@link frc.discordslackbot.commands.AbstractCommand.GenericCommandResponse#doYourWorst(JDA)
  * standard callback}
  */
 @ServerSide

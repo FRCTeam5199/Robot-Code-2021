@@ -1,5 +1,7 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
+import com.slack.api.bolt.App;
+import frc.discordslackbot.SlackBot;
 import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,6 +76,11 @@ public class PingCommand extends AbstractCommand {
                 client.getTextChannelById(CHANNEL_ID).sendMessage(":outbox_tray: checking ping").queue(
                         msg -> msg.editMessage(":inbox_tray: ping is " + (System.currentTimeMillis() - start) + "ms").submit());
             }
+        }
+
+        @Override
+        public void doYourWorst(App client) {
+            SlackBot.sendSlackMessage(CHANNEL_ID, "Pong.");
         }
     }
 }

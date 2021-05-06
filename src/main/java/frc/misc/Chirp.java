@@ -4,7 +4,7 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.music.Orchestra;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.discordbot.MessageHandler;
+import frc.discordslackbot.MessageHandler;
 import frc.motors.TalonMotorController;
 import frc.robot.Main;
 import frc.robot.Robot;

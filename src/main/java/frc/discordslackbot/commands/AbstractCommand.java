@@ -1,13 +1,19 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
-import frc.discordbot.DiscordBot;
-import frc.discordbot.MessageHandler;
+import com.slack.api.bolt.App;
+import com.slack.api.methods.request.chat.ChatPostMessageRequest;
+import com.slack.api.methods.response.chat.ChatPostMessageResponse;
+import com.slack.api.model.event.MessageEvent;
+import frc.discordslackbot.DiscordBot;
+import frc.discordslackbot.MessageHandler;
 import frc.misc.ServerSide;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 
 /**
  * The template for a command from a brobot
@@ -91,10 +97,14 @@ public abstract class AbstractCommand implements Serializable {
      * Every command is able to refine what they are sending on the server in order to save resources on the robot.
      * Also, wifi can be an issue so the less that gets sent, the better. By default, uses {@link GenericCommandData}
      *
-     * @param message the message from {@link frc.discordbot.MessageHandler#onMessageReceived(MessageReceivedEvent)}
+     * @param message the message from {@link frc.discordslackbot.MessageHandler#onMessageReceived(MessageReceivedEvent)}
      * @return the required data extracted from the passed data wrapped in a {@link AbstractCommandData packet}
      */
     public AbstractCommandData extractData(MessageReceivedEvent message) {
+        return new GenericCommandData(message);
+    }
+
+    public AbstractCommandData extractData(MessageEvent message) {
         return new GenericCommandData(message);
     }
 
@@ -110,10 +120,14 @@ public abstract class AbstractCommand implements Serializable {
         /**
          * Extracts {@link #CONTENT}, {@link #MESSAGE_ID}, {@link #AUTHOR_ID}, {@link #GUILD_ID}, {@link #CHANNEL_ID}
          *
-         * @param message message as received from {@link frc.discordbot.MessageHandler#onMessageReceived(MessageReceivedEvent)}
+         * @param message message as received from {@link frc.discordslackbot.MessageHandler#onMessageReceived(MessageReceivedEvent)}
          */
         protected AbstractCommandData(MessageReceivedEvent message) {
             this(message.getMessage().getContentRaw(), message.getMessageId(), message.getAuthor().getId(), message.getGuild().getId(), message.getChannel().getId());
+        }
+
+        protected AbstractCommandData(MessageEvent message) {
+            this(URLDecoder.decode(message.getText(), Charset.defaultCharset()), message.getClientMsgId(), message.getUser(), message.getTeam(), message.getChannel());
         }
 
         /**
@@ -156,15 +170,6 @@ public abstract class AbstractCommand implements Serializable {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
 
-        /**
-         * Callback when response is read on server. For example, if need to reply to the original command, or other
-         * post-command server-side processing should be implemented in inheriting classes
-         *
-         * @param client {@link DiscordBot#getBotObject() the bot object}
-         */
-        @ServerSide
-        public abstract void doYourWorst(JDA client);
-
         protected AbstractCommandResponse(AbstractCommandData originalData) {
             CONTENT = originalData.CONTENT;
             MESSAGE_ID = originalData.MESSAGE_ID;
@@ -176,6 +181,17 @@ public abstract class AbstractCommand implements Serializable {
         protected AbstractCommandResponse() {
             CONTENT = MESSAGE_ID = AUTHOR_ID = GUILD_ID = CHANNEL_ID = "";
         }
+
+        /**
+         * Callback when response is read on server. For example, if need to reply to the original command, or other
+         * post-command server-side processing should be implemented in inheriting classes
+         *
+         * @param client {@link DiscordBot#getBotObject() the bot object}
+         */
+        @ServerSide
+        public abstract void doYourWorst(JDA client);
+
+        public abstract void doYourWorst(App client);
 
         @Override
         public int compareTo(AbstractCommandResponse other) {
@@ -210,6 +226,17 @@ public abstract class AbstractCommand implements Serializable {
             if (response.length() > 0)
                 client.getTextChannelById(CHANNEL_ID).sendMessage(response).queue();
         }
+
+        @Override
+        public void doYourWorst(App client) {
+            if (response.length() > 0) {
+                try {
+                    client.client().chatPostMessage(ChatPostMessageRequest.builder().channel(CHANNEL_ID).text(response).build());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -217,6 +244,10 @@ public abstract class AbstractCommand implements Serializable {
      */
     public static class GenericCommandData extends AbstractCommandData {
         public GenericCommandData(MessageReceivedEvent message) {
+            super(message);
+        }
+
+        public GenericCommandData(MessageEvent message) {
             super(message);
         }
     }
@@ -249,6 +280,17 @@ public abstract class AbstractCommand implements Serializable {
         public void doYourWorst(JDA client) {
             if (!responseMessage.equals("")) {
                 client.getTextChannelById(CHANNEL_ID).sendMessage(responseMessage).queue();
+            }
+        }
+
+        @Override
+        public void doYourWorst(App client) {
+            if (!responseMessage.equals("")) {
+                try {
+                    client.client().chatPostMessage(ChatPostMessageRequest.builder().channel(CHANNEL_ID).text(responseMessage).build());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

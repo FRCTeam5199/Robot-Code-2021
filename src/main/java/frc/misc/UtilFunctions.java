@@ -1,5 +1,7 @@
 package frc.misc;
 
+import java.net.InetAddress;
+
 public class UtilFunctions {
     /**
      * Used in  to get the weighted average between two points
@@ -45,5 +47,24 @@ public class UtilFunctions {
             return ((int) (bytes * 10) / 10.0) + "kb";
         }
         return (int) bytes + "b";
+    }
+
+    /**
+     * Ok this doesnt actually detect internet, what it does is sees if it can resolve and ping google
+     *
+     * @return if there is likely a connection to the internet
+     */
+    public static boolean detectedInternet() {
+        try {
+            if (InetAddress.getByName("google.com").isReachable(1000)) {
+                System.out.println("Internet detected !!!!!!!");
+                return true;
+            } else {
+                System.out.println("NO INTERNET DETECTED");
+            }
+        } catch (Exception ignored) {
+            System.out.println("NO INTERNET?");
+        }
+        return false;
     }
 }

@@ -1,4 +1,4 @@
-package frc.discordbot.commands;
+package frc.discordslackbot.commands;
 
 import frc.misc.Chirp;
 import frc.robot.Robot;
