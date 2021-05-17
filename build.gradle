@@ -3,6 +3,7 @@ import edu.wpi.first.gradlerio.GradleRIOPlugin
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2021.2.2"
+    id 'maven'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -44,6 +45,18 @@ repositories {
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
+    }
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/jojo2357/Prime-Number-Library")
+        credentials {
+            username = "Smaltin"
+            password = "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"
+        }
+    }
+
+    flatDir {
+        dirs 'libs'
     }
 }
 
@@ -97,6 +110,8 @@ dependencies {
     implementation("javax.websocket:javax.websocket-api:1.1")
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.17")
     implementation("org.slf4j:slf4j-simple:1.7.30")
+
+    implementation name: "picovoice-1.1.0"
 }
 
 // Simulation configuration (e.g. environment variables).

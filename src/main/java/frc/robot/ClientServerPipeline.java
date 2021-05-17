@@ -232,7 +232,9 @@ public class ClientServerPipeline implements Runnable {
         if (SERVER) {
             if (checkReply()) {
                 AbstractCommand.AbstractCommandResponse reply = readReply();
-                if (reply.GUILD_ID.matches("[^0-9]")) {
+                if (reply.CHANNEL_ID.matches("[^0-9]")) {
+                    readReply().doYourWorst(SlackBot.getBotObject());
+                } else if (reply.CHANNEL_ID.contains("C")){
                     readReply().doYourWorst(SlackBot.getBotObject());
                 } else {
                     readReply().doYourWorst(DiscordBot.getBotObject());

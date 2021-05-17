@@ -1,9 +1,12 @@
 package frc.discordslackbot.commands;
 
 import com.slack.api.bolt.App;
+import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import frc.discordslackbot.SlackBot;
 import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.NotNull;
+
+import java.math.BigInteger;
 
 /**
  * Gets the ping between Discord and Server
@@ -80,7 +83,17 @@ public class PingCommand extends AbstractCommand {
 
         @Override
         public void doYourWorst(App client) {
-            SlackBot.sendSlackMessage(CHANNEL_ID, "Pong.");
+            long start = System.currentTimeMillis();
+            try {
+                ChatPostMessageResponse result = SlackBot.sendSlackMessage(CHANNEL_ID, ":outbox_tray: checking ping", "");
+                if (result.isOk()) {
+                    SlackBot.updateSlackMessage(CHANNEL_ID, result.getTs(), ":inbox_tray: ping is " + (System.currentTimeMillis() - start) + "ms.");
+                } else {
+                    System.out.println("Your Slack bot is cringe, and so are you. Either connect to the internet, or yell at Slack support for a few hours, maybe even days.");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

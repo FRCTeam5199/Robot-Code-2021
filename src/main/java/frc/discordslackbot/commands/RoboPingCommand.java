@@ -1,6 +1,7 @@
 package frc.discordslackbot.commands;
 
 import com.slack.api.bolt.App;
+import com.slack.api.model.event.MessageEvent;
 import frc.discordslackbot.SlackBot;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -34,6 +35,10 @@ public class RoboPingCommand extends AbstractCommand {
     public AbstractCommandData extractData(MessageReceivedEvent message) {
         return new RoboPingCommand.RoboCommandData(message);
     }
+    @Override
+    public AbstractCommandData extractData(MessageEvent message) {
+        return new RoboPingCommand.RoboCommandData(message);
+    }
 
     /**
      * Takes the timestamp when the message is received on the Server
@@ -46,6 +51,10 @@ public class RoboPingCommand extends AbstractCommand {
             TIMESTAMP = System.currentTimeMillis();
         }
 
+        public RoboCommandData(MessageEvent data) {
+            super(data);
+            TIMESTAMP = System.currentTimeMillis();
+        }
     }
 
     /**

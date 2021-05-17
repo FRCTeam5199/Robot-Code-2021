@@ -6,6 +6,7 @@ import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.model.event.MessageEvent;
 import frc.discordslackbot.DiscordBot;
 import frc.discordslackbot.MessageHandler;
+import frc.discordslackbot.SlackBot;
 import frc.misc.ServerSide;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -191,6 +192,7 @@ public abstract class AbstractCommand implements Serializable {
         @ServerSide
         public abstract void doYourWorst(JDA client);
 
+        @ServerSide
         public abstract void doYourWorst(App client);
 
         @Override
@@ -231,7 +233,8 @@ public abstract class AbstractCommand implements Serializable {
         public void doYourWorst(App client) {
             if (response.length() > 0) {
                 try {
-                    client.client().chatPostMessage(ChatPostMessageRequest.builder().channel(CHANNEL_ID).text(response).build());
+                    SlackBot.sendSlackMessage(CHANNEL_ID, response);
+                    //client.client().chatPostMessage(ChatPostMessageRequest.builder().channel(CHANNEL_ID).text(response).build());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

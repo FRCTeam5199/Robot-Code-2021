@@ -61,7 +61,6 @@ public class OpenURLCommand extends AbstractCommand {
             } else {
                 client.getTextChannelById(CHANNEL_ID).sendMessage("I am simply vibing. Opened url <" + url + ">").queue();
                 try {
-
                     Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start " + url});
                 } catch (IOException e) {
                     System.out.println("Exception: " + e);
