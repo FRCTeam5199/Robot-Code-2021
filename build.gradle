@@ -46,18 +46,6 @@ repositories {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
     }
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/jojo2357/Prime-Number-Library")
-        credentials {
-            username = "Smaltin"
-            password = "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"
-        }
-    }
-
-    flatDir {
-        dirs 'libs'
-    }
 }
 
 // Set this to true to enable desktop support.
@@ -110,8 +98,6 @@ dependencies {
     implementation("javax.websocket:javax.websocket-api:1.1")
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.17")
     implementation("org.slf4j:slf4j-simple:1.7.30")
-
-    implementation name: "picovoice-1.1.0"
 }
 
 // Simulation configuration (e.g. environment variables).
