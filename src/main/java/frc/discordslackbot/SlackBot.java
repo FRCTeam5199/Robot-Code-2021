@@ -22,7 +22,6 @@ public class SlackBot {
             try {
                 holder = new App(AppConfig.builder().singleTeamBotToken(DefaultConfig.SLACKBOTKEY).scope("message").build());
 
-
                 holder.event(MessageEvent.class, (req, ctx) -> {
                     MessageHandler.onMessageReceived(req.getEvent());
                     return ctx.ack();

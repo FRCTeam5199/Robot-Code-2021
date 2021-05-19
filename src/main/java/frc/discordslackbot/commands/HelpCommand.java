@@ -92,5 +92,26 @@ public class HelpCommand extends AbstractCommand {
             }
             SlackBot.sendSlackMessage(CHANNEL_ID, out.toString());
         }
+
+        @Override
+        public void doYourWorst() {
+            StringBuilder out = new StringBuilder();
+            if (CONTENT.split(" ").length == 2) {
+                AbstractCommand command = MessageHandler.getCommand(CONTENT.split(" ")[1]);
+                if (command != null) {
+                    System.out.println(command.sendHelp());
+                    return;
+                }
+                out.append("**Could not find command** ").append(CONTENT.split(" ")[1]).append('\n');
+            } else if (CONTENT.split(" ").length > 2) {
+                SlackBot.sendSlackMessage(CHANNEL_ID, "Sorry bro, I feel for you and hope that whatever gremlins or voodoo responsible for it fixes it soon.");
+                return;
+            }
+            out.append("Command name: <args> (Runs on Server/Robot)");
+            for (AbstractCommand command : MessageHandler.commands.values()) {
+                out.append('\n').append(command.getCommand()).append(": ").append(command.getArgs()).append(" (").append(command.isServerSideCommand() ? "Server" : "Robot").append(")");
+            }
+            System.out.println(out);
+        }
     }
 }

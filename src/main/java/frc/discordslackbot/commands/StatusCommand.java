@@ -62,5 +62,10 @@ public class StatusCommand extends AbstractCommand {
         public void doYourWorst(App client) {
             SlackBot.sendSlackMessage(CHANNEL_ID, REPLY_CONTENT);
         }
+
+        @Override
+        public void doYourWorst() {
+            System.out.println(REPLY_CONTENT);
+        }
     }
 }

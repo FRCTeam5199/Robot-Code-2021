@@ -82,5 +82,19 @@ public class OpenURLCommand extends AbstractCommand {
                 }
             }
         }
+
+        @Override
+        public void doYourWorst() {
+            if (!url.startsWith("https://") && !url.startsWith("http://")) {
+                System.out.println("Invalid url " + url);
+            } else {
+                System.out.println("I am simply vibing. Opened url " + url);
+                try {
+                    Runtime.getRuntime().exec(new String[]{"cmd", "/c", "start " + url});
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

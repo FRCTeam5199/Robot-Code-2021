@@ -1,5 +1,6 @@
 package frc.discordslackbot.commands;
 
+import com.slack.api.model.event.MessageEvent;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.drive.auton.Point;
 import frc.misc.ClientSide;
@@ -7,6 +8,9 @@ import frc.misc.ServerSide;
 import frc.robot.Robot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This very nice command will make the robot drive! Similar to a point-to-point auton, this command does not steer, it
@@ -80,6 +84,15 @@ public class DriveDistanceCommand extends AbstractCommand {
         return new DriveDistanceCommandData(message);
     }
 
+    public AbstractCommandData extractData(MessageEvent message) {
+        return new DriveDistanceCommandData(message);
+    }
+
+    @Override
+    public AbstractCommandData extractData(String message) {
+        return new DriveDistanceCommandData(message);
+    }
+
     /**
      * Holds onto special data like {@link #startingPoint} and parses {@link #requestedSpeed} and {@link
      * #requestedTravel} from the message
@@ -97,13 +110,34 @@ public class DriveDistanceCommand extends AbstractCommand {
             super(message);
         }
 
+        protected DriveDistanceCommandData(MessageEvent message){
+            super(message);
+        }
+
+        protected DriveDistanceCommandData(String message) {
+            super(message);
+        }
+
         @ClientSide
         private void reInit() {
             startingPoint = Robot.driver.guidance.getLocation();
             initialYaw = Robot.driver.guidance.imu.relativeYaw();
-            requestedTravel = CONTENT.split(" ").length > 1 ? Double.parseDouble(CONTENT.split(" ")[1]) : requestedTravel;
-            requestedSpeed = CONTENT.split(" ").length > 2 ? Double.parseDouble(CONTENT.split(" ")[2]) : requestedSpeed;
-            requestedTurn = CONTENT.split(" ").length > 3 ? Double.parseDouble(CONTENT.split(" ")[3]) : requestedTurn;
+            if (CHANNEL_ID.equals("VOICE")) {
+                Matcher matcher = Pattern.compile("\\d").matcher(CONTENT);
+                if (matcher.find()) {
+                    requestedTravel = Double.parseDouble(matcher.group());
+                    if (matcher.find()) {
+                        requestedSpeed = Double.parseDouble(matcher.group());
+                        if (matcher.find()){
+                            requestedTurn = Double.parseDouble(matcher.group());
+                        }
+                    }
+                }
+            }else {
+                requestedTravel = CONTENT.split(" ").length > 1 ? Double.parseDouble(CONTENT.split(" ")[1]) : requestedTravel;
+                requestedSpeed = CONTENT.split(" ").length > 2 ? Double.parseDouble(CONTENT.split(" ")[2]) : requestedSpeed;
+                requestedTurn = CONTENT.split(" ").length > 3 ? Double.parseDouble(CONTENT.split(" ")[3]) : requestedTurn;
+            }
             System.out.println("Going " + requestedTravel + " at " + requestedSpeed + " with " + requestedTurn);
         }
     }

@@ -135,6 +135,17 @@ public class MessageHandler extends ListenerAdapter {
         }
     }
 
+    public static void onMessageRecieved(String mess) {
+        System.out.println("Processing " + mess);
+        if (!(mess.startsWith("robot") || mess.startsWith("brobot"))){
+            System.out.println("Blue banner? I did not hear the trigger word");
+            return;
+        }
+        if (getCommand(mess.split(" ")[1]) != null) {
+            System.out.println("I would have run " + getCommand(mess.split(" ")[1]).getCommand());
+        } else System.out.println("No command found");
+    }
+
     public MessageHandler() {
 
     }

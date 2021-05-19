@@ -109,6 +109,10 @@ public abstract class AbstractCommand implements Serializable {
         return new GenericCommandData(message);
     }
 
+    public AbstractCommandData extractData(String message) {
+        return new GenericCommandData(message);
+    }
+
     /**
      * Very important. Holds the base information that a command would need to run when back on the client (for output).
      * Computations that require more than the basic stored here should be done on the server or a new class made to
@@ -129,6 +133,10 @@ public abstract class AbstractCommand implements Serializable {
 
         protected AbstractCommandData(MessageEvent message) {
             this(URLDecoder.decode(message.getText(), Charset.defaultCharset()), message.getClientMsgId(), message.getUser(), message.getTeam(), message.getChannel());
+        }
+
+        protected AbstractCommandData(String message) {
+            this(message, "VOICE", "VOICE", "VOICE", "VOICE");
         }
 
         /**
@@ -167,7 +175,7 @@ public abstract class AbstractCommand implements Serializable {
      * Very important. Holds the information that the server need to execute according to the {@link #doYourWorst(JDA)
      * callback}. For generic commands that dont need anything, use {@link GenericCommandResponse}
      */
-    public static abstract class AbstractCommandResponse implements Serializable, Comparable<AbstractCommandResponse> {
+    public static abstract class AbstractCommandResponse implements Serializable {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
 
@@ -195,10 +203,7 @@ public abstract class AbstractCommand implements Serializable {
         @ServerSide
         public abstract void doYourWorst(App client);
 
-        @Override
-        public int compareTo(AbstractCommandResponse other) {
-            return MESSAGE_ID.compareTo(other.MESSAGE_ID);
-        }
+        public abstract void doYourWorst();
     }
 
     /**
@@ -240,6 +245,12 @@ public abstract class AbstractCommand implements Serializable {
                 }
             }
         }
+
+        @Override
+        public void doYourWorst() {
+            if (response.length() > 0)
+                System.out.println(response);
+        }
     }
 
     /**
@@ -251,6 +262,10 @@ public abstract class AbstractCommand implements Serializable {
         }
 
         public GenericCommandData(MessageEvent message) {
+            super(message);
+        }
+
+        public GenericCommandData(String message) {
             super(message);
         }
     }
@@ -294,6 +309,13 @@ public abstract class AbstractCommand implements Serializable {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        }
+
+        @Override
+        public void doYourWorst() {
+            if (!responseMessage.equals("")) {
+                System.out.println(responseMessage);
             }
         }
     }

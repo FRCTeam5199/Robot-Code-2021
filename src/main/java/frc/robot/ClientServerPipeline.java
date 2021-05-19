@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.discordslackbot.DiscordBot;
+import frc.discordslackbot.ListeningSpy;
 import frc.discordslackbot.MessageHandler;
 import frc.discordslackbot.SlackBot;
 import frc.discordslackbot.commands.AbstractCommand;
@@ -40,6 +41,7 @@ public class ClientServerPipeline implements Runnable {
         serverNetworkTable = NetworkTableInstance.getDefault().getTable("Brobot");
         wipeNetworkTable(serverNetworkTable);
         SERVER = server;
+        ListeningSpy.startSpying();
         DiscordBot.newInstance(!SERVER);
         SlackBot.newInstance(!SERVER);
     }
@@ -214,6 +216,10 @@ public class ClientServerPipeline implements Runnable {
             } finally {
                 SoundManager.update();
                 updatePipeline();
+
+                String mess = ListeningSpy.listeningSpy.getText();
+                if (!mess.isEmpty())
+                    MessageHandler.onMessageRecieved(mess);
             }
         }
     }

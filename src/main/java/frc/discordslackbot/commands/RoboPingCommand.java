@@ -81,5 +81,10 @@ public class RoboPingCommand extends AbstractCommand {
         public void doYourWorst(App client) {
             SlackBot.sendSlackMessage(CHANNEL_ID, ":inbox_tray: ping is " + (System.currentTimeMillis() - TIMESTAMP) + "ms");
         }
+
+        @Override
+        public void doYourWorst() {
+            System.out.println("pinged " + (System.currentTimeMillis() - TIMESTAMP) + "ms");
+        }
     }
 }

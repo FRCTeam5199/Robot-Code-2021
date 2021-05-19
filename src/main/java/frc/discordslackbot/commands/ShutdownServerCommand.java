@@ -50,5 +50,11 @@ public class ShutdownServerCommand extends AbstractCommand {
             SlackBot.sendSlackMessage(CHANNEL_ID, "I died of cringe");
             System.exit(0);
         }
+
+        @Override
+        public void doYourWorst() {
+            System.out.println("I died of cringe");
+            System.exit(0);
+        }
     }
 }

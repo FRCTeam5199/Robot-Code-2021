@@ -95,5 +95,10 @@ public class PingCommand extends AbstractCommand {
                 e.printStackTrace();
             }
         }
+
+        @Override
+        public void doYourWorst() {
+            System.out.println("Ping pong you're wrong");
+        }
     }
 }
