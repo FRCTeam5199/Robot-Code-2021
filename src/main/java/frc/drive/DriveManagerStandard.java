@@ -5,16 +5,10 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.util.Units;
-import frc.controllers.BaseController;
-import frc.controllers.BopItBasicController;
-import frc.controllers.ControllerEnums;
+import frc.controllers.*;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
-import frc.controllers.DrumTimeController;
-import frc.controllers.SixButtonGuitarController;
-import frc.controllers.WiiController;
-import frc.controllers.XBoxController;
 import frc.misc.InitializationFailureException;
 import frc.misc.PID;
 import frc.misc.SubsystemStatus;
@@ -169,6 +163,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
      */
     @Override
     public void updateGeneric() {
+        super.updateGeneric();
         MotorDisconnectedIssue.handleIssue(this, leaderL, leaderR);
         MotorDisconnectedIssue.handleIssue(this, followerL, followerR);
         setBrake(!coast.getBoolean(false));
@@ -182,6 +177,12 @@ public class DriveManagerStandard extends AbstractDriveManager {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onControlChange() {
+        //recreate controllers
+        initMisc();
     }
 
     @Override
@@ -346,17 +347,20 @@ public class DriveManagerStandard extends AbstractDriveManager {
             case EXPERIMENTAL:
                 controller = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, XBoxController.class);
                 break;
+            case FLIGHT_STICK:
+                controller = BaseController.createOrGet(1, JoystickController.class);
+                break;
             case MARIO_KART:
-                controller = BaseController.createOrGet(0, WiiController.class);
+                controller = BaseController.createOrGet(4, WiiController.class);
                 break;
             case GUITAR:
-                controller = BaseController.createOrGet(0, SixButtonGuitarController.class);
+                controller = BaseController.createOrGet(6, SixButtonGuitarController.class);
                 break;
             case DRUM_TIME:
-                controller = BaseController.createOrGet(0, DrumTimeController.class);
+                controller = BaseController.createOrGet(5, DrumTimeController.class);
                 break;
             case BOP_IT:
-                controller = BaseController.createOrGet(0, BopItBasicController.class);
+                controller = BaseController.createOrGet(3, BopItBasicController.class);
                 break;
             default:
                 throw new UnsupportedOperationException("There is no UI configuration for " + robotSettings.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");

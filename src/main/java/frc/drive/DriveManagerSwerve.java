@@ -140,6 +140,11 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     }
 
     @Override
+    protected void onControlChange() {
+        //pass
+    }
+
+    @Override
     public void initTest() {
         resetSteeringEncoders();
         setupSteeringEncoders();

@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.ballstuff.intaking.Intake;
+import frc.ballstuff.shooting.Shooter;
+import frc.drive.AbstractDriveManager;
 import frc.motors.AbstractMotorController;
 
 import java.util.HashMap;
@@ -47,6 +50,7 @@ public class UserInterface {
             DRIVE_CALIBRATE_PID = DRIVE_PID_LAYOUT.add("Tune PID", false).withWidget(BuiltInWidgets.kToggleSwitch),
             DRIVE_COAST = DRIVE_TAB.add("Coast", false).withWidget(BuiltInWidgets.kToggleSwitch),
             DRIVE_RUMBLE_NEAR_MAX = DRIVE_TAB.add("Rumble Near Max", false).withWidget(BuiltInWidgets.kToggleSwitch),
+
     /*
     //PDP TODO make pdp widget (kPowerDistributionPanel)
     PDP_TOTAL_ENERGY_ON_THIS_BOOT = PDP_TAB.add("Total energy on this boot", 0),
@@ -71,8 +75,12 @@ public class UserInterface {
     public static final HashMap<AbstractMotorController, SimpleWidget> motorTemperatureMonitors = new HashMap<>();
 
     //STATIC STUFF
-    static SimpleWidget SHOOTER_RPM;
-    static ComplexWidget MUSIC_SELECTOR, PDP_DISPLAY;
+    public static SimpleWidget SHOOTER_RPM;
+    public static ComplexWidget MUSIC_SELECTOR, PDP_DISPLAY,
+            DRIVE_STYLE_CHOOSER = DRIVE_TAB.add("Drive Styles", AbstractDriveManager.DriveControlStyles.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser),
+            SHOOTING_STYLE_CHOOSER = SHOOTER_TAB.add("Shooting Styles", Shooter.ShootingControlStyles.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser),
+            INTAKE_STYLE_CHOOSER = SHOOTER_TAB.add("Intaking Styles", Intake.IntakeControlStyles.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser)
+    ;
 
     //SmartDashboard
     public static void smartDashboardPutNumber(String key, double value) {

@@ -1,6 +1,8 @@
 package frc.ballstuff.shooting;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.ballstuff.intaking.Intake;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
 import frc.controllers.ButtonPanelController;
@@ -10,6 +12,7 @@ import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickButtons;
 import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
+import frc.drive.AbstractDriveManager;
 import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.misc.SubsystemStatus;
@@ -20,6 +23,8 @@ import frc.motors.TalonMotorController;
 import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.vision.camera.IVision;
+
+import java.util.Objects;
 
 import static frc.robot.Robot.hopper;
 import static frc.robot.Robot.robotSettings;
@@ -63,10 +68,10 @@ public class Shooter implements ISubsystem {
                 panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
                 break;
             case BOP_IT:
-                joystickController = BaseController.createOrGet(1, BopItBasicController.class);
+                joystickController = BaseController.createOrGet(3, BopItBasicController.class);
                 break;
             case XBOX_CONTROLLER:
-                joystickController = BaseController.createOrGet(1, XBoxController.class);
+                joystickController = BaseController.createOrGet(0, XBoxController.class);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
@@ -113,6 +118,25 @@ public class Shooter implements ISubsystem {
      */
     @Override
     public void updateGeneric() throws IllegalStateException {
+        if (ShootingControlStyles.getSendableChooser().getSelected() != null && robotSettings.SHOOTER_CONTROL_STYLE != ShootingControlStyles.getSendableChooser().getSelected()) {
+            robotSettings.SHOOTER_CONTROL_STYLE = ShootingControlStyles.getSendableChooser().getSelected();
+            switch (robotSettings.SHOOTER_CONTROL_STYLE) {
+                case ACCURACY_2021:
+                case SPEED_2021:
+                case STANDARD:
+                    joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                    panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
+                    break;
+                case BOP_IT:
+                    joystickController = BaseController.createOrGet(3, BopItBasicController.class);
+                    break;
+                case XBOX_CONTROLLER:
+                    joystickController = BaseController.createOrGet(0, XBoxController.class);
+                    break;
+                default:
+                    throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
+            }
+        }
         MotorDisconnectedIssue.handleIssue(this, leader, follower);
         updateShuffleboard();
         switch (robotSettings.SHOOTER_CONTROL_STYLE) {
@@ -388,6 +412,17 @@ public class Shooter implements ISubsystem {
      * Used to change how the input is handled by the {@link Shooter} and what kind of controller to use
      */
     public enum ShootingControlStyles {
-        STANDARD, BOP_IT, XBOX_CONTROLLER, ACCURACY_2021, SPEED_2021
+        STANDARD, BOP_IT, XBOX_CONTROLLER, ACCURACY_2021, SPEED_2021;
+
+        private static SendableChooser<ShootingControlStyles> myChooser;
+
+        public static SendableChooser<ShootingControlStyles> getSendableChooser() {
+            return Objects.requireNonNullElseGet(myChooser, () -> {
+                myChooser = new SendableChooser<>();
+                for (ShootingControlStyles style : ShootingControlStyles.values())
+                    myChooser.addOption(style.name(), style);
+                return myChooser;
+            });
+        }
     }
 }

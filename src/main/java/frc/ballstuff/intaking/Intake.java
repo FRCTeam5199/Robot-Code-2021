@@ -1,10 +1,13 @@
 package frc.ballstuff.intaking;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.controllers.BaseController;
+import frc.controllers.BopItBasicController;
 import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
 import frc.controllers.DrumTimeController;
 import frc.controllers.JoystickController;
+import frc.drive.AbstractDriveManager;
 import frc.drive.auton.AutonType;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
@@ -13,6 +16,8 @@ import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
+
+import java.util.Objects;
 
 import static frc.robot.Robot.robotSettings;
 
@@ -42,7 +47,10 @@ public class Intake implements ISubsystem {
                 joystick = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
                 break;
             case BOPIT:
-                joystick = BaseController.createOrGet(0, DrumTimeController.class);
+                joystick = BaseController.createOrGet(3, BopItBasicController.class);
+                break;
+            case DRUM_TIME:
+                joystick = BaseController.createOrGet(5, DrumTimeController.class);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
@@ -81,6 +89,22 @@ public class Intake implements ISubsystem {
 
     @Override
     public void updateGeneric() {
+        if (IntakeControlStyles.getSendableChooser().getSelected() != null && robotSettings.INTAKE_CONTROL_STYLE != IntakeControlStyles.getSendableChooser().getSelected()) {
+            robotSettings.INTAKE_CONTROL_STYLE = IntakeControlStyles.getSendableChooser().getSelected();
+            switch (robotSettings.INTAKE_CONTROL_STYLE) {
+                case STANDARD:
+                    joystick = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                    break;
+                case BOPIT:
+                    joystick = BaseController.createOrGet(3, BopItBasicController.class);
+                    break;
+                case DRUM_TIME:
+                    joystick = BaseController.createOrGet(5, DrumTimeController.class);
+                    break;
+                default:
+                    throw new IllegalStateException("There is no UI configuration for " + robotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
+            }
+        }
         MotorDisconnectedIssue.handleIssue(this, intakeMotor);
         intakeMotor.moveAtPercent(0.8 * intakeMult);
         switch (robotSettings.INTAKE_CONTROL_STYLE) {
@@ -159,6 +183,17 @@ public class Intake implements ISubsystem {
      * Determines how the {@link Intake} uses user input and what controllers to use
      */
     public enum IntakeControlStyles {
-        STANDARD, BOPIT
+        STANDARD, BOPIT, DRUM_TIME;
+
+        private static SendableChooser<IntakeControlStyles> myChooser;
+
+        public static SendableChooser<IntakeControlStyles> getSendableChooser() {
+            return Objects.requireNonNullElseGet(myChooser, () -> {
+                myChooser = new SendableChooser<>();
+                for (IntakeControlStyles style : IntakeControlStyles.values())
+                    myChooser.addOption(style.name(), style);
+                return myChooser;
+            });
+        }
     }
 }

@@ -2,11 +2,15 @@ package frc.drive;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.ballstuff.shooting.Shooter;
 import frc.misc.ISubsystem;
 import frc.misc.UserInterface;
 import frc.robot.Robot;
 import frc.telemetry.AbstractRobotTelemetry;
 import frc.telemetry.RobotTelemetryStandard;
+
+import java.util.Objects;
 
 import static frc.robot.Robot.robotSettings;
 
@@ -25,6 +29,16 @@ public abstract class AbstractDriveManager implements ISubsystem {
      * Required by {@link RobotTelemetryStandard} in order to reset position
      */
     public abstract void resetDriveEncoders();
+
+    @Override
+    public void updateGeneric() {
+        if (DriveControlStyles.getSendableChooser().getSelected() != null && robotSettings.DRIVE_STYLE != DriveControlStyles.getSendableChooser().getSelected()) {
+            robotSettings.DRIVE_STYLE = DriveControlStyles.getSendableChooser().getSelected();
+            onControlChange();
+        }
+    }
+
+    protected abstract void onControlChange();
 
     /**
      * Required by {@link frc.drive.auton.AbstractAutonManager} for stopping the robot on auton completion
@@ -93,6 +107,18 @@ public abstract class AbstractDriveManager implements ISubsystem {
         MARIO_KART,
         DRUM_TIME,
         GUITAR,
-        BOP_IT
+        BOP_IT,
+        FLIGHT_STICK;
+
+        private static SendableChooser<DriveControlStyles> myChooser;
+
+        public static SendableChooser<DriveControlStyles> getSendableChooser() {
+            return Objects.requireNonNullElseGet(myChooser, () -> {
+                myChooser = new SendableChooser<>();
+                for (DriveControlStyles style : DriveControlStyles.values())
+                    myChooser.addOption(style.name(), style);
+                return myChooser;
+            });
+        }
     }
 }
