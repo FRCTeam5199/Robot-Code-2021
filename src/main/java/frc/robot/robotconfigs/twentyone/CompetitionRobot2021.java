@@ -15,7 +15,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
     public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
-        ENABLE_TURRET = false;
+        ENABLE_TURRET = true;
         ENABLE_SHOOTER = true;
         ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;

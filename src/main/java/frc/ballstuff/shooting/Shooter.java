@@ -120,6 +120,8 @@ public class Shooter implements ISubsystem {
     public void updateGeneric() throws IllegalStateException {
         if (ShootingControlStyles.getSendableChooser().getSelected() != null && robotSettings.SHOOTER_CONTROL_STYLE != ShootingControlStyles.getSendableChooser().getSelected()) {
             robotSettings.SHOOTER_CONTROL_STYLE = ShootingControlStyles.getSendableChooser().getSelected();
+            if (Robot.turret != null)
+                Robot.turret.updateControl();
             switch (robotSettings.SHOOTER_CONTROL_STYLE) {
                 case ACCURACY_2021:
                 case SPEED_2021:
@@ -188,7 +190,7 @@ public class Shooter implements ISubsystem {
             }
             case BOP_IT: {
                 if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN) {
-                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                    ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
                 } else {
                     shooting = false;
                     ballsShot = 0;

@@ -142,9 +142,9 @@ public class DriveManagerStandard extends AbstractDriveManager {
                 break;
             }
             case BOP_IT: {
-                double driveamt = (controller.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN ? 1 : 0) * (controller.get(ControllerEnums.BopItButtons.BOPIT) == ButtonStatus.DOWN ? -1 : 1);
-                double turnamt = (controller.get(ControllerEnums.BopItButtons.TWISTIT) == ButtonStatus.DOWN ? 1 : 0) * (controller.get(ControllerEnums.BopItButtons.BOPIT) == ButtonStatus.DOWN ? -1 : 1);
-                System.out.println("bop it says: " + driveamt + ", " + turnamt);
+                double driveamt = (controller.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN ? 1 * driveScaleMult.getDouble(robotSettings.DRIVE_SCALE) : 0) * (controller.get(ControllerEnums.BopItButtons.BOPIT) == ButtonStatus.DOWN ? -1 : 1);
+                double turnamt = (controller.get(ControllerEnums.BopItButtons.TWISTIT) == ButtonStatus.DOWN ? 1 * driveScaleMult.getDouble(robotSettings.DRIVE_SCALE) : 0) * (controller.get(ControllerEnums.BopItButtons.BOPIT) == ButtonStatus.DOWN ? -1 : 1);
+                //System.out.println("bop it says: " + driveamt + ", " + turnamt);
                 drive(driveamt, turnamt);
                 break;
             }

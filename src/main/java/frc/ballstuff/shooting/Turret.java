@@ -24,7 +24,7 @@ import static frc.robot.Robot.robotSettings;
  * Turret refers to the shooty thing that spinny spinny in the yaw direction
  */
 public class Turret implements ISubsystem {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     public AbstractMotorController turretMotor;
     public IVision visionCamera;
     private BaseController joy, panel;
@@ -52,7 +52,7 @@ public class Turret implements ISubsystem {
                 panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
                 break;
             case BOP_IT:
-                joy = BaseController.createOrGet(1, BopItBasicController.class);
+                joy = BaseController.createOrGet(3, BopItBasicController.class);
                 break;
             default:
                 throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");
@@ -163,6 +163,7 @@ public class Turret implements ISubsystem {
                 }
                 break;
             case BOP_IT:
+                //System.out.println("Shooting bop it");
                 if (joy.get(ControllerEnums.BopItButtons.TWISTIT) == ButtonStatus.DOWN)
                     omegaSetpoint = scan();
                 break;
@@ -246,9 +247,10 @@ public class Turret implements ISubsystem {
      * @return an integer to determine the direction of turret scan
      */
     private double scan() {
-        if (turretDegrees() >= robotSettings.TURRET_MAX_POS - 40) {
+        if (scanDirection == 1 && turretDegrees() >= robotSettings.TURRET_MAX_POS - 40){
             scanDirection = -1;
-        } else if (turretDegrees() <= robotSettings.TURRET_MAX_POS + 40) {
+        }
+        if (scanDirection == -1 && turretDegrees() <= robotSettings.TURRET_MIN_POS + 40) {
             scanDirection = 1;
         }
         return scanDirection;
@@ -306,5 +308,21 @@ public class Turret implements ISubsystem {
      */
     public void setTelemetry(AbstractRobotTelemetry telem) {
         guidance = telem;
+    }
+
+    public void updateControl() {
+        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
+            case ACCURACY_2021:
+            case SPEED_2021:
+            case STANDARD:
+                joy = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
+                break;
+            case BOP_IT:
+                joy = BaseController.createOrGet(3, BopItBasicController.class);
+                break;
+            default:
+                throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");
+        }
     }
 }
