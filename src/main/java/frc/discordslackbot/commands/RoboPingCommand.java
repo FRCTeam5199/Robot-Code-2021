@@ -35,6 +35,7 @@ public class RoboPingCommand extends AbstractCommand {
     public AbstractCommandData extractData(MessageReceivedEvent message) {
         return new RoboPingCommand.RoboCommandData(message);
     }
+
     @Override
     public AbstractCommandData extractData(MessageEvent message) {
         return new RoboPingCommand.RoboCommandData(message);

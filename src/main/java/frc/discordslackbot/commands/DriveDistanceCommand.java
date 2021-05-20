@@ -29,7 +29,8 @@ public class DriveDistanceCommand extends AbstractCommand {
      * #run(AbstractCommandData)}
      *
      * @param message the data associated with this command
-     * @return A {@link frc.discordslackbot.commands.AbstractCommand.GenericCommandResponse} when completed, null otherwise.
+     * @return A {@link frc.discordslackbot.commands.AbstractCommand.GenericCommandResponse} when completed, null
+     * otherwise.
      */
     public AbstractCommandResponse runChecked(DriveDistanceCommandData message) {
         if (DriverStation.getInstance().isDisabled()) {
@@ -110,7 +111,7 @@ public class DriveDistanceCommand extends AbstractCommand {
             super(message);
         }
 
-        protected DriveDistanceCommandData(MessageEvent message){
+        protected DriveDistanceCommandData(MessageEvent message) {
             super(message);
         }
 
@@ -128,12 +129,12 @@ public class DriveDistanceCommand extends AbstractCommand {
                     requestedTravel = Double.parseDouble(matcher.group());
                     if (matcher.find()) {
                         requestedSpeed = Double.parseDouble(matcher.group());
-                        if (matcher.find()){
+                        if (matcher.find()) {
                             requestedTurn = Double.parseDouble(matcher.group());
                         }
                     }
                 }
-            }else {
+            } else {
                 requestedTravel = CONTENT.split(" ").length > 1 ? Double.parseDouble(CONTENT.split(" ")[1]) : requestedTravel;
                 requestedSpeed = CONTENT.split(" ").length > 2 ? Double.parseDouble(CONTENT.split(" ")[2]) : requestedSpeed;
                 requestedTurn = CONTENT.split(" ").length > 3 ? Double.parseDouble(CONTENT.split(" ")[3]) : requestedTurn;

@@ -13,7 +13,6 @@ import frc.drive.auton.galacticsearch.GalacticSearchPaths;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.robot.Robot;
-import frc.telemetry.AbstractRobotTelemetry;
 
 import java.io.IOException;
 import java.util.HashMap;

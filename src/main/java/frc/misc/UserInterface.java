@@ -79,8 +79,7 @@ public class UserInterface {
     public static ComplexWidget MUSIC_SELECTOR, PDP_DISPLAY,
             DRIVE_STYLE_CHOOSER = DRIVE_TAB.add("Drive Styles", AbstractDriveManager.DriveControlStyles.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser),
             SHOOTING_STYLE_CHOOSER = SHOOTER_TAB.add("Shooting Styles", Shooter.ShootingControlStyles.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser),
-            INTAKE_STYLE_CHOOSER = SHOOTER_TAB.add("Intaking Styles", Intake.IntakeControlStyles.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser)
-    ;
+            INTAKE_STYLE_CHOOSER = SHOOTER_TAB.add("Intaking Styles", Intake.IntakeControlStyles.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser);
 
     //SmartDashboard
     public static void smartDashboardPutNumber(String key, double value) {

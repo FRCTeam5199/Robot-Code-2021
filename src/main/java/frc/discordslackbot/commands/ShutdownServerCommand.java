@@ -30,8 +30,8 @@ public class ShutdownServerCommand extends AbstractCommand {
     }
 
     /**
-     * Extra callback needed so {@link frc.discordslackbot.commands.AbstractCommand.GenericCommandResponse} will not suffice.
-     * When replying we must do {@code System.exit(0)}
+     * Extra callback needed so {@link frc.discordslackbot.commands.AbstractCommand.GenericCommandResponse} will not
+     * suffice. When replying we must do {@code System.exit(0)}
      */
     public static class ShutdownServerCommandResponse extends AbstractCommandResponse {
         public ShutdownServerCommandResponse(AbstractCommandData data) {

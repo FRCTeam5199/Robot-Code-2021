@@ -128,23 +128,6 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     }
 
     @Override
-    public void updateGeneric() {
-        MotorDisconnectedIssue.handleIssue(this, driverFL.driver);
-        MotorDisconnectedIssue.handleIssue(this, driverFL.steering);
-        MotorDisconnectedIssue.handleIssue(this, driverBL.driver);
-        MotorDisconnectedIssue.handleIssue(this, driverBL.steering);
-        MotorDisconnectedIssue.handleIssue(this, driverFR.driver);
-        MotorDisconnectedIssue.handleIssue(this, driverFR.steering);
-        MotorDisconnectedIssue.handleIssue(this, driverBR.driver);
-        MotorDisconnectedIssue.handleIssue(this, driverBR.steering);
-    }
-
-    @Override
-    protected void onControlChange() {
-        //pass
-    }
-
-    @Override
     public void initTest() {
         resetSteeringEncoders();
         setupSteeringEncoders();
@@ -259,6 +242,23 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverFL.driver.resetEncoder();
         driverBR.driver.resetEncoder();
         driverBL.driver.resetEncoder();
+    }
+
+    @Override
+    public void updateGeneric() {
+        MotorDisconnectedIssue.handleIssue(this, driverFL.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverFL.steering);
+        MotorDisconnectedIssue.handleIssue(this, driverBL.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverBL.steering);
+        MotorDisconnectedIssue.handleIssue(this, driverFR.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverFR.steering);
+        MotorDisconnectedIssue.handleIssue(this, driverBR.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverBR.steering);
+    }
+
+    @Override
+    protected void onControlChange() {
+        //pass
     }
 
     @Override

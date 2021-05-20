@@ -4,6 +4,7 @@ import com.slack.api.model.event.MessageEvent;
 import frc.discordslackbot.commands.*;
 import frc.misc.ClientSide;
 import frc.misc.ServerSide;
+import frc.robot.ClientServerPipeline;
 import frc.robot.Main;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -137,13 +138,33 @@ public class MessageHandler extends ListenerAdapter {
 
     public static void onMessageRecieved(String mess) {
         System.out.println("Processing " + mess);
-        if (!(mess.startsWith("robot") || mess.startsWith("brobot"))){
+        if (!(mess.startsWith("robot") || mess.startsWith("brobot"))) {
             System.out.println("Blue banner? I did not hear the trigger word");
             return;
         }
         if (getCommand(mess.split(" ")[1]) != null) {
             System.out.println("I would have run " + getCommand(mess.split(" ")[1]).getCommand());
+            Main.pipeline.sendData(getCommand(mess.split(" ")[1]).extractData(mess));
         } else System.out.println("No command found");
+    }
+
+    public static void onMessageReceived(MessageEvent message) {
+        if (message.getChannel().equals("") || message.getBotId() != null) {
+            return;
+        }
+        if (message.getText().charAt(0) == '!' && getCommand(message.getText()) != null) {
+            System.out.println("Recieved Message: " + message.getText());
+            if (!LISTENING) {
+                AbstractCommand command = getCommand(message.getText());
+                if (command.isServerSideCommand()) {
+                    System.out.println("Running serverside " + command.extractData(message));
+                    command.run(command.extractData(message)).doYourWorst(SlackBot.getBotObject());
+                } else {
+                    System.out.println("Sending to bot " + command.extractData(message));
+                    Main.pipeline.sendData(command.extractData(message));
+                }
+            }
+        }
     }
 
     public MessageHandler() {
@@ -179,25 +200,6 @@ public class MessageHandler extends ListenerAdapter {
                 }
             } else
                 throw new IllegalStateException("How did you get here as a client?");
-        }
-    }
-
-    public static void onMessageReceived(MessageEvent message) {
-        if (message.getChannel().equals("") || message.getBotId() != null){
-            return;
-        }
-        if (message.getText().charAt(0) == '!' && getCommand(message.getText()) != null) {
-            System.out.println("Recieved Message: " + message.getText());
-            if (!LISTENING){
-                AbstractCommand command = getCommand(message.getText());
-                if (command.isServerSideCommand()) {
-                    System.out.println("Running serverside " + command.extractData(message));
-                    command.run(command.extractData(message)).doYourWorst(SlackBot.getBotObject());
-                } else {
-                    System.out.println("Sending to bot " + command.extractData(message));
-                    Main.pipeline.sendData(command.extractData(message));
-                }
-            }
         }
     }
 }

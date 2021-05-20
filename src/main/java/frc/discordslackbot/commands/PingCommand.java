@@ -6,8 +6,6 @@ import frc.discordslackbot.SlackBot;
 import net.dv8tion.jda.api.JDA;
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigInteger;
-
 /**
  * Gets the ping between Discord and Server
  */

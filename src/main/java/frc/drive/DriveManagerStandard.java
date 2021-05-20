@@ -158,33 +158,6 @@ public class DriveManagerStandard extends AbstractDriveManager {
 
     }
 
-    /**
-     * updates telemetry and if calibrating pid, does that
-     */
-    @Override
-    public void updateGeneric() {
-        super.updateGeneric();
-        MotorDisconnectedIssue.handleIssue(this, leaderL, leaderR);
-        MotorDisconnectedIssue.handleIssue(this, followerL, followerR);
-        setBrake(!coast.getBoolean(false));
-        if (calibratePid.getBoolean(false)) {
-            PID readPid = new PID(P.getDouble(robotSettings.DRIVEBASE_PID.getP()), I.getDouble(robotSettings.DRIVEBASE_PID.getI()), D.getDouble(robotSettings.DRIVEBASE_PID.getD()), F.getDouble(robotSettings.DRIVEBASE_PID.getF()));
-            if (!lastPID.equals(readPid)) {
-                lastPID = readPid;
-                setPID(lastPID);
-                if (robotSettings.DEBUG && DEBUG) {
-                    System.out.println("Set drive pid to " + lastPID);
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void onControlChange() {
-        //recreate controllers
-        initMisc();
-    }
-
     @Override
     public void initTest() {
         initGeneric();
@@ -225,6 +198,33 @@ public class DriveManagerStandard extends AbstractDriveManager {
     public void driveWithChassisSpeeds(ChassisSpeeds speeds) {
         DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
         driveMPS(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+    }
+
+    /**
+     * updates telemetry and if calibrating pid, does that
+     */
+    @Override
+    public void updateGeneric() {
+        super.updateGeneric();
+        MotorDisconnectedIssue.handleIssue(this, leaderL, leaderR);
+        MotorDisconnectedIssue.handleIssue(this, followerL, followerR);
+        setBrake(!coast.getBoolean(false));
+        if (calibratePid.getBoolean(false)) {
+            PID readPid = new PID(P.getDouble(robotSettings.DRIVEBASE_PID.getP()), I.getDouble(robotSettings.DRIVEBASE_PID.getI()), D.getDouble(robotSettings.DRIVEBASE_PID.getD()), F.getDouble(robotSettings.DRIVEBASE_PID.getF()));
+            if (!lastPID.equals(readPid)) {
+                lastPID = readPid;
+                setPID(lastPID);
+                if (robotSettings.DEBUG && DEBUG) {
+                    System.out.println("Set drive pid to " + lastPID);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onControlChange() {
+        //recreate controllers
+        initMisc();
     }
 
     @Override

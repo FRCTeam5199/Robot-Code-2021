@@ -3,7 +3,6 @@ package frc.drive;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.ballstuff.shooting.Shooter;
 import frc.misc.ISubsystem;
 import frc.misc.UserInterface;
 import frc.robot.Robot;
@@ -30,16 +29,6 @@ public abstract class AbstractDriveManager implements ISubsystem {
      */
     public abstract void resetDriveEncoders();
 
-    @Override
-    public void updateGeneric() {
-        if (DriveControlStyles.getSendableChooser().getSelected() != null && robotSettings.DRIVE_STYLE != DriveControlStyles.getSendableChooser().getSelected()) {
-            robotSettings.DRIVE_STYLE = DriveControlStyles.getSendableChooser().getSelected();
-            onControlChange();
-        }
-    }
-
-    protected abstract void onControlChange();
-
     /**
      * Required by {@link frc.drive.auton.AbstractAutonManager} for stopping the robot on auton completion
      *
@@ -63,6 +52,16 @@ public abstract class AbstractDriveManager implements ISubsystem {
             guidance.resetOdometry();
         }
     }
+
+    @Override
+    public void updateGeneric() {
+        if (DriveControlStyles.getSendableChooser().getSelected() != null && robotSettings.DRIVE_STYLE != DriveControlStyles.getSendableChooser().getSelected()) {
+            robotSettings.DRIVE_STYLE = DriveControlStyles.getSendableChooser().getSelected();
+            onControlChange();
+        }
+    }
+
+    protected abstract void onControlChange();
 
     public String getSubsystemName() {
         return "Drivetrain";

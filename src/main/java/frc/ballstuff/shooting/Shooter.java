@@ -2,7 +2,6 @@ package frc.ballstuff.shooting;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.ballstuff.intaking.Intake;
 import frc.controllers.BaseController;
 import frc.controllers.BopItBasicController;
 import frc.controllers.ButtonPanelController;
@@ -12,7 +11,6 @@ import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickButtons;
 import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
-import frc.drive.AbstractDriveManager;
 import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.misc.SubsystemStatus;
@@ -189,11 +187,12 @@ public class Shooter implements ISubsystem {
                 break;
             }
             case BOP_IT: {
-                if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN) {
+                if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN || singleShot) {
                     ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
                 } else {
                     shooting = false;
                     ballsShot = 0;
+                    shooterDefault();
                 }
                 break;
             }

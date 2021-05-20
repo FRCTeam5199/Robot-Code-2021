@@ -44,19 +44,7 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void init() throws UnsupportedOperationException {
-        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
-            case ACCURACY_2021:
-            case SPEED_2021:
-            case STANDARD:
-                joy = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
-                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
-                break;
-            case BOP_IT:
-                joy = BaseController.createOrGet(3, BopItBasicController.class);
-                break;
-            default:
-                throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");
-        }
+        createMotors();
 
         switch (robotSettings.TURRET_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
@@ -76,6 +64,31 @@ public class Turret implements ISubsystem {
         turretMotor.setInverted(false).setPid(robotSettings.TURRET_PID).setBrake(true);
 
         setBrake(true);
+    }
+
+    private void createMotors() {
+        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
+            case ACCURACY_2021:
+            case SPEED_2021:
+            case STANDARD:
+                joy = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
+                break;
+            case BOP_IT:
+                joy = BaseController.createOrGet(3, BopItBasicController.class);
+                break;
+            default:
+                throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");
+        }
+    }
+
+    /**
+     * Tells the motor if it should coast or slam da brakes
+     *
+     * @param brake should i brake when off? (Y/N)
+     */
+    public void setBrake(boolean brake) {
+        turretMotor.setBrake(brake);
     }
 
     @Override
@@ -247,7 +260,7 @@ public class Turret implements ISubsystem {
      * @return an integer to determine the direction of turret scan
      */
     private double scan() {
-        if (scanDirection == 1 && turretDegrees() >= robotSettings.TURRET_MAX_POS - 40){
+        if (scanDirection == 1 && turretDegrees() >= robotSettings.TURRET_MAX_POS - 40) {
             scanDirection = -1;
         }
         if (scanDirection == -1 && turretDegrees() <= robotSettings.TURRET_MIN_POS + 40) {
@@ -293,15 +306,6 @@ public class Turret implements ISubsystem {
     }
 
     /**
-     * Tells the motor if it should coast or slam da brakes
-     *
-     * @param brake should i brake when off? (Y/N)
-     */
-    public void setBrake(boolean brake) {
-        turretMotor.setBrake(brake);
-    }
-
-    /**
      * If there is a telem object, set it here
      *
      * @param telem the RobotTelemtry object in use by the drivetrian
@@ -311,18 +315,6 @@ public class Turret implements ISubsystem {
     }
 
     public void updateControl() {
-        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
-            case ACCURACY_2021:
-            case SPEED_2021:
-            case STANDARD:
-                joy = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
-                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
-                break;
-            case BOP_IT:
-                joy = BaseController.createOrGet(3, BopItBasicController.class);
-                break;
-            default:
-                throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");
-        }
+        createMotors();
     }
 }

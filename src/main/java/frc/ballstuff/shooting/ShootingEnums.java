@@ -54,6 +54,19 @@ public enum ShootingEnums {
         shooter.setSpeed(4200);
     }),
 
+    FIRE_SINGLE_ASAP(shooter -> {
+        if (robotSettings.ENABLE_HOPPER) {
+            if (shooter.isAtSpeed()) {
+                hopper.setIndexer(true);
+            }
+            if (!hopper.isIndexed()) {
+                shooter.singleShot = false;
+                hopper.setAgitator(false);
+            }
+        }
+        shooter.setSpeed(4200);
+    }),
+
     FIRE_TIMED(shooter -> {
         shooter.setSpeed(4400);
         if (Shooter.DEBUG) {

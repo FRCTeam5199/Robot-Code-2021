@@ -1,13 +1,9 @@
 package frc.discordslackbot;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.CharBuffer;
 
 import static frc.misc.UtilFunctions.detectedInternet;
 
@@ -15,7 +11,7 @@ public class ListeningSpy {
     public static ListeningSpy listeningSpy;
     private BufferedReader is;
     private Process spy;
-    private int readBytes = 0;
+    private final int readBytes = 0;
 
     public static void startSpying() {
         if (detectedInternet()) {

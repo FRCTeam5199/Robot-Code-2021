@@ -1,7 +1,6 @@
 package frc.discordslackbot.commands;
 
 import com.slack.api.bolt.App;
-import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import frc.discordslackbot.SlackBot;
 import frc.misc.ServerSide;
 import net.dv8tion.jda.api.JDA;

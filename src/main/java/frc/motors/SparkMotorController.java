@@ -113,11 +113,6 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void moveAtPercent(double percent) {
-        motor.set(percent);
-    }
-
-    @Override
     public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
         if (motor.setOpenLoopRampRate(timeToMax) != CANError.kOk)
             if (!Robot.SECOND_TRY)
@@ -169,6 +164,11 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public boolean isFailed() {
         return motor.getFaults() != 0 || failureFlag;
+    }
+
+    @Override
+    public void moveAtPercent(double percent) {
+        motor.set(percent);
     }
 
     @Override

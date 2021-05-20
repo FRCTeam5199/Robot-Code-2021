@@ -2,7 +2,6 @@ package frc.discordslackbot.commands;
 
 import com.slack.api.bolt.App;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
-import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.model.event.MessageEvent;
 import frc.discordslackbot.DiscordBot;
 import frc.discordslackbot.MessageHandler;
@@ -131,14 +130,6 @@ public abstract class AbstractCommand implements Serializable {
             this(message.getMessage().getContentRaw(), message.getMessageId(), message.getAuthor().getId(), message.getGuild().getId(), message.getChannel().getId());
         }
 
-        protected AbstractCommandData(MessageEvent message) {
-            this(URLDecoder.decode(message.getText(), Charset.defaultCharset()), message.getClientMsgId(), message.getUser(), message.getTeam(), message.getChannel());
-        }
-
-        protected AbstractCommandData(String message) {
-            this(message, "VOICE", "VOICE", "VOICE", "VOICE");
-        }
-
         /**
          * Universal constructor, dont make public
          *
@@ -154,6 +145,14 @@ public abstract class AbstractCommand implements Serializable {
             AUTHOR_ID = author_id;
             GUILD_ID = guild_id;
             CHANNEL_ID = channel_id;
+        }
+
+        protected AbstractCommandData(MessageEvent message) {
+            this(URLDecoder.decode(message.getText(), Charset.defaultCharset()), message.getClientMsgId(), message.getUser(), message.getTeam(), message.getChannel());
+        }
+
+        protected AbstractCommandData(String message) {
+            this(message, "VOICE", "VOICE", "VOICE", "VOICE");
         }
 
         @Override
@@ -179,18 +178,6 @@ public abstract class AbstractCommand implements Serializable {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
 
-        protected AbstractCommandResponse(AbstractCommandData originalData) {
-            CONTENT = originalData.CONTENT;
-            MESSAGE_ID = originalData.MESSAGE_ID;
-            AUTHOR_ID = originalData.AUTHOR_ID;
-            GUILD_ID = originalData.GUILD_ID;
-            CHANNEL_ID = originalData.CHANNEL_ID;
-        }
-
-        protected AbstractCommandResponse() {
-            CONTENT = MESSAGE_ID = AUTHOR_ID = GUILD_ID = CHANNEL_ID = "";
-        }
-
         /**
          * Callback when response is read on server. For example, if need to reply to the original command, or other
          * post-command server-side processing should be implemented in inheriting classes
@@ -204,6 +191,18 @@ public abstract class AbstractCommand implements Serializable {
         public abstract void doYourWorst(App client);
 
         public abstract void doYourWorst();
+
+        protected AbstractCommandResponse(AbstractCommandData originalData) {
+            CONTENT = originalData.CONTENT;
+            MESSAGE_ID = originalData.MESSAGE_ID;
+            AUTHOR_ID = originalData.AUTHOR_ID;
+            GUILD_ID = originalData.GUILD_ID;
+            CHANNEL_ID = originalData.CHANNEL_ID;
+        }
+
+        protected AbstractCommandResponse() {
+            CONTENT = MESSAGE_ID = AUTHOR_ID = GUILD_ID = CHANNEL_ID = "";
+        }
     }
 
     /**
