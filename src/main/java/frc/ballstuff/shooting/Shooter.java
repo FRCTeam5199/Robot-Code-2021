@@ -2,15 +2,10 @@ package frc.ballstuff.shooting;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.controllers.BaseController;
-import frc.controllers.BopItBasicController;
-import frc.controllers.ButtonPanelController;
-import frc.controllers.ControllerEnums;
+import frc.controllers.*;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickButtons;
-import frc.controllers.JoystickController;
-import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
 import frc.misc.PID;
 import frc.misc.SubsystemStatus;
@@ -120,29 +115,14 @@ public class Shooter implements ISubsystem {
             robotSettings.SHOOTER_CONTROL_STYLE = ShootingControlStyles.getSendableChooser().getSelected();
             if (Robot.turret != null)
                 Robot.turret.updateControl();
-            switch (robotSettings.SHOOTER_CONTROL_STYLE) {
-                case ACCURACY_2021:
-                case SPEED_2021:
-                case STANDARD:
-                    joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
-                    panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
-                    break;
-                case BOP_IT:
-                    joystickController = BaseController.createOrGet(3, BopItBasicController.class);
-                    break;
-                case XBOX_CONTROLLER:
-                    joystickController = BaseController.createOrGet(0, XBoxController.class);
-                    break;
-                default:
-                    throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
-            }
+            createControllers();
         }
         MotorDisconnectedIssue.handleIssue(this, leader, follower);
         updateShuffleboard();
         switch (robotSettings.SHOOTER_CONTROL_STYLE) {
             case STANDARD: {
                 if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
-                    ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                    ShootingEnums.FIRE_SOLID_SPEED_FLIGHTSTICK.shoot(this);
                     isConstSpeed = false;
                 } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
@@ -161,7 +141,7 @@ public class Shooter implements ISubsystem {
                 if (Robot.articulatedHood.unTargeted) {
                     shooterDefault();
                 } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
-                    ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                    ShootingEnums.FIRE_SOLID_SPEED_FLIGHTSTICK.shoot(this);
                     isConstSpeed = false;
                 } else if (singleShot) {
                     ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
@@ -179,22 +159,78 @@ public class Shooter implements ISubsystem {
                     //ShootingEnums.FIRE_TIMED.shoot(this);
                     isConstSpeed = false;
                 } else if (panel.get(ButtonPanelButtons.HOPPER_IN) == ButtonStatus.DOWN) {
-                    ShootingEnums.FIRE_SOLID_SPEED.shoot(this);
+                    ShootingEnums.FIRE_SOLID_SPEED_FLIGHTSTICK.shoot(this);
                     isConstSpeed = false;
                 } else {
                     //shooterDefault();
                 }
                 break;
             }
+            case FLIGHT_STICK: {
+                if (joystickController.get(JoystickButtons.TWO) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_SOLID_SPEED_FLIGHTSTICK.shoot(this);
+                } else if (joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                    isConstSpeed = false;
+                } else {
+                    if (robotSettings.ENABLE_HOPPER) {
+                        hopper.setAll(false);
+                    }
+                    leader.moveAtPercent(0);
+                    shooting = false;
+                    ballsShot = 0;
+                }
+                break;
+            }
             case BOP_IT: {
                 if (joystickController.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN || singleShot) {
                     ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
+                    isConstSpeed = false;
                 } else {
                     shooting = false;
                     ballsShot = 0;
                     shooterDefault();
                 }
                 break;
+            }
+            case GUITAR: {
+                if (joystickController.get(ControllerEnums.SixKeyGuitarButtons.HERO_POWER) == ButtonStatus.DOWN || singleShot) {
+                    ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
+                    isConstSpeed = false;
+                } else {
+                    shooting = false;
+                    ballsShot = 0;
+                    shooterDefault();
+                }
+                break;
+            }
+
+            case WII: {
+                if (joystickController.get(ControllerEnums.WiiButton.TWO) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_SOLID_SPEED_WII.shoot(this);
+                    isConstSpeed = false;
+                } else if (joystickController.get(ControllerEnums.WiiButton.ONE) == ButtonStatus.DOWN || singleShot) {
+                    ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
+                    isConstSpeed = false;
+                } else {
+                    shooting = false;
+                    ballsShot = 0;
+                    shooterDefault();
+                }
+            }
+
+            case DRUM_TIME: {
+                if (joystickController.get(ControllerEnums.DrumButton.A) == ButtonStatus.DOWN) {
+                    ShootingEnums.FIRE_SOLID_SPEED_DRUMS.shoot(this);
+                    isConstSpeed = false;
+                } else if (joystickController.get(ControllerEnums.DrumButton.ONE) == ButtonStatus.DOWN || singleShot) {
+                    ShootingEnums.FIRE_SINGLE_SHOT.shoot(this);
+                    isConstSpeed = false;
+                } else {
+                    shooting = false;
+                    ballsShot = 0;
+                    shooterDefault();
+                }
             }
             case XBOX_CONTROLLER: {
                 if (joystickController.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1) {
@@ -208,6 +244,35 @@ public class Shooter implements ISubsystem {
             }
             default:
                 throw new IllegalStateException("This UI not implemented for this controller");
+        }
+    }
+
+    public void createControllers() {
+        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
+            case ACCURACY_2021:
+            case SPEED_2021:
+            case STANDARD:
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
+            case FLIGHT_STICK:
+                joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                break;
+            case BOP_IT:
+                joystickController = BaseController.createOrGet(3, BopItBasicController.class);
+                break;
+            case XBOX_CONTROLLER:
+                joystickController = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, XBoxController.class);
+                break;
+            case DRUM_TIME:
+                joystickController = BaseController.createOrGet(5, DrumTimeController.class);
+                break;
+            case WII:
+                joystickController = BaseController.createOrGet(4, WiiController.class);
+                break;
+            case GUITAR:
+                joystickController = BaseController.createOrGet(6, SixButtonGuitarController.class);
+                break;
+            default:
+                throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
     }
 
@@ -413,7 +478,7 @@ public class Shooter implements ISubsystem {
      * Used to change how the input is handled by the {@link Shooter} and what kind of controller to use
      */
     public enum ShootingControlStyles {
-        STANDARD, BOP_IT, XBOX_CONTROLLER, ACCURACY_2021, SPEED_2021;
+        STANDARD, BOP_IT, XBOX_CONTROLLER, ACCURACY_2021, SPEED_2021, WII, DRUM_TIME, GUITAR, FLIGHT_STICK;
 
         private static SendableChooser<ShootingControlStyles> myChooser;
 

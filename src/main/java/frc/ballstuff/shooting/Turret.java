@@ -1,12 +1,8 @@
 package frc.ballstuff.shooting;
 
-import frc.controllers.BaseController;
-import frc.controllers.BopItBasicController;
-import frc.controllers.ButtonPanelController;
-import frc.controllers.ControllerEnums;
+import frc.controllers.*;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
-import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
@@ -44,7 +40,7 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void init() throws UnsupportedOperationException {
-        createMotors();
+        createControllers();
 
         switch (robotSettings.TURRET_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
@@ -66,7 +62,7 @@ public class Turret implements ISubsystem {
         setBrake(true);
     }
 
-    private void createMotors() {
+    private void createControllers() {
         switch (robotSettings.SHOOTER_CONTROL_STYLE) {
             case ACCURACY_2021:
             case SPEED_2021:
@@ -77,8 +73,17 @@ public class Turret implements ISubsystem {
             case BOP_IT:
                 joy = BaseController.createOrGet(3, BopItBasicController.class);
                 break;
+            case DRUM_TIME:
+                joy = BaseController.createOrGet(5, DrumTimeController.class);
+                break;
+            case WII:
+                joy = BaseController.createOrGet(4, WiiController.class);
+                break;
+            case GUITAR:
+                joy = BaseController.createOrGet(6, SixButtonGuitarController.class);
             default:
                 throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");
+                //TODO add Xbox and (standalone) Flightstick
         }
     }
 
@@ -121,6 +126,12 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
+        if (Shooter.ShootingControlStyles.getSendableChooser().getSelected() != null && robotSettings.SHOOTER_CONTROL_STYLE != Shooter.ShootingControlStyles.getSendableChooser().getSelected()) {
+            robotSettings.SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.getSendableChooser().getSelected();
+            if (Robot.shooter != null)
+                Robot.shooter.createControllers();
+            createControllers();
+        }
         MotorDisconnectedIssue.handleIssue(this, turretMotor);
         if (robotSettings.DEBUG && DEBUG) {
             System.out.println("Turret degrees:" + turretDegrees());
@@ -139,9 +150,11 @@ public class Turret implements ISubsystem {
                 break;
         }
         switch (robotSettings.SHOOTER_CONTROL_STYLE) {
-            case ACCURACY_2021:
-            case SPEED_2021:
-            case STANDARD:
+            case ACCURACY_2021: {
+            }
+            case SPEED_2021: {
+            }
+            case STANDARD: {
                 if (robotSettings.ENABLE_VISION) {
                     if (panel.get(ButtonPanelButtons.BUDDY_CLIMB) == ButtonStatus.DOWN) {
                         visionCamera.setLedMode(IVision.VisionLEDMode.BLINK); //haha suffer
@@ -175,11 +188,32 @@ public class Turret implements ISubsystem {
                     omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * -2;
                 }
                 break;
+            }
             case BOP_IT:
                 //System.out.println("Shooting bop it");
                 if (joy.get(ControllerEnums.BopItButtons.TWISTIT) == ButtonStatus.DOWN)
                     omegaSetpoint = scan();
                 break;
+            case DRUM_TIME: {
+                if (joy.get(ControllerEnums.DrumButton.PEDAL) == ButtonStatus.DOWN)
+                    omegaSetpoint = scan();
+                break;
+            }
+            case WII: {
+                double rot = joy.get(ControllerEnums.WiiAxis.LEFT_RIGHT_NUMBERPAD);
+                if (Math.abs(rot) >= 0.1) {
+                    omegaSetpoint = rot;
+                }
+                break;
+            }
+            case GUITAR: {
+                if (joy.get(ControllerEnums.SixKeyGuitarButtons.ONE) == ButtonStatus.DOWN) {
+                    omegaSetpoint = 1;
+                } else if (joy.get(ControllerEnums.SixKeyGuitarButtons.THREE) == ButtonStatus.DOWN) {
+                    omegaSetpoint = -1;
+                }
+                break;
+            }
         }
 
         if (isSafe() && !Robot.shooter.isShooting()) {
@@ -315,6 +349,6 @@ public class Turret implements ISubsystem {
     }
 
     public void updateControl() {
-        createMotors();
+        createControllers();
     }
 }
