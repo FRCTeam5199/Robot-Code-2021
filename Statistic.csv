@@ -58,9 +58,9 @@ src/main/java/frc/robot/Robot.java,298 (2.7%),248,83.2%,29,9.7%,21,7.0%
 src/main/java/frc/robot/ClientServerPipeline.java,475 (4.3%),266,56.0%,179,37.7%,30,6.3%
 src/main/java/frc/robot/robotconfigs/DefaultConfig.java,207 (1.9%),155,74.9%,33,15.9%,19,9.2%
 src/main/java/frc/robot/robotconfigs/twentyone/PracticeRobot2021.java,118 (1.1%),88,74.6%,11,9.3%,19,16.1%
-src/main/java/frc/robot/robotconfigs/twentyone/CompetitionRobot2021.java,117 (1.1%),91,77.8%,10,8.5%,16,13.7%
+src/main/java/frc/robot/robotconfigs/twentyone/CompetitionRobot2021.java,116 (1.0%),90,77.6%,10,8.6%,16,13.8%
 src/main/java/frc/robot/robotconfigs/twentyone/Swerve2021.java,124 (1.1%),95,76.6%,11,8.9%,18,14.5%
-src/main/java/frc/robot/robotconfigs/twentytwenty/Robot2020.java,117 (1.1%),90,76.9%,9,7.7%,18,15.4%
+src/main/java/frc/robot/robotconfigs/twentytwenty/Robot2020.java,116 (1.0%),89,76.7%,9,7.8%,18,15.5%
 src/main/java/frc/vision/camera/BallPhoton.java,181 (1.6%),107,59.1%,47,26.0%,27,14.9%
 src/main/java/frc/vision/camera/GoalPhoton.java,177 (1.6%),107,60.5%,43,24.3%,27,15.3%
 src/main/java/frc/vision/camera/GoalLimelight.java,154 (1.4%),121,78.6%,6,3.9%,27,17.5%
@@ -96,4 +96,4 @@ src/main/java/frc/discordslackbot/commands/SkipSongCommand.java,32 (0.3%),25,78.
 src/main/java/frc/discordslackbot/commands/ShootCommand.java,37 (0.3%),28,75.7%,4,10.8%,5,13.5%
 src/main/java/frc/discordslackbot/commands/AbstractCommand.java,321 (2.9%),167,52.0%,113,35.2%,41,12.8%
 src/main/java/frc/discordslackbot/commands/QueueCommand.java,29 (0.3%),21,72.4%,4,13.8%,4,13.8%
-Total,11110,7485,0.6737173717371737,2259,0.20333033303330333,1366,0.12295229522952295
+Total,11108,7483,0.6736586244148361,2259,0.2033669427439683,1366,0.12297443284119554

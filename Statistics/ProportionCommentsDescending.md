@@ -82,9 +82,9 @@
 |[ArticulatedHood.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/ballstuff/shooting/ArticulatedHood.java)|312 (2.8%)|261|83.7%|28|9.0%|23|7.4%|
 |[Swerve2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/robotconfigs/twentyone/Swerve2021.java)|124 (1.1%)|95|76.6%|11|8.9%|18|14.5%|
 |[PingCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/discordslackbot/commands/PingCommand.java)|102 (0.9%)|83|81.4%|9|8.8%|10|9.8%|
-|[CompetitionRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/robotconfigs/twentyone/CompetitionRobot2021.java)|117 (1.1%)|91|77.8%|10|8.5%|16|13.7%|
+|[CompetitionRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/robotconfigs/twentyone/CompetitionRobot2021.java)|116 (1.0%)|90|77.6%|10|8.6%|16|13.8%|
+|[Robot2020.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/robotconfigs/twentytwenty/Robot2020.java)|116 (1.0%)|89|76.7%|9|7.8%|18|15.5%|
 |[PlaySongCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/discordslackbot/commands/PlaySongCommand.java)|39 (0.4%)|31|79.5%|3|7.7%|5|12.8%|
-|[Robot2020.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/robotconfigs/twentytwenty/Robot2020.java)|117 (1.1%)|90|76.9%|9|7.7%|18|15.4%|
 |[SparkMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/motors/SparkMotorController.java)|195 (1.8%)|159|81.5%|14|7.2%|22|11.3%|
 |[TalonMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/motors/TalonMotorController.java)|179 (1.6%)|145|81.0%|12|6.7%|22|12.3%|
 |[IMUNonOpIssue.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/selfdiagnostics/IMUNonOpIssue.java)|46 (0.4%)|36|78.3%|3|6.5%|7|15.2%|
@@ -98,4 +98,4 @@
 |[VictorMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/motors/VictorMotorController.java)|151 (1.4%)|125|82.8%|5|3.3%|21|13.9%|
 |[ListeningSpy.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/discordslackbot/ListeningSpy.java)|55 (0.5%)|47|85.5%|0|0.0%|8|14.5%|
 |[SlackBot.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/discordslackbot/SlackBot.java)|73 (0.7%)|62|84.9%|0|0.0%|11|15.1%|
-|Total (97)|11110|7485|67.4%|2259| 20.3%|1366|12.3%|
+|Total (97)|11108|7483|67.4%|2259| 20.3%|1366|12.3%|

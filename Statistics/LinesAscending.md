@@ -63,8 +63,8 @@
 |[UserInterface.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/misc/UserInterface.java)|109 (1.0%)|78|71.6%|19|17.4%|12|11.0%|
 |[Alarms.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/gpws/Alarms.java)|109 (1.0%)|54|49.5%|45|41.3%|10|9.2%|
 |[AbstractIMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/telemetry/imu/AbstractIMU.java)|114 (1.0%)|63|55.3%|36|31.6%|15|13.2%|
-|[CompetitionRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/robotconfigs/twentyone/CompetitionRobot2021.java)|117 (1.1%)|91|77.8%|10|8.5%|16|13.7%|
-|[Robot2020.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/robotconfigs/twentytwenty/Robot2020.java)|117 (1.1%)|90|76.9%|9|7.7%|18|15.4%|
+|[CompetitionRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/robotconfigs/twentyone/CompetitionRobot2021.java)|116 (1.0%)|90|77.6%|10|8.6%|16|13.8%|
+|[Robot2020.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/robotconfigs/twentytwenty/Robot2020.java)|116 (1.0%)|89|76.7%|9|7.8%|18|15.5%|
 |[HelpCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/discordslackbot/commands/HelpCommand.java)|117 (1.1%)|95|81.2%|13|11.1%|9|7.7%|
 |[PracticeRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/robotconfigs/twentyone/PracticeRobot2021.java)|118 (1.1%)|88|74.6%|11|9.3%|19|16.1%|
 |[AbstractDriveManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/drive/AbstractDriveManager.java)|123 (1.1%)|70|56.9%|34|27.6%|19|15.4%|
@@ -98,4 +98,4 @@
 |[DriveManagerStandard.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/drive/DriveManagerStandard.java)|393 (3.5%)|278|70.7%|80|20.4%|35|8.9%|
 |[ClientServerPipeline.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/robot/ClientServerPipeline.java)|475 (4.3%)|266|56.0%|179|37.7%|30|6.3%|
 |[Shooter.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src/main/java/frc/ballstuff/shooting/Shooter.java)|494 (4.4%)|390|78.9%|66|13.4%|38|7.7%|
-|Total (97)|11110|7485|67.4%|2259| 20.3%|1366|12.3%|
+|Total (97)|11108|7483|67.4%|2259| 20.3%|1366|12.3%|
