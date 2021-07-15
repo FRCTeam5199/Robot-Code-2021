@@ -9,13 +9,14 @@ import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.ArticulatedHood;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
+import frc.discordslackbot.MessageHandler;
 import frc.drive.AbstractDriveManager;
-import frc.drive.DriveBases;
 import frc.drive.DriveManagerStandard;
 import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.misc.Chirp;
+import frc.misc.ClientSide;
 import frc.misc.ISubsystem;
 import frc.misc.LEDs;
 import frc.misc.QuoteOfTheDay;
@@ -28,21 +29,18 @@ import frc.robot.robotconfigs.twentyone.PracticeRobot2021;
 import frc.robot.robotconfigs.twentyone.Swerve2021;
 import frc.robot.robotconfigs.twentytwenty.Robot2020;
 import frc.selfdiagnostics.ISimpleIssue;
+import frc.selfdiagnostics.IssueHandler;
+import frc.selfdiagnostics.MotorDisconnectedIssue;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Welcome. Please enjoy your stay here in programmer fun time land. And remember, IntelliJ is king
  */
+@ClientSide
 public class Robot extends TimedRobot {
-    /**
-     * No son, I refuse to make a new, unseeded random everytime we want a new song. Besides, we have a random at home
-     * already so you don't need another one
-     */
-    public static final Random RANDOM = new Random(System.currentTimeMillis());
     /**
      * If you change this ONE SINGULAR VARIABLE the ENTIRE CONFIG WILL CHANGE. Use this to select which robot you are
      * using from the list under robotconfigs
@@ -71,16 +69,21 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() throws IllegalStateException {
         getRestartProximity();
-        getSettings();
+        robotSettings = getSettings();
         robotSettings.printMappings();
         robotSettings.printToggles();
         robotSettings.printNumbers();
         UserInterface.initRobot();
+        Main.pipeline = ClientServerPipeline.getClient();
+
         if (robotSettings.ENABLE_DRIVE) {
-            if (robotSettings.DRIVE_BASE == DriveBases.STANDARD)
+            if (robotSettings.DRIVE_BASE == AbstractDriveManager.DriveBases.STANDARD)
                 driver = new DriveManagerStandard();
-            else if (robotSettings.DRIVE_BASE == DriveBases.SWIVEL)
+            else if (robotSettings.DRIVE_BASE == AbstractDriveManager.DriveBases.SWIVEL)
                 driver = new DriveManagerSwerve();
+        }
+        if (robotSettings.ENABLE_LEDS) {
+            leds = new LEDs();
         }
         if (robotSettings.ENABLE_INTAKE) {
             intake = new Intake();
@@ -101,7 +104,7 @@ public class Robot extends TimedRobot {
         if (robotSettings.ENABLE_MUSIC) {
             chirp = new Chirp();
         }
-        if (robotSettings.ENABLE_DRIVE) {
+        if (robotSettings.ENABLE_DRIVE && robotSettings.ENABLE_IMU) {
             switch (robotSettings.AUTON_TYPE) {
                 case GALACTIC_SEARCH:
                     autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
@@ -110,7 +113,7 @@ public class Robot extends TimedRobot {
                     autonManager = new frc.drive.auton.followtrajectory.AutonManager(Trajectories.SLALOM2, driver);//Trajectories.TEST_PATH, driver);
                     break;
                 case GALACTIC_SCAM:
-                    autonManager = new frc.drive.auton.galacticsearchscam.AutonManager(driver);
+                    autonManager = new frc.drive.auton.galacticsearchtest.AutonManager(driver);
                     break;
             }
         }
@@ -119,8 +122,9 @@ public class Robot extends TimedRobot {
         }
 
         for (AbstractMotorController motor : AbstractMotorController.motorList) {
+            MotorDisconnectedIssue.handleIssue(driver, motor);
             if (motor.getMotorTemperature() > 5) {
-                UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", 80)));
+                UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", Robot.robotSettings.OVERHEAT_THRESHOLD)));
             }
         }
         String quote = QuoteOfTheDay.getRandomQuote();
@@ -151,24 +155,21 @@ public class Robot extends TimedRobot {
     /**
      * Loads settings based on the id of the robot.
      *
+     * @return the settings for this robot based on the preferences
      * @see DefaultConfig
      */
-    private static void getSettings() {
+    private static DefaultConfig getSettings() {
         String hostName = preferences.getString("hostname", "Default");
         System.out.println("I am " + hostName);
         switch (hostName) {
             case "2020-Comp":
-                robotSettings = new Robot2020();
-                break;
+                return new Robot2020();
             case "2021-Prac":
-                robotSettings = new PracticeRobot2021();
-                break;
+                return new PracticeRobot2021();
             case "2021-Comp":
-                robotSettings = new CompetitionRobot2021();
-                break;
+                return new CompetitionRobot2021();
             case "2021-Swivel":
-                robotSettings = new Swerve2021();
-                break;
+                return new Swerve2021();
             default:
                 //preferences.putString("hostname", "2021-Comp");
                 //settingsFile = new CompetitionRobot2021();
@@ -187,6 +188,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        AbstractMotorController.resetAllMotors();
         for (ISubsystem system : subsystems) {
             system.initAuton();
         }
@@ -194,6 +196,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        AbstractMotorController.resetAllMotors();
         for (ISubsystem system : subsystems) {
             system.initTeleop();
         }
@@ -201,6 +204,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
+        AbstractMotorController.resetAllMotors();
         for (ISubsystem system : subsystems) {
             system.initTest();
         }
@@ -230,7 +234,7 @@ public class Robot extends TimedRobot {
             throw new RuntimeException("Deleted deploy dir contents");
         }
         if (robotSettings.ENABLE_PDP) {
-            pdp.update();
+            pdp.updateGeneric();
         }
 
         for (AbstractMotorController motor : AbstractMotorController.motorList) {
@@ -239,7 +243,15 @@ public class Robot extends TimedRobot {
             }
         }
 
+        if (UserInterface.CLEAR_WARNINGS.getEntry().getBoolean(false)) {
+            UserInterface.CLEAR_WARNINGS.getEntry().setBoolean(false);
+            Main.pipeline.wipeSounds();
+            IssueHandler.issues.clear();
+        }
+
         ISimpleIssue.robotPeriodic();
+        Main.pipeline.updatePipeline();
+        MessageHandler.persistPendingCommands();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package frc.misc;
 
-import frc.robot.Robot;
+import frc.robot.Main;
 
 /**
  * Lets keep things fun and fresh by providing some of our best quotes.
@@ -55,7 +55,8 @@ public class QuoteOfTheDay {
             "I did it! I plugged in the magic numbers.",
             "It may or may not work.",
             "Africa, Default Pi.. \nWhere's Africa? \n... Amica..",
-            "Fix your software!!"
+            "Fix your software!!",
+            "Oh no, it rickrolled me. Oh no! Kill the server!"
     };
 
     /**
@@ -64,6 +65,6 @@ public class QuoteOfTheDay {
      * @return a baller quote
      */
     public static String getRandomQuote() {
-        return quotes[Robot.RANDOM.nextInt(quotes.length)];
+        return quotes[Main.RANDOM.nextInt(quotes.length)];
     }
 }

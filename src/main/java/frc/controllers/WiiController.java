@@ -10,18 +10,7 @@ package frc.controllers;
  * @see ControllerEnums.ButtonStatus
  */
 public class WiiController extends BaseController {
-
-    public static BaseController createOrGet(int channel) {
-        if (channel < 0 || channel >= 6)
-            throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
-        if (BaseController.allControllers[channel] == null)
-            return BaseController.allControllers[channel] = new WiiController(channel);
-        if (BaseController.allControllers[channel] instanceof WiiController)
-            return BaseController.allControllers[channel];
-        throw new ArrayStoreException("A different controller has already been made for channel " + channel);
-    }
-
-    private WiiController(int n) {
+    private WiiController(Integer n) {
         super(n);
     }
 
@@ -32,7 +21,7 @@ public class WiiController extends BaseController {
      * @see #get(ControllerEnums.WiiButton)
      */
     public double get(ControllerEnums.WiiAxis axis) {
-        return stick.getRawAxis(axis.AXIS_VALUE);
+        return controller.getRawAxis(axis.AXIS_VALUE);
     }
 
     /**
@@ -42,6 +31,6 @@ public class WiiController extends BaseController {
      * @see #get(ControllerEnums.WiiAxis)
      */
     public ControllerEnums.ButtonStatus get(ControllerEnums.WiiButton button) {
-        return ControllerEnums.ButtonStatus.get(stick.getRawButton(button.AXIS_VALUE));
+        return ControllerEnums.ButtonStatus.get(controller.getRawButton(button.AXIS_VALUE));
     }
 }

@@ -8,6 +8,7 @@ import frc.controllers.ControllerEnums;
 import frc.controllers.JoystickController;
 import frc.controllers.XBoxController;
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
@@ -17,26 +18,16 @@ import frc.robot.Robot;
 import static frc.misc.UtilFunctions.weightedAverage;
 import static frc.robot.Robot.robotSettings;
 
+/**
+ * Articulated hood refers to the moving top section of {@link Shooter}. Theres a lot going on here so maybe check out
+ * the settings.
+ */
 public class ArticulatedHood implements ISubsystem {
     private static final boolean DEBUG = false;
     public boolean unTargeted = true;
+    public double moveTo = 0.0;
+    public AbstractMotorController hoodMotor;
     BaseController joystickController, panel;
-    /*
-    private final double[][] sizeEncoderPositionArray = {
-            {2.415, 0.05},
-            {1.466, 0.77},
-            {0.793, 0.95},
-            {0.481, 1.235},
-    };
-    private final double[][] sizeEncoderPositionArrayStraight = {
-            {2.415, 0.05},
-            {1.466, 0.77},
-            {0.925, 1.05},
-            {0.481, 1.135},
-    };
-     */
-    private double moveTo = 0.0;
-    private AbstractMotorController hoodMotor;
 
     public ArticulatedHood() {
         addToMetaList();
@@ -49,14 +40,14 @@ public class ArticulatedHood implements ISubsystem {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
-                joystickController = JoystickController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT);
-                panel = ButtonPanelController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT);
+                joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
                 break;
             case BOP_IT:
-                joystickController = BopItBasicController.createOrGet(1);
+                joystickController = BaseController.createOrGet(1, BopItBasicController.class);
                 break;
             case XBOX_CONTROLLER:
-                joystickController = XBoxController.createOrGet(1);
+                joystickController = BaseController.createOrGet(1, XBoxController.class);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the articulated hood. Please implement me");
@@ -64,24 +55,9 @@ public class ArticulatedHood implements ISubsystem {
         createAndInitMotors();
     }
 
-    /**
-     * Initialize the motors.
-     */
-    private void createAndInitMotors() {
-        switch (robotSettings.HOOD_MOTOR_TYPE) {
-            case CAN_SPARK_MAX:
-                hoodMotor = new SparkMotorController(robotSettings.SHOOTER_HOOD_ID, CANSparkMaxLowLevel.MotorType.kBrushed);
-                hoodMotor.setSensorToRealDistanceFactor(1);
-                break;
-            case TALON_FX:
-                hoodMotor = new TalonMotorController(robotSettings.SHOOTER_HOOD_ID);
-                hoodMotor.setSensorToRealDistanceFactor(600 / robotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
-                break;
-            default:
-                throw new IllegalStateException("No such supported hood config for " + robotSettings.HOOD_MOTOR_TYPE.name());
-        }
-        hoodMotor.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
-        hoodMotor.setBrake(true);
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return hoodMotor.isFailed() ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
     }
 
     @Override
@@ -233,6 +209,14 @@ public class ArticulatedHood implements ISubsystem {
         return "ShooterHood";
     }
 
+    /**
+     * This method is supposed to take in camera size and run some math to determine the optimal hood articulation to
+     * fire at that target.
+     *
+     * @param size              The percieved size of the target
+     * @param articulationArray the metadata where the array is formatted [len = number of entries][size, articulation]
+     * @return the optimal articulation given passed inputs
+     */
     public double requiredArticulationForTargetSize(double size, double[][] articulationArray) {
         System.out.println("SIZE:" + size);
         if (size <= articulationArray[articulationArray.length - 1][0]) {
@@ -253,6 +237,10 @@ public class ArticulatedHood implements ISubsystem {
         //return -2;
     }
 
+    /**
+     * Uses {@link ControllerEnums.ButtonPanelTapedButtons nonstandard mapping} and moves the hood based on those
+     * inputs
+     */
     private void moveToPosFromButtons() {
         if (panel.get(ControllerEnums.ButtonPanelTapedButtons.HOOD_POS_1) == ControllerEnums.ButtonStatus.DOWN) {
             moveTo = 0.05; //POS 1
@@ -271,18 +259,20 @@ public class ArticulatedHood implements ISubsystem {
         }
     }
 
+    /**
+     * Moves the hood to a specified point
+     *
+     * @param moveTo     where to move the hood to
+     * @param currentPos where the hood is now
+     */
     private void moveToPos(double moveTo, double currentPos) {
         if (DEBUG && robotSettings.DEBUG) {
             UserInterface.smartDashboardPutNumber("Moving to", moveTo);
         }
         if (moveTo != -2 && moveTo != -1) {
             double distanceNeededToTravel = currentPos - moveTo;
-            //double hoodPercent = distanceNeededToTravel > 0 ? 0.3 : -0.3;
             double hoodPercent = Math.min(Math.abs(distanceNeededToTravel), 0.3);
             hoodPercent *= distanceNeededToTravel > 0 ? 1 : -1;
-            /*if (Math.abs(distanceNeededToTravel) < 0.035) {
-                hoodPercent = 0;
-            }*/
             hoodMotor.moveAtPercent(hoodPercent);
             if (DEBUG && robotSettings.DEBUG) {
                 UserInterface.smartDashboardPutNumber("Moving to", moveTo);
@@ -298,5 +288,25 @@ public class ArticulatedHood implements ISubsystem {
                 UserInterface.smartDashboardPutNumber("Distance from target", 0);
             }
         }
+    }
+
+    /**
+     * Initialize the motors.
+     */
+    private void createAndInitMotors() {
+        switch (robotSettings.HOOD_MOTOR_TYPE) {
+            case CAN_SPARK_MAX:
+                hoodMotor = new SparkMotorController(robotSettings.SHOOTER_HOOD_ID, CANSparkMaxLowLevel.MotorType.kBrushed);
+                hoodMotor.setSensorToRealDistanceFactor(1);
+                break;
+            case TALON_FX:
+                hoodMotor = new TalonMotorController(robotSettings.SHOOTER_HOOD_ID);
+                hoodMotor.setSensorToRealDistanceFactor(600 / robotSettings.SHOOTER_SENSOR_UNITS_PER_ROTATION);
+                break;
+            default:
+                throw new IllegalStateException("No such supported hood config for " + robotSettings.HOOD_MOTOR_TYPE.name());
+        }
+        hoodMotor.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
+        hoodMotor.setBrake(true);
     }
 }

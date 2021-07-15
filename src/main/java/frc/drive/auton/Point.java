@@ -54,6 +54,6 @@ public class Point {
      */
     @Override
     public String toString() {
-        return "(" + X + ", " + Y + ") ";
+        return String.format("(%.2f, %.2f) ", X, Y);
     }
 }

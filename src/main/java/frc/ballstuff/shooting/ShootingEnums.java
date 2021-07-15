@@ -16,10 +16,24 @@ public enum ShootingEnums {
 
     //Used when solid speed button is held down
     //TODO make controller dynamic
-    FIRE_SOLID_SPEED(shooter -> {
+    FIRE_SOLID_SPEED_FLIGHTSTICK(shooter -> {
         shooter.setSpeed(4200 * (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
         if (robotSettings.ENABLE_HOPPER) {
             hopper.setAll(shooter.isAtSpeed() && shooter.joystickController.get(ControllerEnums.JoystickButtons.ONE) == ControllerEnums.ButtonStatus.DOWN);
+        }
+    }),
+
+    FIRE_SOLID_SPEED_WII(shooter -> {
+        shooter.setSpeed(shooter.speed);
+        if (robotSettings.ENABLE_HOPPER) {
+            hopper.setAll(shooter.isAtSpeed() && shooter.joystickController.get(ControllerEnums.WiiButton.A) == ControllerEnums.ButtonStatus.DOWN);
+        }
+    }),
+
+    FIRE_SOLID_SPEED_DRUMS(shooter -> {
+        shooter.setSpeed(shooter.speed);
+        if (robotSettings.ENABLE_HOPPER) {
+            hopper.setAll(shooter.isAtSpeed() && shooter.joystickController.get(ControllerEnums.DrumButton.B) == ControllerEnums.ButtonStatus.DOWN);
         }
     }),
 
@@ -43,12 +57,25 @@ public enum ShootingEnums {
         if (robotSettings.ENABLE_HOPPER) {
             shooter.ticksPassed = (shooter.isAtSpeed() ? Robot.shooter.ticksPassed + 1 : 0);
             if (shooter.ticksPassed >= 50) {
-                hopper.setAgitator(true);
+                hopper.setIndexer(true);
             }
             if (!hopper.isIndexed()) {
                 shooter.singleShot = false;
                 hopper.setAgitator(false);
                 shooter.ticksPassed = 0;
+            }
+        }
+        shooter.setSpeed(4200);
+    }),
+
+    FIRE_SINGLE_ASAP(shooter -> {
+        if (robotSettings.ENABLE_HOPPER) {
+            if (shooter.isAtSpeed()) {
+                hopper.setIndexer(true);
+            }
+            if (!hopper.isIndexed()) {
+                shooter.singleShot = false;
+                hopper.setAgitator(false);
             }
         }
         shooter.setSpeed(4200);

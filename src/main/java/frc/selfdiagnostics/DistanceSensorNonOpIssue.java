@@ -1,7 +1,9 @@
 package frc.selfdiagnostics;
 
+import frc.gpws.Sound;
+import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
-import frc.robot.Robot;
+import frc.robot.Main;
 
 /**
  * Use this when the {@link frc.vision.distancesensor.IDistanceSensor Distance sensor} appears to be
@@ -16,12 +18,25 @@ public class DistanceSensorNonOpIssue implements ISimpleIssue {
     private static final String[] fixes = {"Ensure the %1$s is plugged in", "Ensure the %1$s is listening for the right port"};
     private final String distanceSensorName;
 
-    public static void reportIssue(ISubsystem owner, String imuName) {
-        IssueHandler.issues.put(owner, new DistanceSensorNonOpIssue(imuName));
+    public static void handleIssue(ISubsystem owner, String imuName, boolean report) {
+        if (report)
+            resolveIssue(owner);
+        else
+            reportIssue(owner, imuName);
     }
 
-    public static void resolveIssue(ISubsystem owner) {
-        IssueHandler.issues.remove(owner);
+    private static void resolveIssue(ISubsystem owner) {
+        if (IssueHandler.issues.get(owner) instanceof DistanceSensorNonOpIssue) {
+            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Reconnected));
+            IssueHandler.issues.remove(owner);
+        }
+    }
+
+    private static void reportIssue(ISubsystem owner, String imuName) {
+        if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof DistanceSensorNonOpIssue)) {
+            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Disconnected));
+            IssueHandler.issues.put(owner, new DistanceSensorNonOpIssue(imuName));
+        }
     }
 
     private DistanceSensorNonOpIssue(String name) {
@@ -30,7 +45,6 @@ public class DistanceSensorNonOpIssue implements ISimpleIssue {
 
     @Override
     public String getRandomFix() {
-        return String.format(fixes[Robot.RANDOM.nextInt(fixes.length)], distanceSensorName);
+        return String.format(fixes[Main.RANDOM.nextInt(fixes.length)], distanceSensorName);
     }
-
 }

@@ -3,15 +3,18 @@ package frc.robot.robotconfigs;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
-import frc.ballstuff.intaking.IntakeControlStyles;
-import frc.ballstuff.shooting.ShootingControlStyles;
-import frc.drive.DriveBases;
-import frc.drive.DriveTypes;
+import frc.ballstuff.intaking.Intake;
+import frc.ballstuff.shooting.Shooter;
+import frc.drive.AbstractDriveManager;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
-import frc.motors.SupportedMotors;
-import frc.telemetry.imu.SupportedIMU;
-import frc.vision.camera.SupportedVision;
+import frc.motors.AbstractMotorController;
+import frc.telemetry.imu.AbstractIMU;
+import frc.vision.camera.IVision;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Literally dont mind me I am simply vibing I am here because it means you only have to change one value to completely
@@ -20,7 +23,10 @@ import frc.vision.camera.SupportedVision;
  * @author jojo2357
  */
 public abstract class DefaultConfig {
-    public final boolean DEBUG = false;
+    public static final String BOTKEY = loadEnvVariable("bottoken");
+    public static final String SLACKBOTKEY = loadEnvVariable("slackbottoken");
+    public static final String SLACKSOCKETKEY = loadEnvVariable("slacksockettoken");
+    public final boolean DEBUG = true;
     public String AUTON_COMPLETE_NOISE = "";
     public boolean autonComplete = false;
     //Subsystems
@@ -35,8 +41,6 @@ public abstract class DefaultConfig {
     public boolean ENABLE_PDP = false;
     public boolean ENABLE_LEDS = false;
     public boolean ENABLE_TURRET = false;
-
-    public boolean DRIVE_USE_6_MOTORS = false;
     public boolean DRIVE_INVERT_LEFT = true;
     public boolean DRIVE_INVERT_RIGHT = false;
 
@@ -48,24 +52,24 @@ public abstract class DefaultConfig {
     //SHOOTER
     public boolean SHOOTER_USE_TWO_MOTORS = true;
     public boolean SHOOTER_INVERTED = true;
-    public SupportedVision GOAL_CAMERA_TYPE = SupportedVision.PHOTON;
+    public IVision.SupportedVision GOAL_CAMERA_TYPE = IVision.SupportedVision.PHOTON;
 
     //INTAKE
     public boolean ENABLE_INDEXER_AUTO_INDEX = true;
     public int INDEXER_DETECTION_CUTOFF_DISTANCE = -2;
 
     //UI Styles
-    public DriveTypes DRIVE_STYLE = DriveTypes.STANDARD;
-    public ShootingControlStyles SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
-    public IntakeControlStyles INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
+    public AbstractDriveManager.DriveControlStyles DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
+    public Shooter.ShootingControlStyles SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD;
+    public Intake.IntakeControlStyles INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
 
-    public SupportedMotors SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
-    public SupportedMotors HOOD_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
-    public SupportedMotors DRIVE_MOTOR_TYPE = SupportedMotors.TALON_FX;
-    public SupportedMotors TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
-    public SupportedIMU IMU_TYPE = SupportedIMU.PIGEON;
+    public AbstractMotorController.SupportedMotors SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
+    public AbstractMotorController.SupportedMotors HOOD_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
+    public AbstractMotorController.SupportedMotors DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
+    public AbstractMotorController.SupportedMotors TURRET_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
+    public AbstractIMU.SupportedIMU IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
     public AutonType AUTON_TYPE = AutonType.FOLLOW_PATH;
-    public DriveBases DRIVE_BASE = DriveBases.STANDARD;
+    public AbstractDriveManager.DriveBases DRIVE_BASE = AbstractDriveManager.DriveBases.STANDARD;
 
     public int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
     public double DRIVEBASE_DISTANCE_BETWEEN_WHEELS = -2; //Distance in meters between wheels
@@ -76,6 +80,7 @@ public abstract class DefaultConfig {
     public double TURN_SCALE = 1;
     public double DRIVE_SCALE = 1;
     public double DRIVE_GEARING = 10 / 70.0;
+    public int OVERHEAT_THRESHOLD = 80;
 
     public PID DRIVEBASE_PID = PID.EMPTY_PID;
     public PID SHOOTER_PID = PID.EMPTY_PID;
@@ -136,6 +141,16 @@ public abstract class DefaultConfig {
      */
     public Object IMU_NAVX_PORT = I2C.Port.kMXP;
 
+    private static String loadEnvVariable(String filename) {
+        try {
+            Scanner fis = new Scanner(new File(filename + ".env"));
+            return fis.nextLine();
+        } catch (IOException e) {
+            System.err.println("Could not load " + new File(filename + ".env"));
+            return "";
+        }
+    }
+
     /**
      * Prints the enabled toggles for the loaded settings
      */
@@ -149,10 +164,10 @@ public abstract class DefaultConfig {
         System.out.println("              IMU " + ENABLE_IMU);
         System.out.println("              IMU " + IMU_TYPE.name());
         System.out.println("     Drive motors " + DRIVE_MOTOR_TYPE.name());
-        System.out.println("   Drive 6 motors " + DRIVE_USE_6_MOTORS);
         System.out.println("   Shooter motors " + SHOOTER_MOTOR_TYPE.name());
         System.out.println("     Shoot with 2 " + SHOOTER_USE_TWO_MOTORS);
         System.out.println("      Drive style " + DRIVE_STYLE.name());
+        System.out.println("   Drivebase Type " + DRIVE_BASE.name());
         System.out.println("      Shoot style " + SHOOTER_CONTROL_STYLE.name());
         System.out.println("     Intake style " + INTAKE_CONTROL_STYLE.name());
         System.out.println("  Auton Completed " + autonComplete);

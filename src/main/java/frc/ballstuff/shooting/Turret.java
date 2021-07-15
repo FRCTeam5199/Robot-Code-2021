@@ -1,22 +1,18 @@
 package frc.ballstuff.shooting;
 
-import frc.controllers.BaseController;
-import frc.controllers.BopItBasicController;
-import frc.controllers.ButtonPanelController;
-import frc.controllers.ControllerEnums;
+import frc.controllers.*;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
-import frc.controllers.JoystickController;
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
-import frc.telemetry.RobotTelemetry;
+import frc.telemetry.AbstractRobotTelemetry;
 import frc.vision.camera.IVision;
-import frc.vision.camera.VisionLEDMode;
 
 import static frc.robot.Robot.robotSettings;
 
@@ -24,11 +20,11 @@ import static frc.robot.Robot.robotSettings;
  * Turret refers to the shooty thing that spinny spinny in the yaw direction
  */
 public class Turret implements ISubsystem {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
+    public AbstractMotorController turretMotor;
+    public IVision visionCamera;
     private BaseController joy, panel;
-    private AbstractMotorController motor;
-    private RobotTelemetry guidance;
-    private IVision visionCamera;
+    private AbstractRobotTelemetry guidance;
     private int scanDirection = -1;
 
     public Turret() {
@@ -44,29 +40,16 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void init() throws UnsupportedOperationException {
-        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
-            case ACCURACY_2021:
-            case SPEED_2021:
-            case STANDARD:
-                joy = JoystickController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT);
-                panel = ButtonPanelController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT);
-                break;
-            case BOP_IT:
-                joy = BopItBasicController.createOrGet(1);
-                break;
-            default:
-                throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");
-        }
+        createControllers();
 
         switch (robotSettings.TURRET_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
-                motor = new SparkMotorController(robotSettings.TURRET_YAW_ID);
-                motor.setSensorToRealDistanceFactor(robotSettings.TURRET_SPROCKET_SIZE * robotSettings.TURRET_GEAR_RATIO * Math.PI / 30);
+                turretMotor = new SparkMotorController(robotSettings.TURRET_YAW_ID);
+                turretMotor.setSensorToRealDistanceFactor(robotSettings.TURRET_SPROCKET_SIZE * robotSettings.TURRET_GEAR_RATIO * Math.PI / 30);
                 break;
             case TALON_FX:
-                motor = new TalonMotorController(robotSettings.TURRET_YAW_ID);
-                //TODO make a setting maybe
-                motor.setSensorToRealDistanceFactor(robotSettings.TURRET_SPROCKET_SIZE * robotSettings.TURRET_GEAR_RATIO * Math.PI / 30 * 600 / 2048);
+                turretMotor = new TalonMotorController(robotSettings.TURRET_YAW_ID);
+                turretMotor.setSensorToRealDistanceFactor(robotSettings.TURRET_SPROCKET_SIZE * robotSettings.TURRET_GEAR_RATIO * Math.PI / 30 * 600 / 2048);
                 break;
             default:
                 throw new UnsupportedOperationException("This motor is not supported here in TurretLand inc.");
@@ -74,9 +57,48 @@ public class Turret implements ISubsystem {
         if (robotSettings.ENABLE_VISION) {
             visionCamera = IVision.manufactureGoalCamera(robotSettings.GOAL_CAMERA_TYPE);
         }
-        motor.setInverted(false).setPid(robotSettings.TURRET_PID).setBrake(true);
+        turretMotor.setInverted(false).setPid(robotSettings.TURRET_PID).setBrake(true);
 
         setBrake(true);
+    }
+
+    private void createControllers() {
+        switch (robotSettings.SHOOTER_CONTROL_STYLE) {
+            case ACCURACY_2021:
+            case SPEED_2021:
+            case STANDARD:
+                joy = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
+                break;
+            case BOP_IT:
+                joy = BaseController.createOrGet(3, BopItBasicController.class);
+                break;
+            case DRUM_TIME:
+                joy = BaseController.createOrGet(5, DrumTimeController.class);
+                break;
+            case WII:
+                joy = BaseController.createOrGet(4, WiiController.class);
+                break;
+            case GUITAR:
+                joy = BaseController.createOrGet(6, SixButtonGuitarController.class);
+            default:
+                throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");
+                //TODO add Xbox and (standalone) Flightstick
+        }
+    }
+
+    /**
+     * Tells the motor if it should coast or slam da brakes
+     *
+     * @param brake should i brake when off? (Y/N)
+     */
+    public void setBrake(boolean brake) {
+        turretMotor.setBrake(brake);
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return turretMotor.isFailed() ? SubsystemStatus.FAILED : SubsystemStatus.NOMINAL;
     }
 
     /**
@@ -104,10 +126,13 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (motor.failureFlag)
-            MotorDisconnectedIssue.reportIssue(this, robotSettings.TURRET_YAW_ID, motor.getSuggestedFix());
-        else
-            MotorDisconnectedIssue.resolveIssue(this, robotSettings.TURRET_YAW_ID);
+        if (Shooter.ShootingControlStyles.getSendableChooser().getSelected() != null && robotSettings.SHOOTER_CONTROL_STYLE != Shooter.ShootingControlStyles.getSendableChooser().getSelected()) {
+            robotSettings.SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.getSendableChooser().getSelected();
+            if (Robot.shooter != null)
+                Robot.shooter.createControllers();
+            createControllers();
+        }
+        MotorDisconnectedIssue.handleIssue(this, turretMotor);
         if (robotSettings.DEBUG && DEBUG) {
             System.out.println("Turret degrees:" + turretDegrees());
         }
@@ -125,12 +150,14 @@ public class Turret implements ISubsystem {
                 break;
         }
         switch (robotSettings.SHOOTER_CONTROL_STYLE) {
-            case ACCURACY_2021:
-            case SPEED_2021:
-            case STANDARD:
+            case ACCURACY_2021: {
+            }
+            case SPEED_2021: {
+            }
+            case STANDARD: {
                 if (robotSettings.ENABLE_VISION) {
                     if (panel.get(ButtonPanelButtons.BUDDY_CLIMB) == ButtonStatus.DOWN) {
-                        visionCamera.setLedMode(VisionLEDMode.BLINK); //haha suffer
+                        visionCamera.setLedMode(IVision.VisionLEDMode.BLINK); //haha suffer
                     } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && !Robot.shooter.isShooting()) {
                         if (robotSettings.DEBUG && DEBUG) {
                             System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
@@ -148,9 +175,9 @@ public class Turret implements ISubsystem {
                         } else {
                             omegaSetpoint = scan();
                         }
-                        visionCamera.setLedMode(VisionLEDMode.ON); //If targeting, then use the LL
+                        visionCamera.setLedMode(IVision.VisionLEDMode.ON); //If targeting, then use the LL
                     } else {
-                        visionCamera.setLedMode(VisionLEDMode.OFF); //If not targeting, then stop using the LL
+                        visionCamera.setLedMode(IVision.VisionLEDMode.OFF); //If not targeting, then stop using the LL
                     }
                 }
                 //If holding down the manual rotation button, then rotate the turret based on the Z rotation of the joystick.
@@ -161,10 +188,32 @@ public class Turret implements ISubsystem {
                     omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * -2;
                 }
                 break;
+            }
             case BOP_IT:
+                //System.out.println("Shooting bop it");
                 if (joy.get(ControllerEnums.BopItButtons.TWISTIT) == ButtonStatus.DOWN)
                     omegaSetpoint = scan();
                 break;
+            case DRUM_TIME: {
+                if (joy.get(ControllerEnums.DrumButton.PEDAL) == ButtonStatus.DOWN)
+                    omegaSetpoint = scan();
+                break;
+            }
+            case WII: {
+                double rot = joy.get(ControllerEnums.WiiAxis.LEFT_RIGHT_NUMBERPAD);
+                if (Math.abs(rot) >= 0.1) {
+                    omegaSetpoint = rot;
+                }
+                break;
+            }
+            case GUITAR: {
+                if (joy.get(ControllerEnums.SixKeyGuitarButtons.ONE) == ButtonStatus.DOWN) {
+                    omegaSetpoint = 1;
+                } else if (joy.get(ControllerEnums.SixKeyGuitarButtons.THREE) == ButtonStatus.DOWN) {
+                    omegaSetpoint = -1;
+                }
+                break;
+            }
         }
 
         if (isSafe() && !Robot.shooter.isShooting()) {
@@ -185,7 +234,7 @@ public class Turret implements ISubsystem {
             //UserInterface.putNumber("Turret DB Omega offset", -driveOmega * arbDriveMult.getDouble(-0.28));
             UserInterface.smartDashboardPutNumber("Turret Omega", omegaSetpoint);
             UserInterface.smartDashboardPutNumber("Turret Position", turretDegrees());
-            UserInterface.smartDashboardPutNumber("Turret Speed", motor.getRotations());
+            UserInterface.smartDashboardPutNumber("Turret Speed", turretMotor.getRotations());
             UserInterface.smartDashboardPutBoolean("Turret Safe", isSafe());
             if (robotSettings.ENABLE_IMU && guidance != null) {
                 //no warranties
@@ -205,8 +254,8 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void initTeleop() {
-        motor.resetEncoder();
-        motor.setBrake(true);
+        turretMotor.resetEncoder();
+        turretMotor.setBrake(true);
     }
 
     @Override
@@ -219,7 +268,7 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void initDisabled() {
-        motor.setBrake(false);
+        turretMotor.setBrake(false);
     }
 
     @Override
@@ -236,7 +285,7 @@ public class Turret implements ISubsystem {
      * @return position of turret in degrees
      */
     private double turretDegrees() {
-        return motor.getRotations();
+        return turretMotor.getRotations();
     }
 
     /**
@@ -245,9 +294,10 @@ public class Turret implements ISubsystem {
      * @return an integer to determine the direction of turret scan
      */
     private double scan() {
-        if (turretDegrees() >= robotSettings.TURRET_MAX_POS - 40) {
+        if (scanDirection == 1 && turretDegrees() >= robotSettings.TURRET_MAX_POS - 40) {
             scanDirection = -1;
-        } else if (turretDegrees() <= robotSettings.TURRET_MAX_POS + 40) {
+        }
+        if (scanDirection == -1 && turretDegrees() <= robotSettings.TURRET_MIN_POS + 40) {
             scanDirection = 1;
         }
         return scanDirection;
@@ -274,7 +324,7 @@ public class Turret implements ISubsystem {
         }
         //Dont overcook it pls
         //if (!Robot.shooter.isShooting) {
-        motor.moveAtPercent(speed * 0.15);
+        turretMotor.moveAtPercent(speed * 0.15);
         //}
     }
 
@@ -290,20 +340,15 @@ public class Turret implements ISubsystem {
     }
 
     /**
-     * Tells the motor if it should coast or slam da brakes
-     *
-     * @param brake should i brake when off? (Y/N)
-     */
-    public void setBrake(boolean brake) {
-        motor.setBrake(brake);
-    }
-
-    /**
      * If there is a telem object, set it here
      *
      * @param telem the RobotTelemtry object in use by the drivetrian
      */
-    public void setTelemetry(RobotTelemetry telem) {
+    public void setTelemetry(AbstractRobotTelemetry telem) {
         guidance = telem;
+    }
+
+    public void updateControl() {
+        createControllers();
     }
 }

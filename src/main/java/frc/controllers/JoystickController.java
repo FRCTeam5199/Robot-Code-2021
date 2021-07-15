@@ -14,23 +14,12 @@ import frc.controllers.ControllerEnums.JoystickHatDirection;
  * @see ControllerEnums.JoystickButtons
  */
 public class JoystickController extends BaseController {
-
-    public static BaseController createOrGet(int channel) {
-        if (channel < 0 || channel >= 6)
-            throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
-        if (BaseController.allControllers[channel] == null)
-            return BaseController.allControllers[channel] = new JoystickController(channel);
-        if (BaseController.allControllers[channel] instanceof JoystickController)
-            return BaseController.allControllers[channel];
-        throw new ArrayStoreException("A different controller has already been made for channel " + channel);
-    }
-
     /**
      * joystick controller
      *
      * @param n - an integer
      */
-    private JoystickController(int n) {
+    public JoystickController(Integer n) {
         super(n);
     }
 
@@ -43,9 +32,9 @@ public class JoystickController extends BaseController {
     public JoystickHatDirection getHat() throws IllegalStateException {
         for (JoystickHatDirection dir : JoystickHatDirection.values())
             for (int acceptedValue : dir.ACCEPTED_VALUES)
-                if (acceptedValue == stick.getPOV())
+                if (acceptedValue == controller.getPOV())
                     return dir;
-        throw new IllegalStateException("I could not wrap " + stick.getPOV() + " inside the JoystickHatDirection enumeration.");
+        throw new IllegalStateException("I could not wrap " + controller.getPOV() + " inside the JoystickHatDirection enumeration.");
     }
 
     /**
@@ -55,7 +44,7 @@ public class JoystickController extends BaseController {
      * @return axis.AXIS_VALUE
      */
     public double get(JoystickAxis axis) {
-        return stick.getRawAxis(axis.AXIS_VALUE);//return ((1 - joy.getRawAxis(axis.AXIS_VALUE)) / 2);
+        return controller.getRawAxis(axis.AXIS_VALUE);//return ((1 - joy.getRawAxis(axis.AXIS_VALUE)) / 2);
     }
 
     /**
@@ -66,7 +55,7 @@ public class JoystickController extends BaseController {
      * @see #get(JoystickAxis)
      */
     public double getPositive(JoystickAxis axis) {
-        return ((1 - stick.getRawAxis(axis.AXIS_VALUE)) / 2);
+        return ((1 - controller.getRawAxis(axis.AXIS_VALUE)) / 2);
     }
 
     /**
@@ -76,7 +65,7 @@ public class JoystickController extends BaseController {
      * @return button status
      */
     public ButtonStatus get(JoystickButtons button) {
-        return ButtonStatus.get(stick.getRawButton(button.AXIS_VALUE));
+        return ButtonStatus.get(controller.getRawButton(button.AXIS_VALUE));
     }
 
     /**
@@ -86,7 +75,7 @@ public class JoystickController extends BaseController {
      * @return true if and only if the direction of the hat is included in the enum passed in
      */
     public boolean hatIs(JoystickHatDirection direction) {
-        int output = stick.getPOV();
+        int output = controller.getPOV();
         for (int angle : direction.ACCEPTED_VALUES)
             if (angle == output) {
                 return true;

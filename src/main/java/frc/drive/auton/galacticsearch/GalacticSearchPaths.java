@@ -3,6 +3,10 @@ package frc.drive.auton.galacticsearch;
 import frc.drive.auton.IAutonEnumPath;
 import frc.drive.auton.Point;
 
+/**
+ * The paths for {@link AutonManager galactic search auton}. These are special becuase they store predicted ball
+ * positions for the sum of squares algorithm
+ */
 public enum GalacticSearchPaths implements IAutonEnumPath {
     PATH_A_RED(
             new Point[]{
@@ -37,35 +41,18 @@ public enum GalacticSearchPaths implements IAutonEnumPath {
             , "PathBBlue"
     );
 
-    public static Point[][] ALL_POINTS;
-    private static int registerIndex = 0;
     public final String PATH_FILE_LOCATION;
     public final Point[] POINTS;
 
     /**
-     * Determines the path based on the given points
+     * The constructor. No special processing done here
      *
-     * @param points a given set of points
-     * @return the path determined
+     * @param points  The predicted location of the balls in the camera
+     * @param pathloc The name of the file holding the path (can be changed independently of the enum name)
      */
-    public static GalacticSearchPaths getFromPoints(Point[] points) {
-        for (GalacticSearchPaths path : GalacticSearchPaths.values())
-            if (path.POINTS == points)
-                return path;
-        throw new IllegalStateException("Could not find a path with those points");
-    }
-
     GalacticSearchPaths(Point[] points, String pathloc) {
         POINTS = points;
         PATH_FILE_LOCATION = pathloc;
-        addMyPoint();
-    }
-
-    void addMyPoint() {
-        if (ALL_POINTS == null)
-            ALL_POINTS = new Point[4][3];
-        System.arraycopy(POINTS, 0, ALL_POINTS[registerIndex], 0, 3);
-        registerIndex++;
     }
 
     @Override

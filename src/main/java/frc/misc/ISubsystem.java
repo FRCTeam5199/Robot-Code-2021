@@ -17,6 +17,8 @@ public interface ISubsystem {
      */
     void init();
 
+    SubsystemStatus getSubsystemStatus();
+
     /**
      * When testing, put the code to execute every tick in here
      *

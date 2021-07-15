@@ -47,6 +47,11 @@ public class TalonMotorController extends AbstractMotorController {
     }
 
     @Override
+    public int getID() {
+        return motor.getDeviceID();
+    }
+
+    @Override
     public String getName() {
         return "Talon: " + motor.getDeviceID();
     }
@@ -59,11 +64,6 @@ public class TalonMotorController extends AbstractMotorController {
             throw new IllegalArgumentException("I cant follow that");
         setInverted(invert);
         return this;
-    }
-
-    @Override
-    public AbstractMotorController follow(AbstractMotorController leader) {
-        return follow(leader, false);
     }
 
     @Override
@@ -87,9 +87,9 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtVelocity(double realAmount) {
-        if (isTemperatureAcceptable(motor.getDeviceID()))
+        if (isTemperatureAcceptable()) {
             motor.set(Velocity, realAmount / sensorToRealDistanceFactor);
-        else
+        } else
             motor.set(Velocity, 0);
         /// sensorToRealDistanceFactor);
         //System.out.println("I'm crying. RealAmount: " + realAmount + "\nSensortoDist: " + sensorToRealDistanceFactor + "\nSetting motors to " + realAmount / sensorToRealDistanceFactor);
@@ -131,7 +131,7 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtPercent(double percent) {
-        if (isTemperatureAcceptable(motor.getDeviceID()))
+        if (isTemperatureAcceptable())
             motor.set(PercentOutput, percent);
         else
             motor.set(PercentOutput, 0);
@@ -153,12 +153,19 @@ public class TalonMotorController extends AbstractMotorController {
     }
 
     @Override
+    public boolean isFailed() {
+        Faults falts = new Faults();
+        motor.getFaults(falts);
+        return falts.hasAnyFault() || failureFlag;
+    }
+
+    @Override
     public String getSuggestedFix() {
         Faults foundFaults = new Faults();
         motor.getFaults(foundFaults);
         failureFlag = foundFaults.hasAnyFault();
-        if (foundFaults.UnderVoltage) ;
-            //report to PDP
+        if (foundFaults.UnderVoltage)
+            potentialFix = "More power";
         else if (foundFaults.RemoteLossOfSignal)
             potentialFix = "Ensure that motor %d is plugged into can AND power";
         else if (foundFaults.APIError)

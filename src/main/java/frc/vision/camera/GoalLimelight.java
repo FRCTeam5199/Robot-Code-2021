@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 
 /**
@@ -11,7 +12,6 @@ import frc.misc.UserInterface;
  */
 public class GoalLimelight implements IVision {
     public static final GoalLimelight GOAL_LIME_LIGHT = new GoalLimelight();
-
     private NetworkTable limelight;
     private NetworkTableEntry yaw, size, hasTarget, pitch, pose;
     private LinearFilter filter;
@@ -33,6 +33,11 @@ public class GoalLimelight implements IVision {
         hasTarget = limelight.getEntry("tv");
         pitch = limelight.getEntry("ty");
         pose = limelight.getEntry("camtran");
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return SubsystemStatus.FAILED;
     }
 
     @Override

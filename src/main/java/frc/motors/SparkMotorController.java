@@ -56,23 +56,6 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
-    public AbstractMotorController follow(AbstractMotorController leader) {
-        return follow(leader, false);
-    }
-
-    @Override
-    public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
-        if (!(leader instanceof SparkMotorController))
-            throw new IllegalArgumentException("I cant follow that!!");
-        if (motor.follow(((SparkMotorController) leader).motor, invert) != CANError.kOk)
-            if (!Robot.SECOND_TRY)
-                throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not follow the leader");
-            else
-                failureFlag = true;
-        return this;
-    }
-
-    @Override
     public void resetEncoder() {
         if (encoder.setPosition(0) != CANError.kOk)
             if (!Robot.SECOND_TRY)
@@ -130,11 +113,6 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void moveAtPercent(double percent) {
-        motor.set(percent);
-    }
-
-    @Override
     public AbstractMotorController setOpenLoopRampRate(double timeToMax) {
         if (motor.setOpenLoopRampRate(timeToMax) != CANError.kOk)
             if (!Robot.SECOND_TRY)
@@ -184,7 +162,34 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
+    public boolean isFailed() {
+        return motor.getFaults() != 0 || failureFlag;
+    }
+
+    @Override
+    public void moveAtPercent(double percent) {
+        motor.set(percent);
+    }
+
+    @Override
+    public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
+        if (!(leader instanceof SparkMotorController))
+            throw new IllegalArgumentException("I cant follow that!!");
+        if (motor.follow(((SparkMotorController) leader).motor, invert) != CANError.kOk)
+            if (!Robot.SECOND_TRY)
+                throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " could not follow the leader");
+            else
+                failureFlag = true;
+        return this;
+    }
+
+    @Override
     public double getMotorTemperature() {
         return motor.getMotorTemperature();
+    }
+
+    @Override
+    public int getID() {
+        return motor.getDeviceId();
     }
 }

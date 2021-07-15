@@ -1,19 +1,31 @@
 package frc.drive;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.misc.ISubsystem;
-import frc.telemetry.RobotTelemetry;
+import frc.misc.UserInterface;
+import frc.robot.Robot;
+import frc.telemetry.AbstractRobotTelemetry;
+import frc.telemetry.RobotTelemetryStandard;
+
+import java.util.Objects;
+
+import static frc.robot.Robot.robotSettings;
 
 /**
  * Chill out there is only vibing going on here, officer
  */
 public abstract class AbstractDriveManager implements ISubsystem {
+    protected final NetworkTableEntry driveRotMult = UserInterface.DRIVE_ROT_MULT.getEntry(),
+            driveScaleMult = UserInterface.DRIVE_SCALE_MULT.getEntry();
     /**
      * I dont know where I am going, but i do know that whatever drive manager i end up in will love me
      */
-    public RobotTelemetry guidance;
+    public AbstractRobotTelemetry guidance;
 
     /**
-     * Required by {@link RobotTelemetry} in order to reset position
+     * Required by {@link RobotTelemetryStandard} in order to reset position
      */
     public abstract void resetDriveEncoders();
 
@@ -24,6 +36,10 @@ public abstract class AbstractDriveManager implements ISubsystem {
      */
     public abstract void setBrake(boolean brake);
 
+    public abstract void driveMPS(double xMeters, double yMeters, double rotation);
+
+    public abstract void driveWithChassisSpeeds(ChassisSpeeds speeds);
+
     protected AbstractDriveManager() {
         init();
         addToMetaList();
@@ -31,11 +47,77 @@ public abstract class AbstractDriveManager implements ISubsystem {
     }
 
     protected void createTelem() {
-        guidance = new RobotTelemetry(this);
-        guidance.resetOdometry();
+        if (Robot.robotSettings.ENABLE_IMU) {
+            guidance = AbstractRobotTelemetry.createTelem(this);
+            guidance.resetOdometry();
+        }
     }
+
+    @Override
+    public void updateGeneric() {
+        if (DriveControlStyles.getSendableChooser().getSelected() != null && robotSettings.DRIVE_STYLE != DriveControlStyles.getSendableChooser().getSelected()) {
+            robotSettings.DRIVE_STYLE = DriveControlStyles.getSendableChooser().getSelected();
+            onControlChange();
+        }
+    }
+
+    protected abstract void onControlChange();
 
     public String getSubsystemName() {
         return "Drivetrain";
+    }
+
+    /**
+     * Takes a -1 to 1 scaled value and returns it scaled based on the max sped
+     *
+     * @param input -1 to 1 drive amount
+     * @return input scaled based on the bot's max speed
+     */
+    protected double adjustedDrive(double input) {
+        return input * robotSettings.MAX_SPEED * driveScaleMult.getDouble(robotSettings.DRIVE_SCALE);
+    }
+
+    /**
+     * Takes a -1 to 1 scaled value and returns it scaled based on the max turning
+     *
+     * @param input -1 to 1 drive amount
+     * @return input scaled based on max turning
+     */
+    protected double adjustedRotation(double input) {
+        return input * robotSettings.MAX_ROTATION * driveRotMult.getDouble(robotSettings.TURN_SCALE);
+    }
+
+    /**
+     * How many times will i have to say it: vibing only
+     */
+    public enum DriveBases {
+        STANDARD,
+        SWIVEL
+    }
+
+    /**
+     * See {@link DriveManagerStandard#updateTeleop() updateTeleop} for implementation of each drive style
+     *
+     * @author jojo2357
+     */
+    public enum DriveControlStyles {
+        STANDARD,
+        EXPERIMENTAL,
+        MARIO_KART,
+        DRUM_TIME,
+        GUITAR,
+        BOP_IT,
+        FLIGHT_STICK;
+
+        private static SendableChooser<DriveControlStyles> myChooser;
+
+        public static SendableChooser<DriveControlStyles> getSendableChooser() {
+            return Objects.requireNonNullElseGet(myChooser, () -> {
+                myChooser = new SendableChooser<>();
+                for (DriveControlStyles style : DriveControlStyles.values())
+                    myChooser.addOption(style.name(), style);
+                return myChooser;
+            });
+        }
     }
 }

@@ -44,10 +44,7 @@ public class RevDistanceSensor extends Rev2mDistanceSensor implements IDistanceS
      */
     @Override
     public void updateGeneric() {
-        if (getRange() <= 0)
-            DistanceSensorNonOpIssue.reportIssue(this, getSubsystemName());
-        else
-            DistanceSensorNonOpIssue.resolveIssue(this);
+        DistanceSensorNonOpIssue.handleIssue(this, getSubsystemName(), getRange() <= 0);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 import frc.misc.ISubsystem;
+import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
@@ -18,10 +19,10 @@ import static frc.robot.Robot.robotSettings;
  * is ) to the {@link frc.ballstuff.shooting.Shooter}
  */
 public class Hopper implements ISubsystem {
-    private static final boolean DEBUG = true;
-    private AbstractMotorController agitator, indexer;
-    private IDistanceSensor indexSensor;
-    private boolean agitatorActive = false, indexerActive = false;
+    private static final boolean DEBUG = false;
+    public AbstractMotorController agitator, indexer;
+    public IDistanceSensor indexSensor;
+    public boolean agitatorActive = false, indexerActive = false;
 
     public Hopper() {
         addToMetaList();
@@ -41,7 +42,18 @@ public class Hopper implements ISubsystem {
     }
 
     @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return !indexer.isFailed() && !agitator.isFailed() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+    }
+
+    @Override
     public void updateTest() {
+        if (robotSettings.ENABLE_INDEXER) {
+            indexer.moveAtPercent(indexerActive ? 0.9 : 0);
+        }
+        if (robotSettings.ENABLE_AGITATOR) {
+            agitator.moveAtPercent(agitatorActive ? 0.6 : 0);
+        }
     }
 
     @Override
@@ -83,20 +95,7 @@ public class Hopper implements ISubsystem {
      */
     @Override
     public void updateGeneric() {
-        if (robotSettings.ENABLE_INDEXER) {
-            if (indexer.failureFlag) {
-                MotorDisconnectedIssue.reportIssue(this, robotSettings.INDEXER_MOTOR_ID, indexer.getSuggestedFix());
-            } else {
-                MotorDisconnectedIssue.resolveIssue(this, robotSettings.INDEXER_MOTOR_ID);
-            }
-        }
-        if (robotSettings.ENABLE_AGITATOR) {
-            if (agitator.failureFlag) {
-                MotorDisconnectedIssue.reportIssue(this, robotSettings.AGITATOR_MOTOR_ID, indexer.getSuggestedFix());
-            } else {
-                MotorDisconnectedIssue.resolveIssue(this, robotSettings.AGITATOR_MOTOR_ID);
-            }
-        }
+        MotorDisconnectedIssue.handleIssue(this, agitator, indexer);
         if (!indexerActive && !agitatorActive) {
             if (robotSettings.ENABLE_INDEXER) {
                 if (robotSettings.ENABLE_INDEXER_AUTO_INDEX) {

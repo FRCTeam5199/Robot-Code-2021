@@ -4,8 +4,11 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.music.Orchestra;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.discordslackbot.MessageHandler;
 import frc.motors.TalonMotorController;
+import frc.robot.Main;
 import frc.robot.Robot;
+import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.List;
  * This is where we play our gnarly tunez. Although it cant be seen from here, there is a delete deploy directory method
  * in {@link frc.robot.Robot} that will help remove ghost files. Use this like an {@link Orchestra} with extra steps
  */
+@ClientSide
 public class Chirp extends Orchestra implements ISubsystem {
     /**
      * Contains all of the talons created in {@link TalonMotorController#TalonMotorController(int)} that can be used to
@@ -28,6 +32,9 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     private static HashMap<String, List<String>> songnames;
     public static final SendableChooser<List<String>> MUSIC_SELECTION = getSongs();
+
+    private final ArrayList<String> queue = new ArrayList<>();
+    private boolean remoteCommand = false;
 
     /**
      * Loads up songs for {@link #songnames} and {@link UserInterface#MUSIC_SELECTOR}
@@ -63,6 +70,14 @@ public class Chirp extends Orchestra implements ISubsystem {
         return listObject;
     }
 
+    public static String getAllSongs() {
+        StringBuilder out = new StringBuilder("```\nSongs:");
+        for (String name : songnames.keySet()) {
+            out.append('\n').append(name);
+        }
+        return out.append("```").toString();
+    }
+
     public Chirp() {
         init();
         addToMetaList();
@@ -78,6 +93,11 @@ public class Chirp extends Orchestra implements ISubsystem {
         }
     }
 
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return isPlaying() ? SubsystemStatus.NOMINAL : SubsystemStatus.FAILED;
+    }
+
     /**
      * Autoplays music while taking suggestions. A few important things:
      * <p>
@@ -90,6 +110,26 @@ public class Chirp extends Orchestra implements ISubsystem {
      */
     @Override
     public void updateTest() {
+        if (remoteCommand || MessageHandler.canPersistCommands()) {
+            handleRemoteUpdate();
+        } else {
+            handleLocalUpdate();
+        }
+    }
+
+    private void handleRemoteUpdate() {
+        //System.out.println("Running remote: " + queue.size());
+        if (!isPlaying()) {
+            if (queue.size() > 0) {
+                loadMusic(queue.remove(0));
+                play();
+            } else {
+                remoteCommand = false;
+            }
+        }
+    }
+
+    private void handleLocalUpdate() {
         List<String> selected = MUSIC_SELECTION.getSelected();
         String songName = "";//Robot.songTab.getString("");
         if (selected != null && selected.size() > 0) {
@@ -101,7 +141,7 @@ public class Chirp extends Orchestra implements ISubsystem {
             }
         }
         UserInterface.MUSIC_FOUND_SONG.getEntry().setBoolean(new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists());
-        if (!songName.equals("") && new File(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString()).exists() && !songName.equals(Robot.lastFoundSong)) {
+        if (!songName.equals("") && Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toFile().exists() && !songName.equals(Robot.lastFoundSong)) {
             Robot.lastFoundSong = songName;
             loadMusic(songName);
             ErrorCode e = play();
@@ -117,11 +157,75 @@ public class Chirp extends Orchestra implements ISubsystem {
                 play();
             }
         }
+
+    }
+
+    /**
+     * Loads a song from the provided name assuming it is in the sounds deploy directory (deploy/sounds). Songs must be
+     * in format {@code <name>_<instruments>_<playtime in millis>.chrp}
+     *
+     * @param soundName The name of the file (less extension, less path, just name) to get sound from (should be a .chrp
+     *                  file)
+     * @return Error code per super call
+     */
+    @Override
+    public ErrorCode loadMusic(String soundName) {
+        if (!Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toFile().exists()) {
+            if (songnames.containsKey(soundName)) {
+                String songName = "";
+                for (String str : songnames.get(soundName)) {
+                    if (songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size())
+                        songName = str;
+                    else if (!songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size() && Integer.parseInt(songName.split("_")[1]) < Integer.parseInt(str.split("_")[1]))
+                        songName = str;
+                }
+                super.loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + songName + ".chrp").toString());
+                Robot.lastFoundSong = songName;
+            }
+        } else {
+            Robot.lastFoundSong = soundName;
+            ErrorCode e = super.loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString());
+            if (e != ErrorCode.OK) {
+                System.out.println("Failed to load " + Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp") + ": " + e);
+            }
+            return e;
+        }
+        return ErrorCode.GeneralError;
+    }
+
+    /**
+     * Overrides super to include if the playing song has ended as per given song length specified in file name
+     *
+     * @return if motors are in music mode and there is a song loaded that has yet to end
+     */
+    @Override
+    public boolean isPlaying() {
+        try {
+            return super.isPlaying() && (!Robot.lastFoundSong.equals("") && getCurrentTime() < Integer.parseInt(Robot.lastFoundSong.split("_")[2]));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Selects a random song name from options loaded at runtime in {@link Robot}
+     *
+     * @return song name from {@link #songnames}
+     */
+    public String getRandomSong() {
+        String songName = "";
+        for (String str : songnames.get(songnames.keySet().toArray()[Main.RANDOM.nextInt(songnames.keySet().toArray().length)])) {
+            if (songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size())
+                songName = str;
+            else if (!songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size() && Integer.parseInt(songName.split("_")[1]) < Integer.parseInt(str.split("_")[1]))
+                songName = str;
+        }
+        return songName;
     }
 
     @Override
     public void updateTeleop() {
-
+        stop();
     }
 
     @Override
@@ -164,50 +268,65 @@ public class Chirp extends Orchestra implements ISubsystem {
         return "Music";
     }
 
-    /**
-     * Loads a song from the provided name assuming it is in the sounds deploy directory (deploy/sounds). Songs must be
-     * in format {@code <name>_<instruments>_<playtime in millis>.chrp}
-     *
-     * @param soundName The name of the file (less extension, less path, just name) to get sound from (should be a .chrp
-     *                  file)
-     * @return Error code per super call
-     */
-    @Override
-    public ErrorCode loadMusic(String soundName) {
-        ErrorCode e = super.loadMusic(Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString());
-        if (e != ErrorCode.OK) {
-            System.out.println("Failed to load " + Filesystem.getDeployDirectory().toPath().resolve("sounds/" + soundName + ".chrp").toString() + ": " + e);
+    public String playSongMostNearlyMatching(String songname) {
+        if (!remoteCommand) {
+            stop();
         }
-        return e;
+        remoteCommand = true;
+        if (songname.equals("rand") || songname.equals("random") || songname.equals("rng")) {
+            String out = getRandomSong();
+            if (isPlaying()) {
+                queue.add(out);
+            } else {
+                loadMusic(out);
+                play();
+            }
+            return out;
+        }
+        String winningSong = "";
+        int winningScore = 0;
+        for (String song : songnames.keySet()) {
+            int thiscore = FuzzySearch.partialRatio(songname, song);
+            if (thiscore > winningScore) {
+                winningScore = thiscore;
+                winningSong = song;
+            }
+        }
+        if (winningScore < 50) {
+            return "";
+        }
+        if (isPlaying()) {
+            queue.add(winningSong);
+        } else {
+            loadMusic(winningSong);
+            play();
+        }
+        return winningSong;
     }
 
-    /**
-     * Overrides super to include if the playing song has ended as per given song length specified in file name
-     *
-     * @return if motors are in music mode and there is a song loaded that has yet to end
-     */
-    @Override
-    public boolean isPlaying() {
-        try {
-            return super.isPlaying() && (!Robot.lastFoundSong.equals("") && getCurrentTime() < Integer.parseInt(Robot.lastFoundSong.split("_")[2]));
-        } catch (Exception e) {
-            return false;
+    public int getQueueLength() {
+        return queue.size();
+    }
+
+    public void skipSong() {
+        if (queue.size() > 0) {
+            queue.remove(0);
+            stop();
         }
     }
 
-    /**
-     * Selects a random song name from options loaded at runtime in {@link Robot}
-     *
-     * @return song name from {@link #songnames}
-     */
-    public String getRandomSong() {
-        String songName = "";
-        for (String str : songnames.get(songnames.keySet().toArray()[Robot.RANDOM.nextInt(songnames.keySet().toArray().length)])) {
-            if (songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size())
-                songName = str;
-            else if (!songName.equals("") && Integer.parseInt(str.split("_")[1]) <= talonMotorArrayList.size() && Integer.parseInt(songName.split("_")[1]) < Integer.parseInt(str.split("_")[1]))
-                songName = str;
+    public String getQueueAsString() {
+        if (queue.size() == 0) {
+            if (isPlaying()) {
+                return "playing " + Robot.lastFoundSong.split("_")[0];
+            } else {
+                return "nothing playing sob";
+            }
         }
-        return songName;
+        StringBuilder out = new StringBuilder("```nim\n0) " + Robot.lastFoundSong.split("_")[0] + "\n");
+        for (int i = 0; i < queue.size(); i++) {
+            out.append(i + 1).append(") ").append(queue.get(i)).append('\n');
+        }
+        return out.append("```").toString();
     }
 }

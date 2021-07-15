@@ -4,12 +4,12 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.LinearFilter;
+import frc.misc.SubsystemStatus;
 
 import static frc.robot.Robot.robotSettings;
 
 public class GoalPhoton implements IVision {
     public static final GoalPhoton GOAL_PHOTON = new GoalPhoton();
-
     private NetworkTableEntry yaw;
     private NetworkTableEntry size;
     private NetworkTableEntry hasTarget;
@@ -37,6 +37,11 @@ public class GoalPhoton implements IVision {
         size = cameraTable.getEntry("targetArea");
         hasTarget = cameraTable.getEntry("hasTarget");
         pitch = cameraTable.getEntry("targetPitch");
+    }
+
+    @Override
+    public SubsystemStatus getSubsystemStatus() {
+        return SubsystemStatus.FAILED;
     }
 
     /**

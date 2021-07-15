@@ -33,17 +33,16 @@ public class VictorMotorController extends AbstractMotorController {
     }
 
     @Override
-    public AbstractMotorController follow(AbstractMotorController leader) {
-        if (leader instanceof VictorMotorController) {
-            motor.follow(((VictorMotorController) leader).motor);
-        } else
-            throw new IllegalArgumentException("I cant follow that!");
-        return this;
+    public int getID() {
+        return motor.getDeviceID();
     }
 
     @Override
     public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
-        follow(leader);
+        if (leader instanceof VictorMotorController) {
+            motor.follow(((VictorMotorController) leader).motor);
+        } else
+            throw new IllegalArgumentException("I cant follow that!");
         setInverted(invert);
         return this;
     }
@@ -69,7 +68,7 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtVelocity(double realVelocity) {
-        if (isTemperatureAcceptable(motor.getDeviceID()))
+        if (isTemperatureAcceptable())
             motor.set(Velocity, realVelocity / sensorToRealDistanceFactor);
         else
             motor.set(Velocity, 0);
@@ -104,7 +103,7 @@ public class VictorMotorController extends AbstractMotorController {
 
     @Override
     public void moveAtPercent(double percent) {
-        if (isTemperatureAcceptable(motor.getDeviceID()))
+        if (isTemperatureAcceptable())
             motor.set(PercentOutput, percent);
         else
             motor.set(PercentOutput, 0);
@@ -123,6 +122,13 @@ public class VictorMotorController extends AbstractMotorController {
     @Override
     public double getMotorTemperature() {
         return motor.getTemperature();
+    }
+
+    @Override
+    public boolean isFailed() {
+        Faults falts = new Faults();
+        motor.getFaults(falts);
+        return falts.hasAnyFault() || failureFlag;
     }
 
     @Override
