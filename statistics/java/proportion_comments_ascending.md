@@ -15,8 +15,8 @@
 |[TalonMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fmotors%2FTalonMotorController.java)|179 (1.6%)|145|81.0%|12|6.7%|22|12.3%|
 |[SparkMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fmotors%2FSparkMotorController.java)|195 (1.8%)|159|81.5%|14|7.2%|22|11.3%|
 |[PlaySongCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fdiscordslackbot%2Fcommands%2FPlaySongCommand.java)|39 (0.4%)|31|79.5%|3|7.7%|5|12.8%|
-|[Robot2020.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Frobot%2Frobotconfigs%2Ftwentytwenty%2FRobot2020.java)|117 (1.1%)|90|76.9%|9|7.7%|18|15.4%|
-|[CompetitionRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Frobot%2Frobotconfigs%2Ftwentyone%2FCompetitionRobot2021.java)|117 (1.1%)|91|77.8%|10|8.5%|16|13.7%|
+|[Robot2020.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Frobot%2Frobotconfigs%2Ftwentytwenty%2FRobot2020.java)|116 (1.0%)|89|76.7%|9|7.8%|18|15.5%|
+|[CompetitionRobot2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Frobot%2Frobotconfigs%2Ftwentyone%2FCompetitionRobot2021.java)|116 (1.0%)|90|77.6%|10|8.6%|16|13.8%|
 |[PingCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fdiscordslackbot%2Fcommands%2FPingCommand.java)|102 (0.9%)|83|81.4%|9|8.8%|10|9.8%|
 |[Swerve2021.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Frobot%2Frobotconfigs%2Ftwentyone%2FSwerve2021.java)|124 (1.1%)|95|76.6%|11|8.9%|18|14.5%|
 |[ArticulatedHood.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fballstuff%2Fshooting%2FArticulatedHood.java)|312 (2.8%)|261|83.7%|28|9.0%|23|7.4%|
@@ -98,5 +98,5 @@
 |[ServerSide.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fmisc%2FServerSide.java)|10 (0.1%)|3|30.0%|6|60.0%|1|10.0%|
 |[ISubsystem.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fmisc%2FISubsystem.java)|96 (0.9%)|20|20.8%|62|64.6%|14|14.6%|
 |[IAutonEnumPath.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2Fauton%2FIAutonEnumPath.java)|15 (0.1%)|4|26.7%|10|66.7%|1|6.7%|
-|Average |114.5|77.2|X|23.3|X|14.1|X|
-|Total (97)|11110|7485|67.4%|2259| 20.3%|1366|12.3%|
+|Average |114.5|77.1|X|23.3|X|14.1|X|
+|Total (97)|11108|7483|67.4%|2259| 20.3%|1366|12.3%|
