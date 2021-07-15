@@ -1,15 +1,15 @@
 package frc.robot.robotconfigs.twentytwenty;
 
 import edu.wpi.first.wpilibj.I2C;
-import frc.ballstuff.intaking.IntakeControlStyles;
-import frc.ballstuff.shooting.ShootingControlStyles;
-import frc.drive.DriveTypes;
+import frc.ballstuff.intaking.Intake;
+import frc.ballstuff.shooting.Shooter;
+import frc.drive.AbstractDriveManager;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
-import frc.motors.SupportedMotors;
+import frc.motors.AbstractMotorController;
 import frc.robot.robotconfigs.DefaultConfig;
-import frc.telemetry.imu.SupportedIMU;
-import frc.vision.camera.SupportedVision;
+import frc.telemetry.imu.AbstractIMU;
+import frc.vision.camera.IVision;
 
 public class Robot2020 extends DefaultConfig {
     public Robot2020() {
@@ -23,7 +23,6 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_MUSIC = false;
         ENABLE_HOOD_ARTICULATION = false;
 
-        DRIVE_USE_6_MOTORS = true;
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 
@@ -34,21 +33,21 @@ public class Robot2020 extends DefaultConfig {
         IMU_NAVX_PORT = I2C.Port.kMXP;
 
         //SHOOTER
-        SHOOTER_MOTOR_TYPE = SupportedMotors.TALON_FX;
+        SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
-        GOAL_CAMERA_TYPE = SupportedVision.PHOTON;
+        GOAL_CAMERA_TYPE = IVision.SupportedVision.PHOTON;
         INDEXER_DETECTION_CUTOFF_DISTANCE = 9;
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
 
         //UI Style
-        DRIVE_STYLE = DriveTypes.STANDARD;
-        SHOOTER_CONTROL_STYLE = ShootingControlStyles.STANDARD;
-        INTAKE_CONTROL_STYLE = IntakeControlStyles.STANDARD;
-        DRIVE_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
-        IMU_TYPE = SupportedIMU.PIGEON;
+        DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
+        SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD;
+        INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
+        DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
+        IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
         AUTON_TYPE = AutonType.FOLLOW_PATH;
 
         DRIVEBASE_PID = new PID(0, 0, 0.000005, 0.00002);
@@ -80,7 +79,7 @@ public class Robot2020 extends DefaultConfig {
         TURRET_GEAR_RATIO = 7;
         TURRET_MAX_POS = 270;
         TURRET_MIN_POS = 0;
-        TURRET_MOTOR_TYPE = SupportedMotors.CAN_SPARK_MAX;
+        TURRET_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
         AUTON_TOLERANCE = 0.1;
         AUTO_SPEED = 3;
         AUTO_ROTATION_SPEED = 1;
