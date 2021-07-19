@@ -43,6 +43,8 @@ public abstract class DefaultConfig {
     public boolean ENABLE_TURRET = false;
     public boolean DRIVE_INVERT_LEFT = true;
     public boolean DRIVE_INVERT_RIGHT = false;
+    public boolean ENABLE_MEMES = false;
+    public boolean ENABLE_OVERHEAT_DETECTION = false;
 
     //Misc
     public boolean ENABLE_VISION = false;

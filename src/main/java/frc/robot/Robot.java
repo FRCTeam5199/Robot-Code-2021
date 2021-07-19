@@ -74,7 +74,9 @@ public class Robot extends TimedRobot {
         robotSettings.printToggles();
         robotSettings.printNumbers();
         UserInterface.initRobot();
-        Main.pipeline = ClientServerPipeline.getClient();
+        if (robotSettings.ENABLE_MEMES) {
+            Main.pipeline = ClientServerPipeline.getClient();
+        }
 
         if (robotSettings.ENABLE_DRIVE) {
             if (robotSettings.DRIVE_BASE == AbstractDriveManager.DriveBases.STANDARD)
@@ -159,7 +161,7 @@ public class Robot extends TimedRobot {
      * @see DefaultConfig
      */
     private static DefaultConfig getSettings() {
-        String hostName = preferences.getString("hostname", "Default");
+        String hostName = preferences.getString("hostname", "ERR_NOT_FOUND");
         System.out.println("I am " + hostName);
         switch (hostName) {
             case "2020-Comp":
@@ -170,11 +172,10 @@ public class Robot extends TimedRobot {
                 return new CompetitionRobot2021();
             case "2021-Swivel":
                 return new Swerve2021();
-            default:
-                //preferences.putString("hostname", "2021-Comp");
-                //settingsFile = new CompetitionRobot2021();
-                //break;
+            case "ERR_NOT_FOUND":
                 throw new IllegalStateException("You need to ID this robot.");
+            default:
+                throw new IllegalStateException("Invalid ID " + hostName + " for robot. Please Re-ID.");
         }
     }
 
@@ -245,13 +246,17 @@ public class Robot extends TimedRobot {
 
         if (UserInterface.CLEAR_WARNINGS.getEntry().getBoolean(false)) {
             UserInterface.CLEAR_WARNINGS.getEntry().setBoolean(false);
-            Main.pipeline.wipeSounds();
+            if (robotSettings.ENABLE_MEMES) {
+                Main.pipeline.wipeSounds();
+            }
             IssueHandler.issues.clear();
         }
 
         ISimpleIssue.robotPeriodic();
-        Main.pipeline.updatePipeline();
-        MessageHandler.persistPendingCommands();
+        if (robotSettings.ENABLE_MEMES) {
+            Main.pipeline.updatePipeline();
+            MessageHandler.persistPendingCommands();
+        }
     }
 
     @Override

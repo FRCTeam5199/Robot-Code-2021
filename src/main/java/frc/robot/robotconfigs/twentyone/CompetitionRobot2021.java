@@ -22,6 +22,8 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = true;
         ENABLE_HOOD_ARTICULATION = false;
+        ENABLE_MEMES = true;
+        ENABLE_OVERHEAT_DETECTION = true;
 
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;

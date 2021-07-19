@@ -190,19 +190,23 @@ public abstract class AbstractMotorController {
      * @return invert {@link #isOverheated}
      */
     protected boolean isTemperatureAcceptable() {
-        if (getMotorTemperature() >= Robot.robotSettings.OVERHEAT_THRESHOLD) {
-            if (!isOverheated) {
-                UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), false);
-                Main.pipeline.sendAlarm(Alarms.Overheat, true);
-                isOverheated = true;
+        if (Robot.robotSettings.ENABLE_OVERHEAT_DETECTION) {
+            if (getMotorTemperature() >= Robot.robotSettings.OVERHEAT_THRESHOLD) {
+                if (!isOverheated) {
+                    UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), false);
+                    Main.pipeline.sendAlarm(Alarms.Overheat, true);
+                    isOverheated = true;
+                }
+            } //wait 5 degrees to unoverheat
+            else if (isOverheated && getMotorTemperature() < Robot.robotSettings.OVERHEAT_THRESHOLD - 5) {
+                Main.pipeline.sendAlarm(Alarms.Overheat, false);
+                isOverheated = false;
+                UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), true);
             }
-        } //wait 5 degrees to unoverheat
-        else if (isOverheated && getMotorTemperature() < Robot.robotSettings.OVERHEAT_THRESHOLD - 5) {
-            Main.pipeline.sendAlarm(Alarms.Overheat, false);
-            isOverheated = false;
-            UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), true);
+            return !isOverheated;
+        } else {
+            return true;
         }
-        return !isOverheated;
     }
 
     /**
