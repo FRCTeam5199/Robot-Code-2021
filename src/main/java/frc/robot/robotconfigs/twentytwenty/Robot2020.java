@@ -22,6 +22,8 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = false;
         ENABLE_HOOD_ARTICULATION = false;
+        ENABLE_PNEUMATICS = true;
+        ENABLE_CLIMBER = true;
 
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
@@ -42,11 +44,23 @@ public class Robot2020 extends DefaultConfig {
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
 
+        //pnoomatics
+        PCM_ID = 23;
+        INTAKE_IN_ID = 5;
+        INTAKE_OUT_ID = 4;
+        CLIMBER_IN_ID = 2;
+        CLIMBER_OUT_ID = 3;
+        BALL_SHIFTERS = 6;
+
+        //climber
+        CLIMBER_MOTOR_IDS = new int[]{8, 9};
+
         //UI Style
         DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
         SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
+        CLIMBER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.VICTOR;
         IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
         AUTON_TYPE = AutonType.FOLLOW_PATH;
 

@@ -9,18 +9,14 @@ import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.ArticulatedHood;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
+import frc.climber.Climber;
 import frc.discordslackbot.MessageHandler;
 import frc.drive.AbstractDriveManager;
 import frc.drive.DriveManagerStandard;
 import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
 import frc.drive.auton.followtrajectory.Trajectories;
-import frc.misc.Chirp;
-import frc.misc.ClientSide;
-import frc.misc.ISubsystem;
-import frc.misc.LEDs;
-import frc.misc.QuoteOfTheDay;
-import frc.misc.UserInterface;
+import frc.misc.*;
 import frc.motors.AbstractMotorController;
 import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
@@ -58,6 +54,8 @@ public class Robot extends TimedRobot {
     public static Chirp chirp;
     public static PDP pdp;
     public static LEDs leds;
+    public static Pneumatics pneumatics;
+    public static Climber climber;
     public static AbstractAutonManager autonManager;
     public static boolean SECOND_TRY;
     public static String lastFoundSong = "";
@@ -99,12 +97,18 @@ public class Robot extends TimedRobot {
         if (robotSettings.ENABLE_HOOD_ARTICULATION) {
             articulatedHood = new ArticulatedHood();
         }
+        if (robotSettings.ENABLE_PNEUMATICS) {
+            pneumatics = new Pneumatics();
+        }
         if (robotSettings.ENABLE_TURRET) {
             turret = new Turret();
             if (robotSettings.ENABLE_DRIVE) turret.setTelemetry(driver.guidance);
         }
         if (robotSettings.ENABLE_MUSIC) {
             chirp = new Chirp();
+        }
+        if (robotSettings.ENABLE_CLIMBER) {
+            climber = new Climber();
         }
         if (robotSettings.ENABLE_DRIVE && robotSettings.ENABLE_IMU) {
             switch (robotSettings.AUTON_TYPE) {

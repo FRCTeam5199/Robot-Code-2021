@@ -1,7 +1,9 @@
 package frc.ballstuff.intaking;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.controllers.*;
+import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
 import frc.drive.auton.AutonType;
 import frc.misc.ISubsystem;
@@ -10,10 +12,13 @@ import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
 import frc.motors.VictorMotorController;
+import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 
 import java.util.Objects;
 
+import static frc.controllers.ControllerEnums.ButtonPanelButtons.INTAKE_DOWN;
+import static frc.controllers.ControllerEnums.ButtonPanelButtons.INTAKE_UP;
 import static frc.robot.Robot.robotSettings;
 
 /**
@@ -22,7 +27,7 @@ import static frc.robot.Robot.robotSettings;
 public class Intake implements ISubsystem {
     private static final boolean DEBUG = false;
     public AbstractMotorController intakeMotor;
-    public BaseController joystick;
+    public BaseController joystick, buttonpanel;
     public double intakeMult;
 
     public Intake() throws InitializationFailureException, IllegalStateException {
@@ -89,15 +94,21 @@ public class Intake implements ISubsystem {
                 } else {
                     setIntake(IntakeDirection.OFF);
                 }
+
+                if (buttonpanel.get(INTAKE_UP) == ButtonStatus.DOWN) {
+                    deployIntake(false);
+                } else if (buttonpanel.get(INTAKE_DOWN) == ButtonStatus.DOWN) {
+                    deployIntake(true);
+                }
                 break;
             case DRUM_TIME:
-                if (joystick.get(ControllerEnums.DrumButton.TWO) == ControllerEnums.ButtonStatus.DOWN)
+                if (joystick.get(ControllerEnums.DrumButton.TWO) == ButtonStatus.DOWN)
                     setIntake(IntakeDirection.IN);
                 else
                     setIntake(IntakeDirection.OFF);
                 break;
             case BOP_IT:
-                if (joystick.get(ControllerEnums.BopItButtons.PULLIT) == ControllerEnums.ButtonStatus.DOWN)
+                if (joystick.get(ControllerEnums.BopItButtons.PULLIT) == ButtonStatus.DOWN)
                     setIntake(IntakeDirection.IN);
                 else
                     setIntake(IntakeDirection.OFF);
@@ -164,6 +175,11 @@ public class Intake implements ISubsystem {
         intakeMult = input.ordinal() - 1;
     }
 
+    public void deployIntake(boolean deployed) {
+        if (robotSettings.ENABLE_PNEUMATICS)
+            Robot.pneumatics.solenoidIntake.set(deployed ? Value.kForward : Value.kReverse);
+    }
+
     /**
      * Sets intake power and direction
      *
@@ -178,6 +194,7 @@ public class Intake implements ISubsystem {
             case FLIGHT_STICK:
             case STANDARD:
                 joystick = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                buttonpanel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
                 break;
             case XBOX_CONTROLLER:
                 joystick = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, XBoxController.class);

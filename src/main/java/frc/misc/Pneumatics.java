@@ -1,11 +1,19 @@
 package frc.misc;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+
+import static frc.robot.Robot.robotSettings;
+
 /**
  * I accidentally deleted this, so here we go again.
- * Allows you to control all of the solenoids for all of your air powered needs
+ * Allows you to control all of the solenoids for all of your air powered needs (pnoomatics)
+ *
  * @author Smaltin
  */
 public class Pneumatics implements ISubsystem {
+    public DoubleSolenoid solenoidIntake;
+    public DoubleSolenoid climberLock;
+
     public Pneumatics() {
         addToMetaList();
         init();
@@ -13,7 +21,12 @@ public class Pneumatics implements ISubsystem {
 
     @Override
     public void init() {
-
+        if (robotSettings.ENABLE_INTAKE && robotSettings.ENABLE_PNEUMATICS) {
+            solenoidIntake = new DoubleSolenoid(robotSettings.PCM_ID, robotSettings.INTAKE_OUT_ID, robotSettings.INTAKE_IN_ID);
+        }
+        if (robotSettings.ENABLE_CLIMBER && robotSettings.ENABLE_PNEUMATICS) {
+            climberLock = new DoubleSolenoid(robotSettings.PCM_ID, robotSettings.CLIMBER_IN_ID, robotSettings.CLIMBER_OUT_ID);
+        }
     }
 
     @Override

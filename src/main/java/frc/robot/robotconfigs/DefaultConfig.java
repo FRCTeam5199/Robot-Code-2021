@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
+import frc.climber.Climber;
 import frc.drive.AbstractDriveManager;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
@@ -45,6 +46,8 @@ public abstract class DefaultConfig {
     public boolean DRIVE_INVERT_RIGHT = false;
     public boolean ENABLE_MEMES = false;
     public boolean ENABLE_OVERHEAT_DETECTION = false;
+    public boolean ENABLE_PNEUMATICS = false;
+    public boolean ENABLE_CLIMBER = false;
 
     //Misc
     public boolean ENABLE_VISION = false;
@@ -64,11 +67,13 @@ public abstract class DefaultConfig {
     public AbstractDriveManager.DriveControlStyles DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
     public Shooter.ShootingControlStyles SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD;
     public Intake.IntakeControlStyles INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
+    public Climber.ClimberControlStyles CLIMBER_CONTROL_STYLE = Climber.ClimberControlStyles.STANDARD;
 
     public AbstractMotorController.SupportedMotors SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
     public AbstractMotorController.SupportedMotors HOOD_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
     public AbstractMotorController.SupportedMotors DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
     public AbstractMotorController.SupportedMotors TURRET_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
+    public AbstractMotorController.SupportedMotors CLIMBER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.VICTOR;
     public AbstractIMU.SupportedIMU IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
     public AutonType AUTON_TYPE = AutonType.FOLLOW_PATH;
     public AbstractDriveManager.DriveBases DRIVE_BASE = AbstractDriveManager.DriveBases.STANDARD;
@@ -137,6 +142,17 @@ public abstract class DefaultConfig {
     public int XBOX_CONTROLLER_USB_SLOT = 0;
     public int FLIGHT_STICK_USB_SLOT = 1;
     public int BUTTON_PANEL_USB_SLOT = 2;
+
+    //pnoomatics
+    public int PCM_ID = 1;
+    public int INTAKE_IN_ID;
+    public int INTAKE_OUT_ID;
+    public int CLIMBER_IN_ID;
+    public int CLIMBER_OUT_ID;
+    public int BALL_SHIFTERS;
+
+    //climber
+    public int[] CLIMBER_MOTOR_IDS;
 
     /**
      * Must be one of the following: {@link I2C.Port} {@link SerialPort.Port} {@link SPI.Port}
