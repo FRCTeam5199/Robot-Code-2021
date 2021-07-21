@@ -112,8 +112,8 @@ public class Robot2020 extends DefaultConfig {
         DRIVE_FOLLOWERS_R_IDS = new int[]{5, 6}; //talon
 
         //Shooter Motors
-        SHOOTER_LEADER_ID = 7; //talon
-        SHOOTER_FOLLOWER_ID = 8; //talon
+        SHOOTER_LEADER_ID = 25; //talon
+        SHOOTER_FOLLOWER_ID = 26; //talon
 
         //turret
         TURRET_YAW_ID = 33; //550
