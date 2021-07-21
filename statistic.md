@@ -1,4 +1,4 @@
 |Lang (# files)|Lines (% total)|Code Lines|% Code|Comment Lines|% Comments|Blank Lines|% Blank|
 | --- | --- | --- | --- | --- | --- | --- | --- |
-|[java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/statistics/java/lines_descending.md) (99)|11426 (100.0%)|7725|67.6%|2271|19.9%|1430|12.5%|
+|[java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/statistics/java/lines_descending.md) (99)|11427 (100.0%)|7726|67.6%|2271|19.9%|1430|12.5%|
 |[plaintext](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/statistics/plaintext/lines_descending.md) (1)|4 (0.0%)|4|100.0%|X|X|0|0.0%|
