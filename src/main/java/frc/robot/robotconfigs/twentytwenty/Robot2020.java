@@ -21,7 +21,7 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
         ENABLE_MUSIC = false;
-        ENABLE_HOOD_ARTICULATION = false;
+        ENABLE_HOOD_ARTICULATION = true;
         ENABLE_PNEUMATICS = true;
         ENABLE_CLIMBER = true;
 
@@ -114,6 +114,7 @@ public class Robot2020 extends DefaultConfig {
         //Shooter Motors
         SHOOTER_LEADER_ID = 25; //talon
         SHOOTER_FOLLOWER_ID = 26; //talon
+        SHOOTER_HOOD_ID = 32;
 
         //turret
         TURRET_YAW_ID = 33; //550
