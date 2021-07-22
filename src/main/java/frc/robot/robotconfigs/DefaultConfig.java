@@ -46,6 +46,7 @@ public abstract class DefaultConfig {
     public boolean DRIVE_INVERT_RIGHT = false;
     public boolean ENABLE_MEMES = false;
     public boolean ENABLE_OVERHEAT_DETECTION = false;
+    public boolean ENABLE_SHOOTER_COOLING = false;
     public boolean ENABLE_PNEUMATICS = false;
     public boolean ENABLE_CLIMBER = false;
 
@@ -145,6 +146,7 @@ public abstract class DefaultConfig {
 
     //pnoomatics
     public int PCM_ID = 1;
+    public int SHOOTER_COOLING_ID;
     public int INTAKE_IN_ID;
     public int INTAKE_OUT_ID;
     public int CLIMBER_IN_ID;

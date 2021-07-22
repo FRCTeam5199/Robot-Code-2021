@@ -7,6 +7,8 @@ import frc.motors.AbstractMotorController;
 import frc.motors.followers.AbstractFollowerMotorController;
 import frc.robot.Main;
 
+import static frc.robot.Robot.robotSettings;
+
 /**
  * Pretty self explanatory. This issue is regarding an non operational Motor
  */
@@ -27,6 +29,7 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
     private static void reportIssue(ISubsystem owner, int id, String fix) {
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)) {
             IssueHandler.issues.put(owner, new MotorDisconnectedIssue(id, fix));
+            if (robotSettings.ENABLE_MEMES)
             Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Motor, SoundManager.Sounds.Disconnected));
         }
     }
@@ -34,6 +37,7 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
     private static void resolveIssue(ISubsystem owner, int fixedMotorID) {
         if (IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)
             if (((MotorDisconnectedIssue) IssueHandler.issues.get(owner)).faultedMotorID == fixedMotorID) {
+                if (robotSettings.ENABLE_MEMES)
                 Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Motor, SoundManager.Sounds.Reconnected));
                 IssueHandler.issues.remove(owner);
             }

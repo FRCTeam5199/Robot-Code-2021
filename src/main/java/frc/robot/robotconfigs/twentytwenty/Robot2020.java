@@ -24,6 +24,7 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_HOOD_ARTICULATION = true;
         ENABLE_PNEUMATICS = true;
         ENABLE_CLIMBER = true;
+        ENABLE_SHOOTER_COOLING = true;
 
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
@@ -38,7 +39,7 @@ public class Robot2020 extends DefaultConfig {
         SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
-        GOAL_CAMERA_TYPE = IVision.SupportedVision.PHOTON;
+        GOAL_CAMERA_TYPE = IVision.SupportedVision.LIMELIGHT;
         INDEXER_DETECTION_CUTOFF_DISTANCE = 9;
 
         //INTAKE
@@ -51,6 +52,7 @@ public class Robot2020 extends DefaultConfig {
         CLIMBER_IN_ID = 2;
         CLIMBER_OUT_ID = 3;
         BALL_SHIFTERS = 6;
+        SHOOTER_COOLING_ID = 0;
 
         //climber
         CLIMBER_MOTOR_IDS = new int[]{8, 9};
@@ -105,11 +107,11 @@ public class Robot2020 extends DefaultConfig {
         BALL_CAM_NAME = "BallCamera";
 
         //Drive Motors
-        DRIVE_LEADER_L_ID = 1; //talon
-        DRIVE_FOLLOWERS_L_IDS = new int[]{2, 3}; //talon
+        DRIVE_LEADER_L_ID = 1; //spark
+        DRIVE_FOLLOWERS_L_IDS = new int[]{2, 3}; //spark
 
-        DRIVE_LEADER_R_ID = 4; //talon
-        DRIVE_FOLLOWERS_R_IDS = new int[]{5, 6}; //talon
+        DRIVE_LEADER_R_ID = 4; //spark
+        DRIVE_FOLLOWERS_R_IDS = new int[]{5, 6}; //spark
 
         //Shooter Motors
         SHOOTER_LEADER_ID = 25; //talon

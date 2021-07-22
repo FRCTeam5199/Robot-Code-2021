@@ -1,6 +1,7 @@
 package frc.misc;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 
 import static frc.robot.Robot.robotSettings;
 
@@ -13,6 +14,7 @@ import static frc.robot.Robot.robotSettings;
 public class Pneumatics implements ISubsystem {
     public DoubleSolenoid solenoidIntake;
     public DoubleSolenoid climberLock;
+    public Solenoid shooterCooling;
 
     public Pneumatics() {
         addToMetaList();
@@ -26,6 +28,9 @@ public class Pneumatics implements ISubsystem {
         }
         if (robotSettings.ENABLE_CLIMBER && robotSettings.ENABLE_PNEUMATICS) {
             climberLock = new DoubleSolenoid(robotSettings.PCM_ID, robotSettings.CLIMBER_IN_ID, robotSettings.CLIMBER_OUT_ID);
+        }
+        if (robotSettings.ENABLE_SHOOTER && robotSettings.ENABLE_PNEUMATICS && robotSettings.ENABLE_SHOOTER_COOLING) {
+            shooterCooling = new Solenoid(robotSettings.PCM_ID, robotSettings.SHOOTER_COOLING_ID);
         }
     }
 

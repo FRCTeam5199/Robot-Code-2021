@@ -5,6 +5,8 @@ import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
 import frc.robot.Main;
 
+import static frc.robot.Robot.robotSettings;
+
 /**
  * Pretty self explanatory. This issue is regarding an non operational IMU
  */
@@ -22,6 +24,7 @@ public class IMUNonOpIssue implements ISimpleIssue {
     private static void resolveIssue(ISubsystem owner) {
         if (IssueHandler.issues.get(owner) instanceof IMUNonOpIssue) {
             System.out.println("Cringe ahhahahahahahaa op");
+            if (robotSettings.ENABLE_MEMES)
             Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.IMU, SoundManager.Sounds.Reconnected));
             IssueHandler.issues.remove(owner);
         }
