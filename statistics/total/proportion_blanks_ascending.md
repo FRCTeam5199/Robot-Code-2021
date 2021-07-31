@@ -92,8 +92,8 @@
 |[Trajectories.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2Fauton%2Ffollowtrajectory%2FTrajectories.java)|28 (0.2%)|17|60.7%|6|21.4%|5|17.9%|
 |[WrappedNavX2IMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Ftelemetry%2Fimu%2FWrappedNavX2IMU.java)|96 (0.8%)|59|61.5%|19|19.8%|18|18.8%|
 |[Wait5TicksThenReplyCommand.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Fdiscordslackbot%2Fcommands%2FWait5TicksThenReplyCommand.java)|53 (0.5%)|37|69.8%|6|11.3%|10|18.9%|
-|[BaseController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Fcontrollers%2FBaseController.java)|123 (1.1%)|84|68.3%|15|12.2%|24|19.5%|
 |[ControllerEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Fcontrollers%2FControllerEnums.java)|221 (1.9%)|126|57.0%|50|22.6%|45|20.4%|
+|[BaseController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Fcontrollers%2FBaseController.java)|131 (1.1%)|90|68.7%|14|10.7%|27|20.6%|
 |[RobotTelemetrySwivel.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Ftelemetry%2FRobotTelemetrySwivel.java)|84 (0.7%)|57|67.9%|8|9.5%|19|22.6%|
 |[PDP.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Fpdp%2FPDP.java)|92 (0.8%)|58|63.0%|13|14.1%|21|22.8%|
 |[WrappedPigeonIMU.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Ftelemetry%2Fimu%2FWrappedPigeonIMU.java)|71 (0.6%)|43|60.6%|10|14.1%|18|25.4%|
@@ -101,5 +101,5 @@
 |[AutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2Fauton%2Ffollowtrajectory%2FAutonManager.java)|51 (0.4%)|34|66.7%|3|5.9%|14|27.5%|
 |[Pneumatics.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Fmisc%2FPneumatics.java)|91 (0.8%)|60|65.9%|6|6.6%|25|27.5%|
 |[AutonManager.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/Development/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2Fauton%2Fgalacticsearchtest%2FAutonManager.java)|53 (0.5%)|34|64.2%|3|5.7%|16|30.2%|
-|Average |114.6|77.5|X|22.7|X|14.4|X|
-|Total (100)|11461|7754|67.7%|2271| 19.8%|1436|12.5%|
+|Average |114.7|77.6|X|22.7|X|14.4|X|
+|Total (100)|11469|7760|67.7%|2270| 19.8%|1439|12.5%|
