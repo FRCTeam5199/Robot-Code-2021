@@ -20,7 +20,7 @@ public class XBoxController extends BaseController {
      *
      * @param n the usb port that the controller is on
      */
-    public XBoxController(Integer n) {
+    XBoxController(Integer n) {
         super(n);
     }
 

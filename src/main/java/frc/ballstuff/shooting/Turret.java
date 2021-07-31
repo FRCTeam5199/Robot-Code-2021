@@ -67,20 +67,20 @@ public class Turret implements ISubsystem {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
-                joy = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
-                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
+                joy = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, BaseController.Controllers.BUTTON_PANEL_CONTROLLER);
                 break;
             case BOP_IT:
-                joy = BaseController.createOrGet(3, BopItBasicController.class);
+                joy = BaseController.createOrGet(3, BaseController.Controllers.BOP_IT_CONTROLLER);
                 break;
             case DRUM_TIME:
-                joy = BaseController.createOrGet(5, DrumTimeController.class);
+                joy = BaseController.createOrGet(5, BaseController.Controllers.DRUM_CONTROLLER);
                 break;
             case WII:
-                joy = BaseController.createOrGet(4, WiiController.class);
+                joy = BaseController.createOrGet(4, BaseController.Controllers.WII_CONTROLLER);
                 break;
             case GUITAR:
-                joy = BaseController.createOrGet(6, SixButtonGuitarController.class);
+                joy = BaseController.createOrGet(6, BaseController.Controllers.SIX_BUTTON_GUITAR_CONTROLLER);
             default:
                 throw new UnsupportedOperationException("This control style is not supported here in TurretLand inc.");
                 //TODO add Xbox and (standalone) Flightstick

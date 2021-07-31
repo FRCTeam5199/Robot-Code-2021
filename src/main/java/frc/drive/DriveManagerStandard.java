@@ -345,22 +345,22 @@ public class DriveManagerStandard extends AbstractDriveManager {
         switch (robotSettings.DRIVE_STYLE) {
             case STANDARD:
             case EXPERIMENTAL:
-                controller = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, XBoxController.class);
+                controller = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, BaseController.Controllers.XBOX_CONTROLLER);
                 break;
             case FLIGHT_STICK:
-                controller = BaseController.createOrGet(1, JoystickController.class);
+                controller = BaseController.createOrGet(1, BaseController.Controllers.JOYSTICK_CONTROLLER);
                 break;
             case MARIO_KART:
-                controller = BaseController.createOrGet(4, WiiController.class);
+                controller = BaseController.createOrGet(4, BaseController.Controllers.WII_CONTROLLER);
                 break;
             case GUITAR:
-                controller = BaseController.createOrGet(6, SixButtonGuitarController.class);
+                controller = BaseController.createOrGet(6, BaseController.Controllers.SIX_BUTTON_GUITAR_CONTROLLER);
                 break;
             case DRUM_TIME:
-                controller = BaseController.createOrGet(5, DrumTimeController.class);
+                controller = BaseController.createOrGet(5, BaseController.Controllers.DRUM_CONTROLLER);
                 break;
             case BOP_IT:
-                controller = BaseController.createOrGet(3, BopItBasicController.class);
+                controller = BaseController.createOrGet(3, BaseController.Controllers.BOP_IT_CONTROLLER);
                 break;
             default:
                 throw new UnsupportedOperationException("There is no UI configuration for " + robotSettings.DRIVE_STYLE.name() + " to control the drivetrain. Please implement me");

@@ -61,7 +61,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         BLpid.enableContinuousInput(-180, 180);
         BRpid.enableContinuousInput(-180, 180);
 
-        xbox = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, XBoxController.class);
+        xbox = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, BaseController.Controllers.XBOX_CONTROLLER);
 
         driverFR = new SwerveMotorController(1, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX, 2, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX);
         driverBR = new SwerveMotorController(4, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX, 3, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX);

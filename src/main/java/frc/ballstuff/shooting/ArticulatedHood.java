@@ -35,14 +35,14 @@ public class ArticulatedHood implements ISubsystem {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
-                joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
-                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
+                joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, BaseController.Controllers.BUTTON_PANEL_CONTROLLER);
                 break;
             case BOP_IT:
-                joystickController = BaseController.createOrGet(1, BopItBasicController.class);
+                joystickController = BaseController.createOrGet(1, BaseController.Controllers.BOP_IT_CONTROLLER);
                 break;
             case XBOX_CONTROLLER:
-                joystickController = BaseController.createOrGet(1, XBoxController.class);
+                joystickController = BaseController.createOrGet(1, BaseController.Controllers.XBOX_CONTROLLER);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the articulated hood. Please implement me");

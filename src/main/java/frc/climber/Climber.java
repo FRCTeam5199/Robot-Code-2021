@@ -141,23 +141,23 @@ public class Climber implements ISubsystem {
     private void createControllers() {
         switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case FLIGHT_STICK:
-                joystick = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                joystick = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
             case STANDARD:
-                buttonpanel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
+                buttonpanel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, BaseController.Controllers.BUTTON_PANEL_CONTROLLER);
                 break;
             case XBOX_CONTROLLER:
-                joystick = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, XBoxController.class);
+                joystick = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, BaseController.Controllers.XBOX_CONTROLLER);
             case BOP_IT:
-                joystick = BaseController.createOrGet(3, BopItBasicController.class);
+                joystick = BaseController.createOrGet(3, BaseController.Controllers.BOP_IT_CONTROLLER);
                 break;
             case DRUM_TIME:
-                joystick = BaseController.createOrGet(5, DrumTimeController.class);
+                joystick = BaseController.createOrGet(5, BaseController.Controllers.DRUM_CONTROLLER);
                 break;
             case WII:
-                joystick = BaseController.createOrGet(4, WiiController.class);
+                joystick = BaseController.createOrGet(4, BaseController.Controllers.WII_CONTROLLER);
                 break;
             case GUITAR:
-                joystick = BaseController.createOrGet(6, SixButtonGuitarController.class);
+                joystick = BaseController.createOrGet(6, BaseController.Controllers.SIX_BUTTON_GUITAR_CONTROLLER);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");

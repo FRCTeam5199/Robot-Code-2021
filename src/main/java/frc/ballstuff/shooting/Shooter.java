@@ -57,14 +57,14 @@ public class Shooter implements ISubsystem {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
-                joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
-                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
+                joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, BaseController.Controllers.BUTTON_PANEL_CONTROLLER);
                 break;
             case BOP_IT:
-                joystickController = BaseController.createOrGet(3, BopItBasicController.class);
+                joystickController = BaseController.createOrGet(3, BaseController.Controllers.BOP_IT_CONTROLLER);
                 break;
             case XBOX_CONTROLLER:
-                joystickController = BaseController.createOrGet(0, XBoxController.class);
+                joystickController = BaseController.createOrGet(0, BaseController.Controllers.XBOX_CONTROLLER);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
@@ -252,24 +252,24 @@ public class Shooter implements ISubsystem {
             case ACCURACY_2021:
             case SPEED_2021:
             case STANDARD:
-                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, ButtonPanelController.class);
+                panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, BaseController.Controllers.BUTTON_PANEL_CONTROLLER);
             case FLIGHT_STICK:
-                joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, JoystickController.class);
+                joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
                 break;
             case BOP_IT:
-                joystickController = BaseController.createOrGet(3, BopItBasicController.class);
+                joystickController = BaseController.createOrGet(3, BaseController.Controllers.BOP_IT_CONTROLLER);
                 break;
             case XBOX_CONTROLLER:
-                joystickController = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, XBoxController.class);
+                joystickController = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, BaseController.Controllers.XBOX_CONTROLLER);
                 break;
             case DRUM_TIME:
-                joystickController = BaseController.createOrGet(5, DrumTimeController.class);
+                joystickController = BaseController.createOrGet(5, BaseController.Controllers.DRUM_CONTROLLER);
                 break;
             case WII:
-                joystickController = BaseController.createOrGet(4, WiiController.class);
+                joystickController = BaseController.createOrGet(4, BaseController.Controllers.WII_CONTROLLER);
                 break;
             case GUITAR:
-                joystickController = BaseController.createOrGet(6, SixButtonGuitarController.class);
+                joystickController = BaseController.createOrGet(6, BaseController.Controllers.SIX_BUTTON_GUITAR_CONTROLLER);
                 break;
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.SHOOTER_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
