@@ -2,7 +2,8 @@ package frc.ballstuff.intaking;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.controllers.*;
+import frc.controllers.BaseController;
+import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
 import frc.drive.auton.AutonType;

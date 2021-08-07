@@ -33,6 +33,20 @@ public enum Alarms implements Serializable {
     private transient boolean active;
 
     /**
+     * Simple constructor
+     *
+     * @param alarm     when this alarm plays, this sound will be played
+     * @param urgency   the level of prio this alarm should get. Higher numbers will take precedance over lower numbers
+     *                  when both are overdue
+     * @param frequency millisecond time to wait between calls
+     */
+    Alarms(Sound alarm, int urgency, long frequency) {
+        mySound = alarm;
+        this.urgency = urgency;
+        this.frequency = frequency;
+    }
+
+    /**
      * Reads through all of the alarms and returns the best candidate to play. Filters by alarm currently sounding in
      * {@link SoundManager}, then by highest priority alarm overdue to play, then by most overdue highest prio alarm.
      *
@@ -79,20 +93,6 @@ public enum Alarms implements Serializable {
      */
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    /**
-     * Simple constructor
-     *
-     * @param alarm     when this alarm plays, this sound will be played
-     * @param urgency   the level of prio this alarm should get. Higher numbers will take precedance over lower numbers
-     *                  when both are overdue
-     * @param frequency millisecond time to wait between calls
-     */
-    Alarms(Sound alarm, int urgency, long frequency) {
-        mySound = alarm;
-        this.urgency = urgency;
-        this.frequency = frequency;
     }
 
     /**

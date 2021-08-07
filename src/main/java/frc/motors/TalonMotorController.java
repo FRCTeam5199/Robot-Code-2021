@@ -9,6 +9,8 @@ import frc.misc.Chirp;
 import frc.misc.PID;
 import frc.robot.Robot;
 
+import java.util.ArrayList;
+
 import static com.ctre.phoenix.motorcontrol.ControlMode.*;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Brake;
 import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
@@ -17,6 +19,7 @@ import static com.ctre.phoenix.motorcontrol.NeutralMode.Coast;
  * This is the wrapper for falcon 500's and maybe some other stuff
  */
 public class TalonMotorController extends AbstractMotorController {
+    public final ArrayList<AbstractMotorController> motorFollowerList = new ArrayList<>();
     private final WPI_TalonFX motor;
 
     public TalonMotorController(int id) {
@@ -63,7 +66,7 @@ public class TalonMotorController extends AbstractMotorController {
     public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
         if (leader instanceof TalonMotorController)
             //motor.follow(((TalonMotorController) leader).motor);
-            leader.motorFollowerList.add(this);
+            ((TalonMotorController) leader).motorFollowerList.add(this);
         else
             throw new IllegalArgumentException("I cant follow that");
         setInverted(invert);

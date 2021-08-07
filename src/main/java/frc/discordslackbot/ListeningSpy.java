@@ -9,9 +9,13 @@ import static frc.misc.UtilFunctions.detectedInternet;
 
 public class ListeningSpy {
     public static ListeningSpy listeningSpy;
+    private final int readBytes = 0;
     private BufferedReader is;
     private Process spy;
-    private final int readBytes = 0;
+
+    private ListeningSpy() {
+        createChild();
+    }
 
     public static void startSpying() {
         if (detectedInternet()) {
@@ -39,10 +43,6 @@ public class ListeningSpy {
         } else {
             System.err.println("Listening exe not found in root directory.");
         }
-    }
-
-    private ListeningSpy() {
-        createChild();
     }
 
     public String getText() {

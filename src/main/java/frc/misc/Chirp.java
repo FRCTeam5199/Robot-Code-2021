@@ -36,6 +36,11 @@ public class Chirp extends Orchestra implements ISubsystem {
     private final ArrayList<String> queue = new ArrayList<>();
     private boolean remoteCommand = false;
 
+    public Chirp() {
+        init();
+        addToMetaList();
+    }
+
     /**
      * Loads up songs for {@link #songnames} and {@link UserInterface#MUSIC_SELECTOR}
      *
@@ -76,11 +81,6 @@ public class Chirp extends Orchestra implements ISubsystem {
             out.append('\n').append(name);
         }
         return out.append("```").toString();
-    }
-
-    public Chirp() {
-        init();
-        addToMetaList();
     }
 
     /**

@@ -1,6 +1,7 @@
 package frc.ballstuff.shooting;
 
-import frc.controllers.*;
+import frc.controllers.BaseController;
+import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.misc.ISubsystem;

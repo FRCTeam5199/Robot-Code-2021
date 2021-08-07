@@ -62,6 +62,51 @@ public class Robot extends TimedRobot {
     private static long lastDisable = 0;
 
     /**
+     * Reads from the preferences what the last boot time is. Depending on current system time, sets the {@link
+     * #SECOND_TRY} flag to either restart on error or to persist as best as possible. If you leave the robot on for
+     * half a century then it might not work right so please refrain from that
+     */
+    private static void getRestartProximity() {
+        long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
+        long currentBoot = System.currentTimeMillis();
+        preferences.putString("lastboot", "0" + currentBoot);
+        if (lastBoot > currentBoot) {
+            SECOND_TRY = false;
+        } else if (lastBoot > 1614461266977L) {
+            SECOND_TRY = currentBoot - lastBoot < 30000;
+        } else if (lastBoot < 1614461266977L && currentBoot < 1614461266977L) {
+            SECOND_TRY = currentBoot - lastBoot < 30000;
+        } else {
+            SECOND_TRY = false;
+        }
+    }
+
+    /**
+     * Loads settings based on the id of the robot.
+     *
+     * @return the settings for this robot based on the preferences
+     * @see DefaultConfig
+     */
+    private static DefaultConfig getSettings() {
+        String hostName = preferences.getString("hostname", "ERR_NOT_FOUND");
+        System.out.println("I am " + hostName);
+        switch (hostName) {
+            case "2020-Comp":
+                return new Robot2020();
+            case "2021-Prac":
+                return new PracticeRobot2021();
+            case "2021-Comp":
+                return new CompetitionRobot2021();
+            case "2021-Swivel":
+                return new Swerve2021();
+            case "ERR_NOT_FOUND":
+                throw new IllegalStateException("You need to ID this robot.");
+            default:
+                throw new IllegalStateException("Invalid ID " + hostName + " for robot. Please Re-ID.");
+        }
+    }
+
+    /**
      * Init everything
      */
     @Override
@@ -137,51 +182,6 @@ public class Robot extends TimedRobot {
         String quote = QuoteOfTheDay.getRandomQuote();
         System.out.println("\n\n" + quote);
         UserInterface.smartDashboardPutString("Quote", quote);
-    }
-
-    /**
-     * Reads from the preferences what the last boot time is. Depending on current system time, sets the {@link
-     * #SECOND_TRY} flag to either restart on error or to persist as best as possible. If you leave the robot on for
-     * half a century then it might not work right so please refrain from that
-     */
-    private static void getRestartProximity() {
-        long lastBoot = Long.parseLong(preferences.getString("lastboot", "0"));
-        long currentBoot = System.currentTimeMillis();
-        preferences.putString("lastboot", "0" + currentBoot);
-        if (lastBoot > currentBoot) {
-            SECOND_TRY = false;
-        } else if (lastBoot > 1614461266977L) {
-            SECOND_TRY = currentBoot - lastBoot < 30000;
-        } else if (lastBoot < 1614461266977L && currentBoot < 1614461266977L) {
-            SECOND_TRY = currentBoot - lastBoot < 30000;
-        } else {
-            SECOND_TRY = false;
-        }
-    }
-
-    /**
-     * Loads settings based on the id of the robot.
-     *
-     * @return the settings for this robot based on the preferences
-     * @see DefaultConfig
-     */
-    private static DefaultConfig getSettings() {
-        String hostName = preferences.getString("hostname", "ERR_NOT_FOUND");
-        System.out.println("I am " + hostName);
-        switch (hostName) {
-            case "2020-Comp":
-                return new Robot2020();
-            case "2021-Prac":
-                return new PracticeRobot2021();
-            case "2021-Comp":
-                return new CompetitionRobot2021();
-            case "2021-Swivel":
-                return new Swerve2021();
-            case "ERR_NOT_FOUND":
-                throw new IllegalStateException("You need to ID this robot.");
-            default:
-                throw new IllegalStateException("Invalid ID " + hostName + " for robot. Please Re-ID.");
-        }
     }
 
     @Override

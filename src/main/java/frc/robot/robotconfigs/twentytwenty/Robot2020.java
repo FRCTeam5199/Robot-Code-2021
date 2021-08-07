@@ -6,7 +6,6 @@ import frc.ballstuff.shooting.Shooter;
 import frc.drive.AbstractDriveManager;
 import frc.drive.auton.AutonType;
 import frc.misc.PID;
-import frc.motors.AbstractMotorController;
 import frc.robot.robotconfigs.DefaultConfig;
 import frc.telemetry.imu.AbstractIMU;
 import frc.vision.camera.IVision;

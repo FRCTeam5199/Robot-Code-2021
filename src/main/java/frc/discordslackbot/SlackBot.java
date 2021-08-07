@@ -15,6 +15,28 @@ public class SlackBot {
     private static SlackBot bot = null;
     private final App botObject;
 
+    private SlackBot(boolean listener) {
+        MessageHandler.loadCommands(listener);
+        App holder = null;
+        if (!listener) {
+            try {
+                holder = new App(AppConfig.builder().singleTeamBotToken(DefaultConfig.SLACKBOTKEY).scope("message").build());
+
+                holder.event(MessageEvent.class, (req, ctx) -> {
+                    MessageHandler.onMessageReceived(req.getEvent());
+                    return ctx.ack();
+                });
+
+                SocketModeApp socketModeApp = new SocketModeApp(DefaultConfig.SLACKSOCKETKEY, holder);
+                socketModeApp.startAsync();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        botObject = holder;
+    }
+
     public static void newInstance(boolean listening) {
         UtilFunctions.detectedInternet();
         if (bot == null) {
@@ -47,27 +69,5 @@ public class SlackBot {
     @ServerSide
     public static App getBotObject() {
         return bot.botObject;
-    }
-
-    private SlackBot(boolean listener) {
-        MessageHandler.loadCommands(listener);
-        App holder = null;
-        if (!listener) {
-            try {
-                holder = new App(AppConfig.builder().singleTeamBotToken(DefaultConfig.SLACKBOTKEY).scope("message").build());
-
-                holder.event(MessageEvent.class, (req, ctx) -> {
-                    MessageHandler.onMessageReceived(req.getEvent());
-                    return ctx.ack();
-                });
-
-                SocketModeApp socketModeApp = new SocketModeApp(DefaultConfig.SLACKSOCKETKEY, holder);
-                socketModeApp.startAsync();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        botObject = holder;
     }
 }

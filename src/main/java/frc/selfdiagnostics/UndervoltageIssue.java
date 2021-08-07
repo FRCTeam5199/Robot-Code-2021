@@ -12,6 +12,10 @@ import static frc.robot.Robot.robotSettings;
  * standard {@link frc.robot.ClientServerPipeline#sendSound(Sound)} to pass a simple message
  */
 public class UndervoltageIssue implements ISimpleIssue {
+    private UndervoltageIssue() {
+
+    }
+
     public static void handleIssue(ISubsystem owner, boolean report) {
         if (!report)
             resolveIssue(owner);
@@ -29,13 +33,9 @@ public class UndervoltageIssue implements ISimpleIssue {
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof UndervoltageIssue)) {
             System.err.println(">>>>>>>POSSIBLE BROWNOUT DETECTED<<<<<<<");
             if (robotSettings.ENABLE_MEMES)
-            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Battery, SoundManager.Sounds.Low));
+                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Battery, SoundManager.Sounds.Low));
             IssueHandler.issues.put(owner, new UndervoltageIssue());
         }
-    }
-
-    private UndervoltageIssue() {
-
     }
 
     @Override

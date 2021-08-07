@@ -2,7 +2,6 @@ package frc.controllers;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
 
 /**
@@ -23,31 +22,15 @@ public abstract class BaseController {
     protected final Joystick controller;
     private final int JOYSTICK_CHANNEL;
 
+    protected BaseController(Integer channel) {
+        controller = new Joystick(channel);
+        JOYSTICK_CHANNEL = channel;
+    }
+
     public static BaseController createOrGet(int channel, Controllers controllerType) throws ArrayIndexOutOfBoundsException, ArrayStoreException, UnsupportedOperationException {
         if (channel < 0 || channel >= 6)
             throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
         return allControllers[channel] = controllerType.constructor.apply(channel);
-    }
-
-    public enum Controllers {
-        BOP_IT_CONTROLLER(BopItBasicController::new),
-        BUTTON_PANEL_CONTROLLER(ButtonPanelController::new),
-        DRUM_CONTROLLER(DrumTimeController::new),
-        JOYSTICK_CONTROLLER(JoystickController::new),
-        SIX_BUTTON_GUITAR_CONTROLLER(SixButtonGuitarController::new),
-        WII_CONTROLLER(WiiController::new),
-        XBOX_CONTROLLER(XBoxController::new);
-
-        private final Function<Integer, BaseController> constructor;
-
-        Controllers(Function<Integer, BaseController> structor) {
-            constructor = structor;
-        }
-    }
-
-    protected BaseController(Integer channel) {
-        controller = new Joystick(channel);
-        JOYSTICK_CHANNEL = channel;
     }
 
     @Deprecated
@@ -127,5 +110,21 @@ public abstract class BaseController {
     @Override
     public String toString() {
         return this.getClass().getName() + " on channel " + JOYSTICK_CHANNEL;
+    }
+
+    public enum Controllers {
+        BOP_IT_CONTROLLER(BopItBasicController::new),
+        BUTTON_PANEL_CONTROLLER(ButtonPanelController::new),
+        DRUM_CONTROLLER(DrumTimeController::new),
+        JOYSTICK_CONTROLLER(JoystickController::new),
+        SIX_BUTTON_GUITAR_CONTROLLER(SixButtonGuitarController::new),
+        WII_CONTROLLER(WiiController::new),
+        XBOX_CONTROLLER(XBoxController::new);
+
+        private final Function<Integer, BaseController> constructor;
+
+        Controllers(Function<Integer, BaseController> structor) {
+            constructor = structor;
+        }
     }
 }

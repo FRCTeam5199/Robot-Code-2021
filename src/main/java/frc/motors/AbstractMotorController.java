@@ -1,9 +1,5 @@
 package frc.motors;
 
-import com.ctre.phoenix.motorcontrol.IMotorController;
-import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import frc.gpws.Alarms;
 import frc.misc.PID;
 import frc.misc.UserInterface;
@@ -28,7 +24,6 @@ import static frc.robot.Robot.robotSettings;
  */
 public abstract class AbstractMotorController {
     public static final ArrayList<AbstractMotorController> motorList = new ArrayList<>();
-    public final ArrayList<AbstractMotorController> motorFollowerList = new ArrayList<>();
     /**
      * Value to convert from sensor position to real units (this will vary between motors so know your units!)
      * Destination units are RPM that include the gearing on the motor
@@ -40,6 +35,20 @@ public abstract class AbstractMotorController {
     protected boolean failureFlag = false;
     protected String potentialFix;
     protected boolean isOverheated;
+
+    protected AbstractMotorController() {
+        motorList.add(this);
+    }
+
+    /**
+     * In order to prevent out of control PID loops from emerging, especially coming out of a disable in test mde, we
+     * set all motors to idle. If we really want them to move then this method will take no effect because
+     */
+    public static void resetAllMotors() {
+        for (AbstractMotorController motor : motorList) {
+            motor.moveAtPercent(0);
+        }
+    }
 
     /**
      * Inverts the motor rotation from default for that motor (varies motor to motor of course)
@@ -138,25 +147,11 @@ public abstract class AbstractMotorController {
     public abstract boolean isFailed();
 
     /**
-     * In order to prevent out of control PID loops from emerging, especially coming out of a disable in test mde, we
-     * set all motors to idle. If we really want them to move then this method will take no effect because
-     */
-    public static void resetAllMotors() {
-        for (AbstractMotorController motor : motorList) {
-            motor.moveAtPercent(0);
-        }
-    }
-
-    /**
      * Sets the motor output on a percent output basis
      *
      * @param percent -1 to 1 output requested
      */
     public abstract void moveAtPercent(double percent);
-
-    protected AbstractMotorController() {
-        motorList.add(this);
-    }
 
     /**
      * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and
@@ -202,13 +197,13 @@ public abstract class AbstractMotorController {
                 if (!isOverheated) {
                     UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), false);
                     if (robotSettings.ENABLE_MEMES)
-                    Main.pipeline.sendAlarm(Alarms.Overheat, true);
+                        Main.pipeline.sendAlarm(Alarms.Overheat, true);
                     isOverheated = true;
                 }
             } //wait 5 degrees to unoverheat
             else if (isOverheated && getMotorTemperature() < Robot.robotSettings.OVERHEAT_THRESHOLD - 5) {
                 if (robotSettings.ENABLE_MEMES)
-                Main.pipeline.sendAlarm(Alarms.Overheat, false);
+                    Main.pipeline.sendAlarm(Alarms.Overheat, false);
                 isOverheated = false;
                 UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), true);
             }

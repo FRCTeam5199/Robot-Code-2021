@@ -1,7 +1,8 @@
 package frc.ballstuff.shooting;
 
 import com.revrobotics.CANSparkMaxLowLevel;
-import frc.controllers.*;
+import frc.controllers.BaseController;
+import frc.controllers.ControllerEnums;
 import frc.misc.ISubsystem;
 import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;

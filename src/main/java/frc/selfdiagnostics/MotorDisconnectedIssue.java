@@ -18,6 +18,12 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
     private final boolean knownFix;
     private final String fix;
 
+    private MotorDisconnectedIssue(int motorID, String theFix) {
+        faultedMotorID = motorID;
+        knownFix = !theFix.equals("");
+        fix = theFix;
+    }
+
     public static void handleIssue(ISubsystem owner, AbstractFollowerMotorController... motors) {
         for (AbstractFollowerMotorController motor : motors)
             if (motor.failureFlag())
@@ -30,7 +36,7 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)) {
             IssueHandler.issues.put(owner, new MotorDisconnectedIssue(id, fix));
             if (robotSettings.ENABLE_MEMES)
-            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Motor, SoundManager.Sounds.Disconnected));
+                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Motor, SoundManager.Sounds.Disconnected));
         }
     }
 
@@ -38,7 +44,7 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
         if (IssueHandler.issues.get(owner) instanceof MotorDisconnectedIssue)
             if (((MotorDisconnectedIssue) IssueHandler.issues.get(owner)).faultedMotorID == fixedMotorID) {
                 if (robotSettings.ENABLE_MEMES)
-                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Motor, SoundManager.Sounds.Reconnected));
+                    Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Motor, SoundManager.Sounds.Reconnected));
                 IssueHandler.issues.remove(owner);
             }
     }
@@ -50,12 +56,6 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
                     reportIssue(owner, motor.getID(), motor.getSuggestedFix());
                 else
                     resolveIssue(owner, motor.getID());
-    }
-
-    private MotorDisconnectedIssue(int motorID, String theFix) {
-        faultedMotorID = motorID;
-        knownFix = !theFix.equals("");
-        fix = theFix;
     }
 
     @Override

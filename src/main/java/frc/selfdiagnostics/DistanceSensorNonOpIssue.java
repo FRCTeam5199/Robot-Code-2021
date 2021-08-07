@@ -20,6 +20,10 @@ public class DistanceSensorNonOpIssue implements ISimpleIssue {
     private static final String[] fixes = {"Ensure the %1$s is plugged in", "Ensure the %1$s is listening for the right port"};
     private final String distanceSensorName;
 
+    private DistanceSensorNonOpIssue(String name) {
+        distanceSensorName = name;
+    }
+
     public static void handleIssue(ISubsystem owner, String imuName, boolean report) {
         if (report)
             resolveIssue(owner);
@@ -30,7 +34,7 @@ public class DistanceSensorNonOpIssue implements ISimpleIssue {
     private static void resolveIssue(ISubsystem owner) {
         if (IssueHandler.issues.get(owner) instanceof DistanceSensorNonOpIssue) {
             if (robotSettings.ENABLE_MEMES)
-            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Reconnected));
+                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Reconnected));
             IssueHandler.issues.remove(owner);
         }
     }
@@ -38,13 +42,9 @@ public class DistanceSensorNonOpIssue implements ISimpleIssue {
     private static void reportIssue(ISubsystem owner, String imuName) {
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof DistanceSensorNonOpIssue)) {
             if (robotSettings.ENABLE_MEMES)
-            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Disconnected));
+                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Disconnected));
             IssueHandler.issues.put(owner, new DistanceSensorNonOpIssue(imuName));
         }
-    }
-
-    private DistanceSensorNonOpIssue(String name) {
-        distanceSensorName = name;
     }
 
     @Override

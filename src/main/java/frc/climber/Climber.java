@@ -3,7 +3,7 @@ package frc.climber;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.ballstuff.intaking.Intake;
-import frc.controllers.*;
+import frc.controllers.BaseController;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
@@ -27,8 +27,8 @@ import static frc.robot.Robot.robotSettings;
  * @author Smaltin
  */
 public class Climber implements ISubsystem {
-    private AbstractMotorController[] climberMotors;
     public BaseController joystick, buttonpanel;
+    private AbstractMotorController[] climberMotors;
 
     @Override
     public void init() {

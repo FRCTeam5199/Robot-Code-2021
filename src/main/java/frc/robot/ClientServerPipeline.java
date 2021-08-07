@@ -31,6 +31,22 @@ public class ClientServerPipeline implements Runnable {
     private static int bytesRecieved = 0, bytesSent = 0;
 
     /**
+     * Creates the requested Pipeline object
+     *
+     * @param server true: the device running this pipeline can access the internet and host the bot for the client.
+     *               false: the device running this pipeline cannot host the bot on its own and is listening via the
+     *               pipeline
+     */
+    private ClientServerPipeline(boolean server) {
+        serverNetworkTable = NetworkTableInstance.getDefault().getTable("Brobot");
+        wipeNetworkTable(serverNetworkTable);
+        SERVER = server;
+        ListeningSpy.startSpying();
+        DiscordBot.newInstance(!SERVER);
+        SlackBot.newInstance(!SERVER);
+    }
+
+    /**
      * This is why we use getters, kids. It means that we <i>should</i> only create a server if requested, or a client
      * if requested
      *
@@ -50,68 +66,6 @@ public class ClientServerPipeline implements Runnable {
     @ClientSide
     public static ClientServerPipeline getClient() {
         return Objects.requireNonNullElseGet(CLIENT_PIPELINE, () -> CLIENT_PIPELINE = new ClientServerPipeline(false));
-    }
-
-    /**
-     * Creates the requested Pipeline object
-     *
-     * @param server true: the device running this pipeline can access the internet and host the bot for the client.
-     *               false: the device running this pipeline cannot host the bot on its own and is listening via the
-     *               pipeline
-     */
-    private ClientServerPipeline(boolean server) {
-        serverNetworkTable = NetworkTableInstance.getDefault().getTable("Brobot");
-        wipeNetworkTable(serverNetworkTable);
-        SERVER = server;
-        ListeningSpy.startSpying();
-        DiscordBot.newInstance(!SERVER);
-        SlackBot.newInstance(!SERVER);
-    }
-
-    /**
-     * Clears the networktable from all its keys.
-     *
-     * @param table The networktable being deleted
-     */
-    private void wipeNetworkTable(NetworkTable table) {
-        for (String key : table.getKeys()) {
-            table.delete(key);
-        }
-    }
-
-    /**
-     * {@link frc.discordslackbot.commands.AbstractCommand.AbstractCommandData Data} is just a stripped down way of
-     * sending a {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent message from the bot}
-     *
-     * @param outbound the data packet to send
-     * @return true if data was changed, false otherwise
-     */
-    @ServerSide
-    public boolean sendData(AbstractCommand.AbstractCommandData outbound) {
-        return sendData(outbound, false);
-    }
-
-    /**
-     * {@link frc.discordslackbot.commands.AbstractCommand.AbstractCommandData Data} is just a stripped down way of
-     * sending a {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent message from the bot}
-     *
-     * @param outbound       the data packet to send
-     * @param skipDirtyCheck activating this flag will bypass the redundancy check that skips uploading when the
-     *                       existing data is identical
-     * @return true if data was changed, false otherwise
-     */
-    @ServerSide
-    public boolean sendData(AbstractCommand.AbstractCommandData outbound, boolean skipDirtyCheck) {
-        if (outbound == null)
-            return false;
-        byte[] outboundPacket = writeToBytes(outbound);
-        if (!skipDirtyCheck && checkDirty(outboundPacket, serverNetworkTable.getEntry("command").getRaw(new byte[0]))) {
-            return false;
-        }
-        serverNetworkTable.getEntry("command").setRaw(outboundPacket);
-        serverNetworkTable.getEntry("read_reciept_command").setBoolean(false);
-        sentBytes(outboundPacket.length);
-        return true;
     }
 
     /**
@@ -158,6 +112,82 @@ public class ClientServerPipeline implements Runnable {
     private static void sentBytes(int length) {
         bytesSent += length;
         System.out.println("Bytes sent: " + length + " (" + UtilFunctions.stringifyBytes(bytesSent) + ")");
+    }
+
+    /**
+     * Used to log transferred bytes. Prints fresh bytes read and {@link UtilFunctions#stringifyBytes(double) total
+     * bytes read}
+     *
+     * @param length number of new bytes transferred
+     */
+    private static void readBytes(int length) {
+        bytesRecieved += length;
+        System.out.println("Bytes read: " + length + " (" + UtilFunctions.stringifyBytes(bytesRecieved) + ")");
+    }
+
+    /**
+     * Reads and returns an object as interpreted from the passed data
+     *
+     * @param rawdata serialized object data, represented in bytes (sorry if u have a string idk where u got it from but
+     *                put it back)
+     * @return the input, deserialized
+     */
+    private static Object readFromBytes(byte[] rawdata) {
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream(rawdata);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            Object objectOut = ois.readObject();
+            ois.close();
+            return objectOut;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Clears the networktable from all its keys.
+     *
+     * @param table The networktable being deleted
+     */
+    private void wipeNetworkTable(NetworkTable table) {
+        for (String key : table.getKeys()) {
+            table.delete(key);
+        }
+    }
+
+    /**
+     * {@link frc.discordslackbot.commands.AbstractCommand.AbstractCommandData Data} is just a stripped down way of
+     * sending a {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent message from the bot}
+     *
+     * @param outbound the data packet to send
+     * @return true if data was changed, false otherwise
+     */
+    @ServerSide
+    public boolean sendData(AbstractCommand.AbstractCommandData outbound) {
+        return sendData(outbound, false);
+    }
+
+    /**
+     * {@link frc.discordslackbot.commands.AbstractCommand.AbstractCommandData Data} is just a stripped down way of
+     * sending a {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent message from the bot}
+     *
+     * @param outbound       the data packet to send
+     * @param skipDirtyCheck activating this flag will bypass the redundancy check that skips uploading when the
+     *                       existing data is identical
+     * @return true if data was changed, false otherwise
+     */
+    @ServerSide
+    public boolean sendData(AbstractCommand.AbstractCommandData outbound, boolean skipDirtyCheck) {
+        if (outbound == null)
+            return false;
+        byte[] outboundPacket = writeToBytes(outbound);
+        if (!skipDirtyCheck && checkDirty(outboundPacket, serverNetworkTable.getEntry("command").getRaw(new byte[0]))) {
+            return false;
+        }
+        serverNetworkTable.getEntry("command").setRaw(outboundPacket);
+        serverNetworkTable.getEntry("read_reciept_command").setBoolean(false);
+        sentBytes(outboundPacket.length);
+        return true;
     }
 
     /**
@@ -357,36 +387,6 @@ public class ClientServerPipeline implements Runnable {
         if (readFromBytes(inboundPacket) instanceof AbstractCommand.AbstractCommandData)
             return (AbstractCommand.AbstractCommandData) readFromBytes(inboundPacket);
         throw new IllegalStateException("Not sure what happened but the command that I read isnt a known command");
-    }
-
-    /**
-     * Used to log transferred bytes. Prints fresh bytes read and {@link UtilFunctions#stringifyBytes(double) total
-     * bytes read}
-     *
-     * @param length number of new bytes transferred
-     */
-    private static void readBytes(int length) {
-        bytesRecieved += length;
-        System.out.println("Bytes read: " + length + " (" + UtilFunctions.stringifyBytes(bytesRecieved) + ")");
-    }
-
-    /**
-     * Reads and returns an object as interpreted from the passed data
-     *
-     * @param rawdata serialized object data, represented in bytes (sorry if u have a string idk where u got it from but
-     *                put it back)
-     * @return the input, deserialized
-     */
-    private static Object readFromBytes(byte[] rawdata) {
-        try {
-            ByteArrayInputStream bais = new ByteArrayInputStream(rawdata);
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            Object objectOut = ois.readObject();
-            ois.close();
-            return objectOut;
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**

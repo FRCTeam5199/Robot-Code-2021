@@ -24,6 +24,12 @@ public abstract class AbstractDriveManager implements ISubsystem {
      */
     public AbstractRobotTelemetry guidance;
 
+    protected AbstractDriveManager() {
+        init();
+        addToMetaList();
+        createTelem();
+    }
+
     /**
      * Required by {@link RobotTelemetryStandard} in order to reset position
      */
@@ -39,12 +45,6 @@ public abstract class AbstractDriveManager implements ISubsystem {
     public abstract void driveMPS(double xMeters, double yMeters, double rotation);
 
     public abstract void driveWithChassisSpeeds(ChassisSpeeds speeds);
-
-    protected AbstractDriveManager() {
-        init();
-        addToMetaList();
-        createTelem();
-    }
 
     protected void createTelem() {
         if (Robot.robotSettings.ENABLE_IMU) {
