@@ -9,6 +9,15 @@ import frc.misc.ISubsystem;
  */
 public interface IVision extends ISubsystem {
 
+    boolean hasValidTarget();
+
+    /**
+     * Changes the mode of the vision (on, off, blink)
+     *
+     * @param ledMode the mode (on, off, blink) from enum {@link VisionLEDMode}
+     */
+    void setLedMode(VisionLEDMode ledMode);
+
     static IVision manufactureGoalCamera(SupportedVision cameraType) {
         switch (cameraType) {
             case LIMELIGHT:
@@ -19,15 +28,6 @@ public interface IVision extends ISubsystem {
                 throw new IllegalStateException("You must have a camera type set.");
         }
     }
-
-    boolean hasValidTarget();
-
-    /**
-     * Changes the mode of the vision (on, off, blink)
-     *
-     * @param ledMode the mode (on, off, blink) from enum {@link VisionLEDMode}
-     */
-    void setLedMode(VisionLEDMode ledMode);
 
     /**
      * Returns the angle between the camera and the object

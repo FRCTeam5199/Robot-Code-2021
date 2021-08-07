@@ -14,11 +14,6 @@ public class RevDistanceSensor extends Rev2mDistanceSensor implements IDistanceS
         init();
     }
 
-    public RevDistanceSensor(Rev2mDistanceSensor.Port port, Rev2mDistanceSensor.Unit units, Rev2mDistanceSensor.RangeProfile profile) {
-        super(port, units, profile);
-        init();
-    }
-
     @Override
     public void init() {
         addToMetaList();
@@ -75,6 +70,11 @@ public class RevDistanceSensor extends Rev2mDistanceSensor implements IDistanceS
     @Override
     public void initGeneric() {
 
+    }
+
+    public RevDistanceSensor(Rev2mDistanceSensor.Port port, Rev2mDistanceSensor.Unit units, Rev2mDistanceSensor.RangeProfile profile) {
+        super(port, units, profile);
+        init();
     }
 
     @Override

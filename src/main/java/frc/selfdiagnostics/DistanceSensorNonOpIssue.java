@@ -20,10 +20,6 @@ public class DistanceSensorNonOpIssue implements ISimpleIssue {
     private static final String[] fixes = {"Ensure the %1$s is plugged in", "Ensure the %1$s is listening for the right port"};
     private final String distanceSensorName;
 
-    private DistanceSensorNonOpIssue(String name) {
-        distanceSensorName = name;
-    }
-
     public static void handleIssue(ISubsystem owner, String imuName, boolean report) {
         if (report)
             resolveIssue(owner);
@@ -45,6 +41,10 @@ public class DistanceSensorNonOpIssue implements ISimpleIssue {
                 Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Disconnected));
             IssueHandler.issues.put(owner, new DistanceSensorNonOpIssue(imuName));
         }
+    }
+
+    private DistanceSensorNonOpIssue(String name) {
+        distanceSensorName = name;
     }
 
     @Override

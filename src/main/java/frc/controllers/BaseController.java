@@ -22,15 +22,15 @@ public abstract class BaseController {
     protected final Joystick controller;
     private final int JOYSTICK_CHANNEL;
 
-    protected BaseController(Integer channel) {
-        controller = new Joystick(channel);
-        JOYSTICK_CHANNEL = channel;
-    }
-
     public static BaseController createOrGet(int channel, Controllers controllerType) throws ArrayIndexOutOfBoundsException, ArrayStoreException, UnsupportedOperationException {
         if (channel < 0 || channel >= 6)
             throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
         return allControllers[channel] = controllerType.constructor.apply(channel);
+    }
+
+    protected BaseController(Integer channel) {
+        controller = new Joystick(channel);
+        JOYSTICK_CHANNEL = channel;
     }
 
     @Deprecated

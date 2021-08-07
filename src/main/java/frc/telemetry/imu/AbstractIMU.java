@@ -16,12 +16,9 @@ public abstract class AbstractIMU implements ISubsystem {
     protected double[] startypr = new double[3];
 
     /**
-     * Adds this IMU to the {@link frc.robot.Robot#subsystems} and {@link #init() makes the init call}
+     * Attempts to reset the absolute yaw, and re zeros the relative yaw
      */
-    protected AbstractIMU() {
-        init();
-        addToMetaList();
-    }
+    public abstract void resetOdometry();
 
     /**
      * Creates a new IMU based on the passed type.
@@ -42,9 +39,12 @@ public abstract class AbstractIMU implements ISubsystem {
     }
 
     /**
-     * Attempts to reset the absolute yaw, and re zeros the relative yaw
+     * Adds this IMU to the {@link frc.robot.Robot#subsystems} and {@link #init() makes the init call}
      */
-    public abstract void resetOdometry();
+    protected AbstractIMU() {
+        init();
+        addToMetaList();
+    }
 
     @Override
     public SubsystemStatus getSubsystemStatus() {

@@ -30,9 +30,6 @@ public final class Main {
     public static ClientServerPipeline pipeline;
     public static boolean IS_DS;
 
-    private Main() {
-    }
-
     /**
      * Main initialization function. Do not perform any initialization here.
      * <p>
@@ -49,5 +46,8 @@ public final class Main {
             pipeline = ClientServerPipeline.getServer();
             pipeline.run();
         }
+    }
+
+    private Main() {
     }
 }

@@ -21,19 +21,19 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
     public Translation2d robotTranslation;
     public Rotation2d robotRotation;
 
-    protected AbstractRobotTelemetry(AbstractDriveManager driver) {
-        if (this instanceof RobotTelemetrySwivel ^ (this.driver = driver) instanceof DriveManagerSwerve)
-            throw new IllegalArgumentException("Incompatible telem and drive combo");
-        addToMetaList();
-        init();
-    }
-
     public static AbstractRobotTelemetry createTelem(AbstractDriveManager driver) {
         if (driver instanceof DriveManagerSwerve)
             return new RobotTelemetrySwivel(driver);
         if (driver instanceof DriveManagerStandard)
             return new RobotTelemetryStandard(driver);
         throw new IllegalArgumentException("Cannot create telem for that");
+    }
+
+    protected AbstractRobotTelemetry(AbstractDriveManager driver) {
+        if (this instanceof RobotTelemetrySwivel ^ (this.driver = driver) instanceof DriveManagerSwerve)
+            throw new IllegalArgumentException("Incompatible telem and drive combo");
+        addToMetaList();
+        init();
     }
 
     @Override

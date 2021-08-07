@@ -12,10 +12,6 @@ import static frc.robot.Robot.robotSettings;
  */
 @ClientSide
 public class BrownoutIssue implements ISimpleIssue {
-    private BrownoutIssue() {
-
-    }
-
     /**
      * Unresolved issues from your childhood? no matter! just use a brownout issue!
      *
@@ -41,6 +37,10 @@ public class BrownoutIssue implements ISimpleIssue {
         if (IssueHandler.issues.get(owner) instanceof BrownoutIssue) {
             IssueHandler.issues.remove(owner);
         }
+    }
+
+    private BrownoutIssue() {
+
     }
 
     @Override

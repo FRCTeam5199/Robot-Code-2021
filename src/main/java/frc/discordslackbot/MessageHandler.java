@@ -30,10 +30,6 @@ public class MessageHandler extends ListenerAdapter {
     public static MessageHandler messageHandler;
     private static boolean LISTENING;
 
-    public MessageHandler() {
-
-    }
-
     /**
      * Gets the current state of commands waiting to be executed
      *
@@ -168,6 +164,10 @@ public class MessageHandler extends ListenerAdapter {
                 }
             }
         }
+    }
+
+    public MessageHandler() {
+
     }
 
     /**

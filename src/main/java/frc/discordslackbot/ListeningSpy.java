@@ -13,10 +13,6 @@ public class ListeningSpy {
     private BufferedReader is;
     private Process spy;
 
-    private ListeningSpy() {
-        createChild();
-    }
-
     public static void startSpying() {
         if (detectedInternet()) {
             if (listeningSpy == null) {
@@ -29,6 +25,10 @@ public class ListeningSpy {
 
     private void reviveSpy() {
         spy.destroy();
+        createChild();
+    }
+
+    private ListeningSpy() {
         createChild();
     }
 

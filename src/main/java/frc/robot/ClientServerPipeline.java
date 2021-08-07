@@ -14,7 +14,12 @@ import frc.misc.ClientSide;
 import frc.misc.ServerSide;
 import frc.misc.UtilFunctions;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -29,22 +34,6 @@ public class ClientServerPipeline implements Runnable {
     private static NetworkTable serverNetworkTable;
     private static ClientServerPipeline SERVER_PIPELINE, CLIENT_PIPELINE;
     private static int bytesRecieved = 0, bytesSent = 0;
-
-    /**
-     * Creates the requested Pipeline object
-     *
-     * @param server true: the device running this pipeline can access the internet and host the bot for the client.
-     *               false: the device running this pipeline cannot host the bot on its own and is listening via the
-     *               pipeline
-     */
-    private ClientServerPipeline(boolean server) {
-        serverNetworkTable = NetworkTableInstance.getDefault().getTable("Brobot");
-        wipeNetworkTable(serverNetworkTable);
-        SERVER = server;
-        ListeningSpy.startSpying();
-        DiscordBot.newInstance(!SERVER);
-        SlackBot.newInstance(!SERVER);
-    }
 
     /**
      * This is why we use getters, kids. It means that we <i>should</i> only create a server if requested, or a client
@@ -69,79 +58,19 @@ public class ClientServerPipeline implements Runnable {
     }
 
     /**
-     * Does as the name suggests. Takes a serializeable object and serializes it
+     * Creates the requested Pipeline object
      *
-     * @param objectToWrite the object to serialize
-     * @return the result of serialization
+     * @param server true: the device running this pipeline can access the internet and host the bot for the client.
+     *               false: the device running this pipeline cannot host the bot on its own and is listening via the
+     *               pipeline
      */
-    private static byte[] writeToBytes(Serializable objectToWrite) {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(objectToWrite);
-            oos.close();
-            return baos.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Checks to see if the two data objects are unique
-     *
-     * @param newData New message data
-     * @param oldData Old message data
-     * @return true if a deep equals is true, false otherwise
-     */
-    private static boolean checkDirty(byte[] newData, byte[] oldData) {
-        if (newData.length != oldData.length)
-            return false;
-        for (int i = 0; i < newData.length; i++) {
-            if (oldData[i] != newData[i])
-                return false;
-        }
-        return true;
-    }
-
-    /**
-     * Used to log transferred bytes. Prints fresh bytes sent and {@link UtilFunctions#stringifyBytes(double) total
-     * bytes sent}
-     *
-     * @param length number of new bytes transferred
-     */
-    private static void sentBytes(int length) {
-        bytesSent += length;
-        System.out.println("Bytes sent: " + length + " (" + UtilFunctions.stringifyBytes(bytesSent) + ")");
-    }
-
-    /**
-     * Used to log transferred bytes. Prints fresh bytes read and {@link UtilFunctions#stringifyBytes(double) total
-     * bytes read}
-     *
-     * @param length number of new bytes transferred
-     */
-    private static void readBytes(int length) {
-        bytesRecieved += length;
-        System.out.println("Bytes read: " + length + " (" + UtilFunctions.stringifyBytes(bytesRecieved) + ")");
-    }
-
-    /**
-     * Reads and returns an object as interpreted from the passed data
-     *
-     * @param rawdata serialized object data, represented in bytes (sorry if u have a string idk where u got it from but
-     *                put it back)
-     * @return the input, deserialized
-     */
-    private static Object readFromBytes(byte[] rawdata) {
-        try {
-            ByteArrayInputStream bais = new ByteArrayInputStream(rawdata);
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            Object objectOut = ois.readObject();
-            ois.close();
-            return objectOut;
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    private ClientServerPipeline(boolean server) {
+        serverNetworkTable = NetworkTableInstance.getDefault().getTable("Brobot");
+        wipeNetworkTable(serverNetworkTable);
+        SERVER = server;
+        ListeningSpy.startSpying();
+        DiscordBot.newInstance(!SERVER);
+        SlackBot.newInstance(!SERVER);
     }
 
     /**
@@ -188,6 +117,52 @@ public class ClientServerPipeline implements Runnable {
         serverNetworkTable.getEntry("read_reciept_command").setBoolean(false);
         sentBytes(outboundPacket.length);
         return true;
+    }
+
+    /**
+     * Does as the name suggests. Takes a serializeable object and serializes it
+     *
+     * @param objectToWrite the object to serialize
+     * @return the result of serialization
+     */
+    private static byte[] writeToBytes(Serializable objectToWrite) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(objectToWrite);
+            oos.close();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Checks to see if the two data objects are unique
+     *
+     * @param newData New message data
+     * @param oldData Old message data
+     * @return true if a deep equals is true, false otherwise
+     */
+    private static boolean checkDirty(byte[] newData, byte[] oldData) {
+        if (newData.length != oldData.length)
+            return false;
+        for (int i = 0; i < newData.length; i++) {
+            if (oldData[i] != newData[i])
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * Used to log transferred bytes. Prints fresh bytes sent and {@link UtilFunctions#stringifyBytes(double) total
+     * bytes sent}
+     *
+     * @param length number of new bytes transferred
+     */
+    private static void sentBytes(int length) {
+        bytesSent += length;
+        System.out.println("Bytes sent: " + length + " (" + UtilFunctions.stringifyBytes(bytesSent) + ")");
     }
 
     /**
@@ -387,6 +362,36 @@ public class ClientServerPipeline implements Runnable {
         if (readFromBytes(inboundPacket) instanceof AbstractCommand.AbstractCommandData)
             return (AbstractCommand.AbstractCommandData) readFromBytes(inboundPacket);
         throw new IllegalStateException("Not sure what happened but the command that I read isnt a known command");
+    }
+
+    /**
+     * Used to log transferred bytes. Prints fresh bytes read and {@link UtilFunctions#stringifyBytes(double) total
+     * bytes read}
+     *
+     * @param length number of new bytes transferred
+     */
+    private static void readBytes(int length) {
+        bytesRecieved += length;
+        System.out.println("Bytes read: " + length + " (" + UtilFunctions.stringifyBytes(bytesRecieved) + ")");
+    }
+
+    /**
+     * Reads and returns an object as interpreted from the passed data
+     *
+     * @param rawdata serialized object data, represented in bytes (sorry if u have a string idk where u got it from but
+     *                put it back)
+     * @return the input, deserialized
+     */
+    private static Object readFromBytes(byte[] rawdata) {
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream(rawdata);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            Object objectOut = ois.readObject();
+            ois.close();
+            return objectOut;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

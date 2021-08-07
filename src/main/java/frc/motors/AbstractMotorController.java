@@ -36,20 +36,6 @@ public abstract class AbstractMotorController {
     protected String potentialFix;
     protected boolean isOverheated;
 
-    protected AbstractMotorController() {
-        motorList.add(this);
-    }
-
-    /**
-     * In order to prevent out of control PID loops from emerging, especially coming out of a disable in test mde, we
-     * set all motors to idle. If we really want them to move then this method will take no effect because
-     */
-    public static void resetAllMotors() {
-        for (AbstractMotorController motor : motorList) {
-            motor.moveAtPercent(0);
-        }
-    }
-
     /**
      * Inverts the motor rotation from default for that motor (varies motor to motor of course)
      *
@@ -147,11 +133,25 @@ public abstract class AbstractMotorController {
     public abstract boolean isFailed();
 
     /**
+     * In order to prevent out of control PID loops from emerging, especially coming out of a disable in test mde, we
+     * set all motors to idle. If we really want them to move then this method will take no effect because
+     */
+    public static void resetAllMotors() {
+        for (AbstractMotorController motor : motorList) {
+            motor.moveAtPercent(0);
+        }
+    }
+
+    /**
      * Sets the motor output on a percent output basis
      *
      * @param percent -1 to 1 output requested
      */
     public abstract void moveAtPercent(double percent);
+
+    protected AbstractMotorController() {
+        motorList.add(this);
+    }
 
     /**
      * Have this motor follow another motor (must be the same motor ie talon to talon). This motor will be the child and

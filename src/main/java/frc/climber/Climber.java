@@ -84,11 +84,6 @@ public class Climber implements ISubsystem {
         }
     }
 
-    public void climberLocks(boolean deployed) {
-        if (robotSettings.ENABLE_PNEUMATICS)
-            Robot.pneumatics.climberLock.set(deployed ? Value.kForward : Value.kReverse);
-    }
-
     @Override
     public void initTest() {
 
@@ -162,6 +157,11 @@ public class Climber implements ISubsystem {
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
+    }
+
+    public void climberLocks(boolean deployed) {
+        if (robotSettings.ENABLE_PNEUMATICS)
+            Robot.pneumatics.climberLock.set(deployed ? Value.kForward : Value.kReverse);
     }
 
     public enum ClimberControlStyles {

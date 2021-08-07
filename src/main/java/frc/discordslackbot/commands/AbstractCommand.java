@@ -178,18 +178,6 @@ public abstract class AbstractCommand implements Serializable {
         public final String CONTENT;
         public final String MESSAGE_ID, AUTHOR_ID, GUILD_ID, CHANNEL_ID;
 
-        protected AbstractCommandResponse(AbstractCommandData originalData) {
-            CONTENT = originalData.CONTENT;
-            MESSAGE_ID = originalData.MESSAGE_ID;
-            AUTHOR_ID = originalData.AUTHOR_ID;
-            GUILD_ID = originalData.GUILD_ID;
-            CHANNEL_ID = originalData.CHANNEL_ID;
-        }
-
-        protected AbstractCommandResponse() {
-            CONTENT = MESSAGE_ID = AUTHOR_ID = GUILD_ID = CHANNEL_ID = "";
-        }
-
         /**
          * Callback when response is read on server. For example, if need to reply to the original command, or other
          * post-command server-side processing should be implemented in inheriting classes
@@ -203,6 +191,18 @@ public abstract class AbstractCommand implements Serializable {
         public abstract void doYourWorst(App client);
 
         public abstract void doYourWorst();
+
+        protected AbstractCommandResponse(AbstractCommandData originalData) {
+            CONTENT = originalData.CONTENT;
+            MESSAGE_ID = originalData.MESSAGE_ID;
+            AUTHOR_ID = originalData.AUTHOR_ID;
+            GUILD_ID = originalData.GUILD_ID;
+            CHANNEL_ID = originalData.CHANNEL_ID;
+        }
+
+        protected AbstractCommandResponse() {
+            CONTENT = MESSAGE_ID = AUTHOR_ID = GUILD_ID = CHANNEL_ID = "";
+        }
     }
 
     /**

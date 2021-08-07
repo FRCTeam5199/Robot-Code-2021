@@ -18,12 +18,6 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
     private final boolean knownFix;
     private final String fix;
 
-    private MotorDisconnectedIssue(int motorID, String theFix) {
-        faultedMotorID = motorID;
-        knownFix = !theFix.equals("");
-        fix = theFix;
-    }
-
     public static void handleIssue(ISubsystem owner, AbstractFollowerMotorController... motors) {
         for (AbstractFollowerMotorController motor : motors)
             if (motor.failureFlag())
@@ -56,6 +50,12 @@ public class MotorDisconnectedIssue implements ISimpleIssue {
                     reportIssue(owner, motor.getID(), motor.getSuggestedFix());
                 else
                     resolveIssue(owner, motor.getID());
+    }
+
+    private MotorDisconnectedIssue(int motorID, String theFix) {
+        faultedMotorID = motorID;
+        knownFix = !theFix.equals("");
+        fix = theFix;
     }
 
     @Override

@@ -22,52 +22,6 @@ public class AutonManager extends AbstractAutonManager {
         super(driveManager);
     }
 
-    /**
-     * This is the method that organizes the path comparisons using {@link #sumOfSquares(Point[], Point[])} to calculate
-     * the error.
-     *
-     * @param pointData the (perceived yaw, apparent size) array size 3 points of observations
-     * @return the path with the smallest error from the passed points
-     * @throws IllegalStateException if the least error is {@literal >} 50, dont run for safety reasons
-     */
-    private static GalacticSearchPaths getPath(Point[] pointData) throws IllegalStateException {
-        GalacticSearchPaths bestPath = null;
-        double bestOption = Double.MAX_VALUE;
-        System.out.print("Data in: ");
-        for (int i = 0; i < 3; i++)
-            System.out.print(pointData[i]);
-        System.out.println();
-        for (GalacticSearchPaths path : GalacticSearchPaths.values()) {
-            System.out.print(path.name() + " ");
-            double SOSQ = sumOfSquares(path.POINTS, pointData);
-            if (SOSQ < bestOption) {
-                bestOption = SOSQ;
-                bestPath = path;
-            }
-        }
-        if (bestOption > 500)
-            throw new IllegalStateException("I dont see a path. For safety, I will not run " + bestPath);
-        return bestPath;
-    }
-
-    /**
-     * takes the distance between each point and squares it and returns the sum of the square errors
-     *
-     * @param guesses    the perceived points
-     * @param testPoints the points to plot against
-     * @return the sum of squares error
-     */
-    private static double sumOfSquares(Point[] guesses, Point[] testPoints) {
-        double out = 0;
-        for (int i = 0; i < Math.min(guesses.length, testPoints.length); i++) {
-            System.out.print(guesses[i]);
-            out += Math.pow(guesses[i].X - testPoints[i].X, 2);
-            out += Math.pow(100 * (guesses[i].Y - testPoints[i].Y), 2);
-        }
-        System.out.println(" had " + out);
-        return out;
-    }
-
     @Override
     public void init() {
         if (robotSettings.ENABLE_VISION) {
@@ -130,5 +84,51 @@ public class AutonManager extends AbstractAutonManager {
         UserInterface.smartDashboardPutString("Auton Path", path.name());
         autonPath = path;
         super.initAuton();
+    }
+
+    /**
+     * This is the method that organizes the path comparisons using {@link #sumOfSquares(Point[], Point[])} to calculate
+     * the error.
+     *
+     * @param pointData the (perceived yaw, apparent size) array size 3 points of observations
+     * @return the path with the smallest error from the passed points
+     * @throws IllegalStateException if the least error is {@literal >} 50, dont run for safety reasons
+     */
+    private static GalacticSearchPaths getPath(Point[] pointData) throws IllegalStateException {
+        GalacticSearchPaths bestPath = null;
+        double bestOption = Double.MAX_VALUE;
+        System.out.print("Data in: ");
+        for (int i = 0; i < 3; i++)
+            System.out.print(pointData[i]);
+        System.out.println();
+        for (GalacticSearchPaths path : GalacticSearchPaths.values()) {
+            System.out.print(path.name() + " ");
+            double SOSQ = sumOfSquares(path.POINTS, pointData);
+            if (SOSQ < bestOption) {
+                bestOption = SOSQ;
+                bestPath = path;
+            }
+        }
+        if (bestOption > 500)
+            throw new IllegalStateException("I dont see a path. For safety, I will not run " + bestPath);
+        return bestPath;
+    }
+
+    /**
+     * takes the distance between each point and squares it and returns the sum of the square errors
+     *
+     * @param guesses    the perceived points
+     * @param testPoints the points to plot against
+     * @return the sum of squares error
+     */
+    private static double sumOfSquares(Point[] guesses, Point[] testPoints) {
+        double out = 0;
+        for (int i = 0; i < Math.min(guesses.length, testPoints.length); i++) {
+            System.out.print(guesses[i]);
+            out += Math.pow(guesses[i].X - testPoints[i].X, 2);
+            out += Math.pow(100 * (guesses[i].Y - testPoints[i].Y), 2);
+        }
+        System.out.println(" had " + out);
+        return out;
     }
 }

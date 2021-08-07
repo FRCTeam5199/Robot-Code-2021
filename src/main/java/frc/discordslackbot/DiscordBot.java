@@ -14,27 +14,6 @@ public class DiscordBot {
     private final JDA botObject;
 
     /**
-     * Creates a new DiscordBot (not to be confused with a new {@link JDA} which is the actual discord api wrapper)
-     *
-     * @param listener allows {@link MessageHandler#loadCommands(boolean)} to be run without attempting to create a bot
-     *                 on the client
-     */
-    private DiscordBot(boolean listener) {
-        MessageHandler.loadCommands(listener);
-        JDA holder = null;
-        if (!listener) {
-            try {
-                System.out.println(DefaultConfig.BOTKEY);
-                holder = JDABuilder.createDefault(DefaultConfig.BOTKEY).addEventListeners(new MessageHandler()).build();
-            } catch (Exception e) {
-                System.err.println("Discord bot failed to init");
-                e.printStackTrace();
-            }
-        }
-        botObject = holder;
-    }
-
-    /**
      * Instaniates {@link #bot} if it hasnt already. Also checks for internet connection
      *
      * @param listening True if client, false if server bot object
@@ -54,5 +33,26 @@ public class DiscordBot {
     @ServerSide
     public static JDA getBotObject() {
         return bot.botObject;
+    }
+
+    /**
+     * Creates a new DiscordBot (not to be confused with a new {@link JDA} which is the actual discord api wrapper)
+     *
+     * @param listener allows {@link MessageHandler#loadCommands(boolean)} to be run without attempting to create a bot
+     *                 on the client
+     */
+    private DiscordBot(boolean listener) {
+        MessageHandler.loadCommands(listener);
+        JDA holder = null;
+        if (!listener) {
+            try {
+                System.out.println(DefaultConfig.BOTKEY);
+                holder = JDABuilder.createDefault(DefaultConfig.BOTKEY).addEventListeners(new MessageHandler()).build();
+            } catch (Exception e) {
+                System.err.println("Discord bot failed to init");
+                e.printStackTrace();
+            }
+        }
+        botObject = holder;
     }
 }

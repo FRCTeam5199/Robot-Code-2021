@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 import static frc.robot.Robot.robotSettings;
 
 /**
- * I accidentally deleted this, so here we go again.
- * Allows you to control all of the solenoids for all of your air powered needs (pnoomatics)
+ * I accidentally deleted this, so here we go again. Allows you to control all of the solenoids for all of your air
+ * powered needs (pnoomatics)
  *
  * @author Smaltin
  */
