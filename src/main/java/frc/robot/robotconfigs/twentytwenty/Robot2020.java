@@ -11,6 +11,8 @@ import frc.robot.robotconfigs.DefaultConfig;
 import frc.telemetry.imu.AbstractIMU;
 import frc.vision.camera.IVision;
 
+import static frc.motors.AbstractMotorController.SupportedMotors.*;
+
 public class Robot2020 extends DefaultConfig {
     public Robot2020() {
         ENABLE_DRIVE = true;
@@ -36,7 +38,7 @@ public class Robot2020 extends DefaultConfig {
         IMU_NAVX_PORT = I2C.Port.kMXP;
 
         //SHOOTER
-        SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
+        SHOOTER_MOTOR_TYPE = TALON_FX;
         SHOOTER_USE_TWO_MOTORS = true;
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = IVision.SupportedVision.LIMELIGHT;
@@ -61,8 +63,8 @@ public class Robot2020 extends DefaultConfig {
         DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
         SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD;
         INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
-        DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
-        CLIMBER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.VICTOR;
+        DRIVE_MOTOR_TYPE = CAN_SPARK_MAX;
+        CLIMBER_MOTOR_TYPE = VICTOR;
         IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
         AUTON_TYPE = AutonType.FOLLOW_PATH;
 
@@ -95,7 +97,7 @@ public class Robot2020 extends DefaultConfig {
         TURRET_GEAR_RATIO = 7;
         TURRET_MAX_POS = 270;
         TURRET_MIN_POS = 0;
-        TURRET_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
+        TURRET_MOTOR_TYPE = CAN_SPARK_MAX;
         AUTON_TOLERANCE = 0.1;
         AUTO_SPEED = 3;
         AUTO_ROTATION_SPEED = 1;
@@ -116,7 +118,8 @@ public class Robot2020 extends DefaultConfig {
         //Shooter Motors
         SHOOTER_LEADER_ID = 25; //talon
         SHOOTER_FOLLOWER_ID = 26; //talon
-        SHOOTER_HOOD_ID = 32;
+        SHOOTER_HOOD_ID = 35;
+        HOOD_MOTOR_TYPE = CAN_SPARK_MAX;
 
         //turret
         TURRET_YAW_ID = 33; //550

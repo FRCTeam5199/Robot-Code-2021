@@ -126,11 +126,12 @@ public class Robot extends TimedRobot {
         if (robotSettings.ENABLE_PDP) {
             pdp = new PDP(robotSettings.PDP_ID);
         }
-
-        for (AbstractMotorController motor : AbstractMotorController.motorList) {
-            MotorDisconnectedIssue.handleIssue(driver, motor);
-            if (motor.getMotorTemperature() > 5) {
-                UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", Robot.robotSettings.OVERHEAT_THRESHOLD)));
+        if (robotSettings.ENABLE_OVERHEAT_DETECTION) {
+            for (AbstractMotorController motor : AbstractMotorController.motorList) {
+                MotorDisconnectedIssue.handleIssue(driver, motor);
+                if (motor.getMotorTemperature() > 5) {
+                    UserInterface.motorTemperatureMonitors.put(motor, UserInterface.WARNINGS_TAB.add(motor.getName(), motor.getMotorTemperature()).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("Min", 30, "Max", Robot.robotSettings.OVERHEAT_THRESHOLD)));
+                }
             }
         }
         String quote = QuoteOfTheDay.getRandomQuote();
@@ -242,9 +243,11 @@ public class Robot extends TimedRobot {
             pdp.updateGeneric();
         }
 
-        for (AbstractMotorController motor : AbstractMotorController.motorList) {
-            if (motor.getMotorTemperature() > 5) {
-                UserInterface.motorTemperatureMonitors.get(motor).getEntry().setNumber(motor.getMotorTemperature());
+        if (robotSettings.ENABLE_OVERHEAT_DETECTION) {
+            for (AbstractMotorController motor : AbstractMotorController.motorList) {
+                if (motor.getMotorTemperature() > 5) {
+                    UserInterface.motorTemperatureMonitors.get(motor).getEntry().setNumber(motor.getMotorTemperature());
+                }
             }
         }
 
