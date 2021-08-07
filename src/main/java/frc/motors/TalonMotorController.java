@@ -43,6 +43,9 @@ public class TalonMotorController extends AbstractMotorController {
     @Override
     public AbstractMotorController setInverted(boolean invert) {
         motor.setInverted(invert);
+        for (AbstractMotorController followerMotor : motorFollowerList) {
+            followerMotor.setInverted(invert);
+        }
         return this;
     }
 
@@ -59,7 +62,8 @@ public class TalonMotorController extends AbstractMotorController {
     @Override
     public AbstractMotorController follow(AbstractMotorController leader, boolean invert) {
         if (leader instanceof TalonMotorController)
-            motor.follow(((TalonMotorController) leader).motor);
+            //motor.follow(((TalonMotorController) leader).motor);
+            leader.motorFollowerList.add(this);
         else
             throw new IllegalArgumentException("I cant follow that");
         setInverted(invert);
@@ -68,6 +72,9 @@ public class TalonMotorController extends AbstractMotorController {
 
     @Override
     public void resetEncoder() {
+        for (AbstractMotorController followerMotor : motorFollowerList) {
+            followerMotor.resetEncoder();
+        }
         if (motor.setSelectedSensorPosition(0) != ErrorCode.OK)
             if (!Robot.SECOND_TRY)
                 throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not be reset");
@@ -89,6 +96,9 @@ public class TalonMotorController extends AbstractMotorController {
     public void moveAtVelocity(double realAmount) {
         if (isTemperatureAcceptable()) {
             motor.set(Velocity, realAmount / sensorToRealDistanceFactor);
+            for (AbstractMotorController followerMotor : motorFollowerList) {
+                followerMotor.moveAtVelocity(realAmount);
+            }
         } else
             motor.set(Velocity, 0);
         /// sensorToRealDistanceFactor);
@@ -98,11 +108,17 @@ public class TalonMotorController extends AbstractMotorController {
     @Override
     public void moveAtPosition(double pos) {
         motor.set(Position, pos);
+        for (AbstractMotorController followerMotor : motorFollowerList) {
+            followerMotor.moveAtPosition(pos);
+        }
     }
 
     @Override
     public AbstractMotorController setBrake(boolean brake) {
         motor.setNeutralMode(brake ? Brake : Coast);
+        for (AbstractMotorController followerMotor : motorFollowerList) {
+            followerMotor.setBrake(brake);
+        }
         return this;
     }
 
@@ -126,15 +142,22 @@ public class TalonMotorController extends AbstractMotorController {
                 throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " current limit could not be set");
             else
                 failureFlag = true;
+        for (AbstractMotorController followerMotor : motorFollowerList) {
+            followerMotor.setCurrentLimit(limit);
+        }
         return this;
     }
 
     @Override
     public void moveAtPercent(double percent) {
-        if (isTemperatureAcceptable())
+        if (isTemperatureAcceptable()) {
             motor.set(PercentOutput, percent);
-        else
+        } else {
             motor.set(PercentOutput, 0);
+        }
+        for (AbstractMotorController followerMotor : motorFollowerList) {
+            followerMotor.moveAtPercent(percent);
+        }
     }
 
     @Override
@@ -144,6 +167,9 @@ public class TalonMotorController extends AbstractMotorController {
                 throw new IllegalStateException("Talon motor controller with ID " + motor.getDeviceID() + " could not set open ramp rate");
             else
                 failureFlag = true;
+        for (AbstractMotorController followerMotor : motorFollowerList) {
+            followerMotor.setOpenLoopRampRate(timeToMax);
+        }
         return this;
     }
 

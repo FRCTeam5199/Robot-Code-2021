@@ -1,5 +1,9 @@
 package frc.motors;
 
+import com.ctre.phoenix.motorcontrol.IMotorController;
+import com.ctre.phoenix.motorcontrol.IMotorControllerEnhanced;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import frc.gpws.Alarms;
 import frc.misc.PID;
 import frc.misc.UserInterface;
@@ -24,6 +28,7 @@ import static frc.robot.Robot.robotSettings;
  */
 public abstract class AbstractMotorController {
     public static final ArrayList<AbstractMotorController> motorList = new ArrayList<>();
+    public final ArrayList<AbstractMotorController> motorFollowerList = new ArrayList<>();
     /**
      * Value to convert from sensor position to real units (this will vary between motors so know your units!)
      * Destination units are RPM that include the gearing on the motor
@@ -226,6 +231,7 @@ public abstract class AbstractMotorController {
      * @return the device id this object controls
      */
     public abstract int getID();
+
 
     /**
      * This should be one-for-one replicated for each {@link AbstractMotorController motor controller} in order to
