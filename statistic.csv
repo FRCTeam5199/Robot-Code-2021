@@ -1,12 +1,12 @@
 File,Lines (% total),Code Lines,% Code,Comment Lines,% Comment,Blank Lines,% Blank
 Hopper.java,193 (100.0%),138,71.5%,29,15.0%,26,13.5%
-Intake.java,250 (56.4%),186,74.4%,32,12.8%,32,12.8%
-ArticulatedHood.java,307 (40.9%),256,83.4%,28,9.1%,23,7.5%
-Shooter.java,494 (39.7%),390,78.9%,66,13.4%,38,7.7%
+Intake.java,251 (56.5%),187,74.5%,32,12.7%,32,12.7%
+ArticulatedHood.java,308 (41.0%),257,83.4%,28,9.1%,23,7.5%
+Shooter.java,495 (39.7%),391,79.0%,66,13.3%,38,7.7%
 ShootingEnums.java,131 (9.5%),108,82.4%,7,5.3%,16,12.2%
-Turret.java,354 (20.5%),255,72.0%,68,19.2%,31,8.8%
+Turret.java,355 (20.5%),256,72.1%,68,19.2%,31,8.7%
 Climber.java,188 (9.8%),150,79.8%,5,2.7%,33,17.6%
-BaseController.java,131 (6.4%),90,68.7%,14,10.7%,27,20.6%
+BaseController.java,130 (6.3%),89,68.5%,14,10.8%,27,20.8%
 BopItBasicController.java,20 (1.0%),10,50.0%,8,40.0%,2,10.0%
 ButtonPanelController.java,33 (1.6%),15,45.5%,14,42.4%,4,12.1%
 ControllerEnums.java,221 (9.5%),126,57.0%,50,22.6%,45,20.4%
@@ -36,8 +36,8 @@ StatusCommand.java,71 (1.7%),54,76.1%,7,9.9%,10,14.1%
 TurnCommand.java,95 (2.2%),65,68.4%,18,18.9%,12,12.6%
 Wait5TicksThenReplyCommand.java,53 (1.2%),37,69.8%,6,11.3%,10,18.9%
 AbstractDriveManager.java,123 (2.8%),70,56.9%,34,27.6%,19,15.4%
-DriveManagerStandard.java,393 (8.2%),278,70.7%,80,20.4%,35,8.9%
-DriveManagerSwerve.java,352 (6.8%),251,71.3%,45,12.8%,56,15.9%
+DriveManagerStandard.java,394 (8.2%),279,70.8%,80,20.3%,35,8.9%
+DriveManagerSwerve.java,351 (6.8%),250,71.2%,45,12.8%,56,16.0%
 AbstractAutonManager.java,131 (2.5%),89,67.9%,29,22.1%,13,9.9%
 AutonType.java,11 (0.2%),4,36.4%,6,54.5%,1,9.1%
 IAutonEnumPath.java,15 (0.3%),4,26.7%,10,66.7%,1,6.7%
@@ -63,10 +63,10 @@ ServerSide.java,10 (0.1%),3,30.0%,6,60.0%,1,10.0%
 SubsystemStatus.java,9 (0.1%),4,44.4%,4,44.4%,1,11.1%
 UserInterface.java,103 (1.4%),72,69.9%,19,18.4%,12,11.7%
 UtilFunctions.java,70 (1.0%),30,42.9%,35,50.0%,5,7.1%
-AbstractMotorController.java,253 (3.4%),80,31.6%,143,56.5%,30,11.9%
+AbstractMotorController.java,248 (3.3%),75,30.2%,143,57.7%,30,12.1%
 SparkMotorController.java,190 (2.5%),154,81.1%,14,7.4%,22,11.6%
 SwerveMotorController.java,59 (0.8%),38,64.4%,17,28.8%,4,6.8%
-TalonMotorController.java,205 (2.6%),170,82.9%,13,6.3%,22,10.7%
+TalonMotorController.java,208 (2.6%),172,82.7%,13,6.3%,23,11.1%
 VictorMotorController.java,151 (1.9%),125,82.8%,5,3.3%,21,13.9%
 AbstractFollowerMotorController.java,81 (1.0%),36,44.4%,35,43.2%,10,12.3%
 SparkFollowerMotorsController.java,21 (0.3%),15,71.4%,3,14.3%,3,14.3%
@@ -79,7 +79,7 @@ DefaultConfig.java,227 (2.4%),171,75.3%,35,15.4%,21,9.3%
 CompetitionRobot2021.java,118 (1.2%),92,78.0%,10,8.5%,16,13.6%
 PracticeRobot2021.java,120 (1.2%),90,75.0%,11,9.2%,19,15.8%
 Swerve2021.java,124 (1.3%),95,76.6%,11,8.9%,18,14.5%
-Robot2020.java,136 (1.4%),104,76.5%,11,8.1%,21,15.4%
+Robot2020.java,135 (1.4%),103,76.3%,11,8.1%,21,15.6%
 BrownoutIssue.java,50 (0.5%),33,66.0%,9,18.0%,8,16.0%
 DistanceSensorNonOpIssue.java,54 (0.5%),37,68.5%,9,16.7%,8,14.8%
 IMUNonOpIssue.java,49 (0.5%),38,77.6%,3,6.1%,8,16.3%
@@ -99,4 +99,4 @@ GoalPhoton.java,177 (1.6%),107,60.5%,43,24.3%,27,15.3%
 IVision.java,101 (0.9%),40,39.6%,46,45.5%,15,14.9%
 IDistanceSensor.java,30 (0.3%),15,50.0%,11,36.7%,4,13.3%
 RevDistanceSensor.java,89 (0.8%),55,61.8%,11,12.4%,23,25.8%
-Total,11507,7796,0.7,2271,0.2,1440,0.1
+Total,11507,7795,0.7,2271,0.2,1441,0.1
