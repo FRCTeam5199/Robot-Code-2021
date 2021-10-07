@@ -20,7 +20,11 @@ public class Point {
      * @return whether the distance between this and the other point is less than the provided tolerance
      */
     public boolean isWithin(double distance, Point otherPoint) {
-        return distance > getDistanceFromPoint(otherPoint);
+        boolean yInRange = distance > Math.abs(-Y - otherPoint.Y);
+        boolean xInRange = distance > Math.abs(X - otherPoint.X);
+        System.out.println(Math.abs(-Y - otherPoint.Y) + "  " + Math.abs(X - otherPoint.X));
+        System.out.println(yInRange + " " + xInRange);
+        return xInRange && yInRange;//distance > getDistanceFromPoint(otherPoint);
     }
 
     /**
@@ -30,7 +34,8 @@ public class Point {
      * @return the distance between this point and the passed point
      */
     public double getDistanceFromPoint(Point otherPoint) {
-        return Math.sqrt(Math.pow(X - otherPoint.X, 2) + Math.pow(Y - otherPoint.Y, 2));
+        System.out.println(Math.pow(Y - -otherPoint.Y, 2));
+        return Math.sqrt(Math.pow(X - otherPoint.X, 2) + Math.pow(Y - -otherPoint.Y, 2));
     }
 
     public boolean isWithinEllipse(double distx, double disty, Point otherPoint) {

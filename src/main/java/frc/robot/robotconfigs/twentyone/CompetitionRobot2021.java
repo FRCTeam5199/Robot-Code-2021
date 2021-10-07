@@ -15,14 +15,14 @@ public class CompetitionRobot2021 extends DefaultConfig {
     public CompetitionRobot2021() {
         ENABLE_DRIVE = true;
         ENABLE_INTAKE = true;
-        ENABLE_TURRET = true;
-        ENABLE_SHOOTER = true;
+        ENABLE_TURRET = false;
+        ENABLE_SHOOTER = false;
         ENABLE_HOPPER = true;
         ENABLE_AGITATOR = true;
         ENABLE_INDEXER = true;
-        ENABLE_MUSIC = true;
+        ENABLE_MUSIC = false;
         ENABLE_HOOD_ARTICULATION = false;
-        ENABLE_MEMES = true;
+        ENABLE_MEMES = false;
         ENABLE_OVERHEAT_DETECTION = true;
 
         DRIVE_INVERT_LEFT = true;
@@ -40,6 +40,12 @@ public class CompetitionRobot2021 extends DefaultConfig {
         SHOOTER_INVERTED = false;
         GOAL_CAMERA_TYPE = IVision.SupportedVision.LIMELIGHT;
         INDEXER_DETECTION_CUTOFF_DISTANCE = 5;
+        CALIBRATED_HOOD_POSITION_ARRAY = new double[][]{
+                {2.415, 0.05},
+                {1.466, 0.77},
+                {0.925, 1.05},
+                {0.481, 1.135},
+        };
 
         //INTAKE
         ENABLE_INDEXER_AUTO_INDEX = true;
@@ -47,10 +53,10 @@ public class CompetitionRobot2021 extends DefaultConfig {
         //UI Styles
         DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
         SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.SPEED_2021;//ShootingControlStyles.ACCURACY_2021;
-        INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
+        INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.BOP_IT;
         DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
         IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
-        AUTON_TYPE = AutonType.GALACTIC_SEARCH;
+        AUTON_TYPE = AutonType.POINT_TO_POINT;
 
         DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
         SHOOTER_PID = new PID(0.001, 0.0000005, 0.03, 0);//Accuracy. SPEED = new PID(0.0004, 0.0000007, 0.03, 0);
@@ -66,7 +72,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         WHEEL_DIAMETER = 4; //update: now it's used once
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
-        DRIVE_GEARING = 10 / 60.0;
+        DRIVE_GEARING = 12.0 / 60.0;
 
         SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
         motorPulleySize = 0;//?;
@@ -82,8 +88,8 @@ public class CompetitionRobot2021 extends DefaultConfig {
         TURRET_MAX_POS = 520;
         TURRET_MIN_POS = -2;
         TURRET_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
-        AUTON_TOLERANCE = 0.1;
-        AUTO_SPEED = 3;
+        AUTON_TOLERANCE = 0.05;
+        AUTO_SPEED = 1.00;//3;
         AUTO_ROTATION_SPEED = 1;
         XBOX_CONTROLLER_USB_SLOT = 0;
         FLIGHT_STICK_USB_SLOT = 1;

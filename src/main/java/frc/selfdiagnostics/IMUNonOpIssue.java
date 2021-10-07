@@ -34,7 +34,8 @@ public class IMUNonOpIssue implements ISimpleIssue {
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof IMUNonOpIssue)) {
             System.out.println("Cringe ahhahahahahahaa nonop");
             IssueHandler.issues.put(owner, new IMUNonOpIssue(imuName));
-            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.IMU, SoundManager.Sounds.NonOperational));
+            if (robotSettings.ENABLE_MEMES)
+                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.IMU, SoundManager.Sounds.NonOperational));
         }
     }
 

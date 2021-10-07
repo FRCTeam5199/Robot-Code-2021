@@ -9,9 +9,11 @@ import frc.controllers.ControllerEnums.JoystickHatDirection;
 import frc.drive.auton.AutonType;
 import frc.misc.ISubsystem;
 import frc.misc.InitializationFailureException;
+import frc.misc.Servo;
 import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
+import frc.motors.TalonMotorController;
 import frc.motors.VictorMotorController;
 import frc.robot.Robot;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
@@ -26,8 +28,9 @@ import static frc.robot.Robot.robotSettings;
  * The "Intake" is referring to the part that picks up power cells from the floor
  */
 public class Intake implements ISubsystem {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     public AbstractMotorController intakeMotor;
+    public Servo intakeServo;
     public BaseController joystick, buttonpanel;
     public double intakeMult;
 
@@ -44,7 +47,7 @@ public class Intake implements ISubsystem {
     @Override
     public void init() throws IllegalStateException {
         createControllers();
-        intakeMotor = new VictorMotorController(robotSettings.INTAKE_MOTOR_ID);
+        createMotors();
     }
 
     @Override
@@ -73,7 +76,8 @@ public class Intake implements ISubsystem {
         if (robotSettings.AUTON_TYPE == AutonType.GALACTIC_SEARCH || robotSettings.AUTON_TYPE == AutonType.GALACTIC_SCAM) {
             setIntake(robotSettings.autonComplete ? IntakeDirection.OFF : IntakeDirection.IN);
         }
-        updateGeneric();
+        intakeMotor.moveAtPercent(0.8 * intakeMult);
+        //updateGeneric();
     }
 
     @Override
@@ -84,6 +88,10 @@ public class Intake implements ISubsystem {
         }
         MotorDisconnectedIssue.handleIssue(this, intakeMotor);
         intakeMotor.moveAtPercent(0.8 * intakeMult);
+        if (robotSettings.DEBUG && DEBUG) {
+            UserInterface.smartDashboardPutNumber("Intake Speed", intakeMult);
+        }
+        //System.out.println("Intake mult is " + intakeMult);
         double speed;
         switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case FLIGHT_STICK:
@@ -100,6 +108,26 @@ public class Intake implements ISubsystem {
                     deployIntake(false);
                 } else if (buttonpanel.get(INTAKE_DOWN) == ButtonStatus.DOWN) {
                     deployIntake(true);
+                }
+                break;
+            case ROBOT_2021:
+                if (Robot.robotSettings.INTAKE_MOTOR_TYPE == AbstractMotorController.SupportedMotors.SERVO) {
+                    //do servo-y things
+                    if (joystick.hatIs(JoystickHatDirection.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
+                        //setIntake(IntakeDirection.IN);
+                    } else if (joystick.hatIs(JoystickHatDirection.UP)) {
+                        //setIntake(IntakeDirection.OUT);
+                    } else {
+                        //setIntake(IntakeDirection.OFF);
+                    }
+
+                    if (buttonpanel.get(INTAKE_UP) == ButtonStatus.DOWN) {
+                        //deployIntake(false);
+                    } else if (buttonpanel.get(INTAKE_DOWN) == ButtonStatus.DOWN) {
+                        //deployIntake(true);
+                    }
+                } else {
+                    throw new IllegalStateException("You're unable to use the intake style ROBOT_2021 without a Servo as your motor type.");
                 }
                 break;
             case DRUM_TIME:
@@ -177,7 +205,7 @@ public class Intake implements ISubsystem {
     }
 
     public void deployIntake(boolean deployed) {
-        if (robotSettings.ENABLE_PNEUMATICS)
+        if (robotSettings.ENABLE_PNOOMATICS)
             Robot.pneumatics.solenoidIntake.set(deployed ? Value.kForward : Value.kReverse);
     }
 
@@ -216,6 +244,32 @@ public class Intake implements ISubsystem {
         }
     }
 
+    private void createMotors() {
+        double s2rf;
+        switch (robotSettings.INTAKE_MOTOR_TYPE) {
+            case CAN_SPARK_MAX: {
+                s2rf = 1;
+                break;
+            }
+            case TALON_FX: {
+                intakeMotor = new TalonMotorController(robotSettings.INTAKE_MOTOR_ID);
+                s2rf = 600.0 / 2048.0;
+                break;
+            }
+            case VICTOR:
+                intakeMotor = new VictorMotorController(robotSettings.INTAKE_MOTOR_ID);
+                s2rf = 600.0 / 2048.0;
+                break;
+            case SERVO:
+                intakeServo = new Servo(robotSettings.INTAKE_MOTOR_ID);
+                s2rf = 0;
+                break;
+            default:
+                throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + robotSettings.DRIVE_MOTOR_TYPE.name(), "Add an implementation in the init for drive manager");
+        }
+        intakeMotor.setSensorToRealDistanceFactor(s2rf);
+    }
+
     /**
      * Preserve this order. Out runs the motor at 0 - 1 = -1, off at 1 - 1 = 0, and in at 2 - 1 = 1 (percent)
      *
@@ -230,6 +284,7 @@ public class Intake implements ISubsystem {
      */
     public enum IntakeControlStyles {
         STANDARD,
+        ROBOT_2021,
         WII,
         DRUM_TIME,
         GUITAR,

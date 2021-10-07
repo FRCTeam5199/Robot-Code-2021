@@ -15,7 +15,10 @@ import frc.drive.AbstractDriveManager;
 import frc.drive.DriveManagerStandard;
 import frc.drive.DriveManagerSwerve;
 import frc.drive.auton.AbstractAutonManager;
+import frc.drive.auton.AutonType;
 import frc.drive.auton.followtrajectory.Trajectories;
+import frc.drive.auton.pointtopoint.AutonManager;
+import frc.drive.auton.pointtopoint.AutonRoutines;
 import frc.misc.Chirp;
 import frc.misc.ClientSide;
 import frc.misc.ISubsystem;
@@ -35,6 +38,8 @@ import frc.selfdiagnostics.IssueHandler;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -103,7 +108,7 @@ public class Robot extends TimedRobot {
         if (robotSettings.ENABLE_HOOD_ARTICULATION) {
             articulatedHood = new ArticulatedHood();
         }
-        if (robotSettings.ENABLE_PNEUMATICS) {
+        if (robotSettings.ENABLE_PNOOMATICS) {
             pneumatics = new Pneumatics();
         }
         if (robotSettings.ENABLE_TURRET) {
@@ -122,11 +127,13 @@ public class Robot extends TimedRobot {
                     autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     break;
                 case FOLLOW_PATH:
-                    autonManager = new frc.drive.auton.followtrajectory.AutonManager(Trajectories.SLALOM2, driver);//Trajectories.TEST_PATH, driver);
+                    autonManager = new frc.drive.auton.followtrajectory.AutonManager(Trajectories.SLALOM, driver);//Trajectories.TEST_PATH, driver);
                     break;
                 case GALACTIC_SCAM:
                     autonManager = new frc.drive.auton.galacticsearchtest.AutonManager(driver);
                     break;
+                case POINT_TO_POINT:
+                    autonManager = new frc.drive.auton.pointtopoint.AutonManager(robotSettings.DEFAULT_ROUTINE, driver);
             }
         }
         if (robotSettings.ENABLE_PDP) {
@@ -173,7 +180,8 @@ public class Robot extends TimedRobot {
      */
     private static DefaultConfig getSettings() {
         String hostName = preferences.getString("hostname", "ERR_NOT_FOUND");
-        System.out.println("I am " + hostName);
+        System.out.println("[Preferences] I am " + hostName);
+        setBackup(hostName);
         switch (hostName) {
             case "2020-Comp":
                 return new Robot2020();
@@ -184,9 +192,50 @@ public class Robot extends TimedRobot {
             case "2021-Swivel":
                 return new Swerve2021();
             case "ERR_NOT_FOUND":
-                throw new IllegalStateException("You need to ID this robot.");
+                File settingsFile = new File("/home/lvuser/backup.env");
+                if (settingsFile.exists()) {
+                    try {
+                        FileReader reader = new FileReader(settingsFile);
+                        String backupName = reader.toString();
+                        switch (backupName) {
+                            case "2020-Comp":
+                                setBackup("2020-Comp");
+                                return new Robot2020();
+                            case "2021-Prac":
+                                setBackup("2021-Prac");
+                                return new PracticeRobot2021();
+                            case "2021-Comp":
+                                setBackup("2021-Comp");
+                                return new CompetitionRobot2021();
+                            case "2021-Swivel":
+                                setBackup("2021-Swivel");
+                                return new Swerve2021();
+                            default:
+                                throw new IllegalStateException("Some voodoo magic has caused your backup file to corrupt. I'd suggest yelling at the last person to power off the robot.");
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    throw new IllegalStateException("You need to ID this robot.");
+                }
+                //return new Robot2020();
             default:
                 throw new IllegalStateException("Invalid ID " + hostName + " for robot. Please Re-ID.");
+        }
+    }
+
+    private static void setBackup(String hostName) {
+        if (!hostName.equals("ERR_NOT_FOUND")) {
+            File backupFile = new File("/home/lvuser/backup.env");
+            try {
+                backupFile.createNewFile();
+                FileWriter myWriter = new FileWriter(backupFile);
+                myWriter.write(hostName);
+                myWriter.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -270,12 +319,23 @@ public class Robot extends TimedRobot {
             Main.pipeline.updatePipeline();
             MessageHandler.persistPendingCommands();
         }
+
+        if (robotSettings.AUTON_TYPE == AutonType.POINT_TO_POINT) {
+            if (AutonRoutines.getSendableChooser().getSelected() != null && AutonRoutines.getSendableChooser().getSelected() != ((AutonManager) autonManager).autonPath) {
+                ((AutonManager) autonManager).autonPath = AutonRoutines.getSendableChooser().getSelected();
+                autonManager.init();
+            }
+        }
     }
 
     @Override
     public void disabledPeriodic() {
-        if (robotSettings.ENABLE_DRIVE && System.currentTimeMillis() > lastDisable + 5000)
-            driver.setBrake(false);
+        if (System.currentTimeMillis() > lastDisable + 5000) {
+            if (robotSettings.ENABLE_DRIVE)
+                driver.setBrake(false);
+            if (robotSettings.ENABLE_HOOD_ARTICULATION)
+                articulatedHood.hoodMotor.setBrake(false);
+        }
     }
 
     @Override

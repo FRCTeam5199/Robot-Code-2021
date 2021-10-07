@@ -11,6 +11,13 @@ import frc.misc.ServerSide;
 import frc.misc.UtilFunctions;
 import frc.robot.robotconfigs.DefaultConfig;
 
+
+/**
+ * Since not everyone likes using Discord, we introduced the Slackbot, for all your Slack needs. Allows people on Slack
+ * to send commands to the :b:robot
+ *
+ * @author Smaltin
+ */
 public class SlackBot {
     private static SlackBot bot = null;
     private final App botObject;

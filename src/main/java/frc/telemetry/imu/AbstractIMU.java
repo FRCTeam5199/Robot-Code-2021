@@ -101,8 +101,7 @@ public abstract class AbstractIMU implements ISubsystem {
      * @return yaw since last restart
      */
     public double relativeYaw() {
-        updateGeneric();
-        return (ypr[0] - startYaw);
+        return (absoluteYaw() - startYaw);
     }
 
     /**

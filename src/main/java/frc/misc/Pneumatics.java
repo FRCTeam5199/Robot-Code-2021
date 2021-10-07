@@ -14,6 +14,7 @@ import static frc.robot.Robot.robotSettings;
 public class Pneumatics implements ISubsystem {
     public DoubleSolenoid solenoidIntake;
     public DoubleSolenoid climberLock;
+    public DoubleSolenoid ballShifter;
     public Solenoid shooterCooling;
 
     public Pneumatics() {
@@ -23,14 +24,17 @@ public class Pneumatics implements ISubsystem {
 
     @Override
     public void init() {
-        if (robotSettings.ENABLE_INTAKE && robotSettings.ENABLE_PNEUMATICS) {
+        if (robotSettings.ENABLE_INTAKE && robotSettings.ENABLE_PNOOMATICS) {
             solenoidIntake = new DoubleSolenoid(robotSettings.PCM_ID, robotSettings.INTAKE_OUT_ID, robotSettings.INTAKE_IN_ID);
         }
-        if (robotSettings.ENABLE_CLIMBER && robotSettings.ENABLE_PNEUMATICS) {
+        if (robotSettings.ENABLE_CLIMBER && robotSettings.ENABLE_PNOOMATICS) {
             climberLock = new DoubleSolenoid(robotSettings.PCM_ID, robotSettings.CLIMBER_IN_ID, robotSettings.CLIMBER_OUT_ID);
         }
-        if (robotSettings.ENABLE_SHOOTER && robotSettings.ENABLE_PNEUMATICS && robotSettings.ENABLE_SHOOTER_COOLING) {
+        if (robotSettings.ENABLE_SHOOTER && robotSettings.ENABLE_PNOOMATICS && robotSettings.ENABLE_SHOOTER_COOLING) {
             shooterCooling = new Solenoid(robotSettings.PCM_ID, robotSettings.SHOOTER_COOLING_ID);
+        }
+        if (robotSettings.ENABLE_DRIVE && robotSettings.ENABLE_PNOOMATICS && robotSettings.ENABLE_BALL_SHIFTERS) {
+            ballShifter = new DoubleSolenoid(robotSettings.PCM_ID, robotSettings.BALL_SHIFTERS_IN_ID, robotSettings.BALL_SHIFTERS_OUT_ID);
         }
     }
 

@@ -187,7 +187,7 @@ public abstract class AbstractMotorController {
 
     /**
      * Self explanatory. Takes into account {@link #getMotorTemperature() motor temp} and {@link
-     * frc.robot.robotconfigs.DefaultConfig#OVERHEAT_THRESHOLD} to
+     * frc.robot.robotconfigs.DefaultConfig#OVERHEAT_THRESHOLD} to determine if the motor is running too hot for usage
      *
      * @return invert {@link #isOverheated}
      */
@@ -233,8 +233,8 @@ public abstract class AbstractMotorController {
      * create settings to switch between motor implementations
      */
     public enum SupportedMotors {
-        //Spark = Neo 550, Talon = Falcon 500, Victor = 775pros
-        CAN_SPARK_MAX(11710), TALON_FX(6380), VICTOR(18730);
+        //Spark = Neo 550, Talon = Falcon 500, Victor = 775pros, Servo = whatever servo you put in. I didn't have a better place for this so it's here
+        CAN_SPARK_MAX(11710), TALON_FX(6380), VICTOR(18730), SERVO;
 
         /**
          * Read the name!
@@ -243,6 +243,10 @@ public abstract class AbstractMotorController {
 
         SupportedMotors(int speed) {
             MAX_SPEED_RPM = speed;
+        }
+
+        SupportedMotors() {
+            MAX_SPEED_RPM = 0;
         }
     }
 }

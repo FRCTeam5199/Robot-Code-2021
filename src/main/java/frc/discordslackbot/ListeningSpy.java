@@ -7,6 +7,11 @@ import java.io.InputStreamReader;
 
 import static frc.misc.UtilFunctions.detectedInternet;
 
+/**
+ * Used to listen to what you're saying and relays it to the :b:robot. Very scary, stop spying on me !!!
+ *
+ * @author jojo2357
+ */
 public class ListeningSpy {
     public static ListeningSpy listeningSpy;
     private final int readBytes = 0;
@@ -28,10 +33,6 @@ public class ListeningSpy {
         createChild();
     }
 
-    private ListeningSpy() {
-        createChild();
-    }
-
     private void createChild() {
         if (new File("listentospeech.exe").exists()) {
             try {
@@ -43,6 +44,10 @@ public class ListeningSpy {
         } else {
             System.err.println("Listening exe not found in root directory.");
         }
+    }
+
+    private ListeningSpy() {
+        createChild();
     }
 
     public String getText() {

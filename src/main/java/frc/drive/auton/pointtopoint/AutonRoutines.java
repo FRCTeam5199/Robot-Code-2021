@@ -1,21 +1,73 @@
 package frc.drive.auton.pointtopoint;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.auton.Point;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
+import static frc.drive.auton.pointtopoint.AutonSpecialActions.*;
+
+/**
+ * All the auton paths, using {@link Point points} and {@link AutonSpecialActions} to make the robot do the do
+ */
 public enum AutonRoutines {
+    DRIVE_OFF_INIT_LINE(
+            new AutonWaypoint(new Point(0, 0)),
+            new AutonWaypoint(new Point(Units.feetToMeters(1), 0))
+    ),
+    SHOOT_3_DRIVE_OFF_INIT_LINE(
+            new AutonWaypoint(new Point(0, 0), INTAKE_UP),
+            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET),
+            new AutonWaypoint(new Point(0, 0), SHOOT_THREE),
+            new AutonWaypoint(new Point(0, 0), RESET_SHOOTER),
+            new AutonWaypoint(new Point(1.25, 0)) //Drive off init line
+    ),
+    CREATING_AUTON_TESTING(
+            new AutonWaypoint(new Point(0, 0), SHOOT_THREE)
+    ),
+    SHOOT_3_INTAKE_TRENCH(
+            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET),
+            new AutonWaypoint(new Point(0, 0), SHOOT_THREE),
+            new AutonWaypoint(new Point(0, 0), INTAKE_DOWN),
+            new AutonWaypoint(new Point(0, 0), INTAKE_IN),
+            new AutonWaypoint(new Point(4.5, 0), INTAKE_OFF),
+            new AutonWaypoint(new Point(4.5, 0), RESET_SHOOTER)
+    ),
+    AUTON_TUNING(
+            new AutonWaypoint(new Point(0, 0), INTAKE_UP),
+            new AutonWaypoint(new Point(Units.feetToMeters(8), 0), INTAKE_DOWN),
+            new AutonWaypoint(new Point(Units.feetToMeters(8), 0), INTAKE_IN),
+            new AutonWaypoint(new Point(0, -0.3), INTAKE_OFF),
+            new AutonWaypoint(new Point(0, -0.3), INTAKE_UP)
+    ),
+    GO_FORWARD_AND_SHOOT_ONE(
+            new AutonWaypoint(new Point(0, 0)),
+            new AutonWaypoint(new Point(3, 0), AIM_AT_TARGET),
+            new AutonWaypoint(new Point(3, 0), SHOOT_ONE)
+    ),
+    MULTI_SHOT_TEST(
+            //new AutonWaypoint(new Point(0, 0), INTAKE_DOWN),
+            new AutonWaypoint((new Point(0, 0))), //do nothing?
+            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET),
+            new AutonWaypoint(new Point(0, 0), SHOOT_TWO)
+            //new AutonWaypoint(new Point(0, 0), INTAKE_UP)
+    ),
+    DRIVE_FORWARD_THEN_SHOOT_TWO(
+            new AutonWaypoint(new Point(0, 0), INTAKE_DOWN),
+            new AutonWaypoint(new Point(0, 0), INTAKE_IN),
+            new AutonWaypoint(new Point(4, 0.5), INTAKE_OFF),
+            new AutonWaypoint(new Point(4, 0.5), INTAKE_UP),
+            new AutonWaypoint(new Point(4, 0.5), AIM_AT_TARGET),
+            new AutonWaypoint(new Point(4, 0.5), SHOOT_TWO)
+    ),
     GO_FORWARD_GO_BACK(
             new AutonWaypoint(new Point(0, 0), 1),
             new AutonWaypoint(new Point(3, 0), 1),
             new AutonWaypoint(new Point(3, -3), 1),
             new AutonWaypoint(new Point(0, 0), 1)
-        /*new AutonWaypoint(new Point(0, 0), 1),
-        new AutonWaypoint(new Point(Units.feetToMeters(20), 0), 1),
-        new AutonWaypoint(new Point(0, Units.feetToMeters(9)), 1),
-        new AutonWaypoint(new Point(Units.feetToMeters(20), Units.feetToMeters(9)), 1)*/
     ),
     BARREL_RACING_PATH_ONE( //Doesn't work yet, but the numbers are here. -Sterling
             new AutonWaypoint(new Point(Units.feetToMeters(4.084849326482433), Units.feetToMeters(-8.00097208721011)), 1), //Starting Position
@@ -76,8 +128,18 @@ public enum AutonRoutines {
             new AutonWaypoint(new Point(0.5392969988205053, -2.423488054119271), 3)
     );
 
+    private static SendableChooser<AutonRoutines> myChooser;
     public final ArrayList<AutonWaypoint> WAYPOINTS = new ArrayList<>();
     public int currentWaypoint = 0;
+
+    public static SendableChooser<AutonRoutines> getSendableChooser() {
+        return Objects.requireNonNullElseGet(myChooser, () -> {
+            myChooser = new SendableChooser<>();
+            for (AutonRoutines routine : AutonRoutines.values())
+                myChooser.addOption(routine.name(), routine);
+            return myChooser;
+        });
+    }
 
     AutonRoutines(AutonWaypoint... waypoints) {
         WAYPOINTS.addAll(Arrays.asList(waypoints));

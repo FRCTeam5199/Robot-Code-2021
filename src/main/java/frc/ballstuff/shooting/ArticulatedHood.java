@@ -1,9 +1,10 @@
 package frc.ballstuff.shooting;
 
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import frc.controllers.BaseController;
-import frc.controllers.ControllerEnums;
 import frc.misc.ISubsystem;
+import frc.misc.PID;
 import frc.misc.SubsystemStatus;
 import frc.misc.UserInterface;
 import frc.motors.AbstractMotorController;
@@ -11,17 +12,29 @@ import frc.motors.SparkMotorController;
 import frc.motors.TalonMotorController;
 import frc.robot.Robot;
 
+import static frc.controllers.ControllerEnums.*;
 import static frc.misc.UtilFunctions.weightedAverage;
-import static frc.robot.Robot.robotSettings;
+import static frc.robot.Robot.*;
+
+enum HoodSpecialAction {
+    MANUAL_MOVEMENT, OUT_OF_BOUNDS, NOT_MOVING, AIMING
+}
 
 /**
  * Articulated hood refers to the moving top section of {@link Shooter}. Theres a lot going on here so maybe check out
  * the settings.
  */
 public class ArticulatedHood implements ISubsystem {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
+    private final NetworkTableEntry HOOD_HEIGHT = UserInterface.HOOD_HEIGHT.getEntry(),
+            HEIGHT_OVERRIDE = UserInterface.HOOD_OVERRIDE_HEIGHT.getEntry(),
+            HOOD_OVERRIDE = UserInterface.HOOD_OVERRIDE_POSITION.getEntry(),
+            VISION_SIZE = UserInterface.VISION_SIZE.getEntry(),
+            VISION_ESTIMATE_HEIGHT = UserInterface.VISION_CALCULATED_HEIGHT.getEntry();
     public boolean unTargeted = true;
     public double moveTo = 0.0;
+    public double lastSeenCameraArea = 0.0;
+    public boolean isAtWantedPosition = false;
     public AbstractMotorController hoodMotor;
     BaseController joystickController, panel;
 
@@ -35,6 +48,8 @@ public class ArticulatedHood implements ISubsystem {
         switch (robotSettings.SHOOTER_CONTROL_STYLE) {
             case ACCURACY_2021:
             case SPEED_2021:
+            case STANDARD_OFFSEASON_2021:
+            case EXPERIMENTAL_OFFSEASON_2021:
             case STANDARD:
                 joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
                 panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, BaseController.Controllers.BUTTON_PANEL_CONTROLLER);
@@ -68,7 +83,7 @@ public class ArticulatedHood implements ISubsystem {
 
     @Override
     public void updateAuton() {
-        //updateGeneric();
+
     }
 
     @Override
@@ -76,19 +91,19 @@ public class ArticulatedHood implements ISubsystem {
         double currentPos = hoodMotor.getRotations();
         switch (robotSettings.SHOOTER_CONTROL_STYLE) {
             case ACCURACY_2021:
-                if (currentPos > 1.75) {
-                    moveTo = -1;
+                if (currentPos > robotSettings.SHOOTER_HOOD_MAX_POS) {
+                    moveTo = -3;
                     hoodMotor.moveAtPercent(0.1);
-                } else if (currentPos < 0) {
-                    moveTo = -1;
+                } else if (currentPos < robotSettings.SHOOTER_HOOD_MIN_POS) {
+                    moveTo = -3;
                     hoodMotor.moveAtPercent(-0.1);
-                } else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
-                    moveTo = -1;
+                } else if (joystickController.get(JoystickButtons.FIVE) == ButtonStatus.DOWN) {
+                    moveTo = -2;
                     hoodMotor.moveAtPercent(-0.3);
-                } else if (joystickController.get(ControllerEnums.JoystickButtons.THREE) == ControllerEnums.ButtonStatus.DOWN) {
-                    moveTo = -1;
+                } else if (joystickController.get(JoystickButtons.THREE) == ButtonStatus.DOWN) {
+                    moveTo = -2;
                     hoodMotor.moveAtPercent(0.3);
-                } else if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
+                } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) {
                     if (!Robot.shooter.isValidTarget()) {
                         moveTo = 1.4;
                         unTargeted = true;
@@ -107,19 +122,19 @@ public class ArticulatedHood implements ISubsystem {
                 }
                 break;
             case SPEED_2021:
-                if (currentPos > 1.75) {
-                    moveTo = -1;
+                if (currentPos > robotSettings.SHOOTER_HOOD_MAX_POS) {
+                    moveTo = -3;
                     hoodMotor.moveAtPercent(0.1);
-                } else if (currentPos < 0) {
-                    moveTo = -1;
+                } else if (currentPos < robotSettings.SHOOTER_HOOD_MIN_POS) {
+                    moveTo = -3;
                     hoodMotor.moveAtPercent(-0.1);
-                } else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
-                    moveTo = -1;
+                } else if (joystickController.get(JoystickButtons.FIVE) == ButtonStatus.DOWN) {
+                    moveTo = -2;
                     hoodMotor.moveAtPercent(-0.3);
-                } else if (joystickController.get(ControllerEnums.JoystickButtons.THREE) == ControllerEnums.ButtonStatus.DOWN) {
-                    moveTo = -1;
+                } else if (joystickController.get(JoystickButtons.THREE) == ButtonStatus.DOWN) {
+                    moveTo = -2;
                     hoodMotor.moveAtPercent(0.3);
-                } else if (panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) {
+                } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) {
                     if (!Robot.shooter.isValidTarget()) {
                         moveTo = 0.95;
                         unTargeted = true;
@@ -136,32 +151,64 @@ public class ArticulatedHood implements ISubsystem {
                 } else moveToPosFromButtons();
                 break;
             case STANDARD:
-                if (currentPos > 1.75) {
-                    moveTo = -2;
-                    hoodMotor.moveAtPercent(0.1);
-                } else if (currentPos < 0) {
-                    moveTo = -2;
-                    hoodMotor.moveAtPercent(-0.1);
+                if (HEIGHT_OVERRIDE.getBoolean(false)) {
+                    moveToPos(HOOD_HEIGHT.getDouble(0), currentPos);
+                } else if (currentPos > robotSettings.SHOOTER_HOOD_MAX_POS) {
+                    moveToPos(HoodSpecialAction.OUT_OF_BOUNDS, -robotSettings.SHOOTER_HOOD_OUT_OF_BOUNDS_SPEED);
+                } else if (currentPos < robotSettings.SHOOTER_HOOD_MIN_POS) {
+                    moveToPos(HoodSpecialAction.OUT_OF_BOUNDS, robotSettings.SHOOTER_HOOD_OUT_OF_BOUNDS_SPEED);
                 } else {
-                    if ((panel.get(ControllerEnums.ButtonPanelButtons.TARGET) == ControllerEnums.ButtonStatus.DOWN) && Robot.shooter.goalCamera.hasValidTarget()) {
+                    if ((panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN) && Robot.shooter.goalCamera.hasValidTarget()) {
                         if (!Robot.shooter.isShooting()) {
-                            double[][] sizeEncoderPositionArrayStraight = {
-                                    {2.415, 0.05},
-                                    {1.466, 0.77},
-                                    {0.925, 1.05},
-                                    {0.481, 1.135},
-                            };
-                            moveTo = requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize(), sizeEncoderPositionArrayStraight);
+                            moveToPos(requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize(), robotSettings.CALIBRATED_HOOD_POSITION_ARRAY), currentPos);
                         }
-                    } else if (joystickController.get(ControllerEnums.JoystickButtons.FIVE) == ControllerEnums.ButtonStatus.DOWN) {
-                        moveTo = -2;
-                        hoodMotor.moveAtPercent(-0.3);
-                    } else if (joystickController.get(ControllerEnums.JoystickButtons.THREE) == ControllerEnums.ButtonStatus.DOWN) {
-                        moveTo = -2;
-                        hoodMotor.moveAtPercent(0.3);
+                    } else if (joystickController.get(JoystickButtons.FIVE) == ButtonStatus.DOWN) {
+                        moveToPos(HoodSpecialAction.MANUAL_MOVEMENT, robotSettings.SHOOTER_HOOD_CONTROL_SPEED);
+                    } else if (joystickController.get(JoystickButtons.THREE) == ButtonStatus.DOWN) {
+                        moveToPos(HoodSpecialAction.MANUAL_MOVEMENT, -robotSettings.SHOOTER_HOOD_CONTROL_SPEED);
                     } else {
-                        moveTo = -2;
-                        hoodMotor.moveAtPercent(0);
+                        if (!HOOD_OVERRIDE.getBoolean(false) && currentPos > 3 && !shooter.isShooting()) {
+                            moveToPos(0, currentPos);
+                        } else {
+                            moveToPos(HoodSpecialAction.NOT_MOVING);
+                        }
+                    }
+                }
+                break;
+            case EXPERIMENTAL_OFFSEASON_2021:
+            case STANDARD_OFFSEASON_2021:
+                if (!shooter.tryFiringBalls && shooter.isValidTarget()) {
+                    lastSeenCameraArea = Robot.shooter.goalCamera.getSize();
+                }
+                if (currentPos > robotSettings.SHOOTER_HOOD_MAX_POS) {
+                    moveToPos(HoodSpecialAction.OUT_OF_BOUNDS, -robotSettings.SHOOTER_HOOD_OUT_OF_BOUNDS_SPEED);
+                } else if (currentPos < robotSettings.SHOOTER_HOOD_MIN_POS) {
+                    moveToPos(HoodSpecialAction.OUT_OF_BOUNDS, robotSettings.SHOOTER_HOOD_OUT_OF_BOUNDS_SPEED);
+                } else if (HEIGHT_OVERRIDE.getBoolean(false)) {
+                    moveToPos(HOOD_HEIGHT.getDouble(0), currentPos);
+                } else {
+                    if ((panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN)) {
+                        if (!Robot.shooter.isShooting()) {
+                            if (shooter.tryFiringBalls) {
+                                moveToPos(requiredArticulationForTargetSize(lastSeenCameraArea, robotSettings.CALIBRATED_HOOD_POSITION_ARRAY), currentPos);
+                            } else {
+                                moveToPos(HoodSpecialAction.AIMING, robotSettings.SHOOTER_HOOD_MAX_POS / 2);
+                            }
+                        }
+                    } else if (panel.get(ButtonPanelButtons.AUX_TOP) == ButtonStatus.DOWN) {
+                        moveToPos(HoodSpecialAction.AIMING, robotSettings.TRENCH_FRONT_HOOD_POSITION);
+                    } else if (panel.get(ButtonPanelButtons.AUX_BOTTOM) == ButtonStatus.DOWN) {
+                        moveToPos(HoodSpecialAction.AIMING, robotSettings.INITIATION_LINE_HOOD_POSITION);
+                    } else if (joystickController.get(JoystickButtons.FIVE) == ButtonStatus.DOWN) {
+                        moveToPos(HoodSpecialAction.MANUAL_MOVEMENT, robotSettings.SHOOTER_HOOD_CONTROL_SPEED);
+                    } else if (joystickController.get(JoystickButtons.THREE) == ButtonStatus.DOWN) {
+                        moveToPos(HoodSpecialAction.MANUAL_MOVEMENT, -robotSettings.SHOOTER_HOOD_CONTROL_SPEED);
+                    } else {
+                        if (!HOOD_OVERRIDE.getBoolean(false) && currentPos > 3 && !shooter.isShooting()) {
+                            moveToPos(0, currentPos);
+                        } else {
+                            moveToPos(HoodSpecialAction.NOT_MOVING);
+                        }
                     }
                 }
                 break;
@@ -171,8 +218,11 @@ public class ArticulatedHood implements ISubsystem {
         if (DEBUG && robotSettings.DEBUG) {
             UserInterface.smartDashboardPutNumber("Hood Pos", hoodMotor.getRotations());
             UserInterface.smartDashboardPutNumber("Moving to pos", moveTo);
+            VISION_SIZE.setNumber(turret.visionCamera.getSize());
+            VISION_ESTIMATE_HEIGHT.setNumber(requiredArticulationForTargetSize(shooter.goalCamera.getSize(), robotSettings.CALIBRATED_HOOD_POSITION_ARRAY));
         }
-        moveToPos(moveTo, currentPos);
+        if (robotSettings.SHOOTER_CONTROL_STYLE != Shooter.ShootingControlStyles.STANDARD && robotSettings.SHOOTER_CONTROL_STYLE != Shooter.ShootingControlStyles.STANDARD_OFFSEASON_2021 && robotSettings.SHOOTER_CONTROL_STYLE != Shooter.ShootingControlStyles.EXPERIMENTAL_OFFSEASON_2021) //TODO update the old moveto value to use enums as it's kinda clunky
+            moveToPos(moveTo, currentPos);
     }
 
     @Override
@@ -198,6 +248,7 @@ public class ArticulatedHood implements ISubsystem {
     @Override
     public void initGeneric() {
         hoodMotor.resetEncoder();
+        hoodMotor.setBrake(true);
     }
 
     @Override
@@ -234,56 +285,103 @@ public class ArticulatedHood implements ISubsystem {
     }
 
     /**
-     * Uses {@link ControllerEnums.ButtonPanelTapedButtons nonstandard mapping} and moves the hood based on those
-     * inputs
+     * Uses {@link ButtonPanelTapedButtons nonstandard mapping} and moves the hood based on those inputs
      */
     private void moveToPosFromButtons() {
-        if (panel.get(ControllerEnums.ButtonPanelTapedButtons.HOOD_POS_1) == ControllerEnums.ButtonStatus.DOWN) {
+        if (panel.get(ButtonPanelTapedButtons.HOOD_POS_1) == ButtonStatus.DOWN) {
             moveTo = 0.05; //POS 1
             unTargeted = false;
-        } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.HOOD_POS_2) == ControllerEnums.ButtonStatus.DOWN) {
+        } else if (panel.get(ButtonPanelTapedButtons.HOOD_POS_2) == ButtonStatus.DOWN) {
             moveTo = 0.77; //POS 2
             unTargeted = false;
-        } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.HOOD_POS_3) == ControllerEnums.ButtonStatus.DOWN) {
+        } else if (panel.get(ButtonPanelTapedButtons.HOOD_POS_3) == ButtonStatus.DOWN) {
             moveTo = 1.05; //POS 3
             unTargeted = false;
-        } else if (panel.get(ControllerEnums.ButtonPanelTapedButtons.HOOD_POS_4) == ControllerEnums.ButtonStatus.DOWN) {
+        } else if (panel.get(ButtonPanelTapedButtons.HOOD_POS_4) == ButtonStatus.DOWN) {
             moveTo = 1.135; //POS 4
             unTargeted = false;
         } else {
+            moveTo = -1;
             hoodMotor.moveAtPercent(0);
         }
     }
 
     /**
-     * Moves the hood to a specified point
+     * Moves the hood to a specified point. If you pass in -1 then the hood remains still. If you pass in -2 then the
+     * hood is in manual movement and doesn't move. If you pass in -3 then the hood is out of bounds and doesn't move.
      *
      * @param moveTo     where to move the hood to
      * @param currentPos where the hood is now
      */
-    private void moveToPos(double moveTo, double currentPos) {
+    public void moveToPos(double moveTo, double currentPos) {
         if (DEBUG && robotSettings.DEBUG) {
             UserInterface.smartDashboardPutNumber("Moving to", moveTo);
         }
-        if (moveTo != -2 && moveTo != -1) {
+        if (moveTo > robotSettings.SHOOTER_HOOD_MIN_POS && moveTo < robotSettings.SHOOTER_HOOD_MAX_POS) {
             double distanceNeededToTravel = currentPos - moveTo;
-            double hoodPercent = Math.min(Math.abs(distanceNeededToTravel), 0.3);
-            hoodPercent *= distanceNeededToTravel > 0 ? 1 : -1;
-            hoodMotor.moveAtPercent(hoodPercent);
+            /*
+            double hoodPercent = Math.min(Math.abs(distanceNeededToTravel), 0.2);
+            hoodPercent *= distanceNeededToTravel > 0 ? -1 : 1;
+            //hoodMotor.moveAtPercent(hoodPercent);
+             */
+            isAtWantedPosition = Math.abs(distanceNeededToTravel) < 0.1;
+            hoodMotor.moveAtPosition(moveTo);
             if (DEBUG && robotSettings.DEBUG) {
                 UserInterface.smartDashboardPutNumber("Moving to", moveTo);
                 UserInterface.smartDashboardPutNumber("Distance from target", distanceNeededToTravel);
             }
-        } else if (moveTo == -2) {
-            if (DEBUG && robotSettings.DEBUG) {
-                UserInterface.smartDashboardPutNumber("Distance from target", 0);
-            }
-            hoodMotor.moveAtPercent(0);
         } else {
-            if (DEBUG && robotSettings.DEBUG) {
-                UserInterface.smartDashboardPutNumber("Distance from target", 0);
-            }
+            hoodMotor.moveAtPercent(0);
+            System.out.println("You shouldn't be here. How did you get a hood position of " + moveTo + "?");
         }
+    }
+
+    /**
+     * There are some special things that the hood can do, such as manual aiming, not moving at all, and being out of
+     * bounds. This overloaded function allows these things to work nicely.
+     *
+     * @param specialAction   The {@link HoodSpecialAction special action} to perform
+     * @param speedOrPosition The speed the motor should run at OR the hood position to go to
+     */
+    public void moveToPos(HoodSpecialAction specialAction, double speedOrPosition) {
+        switch (specialAction) {
+            case MANUAL_MOVEMENT:
+                UserInterface.smartDashboardPutNumber("Distance from target", 0);
+                if (robotSettings.DEBUG && DEBUG)
+                    System.out.println("Manually moving");
+                hoodMotor.moveAtPercent(speedOrPosition);
+                break;
+            case OUT_OF_BOUNDS:
+                UserInterface.smartDashboardPutNumber("Distance from target", 0);
+                if (robotSettings.DEBUG && DEBUG)
+                    System.out.println("Out of bounds");
+                hoodMotor.moveAtPercent(speedOrPosition);
+            case AIMING:
+                if (moveTo > robotSettings.SHOOTER_HOOD_MIN_POS && moveTo < robotSettings.SHOOTER_HOOD_MAX_POS) {
+                    isAtWantedPosition = false;
+                    hoodMotor.moveAtPosition(speedOrPosition);
+                } else {
+                    hoodMotor.moveAtPercent(0);
+                    System.out.println("You shouldn't be here. How did you get a hood position of " + moveTo + "?");
+                }
+        }
+    }
+
+    /**
+     * There are some special things that the hood can do, such as manual aiming, not moving at all, and being out of
+     * bounds. This overloaded function allows these things to work nicely.
+     *
+     * @param specialAction The {@link HoodSpecialAction special action} to perform
+     */
+    public void moveToPos(HoodSpecialAction specialAction) {
+        if (specialAction == HoodSpecialAction.NOT_MOVING) {
+            UserInterface.smartDashboardPutNumber("Distance from target", 0);
+            if (robotSettings.DEBUG && DEBUG)
+                System.out.println("Not moving.");
+        } else {
+            throw new IllegalArgumentException("You must provide a speed to run the motor at.");
+        }
+        hoodMotor.moveAtPercent(0);
     }
 
     /**
@@ -292,8 +390,9 @@ public class ArticulatedHood implements ISubsystem {
     private void createAndInitMotors() {
         switch (robotSettings.HOOD_MOTOR_TYPE) {
             case CAN_SPARK_MAX:
-                hoodMotor = new SparkMotorController(robotSettings.SHOOTER_HOOD_ID, CANSparkMaxLowLevel.MotorType.kBrushed);
+                hoodMotor = new SparkMotorController(robotSettings.SHOOTER_HOOD_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
                 hoodMotor.setSensorToRealDistanceFactor(1);
+                ((SparkMotorController) hoodMotor).setAllowedClosedLoopError(.01);
                 break;
             case TALON_FX:
                 hoodMotor = new TalonMotorController(robotSettings.SHOOTER_HOOD_ID);
@@ -302,7 +401,21 @@ public class ArticulatedHood implements ISubsystem {
             default:
                 throw new IllegalStateException("No such supported hood config for " + robotSettings.HOOD_MOTOR_TYPE.name());
         }
-        hoodMotor.setCurrentLimit(80).setBrake(false).setOpenLoopRampRate(40).resetEncoder();
+        hoodMotor.setCurrentLimit(20).setBrake(false).setInverted(robotSettings.SHOOTER_HOOD_INVERT_MOTOR).resetEncoder();
         hoodMotor.setBrake(true);
+        hoodMotor.setPid(new PID(.1, 0, 0.01, 0));
+    }
+
+    public boolean autoHoodAngle() {
+        double currentPos = hoodMotor.getRotations();
+        if (!Robot.shooter.isValidTarget()) {
+            moveTo = robotSettings.SHOOTER_HOOD_MAX_POS * 0.9;
+            unTargeted = true;
+        } else {
+            moveTo = requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize(), robotSettings.CALIBRATED_HOOD_POSITION_ARRAY);
+            unTargeted = false;
+        }
+        moveToPos(moveTo, currentPos);
+        return 1 >= Math.abs(currentPos - moveTo);
     }
 }

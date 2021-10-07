@@ -463,7 +463,8 @@ public class ClientServerPipeline implements Runnable {
     /**
      * Posts the results of a command to the server from the client.
      *
-     * @param alarm the command response to update
+     * @param alarm  the command response to update
+     * @param active the alarm state
      */
     @ClientSide
     public void sendAlarm(Alarms alarm, boolean active) {

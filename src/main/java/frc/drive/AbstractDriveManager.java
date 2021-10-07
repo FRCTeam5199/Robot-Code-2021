@@ -24,6 +24,7 @@ public abstract class AbstractDriveManager implements ISubsystem {
      */
     public AbstractRobotTelemetry guidance;
 
+
     /**
      * Required by {@link RobotTelemetryStandard} in order to reset position
      */
@@ -102,6 +103,7 @@ public abstract class AbstractDriveManager implements ISubsystem {
      */
     public enum DriveControlStyles {
         STANDARD,
+        BALL_SHIFTING_STANDARD,
         EXPERIMENTAL,
         MARIO_KART,
         DRUM_TIME,

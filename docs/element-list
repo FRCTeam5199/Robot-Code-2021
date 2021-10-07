@@ -1,5 +1,6 @@
 frc.ballstuff.intaking
 frc.ballstuff.shooting
+frc.climber
 frc.controllers
 frc.discordslackbot
 frc.discordslackbot.commands
@@ -8,6 +9,7 @@ frc.drive.auton
 frc.drive.auton.followtrajectory
 frc.drive.auton.galacticsearch
 frc.drive.auton.galacticsearchtest
+frc.drive.auton.pointtopoint
 frc.gpws
 frc.misc
 frc.motors

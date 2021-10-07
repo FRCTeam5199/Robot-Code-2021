@@ -38,10 +38,11 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
 
     @Override
     public void init() {
-        driver.resetDriveEncoders();
+        //driver.resetDriveEncoders();
         if (!robotSettings.ENABLE_IMU)
             return;
         imu = AbstractIMU.createIMU(robotSettings.IMU_TYPE);
+        resetOdometry();
     }
 
     @Override
@@ -53,7 +54,8 @@ public abstract class AbstractRobotTelemetry implements ISubsystem {
     public void updateGeneric() {
         robotTranslation = robotPose.getTranslation();
         robotRotation = robotPose.getRotation();
-        UserInterface.smartDashboardPutNumber("Yaw", imu.absoluteYaw());
+        UserInterface.smartDashboardPutNumber("RelYaw", imu.relativeYaw());
+        UserInterface.smartDashboardPutNumber("AbsYaw", imu.absoluteYaw());
     }
 
     @Override

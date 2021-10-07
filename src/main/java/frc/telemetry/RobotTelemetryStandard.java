@@ -1,16 +1,20 @@
 package frc.telemetry;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.AbstractDriveManager;
 import frc.drive.DriveManagerStandard;
 import frc.misc.ISubsystem;
+import frc.misc.UserInterface;
 import frc.misc.UtilFunctions;
 
 import static frc.robot.Robot.robotSettings;
 
 public class RobotTelemetryStandard extends AbstractRobotTelemetry implements ISubsystem {
+    private final boolean DEBUG = true;
+    private final NetworkTableEntry robotLocation = UserInterface.ROBOT_LOCATION.getEntry();
     public DifferentialDriveOdometry odometer;
 
     public RobotTelemetryStandard(AbstractDriveManager driver) {
@@ -26,7 +30,7 @@ public class RobotTelemetryStandard extends AbstractRobotTelemetry implements IS
     public void init() {
         super.init();
         if (imu != null) {
-            odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
+            odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw())); //getRotations should be in distance traveled since start (inches)
             robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
         }
     }
@@ -40,6 +44,9 @@ public class RobotTelemetryStandard extends AbstractRobotTelemetry implements IS
             robotPose = odometer.update(new Rotation2d(Units.degreesToRadians(imu.absoluteYaw())), Units.inchesToMeters(((DriveManagerStandard) driver).leaderL.getRotations()), Units.inchesToMeters(((DriveManagerStandard) driver).leaderR.getRotations()));
             super.updateGeneric();
         }
+        if (DEBUG) {
+            robotLocation.setString("(" + odometer.getPoseMeters().getX() + ", " + odometer.getPoseMeters().getY() + ")");
+        }
     }
 
     /**
@@ -47,8 +54,8 @@ public class RobotTelemetryStandard extends AbstractRobotTelemetry implements IS
      */
     public void resetOdometry() {
         if (robotSettings.ENABLE_IMU) {
-            imu.resetOdometry();
             odometer = new DifferentialDriveOdometry(Rotation2d.fromDegrees(imu.absoluteYaw()));
+            imu.resetOdometry();
         }
         driver.resetDriveEncoders();
     }
@@ -79,7 +86,7 @@ public class RobotTelemetryStandard extends AbstractRobotTelemetry implements IS
 
     @Override
     public void initTest() {
-
+        resetOdometry();
     }
 
     @Override
@@ -123,7 +130,7 @@ public class RobotTelemetryStandard extends AbstractRobotTelemetry implements IS
      * @param wayY y coord of query point
      * @return angle between heading and given point
      */
-    private double headingError(double wayX, double wayY) {
+    public double headingError(double wayX, double wayY) {
         return angleFromHere(wayX, wayY) - imu.yawWraparoundAhead();
     }
 
@@ -134,7 +141,7 @@ public class RobotTelemetryStandard extends AbstractRobotTelemetry implements IS
      * @param wayY y coord of query point
      * @return the angle between the heading and the point passed in
      */
-    private double angleFromHere(double wayX, double wayY) {
+    public double angleFromHere(double wayX, double wayY) {
         return Math.toDegrees(Math.atan2(wayY - fieldY(), wayX - fieldX()));
     }
 }

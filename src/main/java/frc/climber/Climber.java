@@ -16,8 +16,7 @@ import frc.robot.Robot;
 
 import java.util.Objects;
 
-import static frc.controllers.ControllerEnums.ButtonPanelButtons.LOWER_CLIMBER;
-import static frc.controllers.ControllerEnums.ButtonPanelButtons.RAISE_CLIMBER;
+import static frc.controllers.ControllerEnums.ButtonPanelButtons.*;
 import static frc.robot.Robot.robotSettings;
 
 
@@ -29,6 +28,12 @@ import static frc.robot.Robot.robotSettings;
 public class Climber implements ISubsystem {
     public BaseController joystick, buttonpanel;
     private AbstractMotorController[] climberMotors;
+    private boolean isLocked = false;
+
+    public Climber() {
+        addToMetaList();
+        init();
+    }
 
     @Override
     public void init() {
@@ -38,7 +43,7 @@ public class Climber implements ISubsystem {
 
     @Override
     public SubsystemStatus getSubsystemStatus() {
-        return null;
+        return SubsystemStatus.NOMINAL;
     }
 
     @Override
@@ -48,7 +53,7 @@ public class Climber implements ISubsystem {
 
     @Override
     public void updateTeleop() {
-
+        updateGeneric();
     }
 
     @Override
@@ -63,24 +68,27 @@ public class Climber implements ISubsystem {
             createControllers();
         }
 
-        switch (robotSettings.CLIMBER_CONTROL_STYLE) {
-            case STANDARD:
-                if (buttonpanel.get(LOWER_CLIMBER) == ButtonStatus.DOWN) {
-                    for (AbstractMotorController motor : climberMotors) {
-                        motor.moveAtPercent(-0.5);
-                    }
-                } else if (buttonpanel.get(RAISE_CLIMBER) == ButtonStatus.DOWN) {
-                    for (AbstractMotorController motor : climberMotors) {
-                        motor.moveAtPercent(0.5);
-                    }
-                } else {
-                    for (AbstractMotorController motor : climberMotors) {
-                        motor.moveAtPercent(0);
-                    }
+        if (robotSettings.CLIMBER_CONTROL_STYLE == ClimberControlStyles.STANDARD) {
+            if (buttonpanel.get(LOWER_CLIMBER) == ButtonStatus.DOWN) {
+                for (AbstractMotorController motor : climberMotors) {
+                    motor.moveAtPercent(-0.5);
                 }
-                break;
-            default:
-                throw new IllegalStateException("There is no UI configuration for " + robotSettings.CLIMBER_CONTROL_STYLE.name() + " to control the climber. Please implement me");
+            } else if (buttonpanel.get(RAISE_CLIMBER) == ButtonStatus.DOWN && !isLocked) {
+                for (AbstractMotorController motor : climberMotors) {
+                    motor.moveAtPercent(0.5);
+                }
+            } else {
+                for (AbstractMotorController motor : climberMotors) {
+                    motor.moveAtPercent(0);
+                }
+            }
+            if (buttonpanel.get(CLIMBER_LOCK) == ButtonStatus.DOWN) {
+                climberLocks(true);
+            } else if (buttonpanel.get(CLIMBER_UNLOCK) == ButtonStatus.DOWN) {
+                climberLocks(false);
+            }
+        } else {
+            throw new IllegalStateException("There is no UI configuration for " + robotSettings.CLIMBER_CONTROL_STYLE.name() + " to control the climber. Please implement me");
         }
     }
 
@@ -111,7 +119,13 @@ public class Climber implements ISubsystem {
 
     @Override
     public String getSubsystemName() {
-        return null;
+        return "Climber";
+    }
+
+    public void climberLocks(boolean deployed) {
+        if (robotSettings.ENABLE_PNOOMATICS)
+            Robot.pneumatics.climberLock.set(deployed ? Value.kForward : Value.kReverse);
+        isLocked = deployed;
     }
 
     private void createMotors() {
@@ -129,6 +143,9 @@ public class Climber implements ISubsystem {
                     break;
                 default:
                     throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + robotSettings.CLIMBER_MOTOR_TYPE.name(), "Add an implementation in the init for climber");
+            }
+            if (indexer % 2 != 0) {
+                climberMotors[indexer].setInverted(true);
             }
         }
     }
@@ -157,11 +174,6 @@ public class Climber implements ISubsystem {
             default:
                 throw new IllegalStateException("There is no UI configuration for " + robotSettings.INTAKE_CONTROL_STYLE.name() + " to control the shooter. Please implement me");
         }
-    }
-
-    public void climberLocks(boolean deployed) {
-        if (robotSettings.ENABLE_PNEUMATICS)
-            Robot.pneumatics.climberLock.set(deployed ? Value.kForward : Value.kReverse);
     }
 
     public enum ClimberControlStyles {

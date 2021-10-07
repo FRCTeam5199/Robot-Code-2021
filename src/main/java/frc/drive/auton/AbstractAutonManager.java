@@ -116,8 +116,10 @@ public abstract class AbstractAutonManager implements ISubsystem {
         trajectory = paths.get(autonPath);
         if (robotSettings.ENABLE_IMU) {
             DRIVING_CHILD.guidance.resetOdometry();
-            Transform2d transform = DRIVING_CHILD.guidance.robotPose.minus(trajectory.getInitialPose());
-            trajectory = trajectory.transformBy(transform);
+            if (trajectory != null) {
+                Transform2d transform = DRIVING_CHILD.guidance.robotPose.minus(trajectory.getInitialPose());
+                trajectory = trajectory.transformBy(transform);
+            }
         }
         timer.stop();
         timer.reset();

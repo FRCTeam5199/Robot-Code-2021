@@ -14,7 +14,7 @@ public class ShootCommand extends AbstractCommand {
         if (!Robot.robotSettings.ENABLE_SHOOTER) {
             return new GenericCommandResponse(message, "Please enable shooter");
         }
-        if (!DriverStation.getInstance().isDisabled() && Robot.shooter.fireSingleShot()) {
+        if (!DriverStation.getInstance().isDisabled() && Robot.shooter.fireAmount(1)) {
             return new GenericCommandResponse(message, "BOOOM :boom:");
         }
         return ContinuePersistingCommandResponse.PASS;

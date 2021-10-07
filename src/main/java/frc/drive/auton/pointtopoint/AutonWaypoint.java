@@ -3,6 +3,8 @@ package frc.drive.auton.pointtopoint;
 
 import frc.drive.auton.Point;
 
+import static frc.drive.auton.pointtopoint.AutonSpecialActions.NONE;
+
 public class AutonWaypoint {
     public final Point LOCATION;
     public final double SPEED;
@@ -26,7 +28,11 @@ public class AutonWaypoint {
 //Anything below here has a default of no action.
 //----------------------------------------------------------------------------------------
     public AutonWaypoint(Point pos, double speed) {
-        this(pos, speed, AutonSpecialActions.NONE);
+        this(pos, speed, NONE);
+    }
+
+    public AutonWaypoint(Point pos, AutonSpecialActions action) {
+        this(pos, 1, action);
     }
 
     public AutonWaypoint(Point pos) {
