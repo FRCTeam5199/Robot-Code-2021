@@ -34,7 +34,7 @@ import static frc.robot.Robot.robotSettings;
  * @see RobotTelemetryStandard
  */
 public class DriveManagerStandard extends AbstractDriveManager {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(robotSettings.DRIVEBASE_DISTANCE_BETWEEN_WHEELS);
     private final NetworkTableEntry
             P = UserInterface.DRIVE_P.getEntry(),
@@ -138,9 +138,30 @@ public class DriveManagerStandard extends AbstractDriveManager {
                 if (rumbleController.getBoolean(false)) {
                     controller.rumble(Math.max(0, Math.min(1, (avgSpeedInFPS - robotSettings.RUMBLE_TOLERANCE_FPS) / (robotSettings.MAX_SPEED - robotSettings.RUMBLE_TOLERANCE_FPS))));
                 }
-                drive(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
+                driveCringe(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X));
             }
             break;
+            case OPENLOOP_BALL_SHIFTING_STANDARD: {
+                if (controller.get(ControllerEnums.XBoxPOVButtons.DOWN) == ButtonStatus.DOWN) {
+                    pneumatics.ballShifter.set(DoubleSolenoid.Value.kForward);
+                    ballShifterEnabled = true;
+                } else if (controller.get(ControllerEnums.XBoxPOVButtons.UP) == ButtonStatus.DOWN) {
+                    pneumatics.ballShifter.set(DoubleSolenoid.Value.kReverse);
+                    ballShifterEnabled = false;
+                } 
+                double invertedDrive = robotSettings.DRIVE_INVERT_LEFT ? -1 : 1;
+                double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+                double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+                if (robotSettings.DEBUG && DEBUG) {
+                    System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
+                    //System.out.println("Forward: " + (invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y)) + " Turn: " + (dynamic_gear_R * -controller.get(XboxAxes.RIGHT_JOY_X)));
+                }
+                if (rumbleController.getBoolean(false)) {
+                    controller.rumble(Math.max(0, Math.min(1, (avgSpeedInFPS - robotSettings.RUMBLE_TOLERANCE_FPS) / (robotSettings.MAX_SPEED - robotSettings.RUMBLE_TOLERANCE_FPS))));
+                }
+                drivePercent(controller.get(XboxAxes.LEFT_JOY_Y), controller.get(XboxAxes.RIGHT_JOY_X));
+                break;
+            }
             case MARIO_KART: {
                 double gogoTime = controller.get(ControllerEnums.WiiButton.ONE) == ButtonStatus.DOWN ? -1 : controller.get(ControllerEnums.WiiButton.TWO) == ButtonStatus.DOWN ? 1 : 0;
                 drive(0.75 * gogoTime, -0.5 * controller.get(ControllerEnums.WiiAxis.ROTATIONAL_TILT) * gogoTime);
@@ -270,9 +291,10 @@ public class DriveManagerStandard extends AbstractDriveManager {
     public void driveFPS(double leftFPS, double rightFPS) {
         //todo get rid of this
         double gearRatio = 28.6472 * 12;
-        if (robotSettings.DEBUG && DEBUG) {
+        if (/*robotSettings.DEBUG &&*/ DEBUG) {
             System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + gearRatio + ")");
             UserInterface.smartDashboardPutNumber("Left Wheel RPM", leaderL.getSpeed());
+            UserInterface.smartDashboardPutNumber("Left Wheel Voltage", leaderL.getVoltage());
         }
         leaderL.moveAtVelocity((leftFPS) * gearRatio * robotSettings.DRIVE_SCALE);
         leaderR.moveAtVelocity((rightFPS) * gearRatio * robotSettings.DRIVE_SCALE);
@@ -286,6 +308,11 @@ public class DriveManagerStandard extends AbstractDriveManager {
      */
     public void drive(double forward, double rotation) {
         drivePure(adjustedDrive(forward), adjustedRotation(rotation));
+    }
+
+    public void drivePercent(double leftPercent, double rightPercent) {
+        leaderL.moveAtPercent(leftPercent);
+        leaderR.moveAtPercent(rightPercent);
     }
 
     /**
@@ -348,7 +375,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
         leaderL.setInverted(robotSettings.DRIVE_INVERT_LEFT).resetEncoder();
         leaderR.setInverted(robotSettings.DRIVE_INVERT_RIGHT).resetEncoder();
 
-        setAllMotorCurrentLimits(50);
+        setAllMotorCurrentLimits(35);
 
         followerL.invert(robotSettings.DRIVE_INVERT_LEFT);
         followerR.invert(robotSettings.DRIVE_INVERT_RIGHT);
@@ -416,5 +443,34 @@ public class DriveManagerStandard extends AbstractDriveManager {
     private void setPID(PID pid) {
         leaderL.setPid(pid);
         leaderR.setPid(pid);
+    }
+
+    public void driveCringe(double forward, double rotation) {
+        /*
+        drivePure(adjustedDrive(forward), adjustedRotation(rotation)); //double FPS, double omega
+
+        driveWithChassisSpeeds(new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega));
+
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+        driveMPS(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+
+        driveFPS(Units.metersToFeet(leftMPS), Units.metersToFeet(rightMPS));
+         */
+        double FPS = adjustedDrive(forward);
+        double omega = adjustedRotation(rotation);
+        ChassisSpeeds cringChassis = new ChassisSpeeds(Units.feetToMeters(FPS), 0, omega);
+        DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(cringChassis);
+        double leftFPS = Units.metersToFeet(wheelSpeeds.leftMetersPerSecond);
+        double rightFPS = Units.metersToFeet(wheelSpeeds.rightMetersPerSecond);
+        //todo get rid of this
+        double gearRatio = 28.6472 * 12;
+        if (/*robotSettings.DEBUG &&*/ DEBUG) {
+            System.out.println("FPS: " + leftFPS + "  " + rightFPS + " (" + gearRatio + ")");
+            UserInterface.smartDashboardPutNumber("Left Wheel RPM", leaderL.getSpeed());
+            UserInterface.smartDashboardPutNumber("Left Wheel Voltage", leaderL.getVoltage());
+        }
+        //I like to call this one driveCringe
+        leaderL.moveAtVoltage(adjustedDriveVoltage((leftFPS) * gearRatio * robotSettings.DRIVE_SCALE));
+        leaderR.moveAtVoltage(adjustedDriveVoltage((rightFPS) * gearRatio * robotSettings.DRIVE_SCALE));
     }
 }

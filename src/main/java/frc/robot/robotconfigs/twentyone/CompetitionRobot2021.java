@@ -17,21 +17,22 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_INTAKE = true;
         ENABLE_TURRET = false;
         ENABLE_SHOOTER = false;
-        ENABLE_HOPPER = true;
-        ENABLE_AGITATOR = true;
-        ENABLE_INDEXER = true;
+        ENABLE_HOPPER = false;
+        ENABLE_AGITATOR = false;
+        ENABLE_INDEXER = false;
         ENABLE_MUSIC = false;
         ENABLE_HOOD_ARTICULATION = false;
         ENABLE_MEMES = false;
-        ENABLE_OVERHEAT_DETECTION = true;
+        ENABLE_OVERHEAT_DETECTION = false;
+        ENABLE_INTAKE_SERVOS = true;
 
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
 
         //Misc
-        ENABLE_VISION = true;
-        USE_PHOTONVISION = true;
-        ENABLE_IMU = true;
+        ENABLE_VISION = false;
+        USE_PHOTONVISION = false;
+        ENABLE_IMU = false;
         IMU_NAVX_PORT = I2C.Port.kMXP;
 
         //SHOOTER
@@ -53,12 +54,12 @@ public class CompetitionRobot2021 extends DefaultConfig {
         //UI Styles
         DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
         SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.SPEED_2021;//ShootingControlStyles.ACCURACY_2021;
-        INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.BOP_IT;
+        INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.ROBOT_2021;
         DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
         IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
         AUTON_TYPE = AutonType.POINT_TO_POINT;
 
-        DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
+        DRIVEBASE_PID = new PID(0.00075, 0, 0.002);
         SHOOTER_PID = new PID(0.001, 0.0000005, 0.03, 0);//Accuracy. SPEED = new PID(0.0004, 0.0000007, 0.03, 0);
         SHOOTER_CONST_SPEED_PID = new PID(0.0001, 0.0000007, 0.05, 0);
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
@@ -69,7 +70,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
         RUMBLE_TOLERANCE_FPS = 8;
         MAX_ROTATION = 11.2; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
-        WHEEL_DIAMETER = 4; //update: now it's used once
+        WHEEL_DIAMETER = 5; //update: now it's used once
         TURN_SCALE = 0.7;
         DRIVE_SCALE = 1;
         DRIVE_GEARING = 12.0 / 60.0;
@@ -112,6 +113,13 @@ public class CompetitionRobot2021 extends DefaultConfig {
         SHOOTER_LEADER_ID = 7; //talon
         SHOOTER_FOLLOWER_ID = 8; //talon
         SHOOTER_HOOD_ID = 32;
+        SHOOTER_HOOD_MAX_POS = 47;//11 on 9x;
+        SHOOTER_HOOD_MIN_POS = -0.1;
+        SHOOTER_HOOD_INVERT_MOTOR = false;
+        SHOOTER_HOOD_CONTROL_SPEED = 0.5;
+        SHOOTER_HOOD_OUT_OF_BOUNDS_SPEED = 0.3;
+        TRENCH_FRONT_HOOD_POSITION = SHOOTER_HOOD_MAX_POS * (27.0/57);
+        INITIATION_LINE_HOOD_POSITION = SHOOTER_HOOD_MAX_POS * (13.0/57);
 
         //turret
         TURRET_YAW_ID = 33; //550
@@ -120,5 +128,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         INDEXER_MOTOR_ID = 11; //victor
         //intake
         INTAKE_MOTOR_ID = 12; //victor
+        INTAKE_SERVO_R_ID = 2;
+        INTAKE_SERVO_L_ID = 3;
     }
 }

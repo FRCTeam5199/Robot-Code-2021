@@ -1,5 +1,7 @@
 package frc.ballstuff.shooting;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.controllers.BaseController;
 import frc.controllers.ControllerEnums;
 import frc.controllers.ControllerEnums.ButtonPanelButtons;
@@ -22,6 +24,8 @@ import static frc.robot.Robot.*;
  */
 public class Turret implements ISubsystem {
     private static final boolean DEBUG = false;
+    private final NetworkTableEntry isMorganne = UserInterface.MORGANNE_MODE.getEntry();
+    private final PIDController HEADING_PID;
     public AbstractMotorController turretMotor;
     public IVision visionCamera;
     private BaseController joy, panel;
@@ -31,6 +35,7 @@ public class Turret implements ISubsystem {
     public Turret() {
         addToMetaList();
         init();
+        HEADING_PID = new PIDController(robotSettings.TURRET_HEADING_PID.P, robotSettings.TURRET_HEADING_PID.I, robotSettings.TURRET_HEADING_PID.D);
     }
 
     /**
@@ -61,6 +66,7 @@ public class Turret implements ISubsystem {
         turretMotor.setInverted(false).setPid(robotSettings.TURRET_PID).setBrake(true);
 
         setBrake(true);
+        turretMotor.resetEncoder();
     }
 
     private void createControllers() {
@@ -142,11 +148,20 @@ public class Turret implements ISubsystem {
         double omegaSetpoint = 0;
         double camoffset = 0;
         switch (robotSettings.SHOOTER_CONTROL_STYLE) {
+            case STANDARD_OFFSEASON_2021:
+                if (panel.get(ButtonPanelButtons.AUX_TOP) == ButtonStatus.DOWN) { //trench
+                    camoffset = 0;//-4;//-2;
+                } else if (panel.get(ButtonPanelButtons.AUX_BOTTOM) == ButtonStatus.DOWN) { //init
+                    camoffset = 0;
+                } else {
+                    camoffset = -4;
+                }
+                break;
             case ACCURACY_2021:
                 camoffset = -3;
                 break;
             case SPEED_2021:
-                camoffset = -0.75;
+                camoffset = -10;
                 break;
             default:
                 camoffset = 0;
@@ -171,7 +186,7 @@ public class Turret implements ISubsystem {
                                 omegaSetpoint = 0.3;
                             } else if (angle < -0.005) {
                                 omegaSetpoint = -0.3;
-                            }
+                            } //WHAT IS THIS DUDES WHERES THE PID
                             omegaSetpoint *= Math.min(Math.abs(angle * 1.5), 1);
                         } else {
                             omegaSetpoint = scan();
@@ -204,12 +219,7 @@ public class Turret implements ISubsystem {
                             Robot.articulatedHood.unTargeted = true;
                         if (visionCamera.hasValidTarget()) {
                             double angle = -visionCamera.getAngle() + camoffset;
-                            if (angle > 0.005) {
-                                omegaSetpoint = 0.3;
-                            } else if (angle < -0.005) {
-                                omegaSetpoint = -0.3;
-                            }
-                            omegaSetpoint *= Math.min(Math.abs(angle * 1.5), 1);
+                            omegaSetpoint = -HEADING_PID.calculate(angle);
                         } else {
                             omegaSetpoint = scan();
                         }
@@ -222,12 +232,7 @@ public class Turret implements ISubsystem {
                             Robot.articulatedHood.unTargeted = true;
                         if (visionCamera.hasValidTarget()) {
                             double angle = -visionCamera.getAngle() + camoffset;
-                            if (angle > 0.005) {
-                                omegaSetpoint = 0.3;
-                            } else if (angle < -0.005) {
-                                omegaSetpoint = -0.3;
-                            }
-                            omegaSetpoint *= Math.min(Math.abs(angle * 1.5), 1);
+                            omegaSetpoint = -HEADING_PID.calculate(angle);
                         } else {
                             omegaSetpoint = scan();
                         }
@@ -241,7 +246,7 @@ public class Turret implements ISubsystem {
                     if (robotSettings.DEBUG && DEBUG) {
                         System.out.println("Joystick is at " + joy.get(ControllerEnums.JoystickAxis.Z_ROTATE));
                     }
-                    omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * -2;
+                    omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * (isMorganne.getBoolean(true) ? -1.25 : -2);
                 }
                 break;
             }
@@ -310,13 +315,13 @@ public class Turret implements ISubsystem {
      */
     @Override
     public void initTeleop() {
-        turretMotor.resetEncoder();
+        //turretMotor.resetEncoder();
         turretMotor.setBrake(true);
     }
 
     @Override
     public void initAuton() {
-
+        turretMotor.resetEncoder();
     }
 
     /**
@@ -356,7 +361,12 @@ public class Turret implements ISubsystem {
         if (scanDirection == -1 && turretDegrees() <= robotSettings.TURRET_MIN_POS + 40) {
             scanDirection = 1;
         }
-        return scanDirection;
+
+        if (joy.get(ControllerEnums.JoystickButtons.ONE) == ButtonStatus.UP) {
+            return scanDirection;
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -396,14 +406,13 @@ public class Turret implements ISubsystem {
     }
 
     public boolean resetShooter() {
-        /*
-        rotateTurret(-1 * Math.min(Math.abs(turretDegrees()), 1));
-        if (turretDegrees() < robotSettings.TURRET_MIN_POS) {
-            rotateTurret(Math.min(Math.abs(turretDegrees()), 0.1));
-        }*/
         turretMotor.moveAtPosition(1);
         articulatedHood.moveToPos(0.0, articulatedHood.hoodMotor.getRotations());
-        return (Math.abs(turretDegrees()) <= 0.1 && Math.abs(articulatedHood.hoodMotor.getRotations()) <= 0.1);
+        boolean condition = (Math.abs(turretDegrees()) <= 0.1 && Math.abs(articulatedHood.hoodMotor.getRotations()) <= 0.1);
+        if (condition) {
+            turretMotor.moveAtPercent(0);
+        }
+        return condition;
     }
 
     public boolean aimAtTarget() {
@@ -424,21 +433,75 @@ public class Turret implements ISubsystem {
             Robot.articulatedHood.unTargeted = true;
         if (visionCamera.hasValidTarget()) {
             angle = -visionCamera.getAngle() + camoffset;
-            if (angle > 0.005) {
-                omegaSetpoint = 0.3;
-            } else if (angle < -0.005) {
-                omegaSetpoint = -0.3;
-            }
-            omegaSetpoint *= Math.min(Math.abs(angle) * 1.5, 1.5);
+            omegaSetpoint = -HEADING_PID.calculate(angle);
         } else {
             omegaSetpoint = scan();
         }
         boolean criteria;
-        if (robotSettings.ENABLE_HOOD_ARTICULATION)
-            criteria = Math.abs(angle) < 0.1 && articulatedHood.autoHoodAngle() && shooter.isValidTarget();
-        else
-            criteria = Math.abs(angle) < 0.1;
+        if (robotSettings.ENABLE_HOOD_ARTICULATION) {
+            criteria = Math.abs(angle) < 1.5 && articulatedHood.autoHoodAngle() && shooter.isValidTarget();
+            UserInterface.smartDashboardPutBoolean("AutoHoodSet", articulatedHood.autoHoodAngle());
+            UserInterface.smartDashboardPutBoolean("Valid Target", shooter.isValidTarget());
+            UserInterface.smartDashboardPutNumber("Angle", angle);
+        }
+        else {
+            criteria = Math.abs(angle) < 1.5;
+        }
 
+        if (criteria) {
+            visionCamera.setLedMode(IVision.VisionLEDMode.OFF);
+            rotateTurret(0);
+        }
+
+        if (isSafe() && !Robot.shooter.isShooting()) {
+            if (!criteria)
+                rotateTurret(omegaSetpoint);
+            if (robotSettings.DEBUG && DEBUG) {
+                System.out.println("Attempting to rotate the POS at" + omegaSetpoint);
+            }
+        } else {
+            if (!criteria) {
+                if (turretDegrees() > robotSettings.TURRET_MAX_POS) {
+                    rotateTurret(-1);
+                } else if (turretDegrees() < robotSettings.TURRET_MIN_POS) {
+                    rotateTurret(1);
+                } else {
+                    rotateTurret(0);
+                }
+            }
+        }
+        return criteria;
+    }
+
+    public boolean aimAtTarget(double camoffset, double height) {
+        double omegaSetpoint = 0;
+        double angle = 0;
+        if (robotSettings.ENABLE_VISION)
+            visionCamera.setLedMode(IVision.VisionLEDMode.ON); //If targeting, then use the LL
+        if (robotSettings.ENABLE_HOOD_ARTICULATION)
+            articulatedHood.autoHoodAngle();
+        if (robotSettings.DEBUG && DEBUG) {
+            System.out.println("I'm looking. Target is valid? " + visionCamera.hasValidTarget());
+        }
+        if (robotSettings.ENABLE_HOOD_ARTICULATION)
+            Robot.articulatedHood.unTargeted = true;
+        if (visionCamera.hasValidTarget()) {
+            angle = -visionCamera.getAngle() + camoffset;
+            omegaSetpoint = -HEADING_PID.calculate(angle);
+        } else {
+            omegaSetpoint = scan();
+        }
+        boolean criteria;
+        if (robotSettings.ENABLE_HOOD_ARTICULATION) {
+            boolean check1 = articulatedHood.autoHoodAngle(height);
+            criteria = Math.abs(angle) < 1.8 && check1 && shooter.isValidTarget();
+            UserInterface.smartDashboardPutBoolean("AutoHoodSet", check1);
+            UserInterface.smartDashboardPutBoolean("Valid Target", shooter.isValidTarget());
+            UserInterface.smartDashboardPutNumber("Angle", angle);
+        }
+        else {
+            criteria = Math.abs(angle) < 1.8;
+        }
         if (criteria) {
             visionCamera.setLedMode(IVision.VisionLEDMode.OFF);
             rotateTurret(0);

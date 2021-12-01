@@ -16,7 +16,7 @@ import static frc.motors.AbstractMotorController.SupportedMotors.*;
 public class Robot2020 extends DefaultConfig {
     public Robot2020() {
         ENABLE_DRIVE = true;
-        ENABLE_BALL_SHIFTERS = true; //TODO implement this
+        ENABLE_BALL_SHIFTERS = true;
         ENABLE_INTAKE = true;
         ENABLE_TURRET = true;
         ENABLE_SHOOTER = true;
@@ -27,9 +27,9 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_HOOD_ARTICULATION = true;
         ENABLE_PNOOMATICS = true;
         ENABLE_CLIMBER = true;
-        ENABLE_SHOOTER_COOLING = false;
+        ENABLE_BUDDY_CLIMBER = true;
 
-        AUTON_COMPLETE_NOISE = "LevelComplete_4_6000";
+        AUTON_COMPLETE_NOISE = "";//"LevelComplete_4_6000";
 
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
@@ -59,7 +59,8 @@ public class Robot2020 extends DefaultConfig {
         CLIMBER_OUT_ID = 3;
         BALL_SHIFTERS_IN_ID = 6;
         BALL_SHIFTERS_OUT_ID = 7;
-        SHOOTER_COOLING_ID = 0;
+        BUDDY_CLIMBER_LOCK_IN_ID = 1;
+        BUDDY_CLIMBER_LOCK_OUT_ID = 0;
 
         //climber
         CLIMBER_MOTOR_IDS = new int[]{8, 9};
@@ -78,8 +79,9 @@ public class Robot2020 extends DefaultConfig {
         SHOOTER_PID = new PID(4, 0, 2.5, 0);
         SHOOTER_CONST_SPEED_PID = SHOOTER_PID;
         SHOOTER_RECOVERY_PID = SHOOTER_PID;
-        TURRET_PID = new PID(0.006, 0.00001, 0.001);
-        HEADING_PID = new PID(1.2, 0.3, 0.0003);
+        TURRET_PID = new PID(0.006, 0.00002, 0.001);
+        HEADING_PID = new PID(0.5, 0.03, 0.0003);
+        TURRET_HEADING_PID = new PID(0.06, 0.00002, 0.001);
         DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
         DRIVEBASE_DISTANCE_BETWEEN_WHEELS = 0.5588;
         MAX_SPEED = 10; //max speed in fps - REAL IS 10(for 4in wheels)
@@ -131,29 +133,13 @@ public class Robot2020 extends DefaultConfig {
         SHOOTER_HOOD_INVERT_MOTOR = true;
         SHOOTER_HOOD_CONTROL_SPEED = 0.5;
         SHOOTER_HOOD_OUT_OF_BOUNDS_SPEED = 0.3;
-        TRENCH_FRONT_HOOD_POSITION = SHOOTER_HOOD_MAX_POS * (27.0 / 57);
-        INITIATION_LINE_HOOD_POSITION = SHOOTER_HOOD_MAX_POS * (13.0 / 57);
+        TRENCH_FRONT_HOOD_POSITION = 19.0;
+        INITIATION_LINE_HOOD_POSITION = 9.0;
         CALIBRATED_HOOD_POSITION_ARRAY = new double[][]{
                 //tA, HH (Area, Hood Height)
-                {2.89, 0}, //Literally can't shoot here so just make the best shot you can ig
-                {2.9, 3}, //quick ramp up to 3
-                {3.0, 3}, //You can make some nice shot here ig
-                {2.6, 3},
-                {2.7, 4},
-                {2.4, 3.5},
-                {2.3, 4},
-                {2.2, 4.5},
-                {2.1, 5},
-                {1.6, 13},
-                {1.1, 17},
-                {0.7, 26.57},
-                {0.74, 19.25},
-                {0.66, 20.5},
-                {0.61, 22.5},
-                {0.56, 25},
-                {0.49, 25},
-                {0.27, 20}
-
+                {2.1, 0},
+                {1.39, 9.5},
+                {0.68, 19}
         };
 
         //turret

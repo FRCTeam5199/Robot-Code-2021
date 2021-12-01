@@ -1,7 +1,6 @@
 package frc.drive.auton.pointtopoint;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.util.Units;
 import frc.drive.auton.Point;
 
 import java.util.ArrayList;
@@ -14,28 +13,60 @@ import static frc.drive.auton.pointtopoint.AutonSpecialActions.*;
  * All the auton paths, using {@link Point points} and {@link AutonSpecialActions} to make the robot do the do
  */
 public enum AutonRoutines {
+    DO_NOTHING(
+            new AutonWaypoint(new Point(0, 0))
+    ),
+    RESET_INTAKE_DO_NOTHING(
+            new AutonWaypoint(new Point(0, 0), INTAKE_UP)
+    ),
     DRIVE_OFF_INIT_LINE(
             new AutonWaypoint(new Point(0, 0)),
-            new AutonWaypoint(new Point(Units.feetToMeters(1), 0))
+            new AutonWaypoint(new Point(1.25, 0))
+    ),
+    DRIVE_OFF_SHOOT_3(
+            new AutonWaypoint(new Point(0, 0)),
+            new AutonWaypoint(new Point(1.25, 0), AIM_AT_TARGET_TRENCH),
+            new AutonWaypoint(new Point(1.25, 0), SHOOT_THREE)
     ),
     SHOOT_3_DRIVE_OFF_INIT_LINE(
-            new AutonWaypoint(new Point(0, 0), INTAKE_UP),
-            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET),
+            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET_TRENCH),
             new AutonWaypoint(new Point(0, 0), SHOOT_THREE),
-            new AutonWaypoint(new Point(0, 0), RESET_SHOOTER),
+            //new AutonWaypoint(new Point(0, 0), RESET_SHOOTER),
             new AutonWaypoint(new Point(1.25, 0)) //Drive off init line
     ),
+
     CREATING_AUTON_TESTING(
-            new AutonWaypoint(new Point(0, 0), SHOOT_THREE)
+            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET_TRENCH),
+            new AutonWaypoint(new Point(0, 0), SHOOT_ALL_TIMED),
+            new AutonWaypoint(new Point(0, 0), INTAKE_DOWN),
+            new AutonWaypoint(new Point(0, 0), INTAKE_IN),
+            new AutonWaypoint(new Point(4.5, 0), ZERO_TURRET),
+            new AutonWaypoint(new Point(4.5, 0), AIM_AT_TARGET_END_TRENCH),
+            new AutonWaypoint(new Point(4.5, 0), INTAKE_OFF),
+            new AutonWaypoint(new Point(4.5, 0), SHOOT_ALL_TIMED)
     ),
     SHOOT_3_INTAKE_TRENCH(
-            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET),
+            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET_TRENCH),
             new AutonWaypoint(new Point(0, 0), SHOOT_THREE),
             new AutonWaypoint(new Point(0, 0), INTAKE_DOWN),
             new AutonWaypoint(new Point(0, 0), INTAKE_IN),
-            new AutonWaypoint(new Point(4.5, 0), INTAKE_OFF),
-            new AutonWaypoint(new Point(4.5, 0), RESET_SHOOTER)
+            new AutonWaypoint(new Point(4.8, 0), INTAKE_OFF)
     ),
+    SHOOT_3_DONT_MOVE(
+            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET_TRENCH),
+            new AutonWaypoint(new Point(0, 0), SHOOT_THREE)
+    ),
+    SHOOT_3_INTAKE_TRENCH_SHOOT_3(
+            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET_TRENCH),
+            new AutonWaypoint(new Point(0, 0), SHOOT_THREE),
+            new AutonWaypoint(new Point(0, 0), INTAKE_DOWN),
+            new AutonWaypoint(new Point(0, 0), INTAKE_IN),
+            new AutonWaypoint(new Point(4.5, 0), ZERO_TURRET),
+            new AutonWaypoint(new Point(4.5, 0), AIM_AT_TARGET_END_TRENCH),
+            new AutonWaypoint(new Point(4.5, 0), INTAKE_OFF),
+            new AutonWaypoint(new Point(4.5, 0), SHOOT_THREE)
+    )/*,
+
     AUTON_TUNING(
             new AutonWaypoint(new Point(0, 0), INTAKE_UP),
             new AutonWaypoint(new Point(Units.feetToMeters(8), 0), INTAKE_DOWN),
@@ -45,13 +76,13 @@ public enum AutonRoutines {
     ),
     GO_FORWARD_AND_SHOOT_ONE(
             new AutonWaypoint(new Point(0, 0)),
-            new AutonWaypoint(new Point(3, 0), AIM_AT_TARGET),
+            new AutonWaypoint(new Point(3, 0), AIM_AT_TARGET_TRENCH),
             new AutonWaypoint(new Point(3, 0), SHOOT_ONE)
     ),
     MULTI_SHOT_TEST(
             //new AutonWaypoint(new Point(0, 0), INTAKE_DOWN),
             new AutonWaypoint((new Point(0, 0))), //do nothing?
-            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET),
+            new AutonWaypoint(new Point(0, 0), AIM_AT_TARGET_TRENCH),
             new AutonWaypoint(new Point(0, 0), SHOOT_TWO)
             //new AutonWaypoint(new Point(0, 0), INTAKE_UP)
     ),
@@ -60,7 +91,7 @@ public enum AutonRoutines {
             new AutonWaypoint(new Point(0, 0), INTAKE_IN),
             new AutonWaypoint(new Point(4, 0.5), INTAKE_OFF),
             new AutonWaypoint(new Point(4, 0.5), INTAKE_UP),
-            new AutonWaypoint(new Point(4, 0.5), AIM_AT_TARGET),
+            new AutonWaypoint(new Point(4, 0.5), AIM_AT_TARGET_TRENCH),
             new AutonWaypoint(new Point(4, 0.5), SHOOT_TWO)
     ),
     GO_FORWARD_GO_BACK(
@@ -126,7 +157,7 @@ public enum AutonRoutines {
             new AutonWaypoint(new Point(2.2549439188290363, -0.8536468213635892), 3),
             new AutonWaypoint(new Point(2.264664297979227, -2.447789001994746), 3),
             new AutonWaypoint(new Point(0.5392969988205053, -2.423488054119271), 3)
-    );
+    )*/;
 
     private static SendableChooser<AutonRoutines> myChooser;
     public final ArrayList<AutonWaypoint> WAYPOINTS = new ArrayList<>();

@@ -30,7 +30,8 @@ import static frc.robot.Robot.robotSettings;
 public class Intake implements ISubsystem {
     private static final boolean DEBUG = true;
     public AbstractMotorController intakeMotor;
-    public Servo intakeServo;
+    public Servo intakeServo1;
+    public Servo intakeServo2;
     public BaseController joystick, buttonpanel;
     public double intakeMult;
 
@@ -48,6 +49,7 @@ public class Intake implements ISubsystem {
     public void init() throws IllegalStateException {
         createControllers();
         createMotors();
+        createServos();
     }
 
     @Override
@@ -111,20 +113,22 @@ public class Intake implements ISubsystem {
                 }
                 break;
             case ROBOT_2021:
-                if (Robot.robotSettings.INTAKE_MOTOR_TYPE == AbstractMotorController.SupportedMotors.SERVO) {
+                if (robotSettings.ENABLE_INTAKE_SERVOS) {
                     //do servo-y things
                     if (joystick.hatIs(JoystickHatDirection.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
-                        //setIntake(IntakeDirection.IN);
+                        setIntake(IntakeDirection.IN);
                     } else if (joystick.hatIs(JoystickHatDirection.UP)) {
-                        //setIntake(IntakeDirection.OUT);
+                        setIntake(IntakeDirection.OUT);
                     } else {
-                        //setIntake(IntakeDirection.OFF);
+                        setIntake(IntakeDirection.OFF);
                     }
 
-                    if (buttonpanel.get(INTAKE_UP) == ButtonStatus.DOWN) {
-                        //deployIntake(false);
-                    } else if (buttonpanel.get(INTAKE_DOWN) == ButtonStatus.DOWN) {
-                        //deployIntake(true);
+                    if (joystick.get(ControllerEnums.JoystickButtons.FOUR) == ButtonStatus.DOWN) {
+                        intakeServo1.moveToAngle(145);
+                        intakeServo2.moveToAngle(35);
+                    } else if (joystick.get(ControllerEnums.JoystickButtons.SIX) == ButtonStatus.DOWN) {
+                        intakeServo1.moveToAngle(0);
+                        intakeServo2.moveToAngle(180);
                     }
                 } else {
                     throw new IllegalStateException("You're unable to use the intake style ROBOT_2021 without a Servo as your motor type.");
@@ -221,6 +225,9 @@ public class Intake implements ISubsystem {
     private void createControllers() {
         switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case FLIGHT_STICK:
+            case ROBOT_2021:
+                joystick = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
+                break;
             case STANDARD:
                 joystick = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
                 buttonpanel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, BaseController.Controllers.BUTTON_PANEL_CONTROLLER);
@@ -260,14 +267,18 @@ public class Intake implements ISubsystem {
                 intakeMotor = new VictorMotorController(robotSettings.INTAKE_MOTOR_ID);
                 s2rf = 600.0 / 2048.0;
                 break;
-            case SERVO:
-                intakeServo = new Servo(robotSettings.INTAKE_MOTOR_ID);
-                s2rf = 0;
-                break;
             default:
                 throw new InitializationFailureException("DriveManager does not have a suitible constructor for " + robotSettings.DRIVE_MOTOR_TYPE.name(), "Add an implementation in the init for drive manager");
         }
         intakeMotor.setSensorToRealDistanceFactor(s2rf);
+    }
+
+
+    private void createServos(){
+        if(robotSettings.ENABLE_INTAKE_SERVOS) {
+            intakeServo1 = new Servo(robotSettings.INTAKE_SERVO_L_ID);
+            intakeServo2 = new Servo(robotSettings.INTAKE_SERVO_R_ID);
+        }
     }
 
     /**

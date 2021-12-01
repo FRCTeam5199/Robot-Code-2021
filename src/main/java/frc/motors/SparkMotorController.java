@@ -91,6 +91,16 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
+    public double getVoltage() {
+        return motor.getBusVoltage() * motor.getAppliedOutput();
+    }
+
+    @Override
+    public void moveAtVoltage(double voltin) {
+        motor.setVoltage(voltin);
+    }
+
+    @Override
     public double getRotations() {
         return encoder.getPosition() * sensorToRealDistanceFactor;
     }

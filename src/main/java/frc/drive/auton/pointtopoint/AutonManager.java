@@ -96,8 +96,17 @@ public class AutonManager extends AbstractAutonManager {
                     //litterally do nothing
                     specialActionComplete = true;
                     break;
-                case AIM_AT_TARGET:
-                    specialActionComplete = Robot.turret.aimAtTarget(2.5);
+                case AIM_AT_TARGET_TRENCH:
+                    specialActionComplete = Robot.turret.aimAtTarget(-4, 10);
+                    break;
+                case AIM_AT_TARGET_END_TRENCH:
+                    specialActionComplete = Robot.turret.aimAtTarget(-2, 23.5);
+                    break;
+                case ZERO_TURRET:
+                    Robot.turret.turretMotor.moveAtPosition(0);
+                    specialActionComplete = 1 > Math.abs(Robot.turret.turretMotor.getRotations());
+                case AIM_AT_TARGET_DIRECT:
+                    specialActionComplete = Robot.turret.aimAtTarget();
                     break;
                 case SHOOT_ONE:
                     specialActionComplete = Robot.shooter.fireAmount(1);
@@ -113,6 +122,9 @@ public class AutonManager extends AbstractAutonManager {
                     break;
                 case SHOOT_ALL:
                     specialActionComplete = Robot.shooter.fireAmount(5);
+                    break;
+                case SHOOT_ALL_TIMED:
+                    specialActionComplete = Robot.shooter.fireTimed(3);
                     break;
                 case INTAKE_IN:
                     Robot.intake.setIntake(Intake.IntakeDirection.IN);

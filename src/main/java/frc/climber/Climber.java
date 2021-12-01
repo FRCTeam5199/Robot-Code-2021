@@ -63,19 +63,14 @@ public class Climber implements ISubsystem {
 
     @Override
     public void updateGeneric() {
-        if (Intake.IntakeControlStyles.getSendableChooser().getSelected() != null && robotSettings.INTAKE_CONTROL_STYLE != Intake.IntakeControlStyles.getSendableChooser().getSelected()) {
-            robotSettings.INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.getSendableChooser().getSelected();
-            createControllers();
-        }
-
         if (robotSettings.CLIMBER_CONTROL_STYLE == ClimberControlStyles.STANDARD) {
             if (buttonpanel.get(LOWER_CLIMBER) == ButtonStatus.DOWN) {
                 for (AbstractMotorController motor : climberMotors) {
-                    motor.moveAtPercent(-0.5);
+                    motor.moveAtPercent(-0.8);
                 }
             } else if (buttonpanel.get(RAISE_CLIMBER) == ButtonStatus.DOWN && !isLocked) {
                 for (AbstractMotorController motor : climberMotors) {
-                    motor.moveAtPercent(0.5);
+                    motor.moveAtPercent(0.8);
                 }
             } else {
                 for (AbstractMotorController motor : climberMotors) {

@@ -5,8 +5,8 @@ import frc.misc.UserInterface;
 
 import java.util.function.Consumer;
 
-import static frc.robot.Robot.hopper;
-import static frc.robot.Robot.robotSettings;
+import static frc.robot.Robot.*;
+import static frc.robot.Robot.shooter;
 
 
 /**
@@ -54,8 +54,17 @@ public enum ShootingEnums {
 
     //Used by our current vision tracking
     FIRE_HIGH_SPEED(shooter -> {
-        shooter.setSpeed(4200); //* (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1)
+        shooter.setSpeed(4200 * (shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER) * 0.25 + 1));
         if (robotSettings.ENABLE_HOPPER) {
+            hopper.setAll((shooter.isAtSpeed()));
+        }
+    }),
+
+    FIRE_HIGH_SPEED_SPINUP(shooter -> {
+        shooter.setSpeed(3700 + (500 * shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER)));
+        if (robotSettings.ENABLE_HOPPER) {
+            shooter.setShooting(true);
+            shooter.tryFiringBalls = true;
             hopper.setAll((shooter.isAtSpeed()));
         }
     }),
@@ -83,9 +92,9 @@ public enum ShootingEnums {
     }),
     FIRE_MULTIPLE_SHOTS(shooter -> {
         if (shooter.ballsToShoot > shooter.ballsShot && shooter.ballsToShoot != -1) {
-            shooter.setSpeed(4250); //The speed to run the shooter at during firing, typically 4200
+            shooter.setSpeed(4300); //The speed to run the shooter at during firing, typically 4200
             if (robotSettings.ENABLE_HOPPER) {
-                shooter.ticksPassed = (shooter.isAtSpeed(4200) && hopper.isIndexed() && shooter.checkForDips ? shooter.ticksPassed + 1 : 0); //Shooter is at speed ticks
+                shooter.ticksPassed = (shooter.isAtSpeed(4210) && hopper.isIndexed() && shooter.checkForDips ? shooter.ticksPassed + 1 : 0); //Shooter is at speed ticks
                 if (shooter.ticksPassed >= 10) { //You're good to shoot, 0.2 seconds passed @ speed
                     hopper.setIndexer(true); //Run the indexer, fire away!
                 }
@@ -96,7 +105,7 @@ public enum ShootingEnums {
                     shooter.emptyIndexerTicks = 0;
                 }
 
-                if (shooter.getSpeed() > 4185) {
+                if (shooter.getSpeed() > 4190) {
                     shooter.checkForDips = true;
                 }
 
@@ -123,7 +132,7 @@ public enum ShootingEnums {
                     shooter.ballsToShoot = -1; //Stop the routine, either there's no more balls or one got jammed
                     System.out.println("!!! If you didn't fire as many balls as you wanted, then one must've jammed !!!"); //yikes.
                 }
-                final boolean DEBUG = false;
+                final boolean DEBUG = true;
                 if (robotSettings.DEBUG && DEBUG) {
                     UserInterface.smartDashboardPutNumber("Balls To Shoot", shooter.ballsToShoot);
                     UserInterface.smartDashboardPutNumber("Balls Shot", shooter.ballsShot);
@@ -160,24 +169,24 @@ public enum ShootingEnums {
     }),
 
     FIRE_TIMED(shooter -> {
-        shooter.setSpeed(4400);
+        shooter.setSpeed(4200);
         if (Shooter.DEBUG) {
             System.out.println("Balls shot: " + shooter.ballsShot);
             System.out.println("Ticks passed: " + shooter.ticksPassed);
         }
         if (shooter.getSpeed() >= 4200) {
-            if (++shooter.ticksPassed >= 17) {
-                hopper.setIndexer(true);
-                if (!hopper.isIndexed()) {
-                    hopper.setIndexer(false);
-                    shooter.ballsShot++;
-                    shooter.ticksPassed = 0;
-                }
+            shooter.timerTicks++;
+            //if (++shooter.ticksPassed >= 17) {
+                hopper.setAll(true);
+            if (shooter.timerTicks >= shooter.goalTicks) {
+                shooter.multiShot = false;
+                hopper.setAll(false);
             }
         } else {
-            shooter.ticksPassed = 0;
+            //shooter.ticksPassed = 0;
         }
     }),
+
     FIRE_WITH_NO_REGARD_TO_ACCURACY(shooter -> {
         shooter.setSpeed(4400);
         if (robotSettings.ENABLE_HOPPER) {

@@ -76,6 +76,8 @@ public abstract class AbstractMotorController {
      */
     public abstract void moveAtPosition(double pos);
 
+    public abstract void moveAtVoltage(double voltIn);
+
     /**
      * Sets the idle mode to either be (brake = false) minimally resistive or (brake = true) to resist all motion/use
      * ERF to slow motor (actual implemetation varies between motors)
@@ -99,6 +101,8 @@ public abstract class AbstractMotorController {
      * @return The current speed of the motor
      */
     public abstract double getSpeed();
+
+    public abstract double getVoltage();
 
     /**
      * Sets the maximum allowable current that will flow through this motor

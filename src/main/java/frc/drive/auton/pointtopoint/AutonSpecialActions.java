@@ -32,6 +32,11 @@ public enum AutonSpecialActions {
      */
     SHOOT_ALL,
     /**
+     * Runs the shooter for 3 seconds while spun up then stops
+     */
+    SHOOT_ALL_TIMED,
+
+    /**
      * Pull the intake up using the piston
      */
     INTAKE_UP,
@@ -40,9 +45,25 @@ public enum AutonSpecialActions {
      */
     INTAKE_DOWN,
     /**
+     * Aim at the target and articulate the hood. Meant for trench.
+     */
+    AIM_AT_TARGET_TRENCH,
+
+
+    /**
+     * Aim at the target and articulate the hood. Meant for trench, particularly at the trench table
+     */
+    AIM_AT_TARGET_END_TRENCH,
+
+    /**
+     * Sets the turret to its 0 position
+     */
+    ZERO_TURRET,
+
+    /**
      * Aim at the target and articulate the hood.
      */
-    AIM_AT_TARGET,
+    AIM_AT_TARGET_DIRECT,
     /**
      * Spin up the intake to go in
      */

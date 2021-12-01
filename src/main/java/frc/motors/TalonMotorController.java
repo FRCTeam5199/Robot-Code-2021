@@ -134,6 +134,11 @@ public class TalonMotorController extends AbstractMotorController {
     }
 
     @Override
+    public void moveAtVoltage(double voltin) {
+        motor.setVoltage(voltin);
+    }
+
+    @Override
     public AbstractMotorController setBrake(boolean brake) {
         motor.setNeutralMode(brake ? Brake : Coast);
         if (!this.isFollower) {
@@ -152,6 +157,11 @@ public class TalonMotorController extends AbstractMotorController {
     @Override
     public double getSpeed() {
         return motor.getSelectedSensorVelocity() * sensorToRealDistanceFactor;
+    }
+
+    @Override
+    public double getVoltage() {
+        return 0; //TODO voltage
     }
 
     @Override

@@ -15,6 +15,7 @@ public class Pneumatics implements ISubsystem {
     public DoubleSolenoid solenoidIntake;
     public DoubleSolenoid climberLock;
     public DoubleSolenoid ballShifter;
+    public DoubleSolenoid buddyClimberLock;
     public Solenoid shooterCooling;
 
     public Pneumatics() {
@@ -35,6 +36,9 @@ public class Pneumatics implements ISubsystem {
         }
         if (robotSettings.ENABLE_DRIVE && robotSettings.ENABLE_PNOOMATICS && robotSettings.ENABLE_BALL_SHIFTERS) {
             ballShifter = new DoubleSolenoid(robotSettings.PCM_ID, robotSettings.BALL_SHIFTERS_IN_ID, robotSettings.BALL_SHIFTERS_OUT_ID);
+        }
+        if (robotSettings.ENABLE_BUDDY_CLIMBER && robotSettings.ENABLE_PNOOMATICS) {
+            buddyClimberLock = new DoubleSolenoid(robotSettings.PCM_ID, robotSettings.BUDDY_CLIMBER_LOCK_IN_ID, robotSettings.BUDDY_CLIMBER_LOCK_OUT_ID);
         }
     }
 

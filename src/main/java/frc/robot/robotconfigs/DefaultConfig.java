@@ -28,7 +28,7 @@ public abstract class DefaultConfig {
     public static final String BOTKEY = loadEnvVariable("bottoken");
     public static final String SLACKBOTKEY = loadEnvVariable("slackbottoken");
     public static final String SLACKSOCKETKEY = loadEnvVariable("slacksockettoken");
-    public final boolean DEBUG = true;
+    public final boolean DEBUG = false;
     public String AUTON_COMPLETE_NOISE = "";
     public boolean autonComplete = false;
     //Subsystems
@@ -50,7 +50,10 @@ public abstract class DefaultConfig {
     public boolean ENABLE_OVERHEAT_DETECTION = false;
     public boolean ENABLE_SHOOTER_COOLING = false;
     public boolean ENABLE_PNOOMATICS = false;
+    public boolean ENABLE_INTAKE_SERVOS = false;
     public boolean ENABLE_CLIMBER = false;
+    public boolean ENABLE_FLASHLIGHT = false;
+    public boolean ENABLE_BUDDY_CLIMBER = false;
 
     //Misc
     public boolean ENABLE_VISION = false;
@@ -69,7 +72,7 @@ public abstract class DefaultConfig {
     //UI Styles
     public AbstractDriveManager.DriveControlStyles DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
     public Shooter.ShootingControlStyles SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD;
-    public Intake.IntakeControlStyles INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
+public Intake.IntakeControlStyles INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
     public Climber.ClimberControlStyles CLIMBER_CONTROL_STYLE = Climber.ClimberControlStyles.STANDARD;
 
     public AbstractMotorController.SupportedMotors SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
@@ -100,6 +103,7 @@ public abstract class DefaultConfig {
     public PID SHOOTER_RECOVERY_PID = SHOOTER_PID;
     public PID TURRET_PID = PID.EMPTY_PID;
     public PID HEADING_PID = PID.EMPTY_PID;
+    public PID TURRET_HEADING_PID = PID.EMPTY_PID;
     public double SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
     public double motorPulleySize = 0;//?;
     public double driverPulleySize = 0;//?;
@@ -145,6 +149,8 @@ public abstract class DefaultConfig {
     public int INDEXER_MOTOR_ID = 11; //victor
     //intake
     public int INTAKE_MOTOR_ID = 12; //victor
+    public int INTAKE_SERVO_L_ID = 0;
+    public int INTAKE_SERVO_R_ID = 1;
     public int IMU_ID = 22; //pigeon
     //leds
     public int LED_STRAND_LENGTH = 60;
@@ -165,6 +171,8 @@ public abstract class DefaultConfig {
     public int CLIMBER_OUT_ID;
     public int BALL_SHIFTERS_IN_ID;
     public int BALL_SHIFTERS_OUT_ID;
+    public int BUDDY_CLIMBER_LOCK_IN_ID;
+    public int BUDDY_CLIMBER_LOCK_OUT_ID;
 
     //climber
     public int[] CLIMBER_MOTOR_IDS;

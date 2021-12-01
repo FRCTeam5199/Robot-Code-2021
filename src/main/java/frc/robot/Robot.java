@@ -9,6 +9,7 @@ import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.ArticulatedHood;
 import frc.ballstuff.shooting.Shooter;
 import frc.ballstuff.shooting.Turret;
+import frc.climber.BuddyClimber;
 import frc.climber.Climber;
 import frc.discordslackbot.MessageHandler;
 import frc.drive.AbstractDriveManager;
@@ -19,13 +20,7 @@ import frc.drive.auton.AutonType;
 import frc.drive.auton.followtrajectory.Trajectories;
 import frc.drive.auton.pointtopoint.AutonManager;
 import frc.drive.auton.pointtopoint.AutonRoutines;
-import frc.misc.Chirp;
-import frc.misc.ClientSide;
-import frc.misc.ISubsystem;
-import frc.misc.LEDs;
-import frc.misc.Pneumatics;
-import frc.misc.QuoteOfTheDay;
-import frc.misc.UserInterface;
+import frc.misc.*;
 import frc.motors.AbstractMotorController;
 import frc.pdp.PDP;
 import frc.robot.robotconfigs.DefaultConfig;
@@ -38,7 +33,6 @@ import frc.selfdiagnostics.IssueHandler;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Map;
@@ -67,6 +61,8 @@ public class Robot extends TimedRobot {
     public static LEDs leds;
     public static Pneumatics pneumatics;
     public static Climber climber;
+    public static BuddyClimber buddyClimber;
+    public static Flashlight flashlight;
     public static AbstractAutonManager autonManager;
     public static boolean SECOND_TRY;
     public static String lastFoundSong = "";
@@ -86,6 +82,8 @@ public class Robot extends TimedRobot {
         if (robotSettings.ENABLE_MEMES) {
             Main.pipeline = ClientServerPipeline.getClient();
         }
+
+        //flashlight = new Flashlight();
 
         if (robotSettings.ENABLE_DRIVE) {
             if (robotSettings.DRIVE_BASE == AbstractDriveManager.DriveBases.STANDARD)
@@ -121,6 +119,14 @@ public class Robot extends TimedRobot {
         if (robotSettings.ENABLE_CLIMBER) {
             climber = new Climber();
         }
+
+        if (robotSettings.ENABLE_BUDDY_CLIMBER) {
+            buddyClimber = new BuddyClimber();
+        }
+        if (robotSettings.ENABLE_FLASHLIGHT) {
+            flashlight = new Flashlight();
+        }
+
         if (robotSettings.ENABLE_DRIVE && robotSettings.ENABLE_IMU) {
             switch (robotSettings.AUTON_TYPE) {
                 case GALACTIC_SEARCH:
@@ -192,36 +198,9 @@ public class Robot extends TimedRobot {
             case "2021-Swivel":
                 return new Swerve2021();
             case "ERR_NOT_FOUND":
-                File settingsFile = new File("/home/lvuser/backup.env");
-                if (settingsFile.exists()) {
-                    try {
-                        FileReader reader = new FileReader(settingsFile);
-                        String backupName = reader.toString();
-                        switch (backupName) {
-                            case "2020-Comp":
-                                setBackup("2020-Comp");
-                                return new Robot2020();
-                            case "2021-Prac":
-                                setBackup("2021-Prac");
-                                return new PracticeRobot2021();
-                            case "2021-Comp":
-                                setBackup("2021-Comp");
-                                return new CompetitionRobot2021();
-                            case "2021-Swivel":
-                                setBackup("2021-Swivel");
-                                return new Swerve2021();
-                            default:
-                                throw new IllegalStateException("Some voodoo magic has caused your backup file to corrupt. I'd suggest yelling at the last person to power off the robot.");
-                        }
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                } else {
-                    throw new IllegalStateException("You need to ID this robot.");
-                }
-                //return new Robot2020();
+                throw new InitializationFailureException("Robot is not ID'd", "Open the SmartDashboard, create a String with key \"hostname\" and value \"202#-(Comp/Prac)\"");
             default:
-                throw new IllegalStateException("Invalid ID " + hostName + " for robot. Please Re-ID.");
+                throw new InitializationFailureException(String.format("Invalid ID %s for robot.", hostName), "In the SmartDashboard, set the key \"hostname\" to a correct value (ex: \"202#-(Comp/Prac)\")");
         }
     }
 

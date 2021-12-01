@@ -190,7 +190,8 @@ public class ArticulatedHood implements ISubsystem {
                     if ((panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN)) {
                         if (!Robot.shooter.isShooting()) {
                             if (shooter.tryFiringBalls) {
-                                moveToPos(requiredArticulationForTargetSize(lastSeenCameraArea, robotSettings.CALIBRATED_HOOD_POSITION_ARRAY), currentPos);
+                                //moveToPos(requiredArticulationForTargetSize(lastSeenCameraArea, robotSettings.CALIBRATED_HOOD_POSITION_ARRAY), currentPos);
+                                moveToPos(interpolateBetweenTwoPositions(lastSeenCameraArea), currentPos);
                             } else {
                                 moveToPos(HoodSpecialAction.AIMING, robotSettings.SHOOTER_HOOD_MAX_POS / 2);
                             }
@@ -211,6 +212,7 @@ public class ArticulatedHood implements ISubsystem {
                         }
                     }
                 }
+                UserInterface.smartDashboardPutNumber("ArticulatedHoodAngle", interpolateBetweenTwoPositions(lastSeenCameraArea));
                 break;
             default:
                 throw new IllegalStateException("You can't articulate the hood without the panel.");
@@ -237,7 +239,7 @@ public class ArticulatedHood implements ISubsystem {
 
     @Override
     public void initAuton() {
-
+        hoodMotor.resetEncoder();
     }
 
     @Override
@@ -247,7 +249,6 @@ public class ArticulatedHood implements ISubsystem {
 
     @Override
     public void initGeneric() {
-        hoodMotor.resetEncoder();
         hoodMotor.setBrake(true);
     }
 
@@ -324,9 +325,9 @@ public class ArticulatedHood implements ISubsystem {
             hoodPercent *= distanceNeededToTravel > 0 ? -1 : 1;
             //hoodMotor.moveAtPercent(hoodPercent);
              */
-            isAtWantedPosition = Math.abs(distanceNeededToTravel) < 0.1;
+            isAtWantedPosition = Math.abs(distanceNeededToTravel) < 0.5;
             hoodMotor.moveAtPosition(moveTo);
-            if (DEBUG && robotSettings.DEBUG) {
+            if (DEBUG ){//&& robotSettings.DEBUG) {
                 UserInterface.smartDashboardPutNumber("Moving to", moveTo);
                 UserInterface.smartDashboardPutNumber("Distance from target", distanceNeededToTravel);
             }
@@ -384,6 +385,27 @@ public class ArticulatedHood implements ISubsystem {
         hoodMotor.moveAtPercent(0);
     }
 
+    public double interpolateBetweenTwoPositions(double size) {
+        double closesize = 2.1; //actually max
+        double farsize = 0.68; //actually min
+        double closeangle = 0;
+        double farangle = 19;
+        if (size > closesize) {
+            return closeangle;
+        } else if (size < farsize) {
+            return farangle;
+        } else {
+            double cringemath = 26 - (((farangle - closeangle) / (closesize - farsize)) * size);
+            if (cringemath < robotSettings.SHOOTER_HOOD_MIN_POS)
+                return closeangle;
+            else if (cringemath > robotSettings.SHOOTER_HOOD_MAX_POS) {
+                return farangle;
+            } else {
+                return cringemath;
+            }
+        }
+    }
+
     /**
      * Initialize the motors.
      */
@@ -404,18 +426,33 @@ public class ArticulatedHood implements ISubsystem {
         hoodMotor.setCurrentLimit(20).setBrake(false).setInverted(robotSettings.SHOOTER_HOOD_INVERT_MOTOR).resetEncoder();
         hoodMotor.setBrake(true);
         hoodMotor.setPid(new PID(.1, 0, 0.01, 0));
+        hoodMotor.resetEncoder();
     }
 
     public boolean autoHoodAngle() {
         double currentPos = hoodMotor.getRotations();
         if (!Robot.shooter.isValidTarget()) {
             moveTo = robotSettings.SHOOTER_HOOD_MAX_POS * 0.9;
+            lastSeenCameraArea = 0;
             unTargeted = true;
         } else {
+            if (unTargeted)
+                lastSeenCameraArea = shooter.goalCamera.getSize();
             moveTo = requiredArticulationForTargetSize(Robot.shooter.goalCamera.getSize(), robotSettings.CALIBRATED_HOOD_POSITION_ARRAY);
             unTargeted = false;
         }
-        moveToPos(moveTo, currentPos);
-        return 1 >= Math.abs(currentPos - moveTo);
+        moveToPos(Math.max(0, moveTo), currentPos);
+        boolean condition = 1 >= Math.abs(currentPos - moveTo) && moveTo != robotSettings.SHOOTER_HOOD_MAX_POS * 0.9;
+        if (condition)
+            lastSeenCameraArea = 0;
+        return condition;
+    }
+
+    public boolean autoHoodAngle(double height) {
+        double currentPos = hoodMotor.getRotations();
+        moveTo = height;
+        unTargeted = false;
+        moveToPos(Math.max(0, height - 2), currentPos);
+        return 1 >= Math.abs(currentPos - (moveTo - 2));
     }
 }

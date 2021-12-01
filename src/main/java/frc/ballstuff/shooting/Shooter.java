@@ -36,13 +36,15 @@ public class Shooter implements ISubsystem {
             calibratePID = UserInterface.SHOOTER_CALIBRATE_PID.getEntry(),
             rpmGraph = UserInterface.SHOOTER_RPM_GRAPH.getEntry();
     public double speed = 4200;
+    public int goalTicks = 300;
     public int ballsShot = 0, ticksPassed = 0, emptyIndexerTicks = 0, hopperCooldownTicks = 0, ballsToShoot = 0;
+    public int timerTicks = 0;
     public IVision goalCamera;
     public AbstractMotorController leader, follower;
     public boolean isConstSpeed, isConstSpeedLast = false, shooting = false, isSpinningUp = false, isSpinningUpHeld, singleShot = false, multiShot = false, loadingIndexer = false;
     public boolean checkForDips = false;
     public boolean tryFiringBalls = false;
-    BaseController panel, joystickController;
+    BaseController panel, joystickController, xbox;
     private PID lastPID = PID.EMPTY_PID;
 
     public Shooter() {
@@ -63,6 +65,7 @@ public class Shooter implements ISubsystem {
             case STANDARD:
                 joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
                 panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, BaseController.Controllers.BUTTON_PANEL_CONTROLLER);
+                xbox = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, BaseController.Controllers.XBOX_CONTROLLER);
                 break;
             case BOP_IT:
                 joystickController = BaseController.createOrGet(3, BaseController.Controllers.BOP_IT_CONTROLLER);
@@ -114,6 +117,8 @@ public class Shooter implements ISubsystem {
             case STANDARD_OFFSEASON_2021:
             case STANDARD:
                 panel = BaseController.createOrGet(robotSettings.BUTTON_PANEL_USB_SLOT, BaseController.Controllers.BUTTON_PANEL_CONTROLLER);
+                xbox = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, BaseController.Controllers.XBOX_CONTROLLER);
+                joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
             case FLIGHT_STICK:
                 joystickController = BaseController.createOrGet(robotSettings.FLIGHT_STICK_USB_SLOT, BaseController.Controllers.JOYSTICK_CONTROLLER);
                 break;
@@ -220,6 +225,11 @@ public class Shooter implements ISubsystem {
      */
     @Override
     public void updateGeneric() throws IllegalStateException {
+        if (leader.getSpeed() > 1000) {
+            if (robotSettings.ENABLE_DRIVE) {
+                //xbox.rumble(0.1 * (leader.getSpeed() / 4200));
+            }
+        }
         if (ShootingControlStyles.getSendableChooser().getSelected() != null && robotSettings.SHOOTER_CONTROL_STYLE != ShootingControlStyles.getSendableChooser().getSelected()) {
             robotSettings.SHOOTER_CONTROL_STYLE = ShootingControlStyles.getSendableChooser().getSelected();
             if (Robot.turret != null)
@@ -257,8 +267,15 @@ public class Shooter implements ISubsystem {
                 if (panel.get(ButtonPanelButtons.SOLID_SPEED) == ButtonStatus.DOWN) {
                     ShootingEnums.FIRE_SOLID_SPEED_FLIGHTSTICK.shoot(this);
                     isConstSpeed = false;
-                } else if ((panel.get(ButtonPanelButtons.AUX_TOP) == ButtonStatus.DOWN || panel.get(ButtonPanelButtons.AUX_BOTTOM) == ButtonStatus.DOWN) && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
-                    ShootingEnums.FIRE_HIGH_SPEED.shoot(this);
+                } else if ((panel.get(ButtonPanelButtons.AUX_TOP) == ButtonStatus.DOWN || panel.get(ButtonPanelButtons.AUX_BOTTOM) == ButtonStatus.DOWN)) {
+                    shooter.setSpeed(3700 + (500 * shooter.joystickController.getPositive(ControllerEnums.JoystickAxis.SLIDER)));
+                    if (joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
+                        ShootingEnums.FIRE_HIGH_SPEED_SPINUP.shoot(this);
+                    } else {
+                        shooter.setShooting(false);
+                        shooter.tryFiringBalls = false;
+                        hopper.setAll(false);
+                    }
                 } else if (panel.get(ButtonPanelButtons.TARGET) == ButtonStatus.DOWN && joystickController.get(JoystickButtons.ONE) == ButtonStatus.DOWN) {
                     tryFiringBalls = true;
                     if (articulatedHood.isAtWantedPosition) {
@@ -271,8 +288,8 @@ public class Shooter implements ISubsystem {
                         hopper.setAll(false);
                     }
                     leader.moveAtPercent(0);
-                    shooting = false;
                     ballsShot = 0;
+                    shooterDefault();
                 }
                 if (robotSettings.ENABLE_SHOOTER_COOLING) {
                     if (panel.get(ButtonPanelButtons.AUX_BOTTOM) == ButtonStatus.DOWN) { //OFF
@@ -584,11 +601,28 @@ public class Shooter implements ISubsystem {
      * @return if the balls have finished shooting
      * @author Smaltin
      */
-    public boolean fireAmount(int shots) { //TODO make sure fire multiple balls works
+    public boolean fireAmount(int shots) {
         ballsToShoot = shots;
         multiShot = true;
         ShootingEnums.FIRE_MULTIPLE_SHOTS.shoot(this);
         isConstSpeed = !multiShot;
+        updateShuffleboard();
+        if (!multiShot) {
+            shooting = false;
+            setPercentSpeed(0);
+            hopper.setAll(false);
+        }
+        return !multiShot;
+    }
+
+    public boolean fireTimed(int seconds) {
+        goalTicks = seconds*50; //tick = 20ms. 50 ticks in a second.
+        if (!shooting) {
+            ticksPassed = 0;
+            shooting = true;
+            multiShot = true;
+        }
+        ShootingEnums.FIRE_TIMED.shoot(this);
         updateShuffleboard();
         if (!multiShot) {
             shooting = false;
