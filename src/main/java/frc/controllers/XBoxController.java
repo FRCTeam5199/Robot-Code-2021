@@ -3,6 +3,7 @@ package frc.controllers;
 import edu.wpi.first.wpilibj.GenericHID;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
+import frc.controllers.ControllerEnums.XBoxPOVButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
 
 /**
@@ -20,7 +21,7 @@ public class XBoxController extends BaseController {
      *
      * @param n the usb port that the controller is on
      */
-    public XBoxController(Integer n) {
+    XBoxController(Integer n) {
         super(n);
     }
 
@@ -48,6 +49,11 @@ public class XBoxController extends BaseController {
     @Override
     public ButtonStatus get(XBoxButtons button) {
         return ButtonStatus.get(controller.getRawButton(button.AXIS_VALUE));
+    }
+
+    @Override
+    public ButtonStatus get(XBoxPOVButtons button) {
+        return ButtonStatus.get(controller.getPOV() == button.POV_ANGLE);
     }
 
     @Override

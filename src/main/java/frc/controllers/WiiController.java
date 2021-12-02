@@ -10,7 +10,7 @@ package frc.controllers;
  * @see ControllerEnums.ButtonStatus
  */
 public class WiiController extends BaseController {
-    private WiiController(Integer n) {
+    WiiController(Integer n) {
         super(n);
     }
 

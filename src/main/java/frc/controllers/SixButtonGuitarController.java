@@ -11,7 +11,7 @@ package frc.controllers;
  * @see ControllerEnums.ButtonStatus
  */
 public class SixButtonGuitarController extends BaseController {
-    private SixButtonGuitarController(Integer channel) {
+    SixButtonGuitarController(Integer channel) {
         super(channel);
     }
 

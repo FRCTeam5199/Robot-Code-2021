@@ -11,7 +11,7 @@ package frc.controllers;
  * @see ControllerEnums.ButtonStatus
  */
 public class DrumTimeController extends BaseController {
-    private DrumTimeController(Integer channel) {
+    DrumTimeController(Integer channel) {
         super(channel);
     }
 

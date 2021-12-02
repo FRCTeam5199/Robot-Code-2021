@@ -9,7 +9,7 @@ package frc.controllers;
  * @see ControllerEnums.ButtonStatus
  */
 public class BopItBasicController extends BaseController {
-    public BopItBasicController(Integer channel) {
+    BopItBasicController(Integer channel) {
         super(channel);
     }
 

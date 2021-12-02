@@ -92,6 +92,16 @@ public class ControllerEnums {
         }
     }
 
+    public enum XBoxPOVButtons {
+        UP(0), DOWN(180), LEFT(270), RIGHT(90), UP_LEFT(315), UP_RIGHT(45), DOWN_LEFT(225), DOWN_RIGHT(135);
+
+        public final int POV_ANGLE;
+
+        XBoxPOVButtons(int position) {
+            this.POV_ANGLE = position;
+        }
+    }
+
     /**
      * @see JoystickController
      */
@@ -122,7 +132,7 @@ public class ControllerEnums {
      * @see JoystickController
      */
     public enum JoystickButtons {
-        ONE(1), TWO(2), THREE(3), FIVE(5), EIGHT(8), ELEVEN(11);
+        ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), ELEVEN(11);
 
         public final int AXIS_VALUE;
 

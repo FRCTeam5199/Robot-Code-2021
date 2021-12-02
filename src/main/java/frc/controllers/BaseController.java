@@ -2,7 +2,7 @@ package frc.controllers;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.function.Function;
 
 /**
  * for ANY CONTROLLER, put EVERY GET METHOD in here as well as in the proper class! This allows for the COMPLETE HOT
@@ -16,25 +16,16 @@ public abstract class BaseController {
      * same channel and to reduce memory impact by reducing redundant objects. To use, simply query the index
      * corresponding to the port desired and if null, create and set. Otherwise, verify controller type then use.
      *
-     * @see #createOrGet(int, Class)
+     * @see #createOrGet(int, Controllers)
      */
     protected static final BaseController[] allControllers = new BaseController[6];
     protected final Joystick controller;
     private final int JOYSTICK_CHANNEL;
 
-    public static BaseController createOrGet(int channel, Class<? extends BaseController> clazz) throws ArrayIndexOutOfBoundsException, ArrayStoreException, UnsupportedOperationException {
+    public static BaseController createOrGet(int channel, Controllers controllerType) throws ArrayIndexOutOfBoundsException, ArrayStoreException, UnsupportedOperationException {
         if (channel < 0 || channel >= 6)
             throw new ArrayIndexOutOfBoundsException("You cant have a controller with id of " + channel);
-        try {
-            if (allControllers[channel] == null)
-                return allControllers[channel] = clazz.getConstructor(Integer.class).newInstance(channel);
-        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            throw new RuntimeException("Haha:" + e);
-            //throw new UnsupportedOperationException("Create a constructor in " + clazz.getName() + " that has ONLY and Integer parameter (not int)");
-        }
-        if (clazz.isAssignableFrom(allControllers[channel].getClass()))
-            return allControllers[channel];
-        throw new ArrayStoreException("A different controller has already been made for channel " + channel);
+        return allControllers[channel] = controllerType.constructor.apply(channel);
     }
 
     protected BaseController(Integer channel) {
@@ -83,6 +74,10 @@ public abstract class BaseController {
         throw new UnsupportedOperationException("This controller does not support getting an xbox button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
     }
 
+    public ControllerEnums.ButtonStatus get(ControllerEnums.XBoxPOVButtons position) {
+        throw new UnsupportedOperationException("This controller does not support getting an xbox button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    }
+
     public void rumble(double percent) {
         throw new UnsupportedOperationException("This controller does not support rumbling. If you believe this is a mistake, please override the overloaded rumble in the appropriate class");
     }
@@ -119,5 +114,21 @@ public abstract class BaseController {
     @Override
     public String toString() {
         return this.getClass().getName() + " on channel " + JOYSTICK_CHANNEL;
+    }
+
+    public enum Controllers {
+        BOP_IT_CONTROLLER(BopItBasicController::new),
+        BUTTON_PANEL_CONTROLLER(ButtonPanelController::new),
+        DRUM_CONTROLLER(DrumTimeController::new),
+        JOYSTICK_CONTROLLER(JoystickController::new),
+        SIX_BUTTON_GUITAR_CONTROLLER(SixButtonGuitarController::new),
+        WII_CONTROLLER(WiiController::new),
+        XBOX_CONTROLLER(XBoxController::new);
+
+        private final Function<Integer, BaseController> constructor;
+
+        Controllers(Function<Integer, BaseController> structor) {
+            constructor = structor;
+        }
     }
 }

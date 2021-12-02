@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import frc.controllers.BaseController;
 import frc.controllers.ControllerEnums;
-import frc.controllers.XBoxController;
 import frc.misc.PID;
 import frc.misc.SubsystemStatus;
 import frc.motors.AbstractMotorController;
@@ -61,7 +60,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         BLpid.enableContinuousInput(-180, 180);
         BRpid.enableContinuousInput(-180, 180);
 
-        xbox = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, XBoxController.class);
+        xbox = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, BaseController.Controllers.XBOX_CONTROLLER);
 
         driverFR = new SwerveMotorController(1, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX, 2, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX);
         driverBR = new SwerveMotorController(4, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX, 3, AbstractMotorController.SupportedMotors.CAN_SPARK_MAX);
@@ -245,23 +244,6 @@ public class DriveManagerSwerve extends AbstractDriveManager {
     }
 
     @Override
-    public void updateGeneric() {
-        MotorDisconnectedIssue.handleIssue(this, driverFL.driver);
-        MotorDisconnectedIssue.handleIssue(this, driverFL.steering);
-        MotorDisconnectedIssue.handleIssue(this, driverBL.driver);
-        MotorDisconnectedIssue.handleIssue(this, driverBL.steering);
-        MotorDisconnectedIssue.handleIssue(this, driverFR.driver);
-        MotorDisconnectedIssue.handleIssue(this, driverFR.steering);
-        MotorDisconnectedIssue.handleIssue(this, driverBR.driver);
-        MotorDisconnectedIssue.handleIssue(this, driverBR.steering);
-    }
-
-    @Override
-    protected void onControlChange() {
-        //pass
-    }
-
-    @Override
     public void setBrake(boolean brake) {
         driverFR.driver.setBrake(brake);
         driverFL.driver.setBrake(brake);
@@ -308,6 +290,23 @@ public class DriveManagerSwerve extends AbstractDriveManager {
             System.out.printf("%4f %4f %4f %4f \n", frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
         }
         setDrive(frontLeft.speedMetersPerSecond, frontRight.speedMetersPerSecond, backLeft.speedMetersPerSecond, backRight.speedMetersPerSecond);
+    }
+
+    @Override
+    public void updateGeneric() {
+        MotorDisconnectedIssue.handleIssue(this, driverFL.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverFL.steering);
+        MotorDisconnectedIssue.handleIssue(this, driverBL.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverBL.steering);
+        MotorDisconnectedIssue.handleIssue(this, driverFR.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverFR.steering);
+        MotorDisconnectedIssue.handleIssue(this, driverBR.driver);
+        MotorDisconnectedIssue.handleIssue(this, driverBR.steering);
+    }
+
+    @Override
+    protected void onControlChange() {
+        //pass
     }
 
     /**

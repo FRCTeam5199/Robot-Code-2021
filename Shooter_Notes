@@ -1,0 +1,26 @@
+4200 rpm - toggle speed up
+Target - Raise up, target, get angle, change hood
+Trigger - fire ball
+
+Action items
+DONE 4200rpm toggle for spin up
+DONE Target button raises hood angle to set number
+TODO in robot settings
+TODO holding side button and spun up disables hood articulation
+DONE Target button scans
+DONE Trigger fires ball if locked on
+DONE & disables tracking when button 2 (side) is held
+TODO make it so you can target while spinning up
+
+
+Shooting Auton
+
+ballsToShoot, ballsShot, ticksPassed, emptyHopperTicks
+
+Shoot (x) balls
+Wait 50 ticks (1 second) while shooter is at speed before firing a ball
+Wait 100 ticks (2 seconds) without indexing before calling off the routine
+If no ball is indexed, run the indexer
+
+3.1 target size cannot shoot. too close
+target size 3 shoots at hood pos 0

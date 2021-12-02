@@ -2,6 +2,7 @@ package frc.motors;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.Faults;
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.misc.PID;
 import frc.robot.Robot;
@@ -77,6 +78,17 @@ public class VictorMotorController extends AbstractMotorController {
     @Override
     public void moveAtPosition(double pos) {
         motor.set(Position, pos / sensorToRealDistanceFactor);
+    }
+
+    @Override
+    public double getVoltage() {
+        return 0; //TODO voltage
+    }
+
+    @Override
+    public void moveAtVoltage(double voltin) {
+        //motor.set(VictorSPXControlMode.PercentOutput, voltin);
+        throw new IllegalStateException("I can't do this loser");
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.slack.api.model.event.MessageEvent;
 import frc.discordslackbot.commands.*;
 import frc.misc.ClientSide;
 import frc.misc.ServerSide;
-import frc.robot.ClientServerPipeline;
 import frc.robot.Main;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

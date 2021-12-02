@@ -7,11 +7,16 @@ import java.io.InputStreamReader;
 
 import static frc.misc.UtilFunctions.detectedInternet;
 
+/**
+ * Used to listen to what you're saying and relays it to the :b:robot. Very scary, stop spying on me !!!
+ *
+ * @author jojo2357
+ */
 public class ListeningSpy {
     public static ListeningSpy listeningSpy;
+    private final int readBytes = 0;
     private BufferedReader is;
     private Process spy;
-    private final int readBytes = 0;
 
     public static void startSpying() {
         if (detectedInternet()) {

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
 import frc.drive.AbstractDriveManager;
+import frc.drive.auton.pointtopoint.AutonRoutines;
 import frc.motors.AbstractMotorController;
 
 import java.util.HashMap;
@@ -25,12 +26,15 @@ public class UserInterface {
     //PDP_TAB = Shuffleboard.getTab("Lectricity"),
     MUSICK_TAB = Shuffleboard.getTab("musick"),
             ROBOT_TAB = Shuffleboard.getTab("DANGER!"),
-            WARNINGS_TAB = Shuffleboard.getTab("Warnings");
+            WARNINGS_TAB = Shuffleboard.getTab("Warnings"),
+            HOOD_TAB = Shuffleboard.getTab("Hood"),
+            AUTON_TAB = Shuffleboard.getTab("Auton");
 
     //LAYOUTS
     public static final ShuffleboardLayout SHOOTER_PID_LAYOUT = SHOOTER_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2, 3),
             DRIVE_PID_LAYOUT = DRIVE_TAB.getLayout("PID", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2, 3),
-            PDP_SETTINGS_LAYOUT = ROBOT_TAB.getLayout("PDP", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2, 1);
+            PDP_SETTINGS_LAYOUT = ROBOT_TAB.getLayout("PDP", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2, 1),
+            HOOD_HEIGHT_LAYOUT = HOOD_TAB.getLayout("Height", BuiltInLayouts.kList).withProperties(Map.of("Label position", "LEFT")).withSize(2, 1);
 
     //SHOOTER
     public static final SimpleWidget SHOOTER_P = SHOOTER_PID_LAYOUT.add("P", robotSettings.SHOOTER_PID.getP()),
@@ -40,6 +44,14 @@ public class UserInterface {
             SHOOTER_CONST_SPEED = SHOOTER_TAB.add("Constant Speed", 0),
             SHOOTER_CALIBRATE_PID = SHOOTER_PID_LAYOUT.add("Tune PID", false).withWidget(BuiltInWidgets.kToggleSwitch),
             SHOOTER_OVERRIDE_LED = SHOOTER_TAB.add("Override LED", false).withWidget(BuiltInWidgets.kToggleSwitch),
+            SHOOTER_RPM_GRAPH = SHOOTER_TAB.add("RPM Graph", 0).withWidget(BuiltInWidgets.kGraph).withSize(3, 3),
+    //HOOD
+    HOOD_HEIGHT = HOOD_HEIGHT_LAYOUT.add("Height", 0),
+            HOOD_OVERRIDE_HEIGHT = HOOD_HEIGHT_LAYOUT.add("Override", false).withWidget(BuiltInWidgets.kToggleSwitch),
+            HOOD_OVERRIDE_POSITION = HOOD_TAB.add("Override Height", false).withWidget(BuiltInWidgets.kToggleSwitch),
+            VISION_SIZE = HOOD_TAB.add("Target Size", 0).withWidget(BuiltInWidgets.kTextView),
+            VISION_CALCULATED_HEIGHT = HOOD_TAB.add("Target HH", 0).withWidget(BuiltInWidgets.kTextView),
+
     //DRIVETRAIN
     DRIVE_ROT_MULT = DRIVE_TAB.add("Rotation Factor", robotSettings.TURN_SCALE),
             DRIVE_SCALE_MULT = DRIVE_TAB.add("Speed Factor", robotSettings.DRIVE_SCALE),
@@ -50,6 +62,8 @@ public class UserInterface {
             DRIVE_CALIBRATE_PID = DRIVE_PID_LAYOUT.add("Tune PID", false).withWidget(BuiltInWidgets.kToggleSwitch),
             DRIVE_COAST = DRIVE_TAB.add("Coast", false).withWidget(BuiltInWidgets.kToggleSwitch),
             DRIVE_RUMBLE_NEAR_MAX = DRIVE_TAB.add("Rumble Near Max", false).withWidget(BuiltInWidgets.kToggleSwitch),
+            DRIVE_SPEED_RPM = DRIVE_TAB.add("Drivebase RPM", 0).withWidget(BuiltInWidgets.kGraph),
+            ROBOT_LOCATION = DRIVE_TAB.add("Robot Location", "(0, 0)").withWidget(BuiltInWidgets.kTextView),
 
     /*
     //PDP TODO make pdp widget (kPowerDistributionPanel)
@@ -71,12 +85,14 @@ public class UserInterface {
     PDP_BROWNOUT_MIN_OVERRIDE = PDP_SETTINGS_LAYOUT.add("Settings Override", false).withWidget(BuiltInWidgets.kToggleSwitch),
             PDP_BROWNOUT_MIN_VAL = PDP_SETTINGS_LAYOUT.add("Minimum Brownout Voltage", 9),
     //DANGER PANEL
-    GET_RANDOM_FIX = ROBOT_TAB.add("Get random fix", false).withWidget(BuiltInWidgets.kToggleButton);
+    GET_RANDOM_FIX = ROBOT_TAB.add("Get random fix", false).withWidget(BuiltInWidgets.kToggleButton),
+    MORGANNE_MODE = ROBOT_TAB.add("isMorganne", true).withWidget(BuiltInWidgets.kToggleSwitch);
     public static final HashMap<AbstractMotorController, SimpleWidget> motorTemperatureMonitors = new HashMap<>();
 
     //STATIC STUFF
     public static SimpleWidget SHOOTER_RPM;
     public static ComplexWidget MUSIC_SELECTOR, PDP_DISPLAY,
+            AUTON_STYLE_CHOOSER = AUTON_TAB.add("Auton Styles", AutonRoutines.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser),
             DRIVE_STYLE_CHOOSER = DRIVE_TAB.add("Drive Styles", AbstractDriveManager.DriveControlStyles.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser),
             SHOOTING_STYLE_CHOOSER = SHOOTER_TAB.add("Shooting Styles", Shooter.ShootingControlStyles.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser),
             INTAKE_STYLE_CHOOSER = SHOOTER_TAB.add("Intaking Styles", Intake.IntakeControlStyles.getSendableChooser()).withWidget(BuiltInWidgets.kComboBoxChooser);

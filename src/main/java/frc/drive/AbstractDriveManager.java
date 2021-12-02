@@ -24,6 +24,7 @@ public abstract class AbstractDriveManager implements ISubsystem {
      */
     public AbstractRobotTelemetry guidance;
 
+
     /**
      * Required by {@link RobotTelemetryStandard} in order to reset position
      */
@@ -77,6 +78,11 @@ public abstract class AbstractDriveManager implements ISubsystem {
         return input * robotSettings.MAX_SPEED * driveScaleMult.getDouble(robotSettings.DRIVE_SCALE);
     }
 
+    protected double adjustedDriveVoltage(double input) {
+        double calc = input * (0.91 / 371.0);
+        return (calc > 12) ? 12 : ((calc < -12) ? -12 : calc);
+    }
+
     /**
      * Takes a -1 to 1 scaled value and returns it scaled based on the max turning
      *
@@ -102,12 +108,14 @@ public abstract class AbstractDriveManager implements ISubsystem {
      */
     public enum DriveControlStyles {
         STANDARD,
+        BALL_SHIFTING_STANDARD,
         EXPERIMENTAL,
         MARIO_KART,
         DRUM_TIME,
         GUITAR,
         BOP_IT,
-        FLIGHT_STICK;
+        FLIGHT_STICK,
+        OPENLOOP_BALL_SHIFTING_STANDARD;
 
         private static SendableChooser<DriveControlStyles> myChooser;
 

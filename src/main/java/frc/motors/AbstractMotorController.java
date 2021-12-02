@@ -9,6 +9,8 @@ import frc.robot.Robot;
 
 import java.util.ArrayList;
 
+import static frc.robot.Robot.robotSettings;
+
 /**
  * This is the base class for any motor. It is not an interface because it has to have a {@link
  * #sensorToRealDistanceFactor nonstatic field} which is not doable in an interface. If you are to use a motor that we
@@ -74,6 +76,8 @@ public abstract class AbstractMotorController {
      */
     public abstract void moveAtPosition(double pos);
 
+    public abstract void moveAtVoltage(double voltIn);
+
     /**
      * Sets the idle mode to either be (brake = false) minimally resistive or (brake = true) to resist all motion/use
      * ERF to slow motor (actual implemetation varies between motors)
@@ -97,6 +101,8 @@ public abstract class AbstractMotorController {
      * @return The current speed of the motor
      */
     public abstract double getSpeed();
+
+    public abstract double getVoltage();
 
     /**
      * Sets the maximum allowable current that will flow through this motor
@@ -185,24 +191,30 @@ public abstract class AbstractMotorController {
 
     /**
      * Self explanatory. Takes into account {@link #getMotorTemperature() motor temp} and {@link
-     * frc.robot.robotconfigs.DefaultConfig#OVERHEAT_THRESHOLD} to
+     * frc.robot.robotconfigs.DefaultConfig#OVERHEAT_THRESHOLD} to determine if the motor is running too hot for usage
      *
      * @return invert {@link #isOverheated}
      */
     protected boolean isTemperatureAcceptable() {
-        if (getMotorTemperature() >= Robot.robotSettings.OVERHEAT_THRESHOLD) {
-            if (!isOverheated) {
-                UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), false);
-                Main.pipeline.sendAlarm(Alarms.Overheat, true);
-                isOverheated = true;
+        if (Robot.robotSettings.ENABLE_OVERHEAT_DETECTION) {
+            if (getMotorTemperature() >= Robot.robotSettings.OVERHEAT_THRESHOLD) {
+                if (!isOverheated) {
+                    UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), false);
+                    if (robotSettings.ENABLE_MEMES)
+                        Main.pipeline.sendAlarm(Alarms.Overheat, true);
+                    isOverheated = true;
+                }
+            } //wait 5 degrees to unoverheat
+            else if (isOverheated && getMotorTemperature() < Robot.robotSettings.OVERHEAT_THRESHOLD - 5) {
+                if (robotSettings.ENABLE_MEMES)
+                    Main.pipeline.sendAlarm(Alarms.Overheat, false);
+                isOverheated = false;
+                UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), true);
             }
-        } //wait 5 degrees to unoverheat
-        else if (isOverheated && getMotorTemperature() < Robot.robotSettings.OVERHEAT_THRESHOLD - 5) {
-            Main.pipeline.sendAlarm(Alarms.Overheat, false);
-            isOverheated = false;
-            UserInterface.smartDashboardPutBoolean("OVERHEAT " + getID(), true);
+            return !isOverheated;
+        } else {
+            return true;
         }
-        return !isOverheated;
     }
 
     /**
@@ -219,13 +231,14 @@ public abstract class AbstractMotorController {
      */
     public abstract int getID();
 
+
     /**
      * This should be one-for-one replicated for each {@link AbstractMotorController motor controller} in order to
      * create settings to switch between motor implementations
      */
     public enum SupportedMotors {
-        //Spark = Neo 550, Talon = Falcon 500, Victor = 775pros
-        CAN_SPARK_MAX(11710), TALON_FX(6380), VICTOR(18730);
+        //Spark = Neo 550, Talon = Falcon 500, Victor = 775pros, Servo = whatever servo you put in. I didn't have a better place for this so it's here
+        CAN_SPARK_MAX(11710), TALON_FX(6380), VICTOR(18730), SERVO;
 
         /**
          * Read the name!
@@ -234,6 +247,10 @@ public abstract class AbstractMotorController {
 
         SupportedMotors(int speed) {
             MAX_SPEED_RPM = speed;
+        }
+
+        SupportedMotors() {
+            MAX_SPEED_RPM = 0;
         }
     }
 }

@@ -38,6 +38,6 @@ public class InitializationFailureException extends RuntimeException {
      */
     @Override
     public String toString() {
-        return super.toString() + " " + possibleFix;
+        return super.toString() + "\nFix: " + getPossibleFix();
     }
 }

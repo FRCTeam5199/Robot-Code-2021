@@ -5,6 +5,8 @@ import frc.misc.ClientSide;
 import frc.misc.ISubsystem;
 import frc.robot.Main;
 
+import static frc.robot.Robot.robotSettings;
+
 /**
  *
  */
@@ -23,7 +25,8 @@ public class BrownoutIssue implements ISimpleIssue {
     }
 
     private static void reportIssue(ISubsystem owner) {
-        Main.pipeline.sendAlarm(Alarms.Brownout, true);
+        if (robotSettings.ENABLE_MEMES)
+            Main.pipeline.sendAlarm(Alarms.Brownout, true);
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof BrownoutIssue)) {
             System.err.println(">>>>>>>BROWNOUT DETECTED<<<<<<<");
             IssueHandler.issues.put(owner, new BrownoutIssue());

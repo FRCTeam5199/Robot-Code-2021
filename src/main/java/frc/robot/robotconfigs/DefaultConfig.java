@@ -5,8 +5,10 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.ballstuff.intaking.Intake;
 import frc.ballstuff.shooting.Shooter;
+import frc.climber.Climber;
 import frc.drive.AbstractDriveManager;
 import frc.drive.auton.AutonType;
+import frc.drive.auton.pointtopoint.AutonRoutines;
 import frc.misc.PID;
 import frc.motors.AbstractMotorController;
 import frc.telemetry.imu.AbstractIMU;
@@ -26,11 +28,12 @@ public abstract class DefaultConfig {
     public static final String BOTKEY = loadEnvVariable("bottoken");
     public static final String SLACKBOTKEY = loadEnvVariable("slackbottoken");
     public static final String SLACKSOCKETKEY = loadEnvVariable("slacksockettoken");
-    public final boolean DEBUG = true;
+    public final boolean DEBUG = false;
     public String AUTON_COMPLETE_NOISE = "";
     public boolean autonComplete = false;
     //Subsystems
     public boolean ENABLE_DRIVE = false;
+    public boolean ENABLE_BALL_SHIFTERS = false;
     public boolean ENABLE_INTAKE = false;
     public boolean ENABLE_SHOOTER = false;
     public boolean ENABLE_HOOD_ARTICULATION = false;
@@ -43,6 +46,14 @@ public abstract class DefaultConfig {
     public boolean ENABLE_TURRET = false;
     public boolean DRIVE_INVERT_LEFT = true;
     public boolean DRIVE_INVERT_RIGHT = false;
+    public boolean ENABLE_MEMES = false;
+    public boolean ENABLE_OVERHEAT_DETECTION = false;
+    public boolean ENABLE_SHOOTER_COOLING = false;
+    public boolean ENABLE_PNOOMATICS = false;
+    public boolean ENABLE_INTAKE_SERVOS = false;
+    public boolean ENABLE_CLIMBER = false;
+    public boolean ENABLE_FLASHLIGHT = false;
+    public boolean ENABLE_BUDDY_CLIMBER = false;
 
     //Misc
     public boolean ENABLE_VISION = false;
@@ -61,14 +72,18 @@ public abstract class DefaultConfig {
     //UI Styles
     public AbstractDriveManager.DriveControlStyles DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
     public Shooter.ShootingControlStyles SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD;
-    public Intake.IntakeControlStyles INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
+public Intake.IntakeControlStyles INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
+    public Climber.ClimberControlStyles CLIMBER_CONTROL_STYLE = Climber.ClimberControlStyles.STANDARD;
 
     public AbstractMotorController.SupportedMotors SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
     public AbstractMotorController.SupportedMotors HOOD_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
     public AbstractMotorController.SupportedMotors DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
     public AbstractMotorController.SupportedMotors TURRET_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;
+    public AbstractMotorController.SupportedMotors CLIMBER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.VICTOR;
+    public AbstractMotorController.SupportedMotors INTAKE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.VICTOR;
     public AbstractIMU.SupportedIMU IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
     public AutonType AUTON_TYPE = AutonType.FOLLOW_PATH;
+    public AutonRoutines DEFAULT_ROUTINE = AutonRoutines.DRIVE_OFF_INIT_LINE;
     public AbstractDriveManager.DriveBases DRIVE_BASE = AbstractDriveManager.DriveBases.STANDARD;
 
     public int DRIVEBASE_SENSOR_UNITS_PER_ROTATION = 2048;//4096 if MagEncoder, built in 2048
@@ -76,7 +91,7 @@ public abstract class DefaultConfig {
     public double MAX_SPEED = 0; //max speed in fps - REAL IS 10(for 4in wheels)
     public double RUMBLE_TOLERANCE_FPS = 0; //The minimum value in which the controller will begin rumbling
     public double MAX_ROTATION = 0; //max rotational speed in radians per second - REAL IS 11.2(for 4in wheels)
-    public double WHEEL_DIAMETER = 0;
+    public double WHEEL_DIAMETER = 6;
     public double TURN_SCALE = 1;
     public double DRIVE_SCALE = 1;
     public double DRIVE_GEARING = 10 / 70.0;
@@ -88,6 +103,7 @@ public abstract class DefaultConfig {
     public PID SHOOTER_RECOVERY_PID = SHOOTER_PID;
     public PID TURRET_PID = PID.EMPTY_PID;
     public PID HEADING_PID = PID.EMPTY_PID;
+    public PID TURRET_HEADING_PID = PID.EMPTY_PID;
     public double SHOOTER_SENSOR_UNITS_PER_ROTATION = 2048;
     public double motorPulleySize = 0;//?;
     public double driverPulleySize = 0;//?;
@@ -107,7 +123,6 @@ public abstract class DefaultConfig {
     public String GOAL_CAM_NAME = "GoalCamera";
     public String BALL_CAM_NAME = "BallCamera";
 
-
     //Drive Motors
     public int DRIVE_LEADER_L_ID; //talon
     public int[] DRIVE_FOLLOWERS_L_IDS; //talon
@@ -117,7 +132,16 @@ public abstract class DefaultConfig {
     public int SHOOTER_LEADER_ID = 7; //talon
     public int SHOOTER_FOLLOWER_ID = 8; //talon
     //hood
-    public int SHOOTER_HOOD_ID = 32; //HD HEX motor via spark max
+    public int SHOOTER_HOOD_ID; //HD HEX motor via spark max
+    public double SHOOTER_HOOD_MAX_POS;
+    public double SHOOTER_HOOD_MIN_POS;
+    public boolean SHOOTER_HOOD_INVERT_MOTOR;
+    public double SHOOTER_HOOD_CONTROL_SPEED = 0.5;
+    public double SHOOTER_HOOD_OUT_OF_BOUNDS_SPEED = 0.3;
+    public double TRENCH_FRONT_HOOD_POSITION;
+    public double INITIATION_LINE_HOOD_POSITION;
+    public double[][] CALIBRATED_HOOD_POSITION_ARRAY;
+
     //turret
     public int TURRET_YAW_ID = 33; //550
     //hopper
@@ -125,6 +149,8 @@ public abstract class DefaultConfig {
     public int INDEXER_MOTOR_ID = 11; //victor
     //intake
     public int INTAKE_MOTOR_ID = 12; //victor
+    public int INTAKE_SERVO_L_ID = 0;
+    public int INTAKE_SERVO_R_ID = 1;
     public int IMU_ID = 22; //pigeon
     //leds
     public int LED_STRAND_LENGTH = 60;
@@ -135,6 +161,21 @@ public abstract class DefaultConfig {
     public int XBOX_CONTROLLER_USB_SLOT = 0;
     public int FLIGHT_STICK_USB_SLOT = 1;
     public int BUTTON_PANEL_USB_SLOT = 2;
+
+    //pnoomatics
+    public int PCM_ID = 1;
+    public int SHOOTER_COOLING_ID;
+    public int INTAKE_IN_ID;
+    public int INTAKE_OUT_ID;
+    public int CLIMBER_IN_ID;
+    public int CLIMBER_OUT_ID;
+    public int BALL_SHIFTERS_IN_ID;
+    public int BALL_SHIFTERS_OUT_ID;
+    public int BUDDY_CLIMBER_LOCK_IN_ID;
+    public int BUDDY_CLIMBER_LOCK_OUT_ID;
+
+    //climber
+    public int[] CLIMBER_MOTOR_IDS;
 
     /**
      * Must be one of the following: {@link I2C.Port} {@link SerialPort.Port} {@link SPI.Port}

@@ -56,7 +56,8 @@ public class QuoteOfTheDay {
             "It may or may not work.",
             "Africa, Default Pi.. \nWhere's Africa? \n... Amica..",
             "Fix your software!!",
-            "Oh no, it rickrolled me. Oh no! Kill the server!"
+            "Oh no, it rickrolled me. Oh no! Kill the server!",
+            "Me: I love my job! \nBrandon: That's a lie."
     };
 
     /**

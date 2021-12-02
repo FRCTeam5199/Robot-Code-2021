@@ -12,8 +12,7 @@ import frc.robot.Robot;
 import static com.revrobotics.CANSparkMax.IdleMode.kBrake;
 import static com.revrobotics.CANSparkMax.IdleMode.kCoast;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
-import static com.revrobotics.ControlType.kPosition;
-import static com.revrobotics.ControlType.kVelocity;
+import static com.revrobotics.ControlType.*;
 
 /**
  * This works to wrap Neo's and maybe some other motors
@@ -66,7 +65,7 @@ public class SparkMotorController extends AbstractMotorController {
 
     @Override
     public AbstractMotorController setPid(PID pid) {
-        if (myPid.setP(pid.getP()) != CANError.kOk || myPid.setI(pid.getI()) != CANError.kOk || myPid.setD(pid.getD()) != CANError.kOk || myPid.setFF(pid.getF()) != CANError.kOk)
+        if (myPid.setP(pid.getP(), 0) != CANError.kOk || myPid.setI(pid.getI(), 0) != CANError.kOk || myPid.setD(pid.getD(), 0) != CANError.kOk || myPid.setFF(pid.getF(), 0) != CANError.kOk)
             if (!Robot.SECOND_TRY)
                 throw new IllegalStateException("Spark motor controller with ID " + motor.getDeviceId() + " F in PIDF couldnt be reset");
             else
@@ -75,13 +74,14 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
-    public void moveAtVelocity(double realDistance) {
-        myPid.setReference(realDistance / sensorToRealDistanceFactor, kVelocity);
+    public void moveAtVelocity(double velocityRPM) {
+        //System.out.println("VelocityRPM " + velocityRPM);
+        myPid.setReference(velocityRPM, kVelocity, 0);
     }
 
     @Override
     public void moveAtPosition(double pos) {
-        myPid.setReference(pos / sensorToRealDistanceFactor, kPosition);
+        myPid.setReference(pos / sensorToRealDistanceFactor, kPosition, 0);
     }
 
     @Override
@@ -91,15 +91,23 @@ public class SparkMotorController extends AbstractMotorController {
     }
 
     @Override
+    public double getVoltage() {
+        return motor.getBusVoltage() * motor.getAppliedOutput();
+    }
+
+    @Override
+    public void moveAtVoltage(double voltin) {
+        motor.setVoltage(voltin);
+    }
+
+    @Override
     public double getRotations() {
-        //why 9? i dunno
         return encoder.getPosition() * sensorToRealDistanceFactor;
-        //return encoder.getVelocity() * sensorToRevolutionFactor;
     }
 
     @Override
     public double getSpeed() {
-        return encoder.getVelocity() * sensorToRealDistanceFactor;
+        return encoder.getVelocity();
     }
 
     @Override
@@ -191,5 +199,17 @@ public class SparkMotorController extends AbstractMotorController {
     @Override
     public int getID() {
         return motor.getDeviceId();
+    }
+
+    public void moveAtPositionSmart(double pos) {
+        myPid.setReference(pos / sensorToRealDistanceFactor, kSmartMotion, 0);
+    }
+
+    public void setAllowedClosedLoopError(double threshold) {
+        myPid.setSmartMotionAllowedClosedLoopError(threshold, 0);
+    }
+
+    public double getAbsoluteRotations() {
+        return encoder.getPosition();
     }
 }

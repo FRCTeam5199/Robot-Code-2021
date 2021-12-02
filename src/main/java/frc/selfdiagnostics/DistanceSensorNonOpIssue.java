@@ -5,6 +5,8 @@ import frc.gpws.SoundManager;
 import frc.misc.ISubsystem;
 import frc.robot.Main;
 
+import static frc.robot.Robot.robotSettings;
+
 /**
  * Use this when the {@link frc.vision.distancesensor.IDistanceSensor Distance sensor} appears to be
  * unresponsive/disconnected
@@ -27,14 +29,16 @@ public class DistanceSensorNonOpIssue implements ISimpleIssue {
 
     private static void resolveIssue(ISubsystem owner) {
         if (IssueHandler.issues.get(owner) instanceof DistanceSensorNonOpIssue) {
-            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Reconnected));
+            if (robotSettings.ENABLE_MEMES)
+                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Reconnected));
             IssueHandler.issues.remove(owner);
         }
     }
 
     private static void reportIssue(ISubsystem owner, String imuName) {
         if (!IssueHandler.issues.containsKey(owner) || !(IssueHandler.issues.get(owner) instanceof DistanceSensorNonOpIssue)) {
-            Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Disconnected));
+            if (robotSettings.ENABLE_MEMES)
+                Main.pipeline.sendSound(new Sound(SoundManager.SoundPacks.Jojo, SoundManager.Sounds.Distance, SoundManager.Sounds.Sensor, SoundManager.Sounds.Disconnected));
             IssueHandler.issues.put(owner, new DistanceSensorNonOpIssue(imuName));
         }
     }
