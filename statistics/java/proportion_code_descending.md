@@ -2,8 +2,8 @@
 |[File](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/statistics%2Fjava%2Fname_ascending.md%2F)|[Lines (% total)](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/statistics%2Fjava%2Flines_descending.md%2F)|[Code Lines](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/statistics%2Fjava%2Fcode_descending.md%2F)|[% Code](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/statistics%2Fjava%2Fproportion_code_ascending.md%2F)|[Comment Lines](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/statistics%2Fjava%2Fcomments_descending.md%2F)|[% Comment](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/statistics%2Fjava%2Fproportion_comments_descending.md%2F)|[Blank Lines](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/statistics%2Fjava%2Fblanks_descending.md%2F)|[% Blank](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/statistics%2Fjava%2Fproportion_blanks_descending.md%2F)|
 | --- | --- | --- | --- | --- | --- | --- | --- |
 |[Robot.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Frobot%2FRobot.java)|355 (2.6%)|303|85.4%|27|7.6%|25|7.0%|
+|[ShootingEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fballstuff%2Fshooting%2FShootingEnums.java)|225 (1.7%)|189|84.0%|10|4.4%|26|11.6%|
 |[TalonMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fmotors%2FTalonMotorController.java)|243 (1.8%)|204|84.0%|13|5.3%|26|10.7%|
-|[ShootingEnums.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fballstuff%2Fshooting%2FShootingEnums.java)|218 (1.6%)|183|83.9%|10|4.6%|25|11.5%|
 |[BuddyClimber.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fclimber%2FBuddyClimber.java)|117 (0.9%)|98|83.8%|0|0.0%|19|16.2%|
 |[ArticulatedHood.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fballstuff%2Fshooting%2FArticulatedHood.java)|458 (3.4%)|383|83.6%|46|10.0%|29|6.3%|
 |[VictorMotorController.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fmotors%2FVictorMotorController.java)|163 (1.2%)|134|82.2%|6|3.7%|23|14.1%|
@@ -108,5 +108,5 @@
 |[IAutonEnumPath.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2Fauton%2FIAutonEnumPath.java)|15 (0.1%)|4|26.7%|10|66.7%|1|6.7%|
 |[AutonSpecialActions.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fdrive%2Fauton%2Fpointtopoint%2FAutonSpecialActions.java)|79 (0.6%)|19|24.1%|54|68.4%|6|7.6%|
 |[ISubsystem.java](https://github.com/FRCTeam5199/Robot-Code-2021/tree/master/src%2Fmain%2Fjava%2Ffrc%2Fmisc%2FISubsystem.java)|96 (0.7%)|20|20.8%|62|64.6%|14|14.6%|
-|Average |126.5|86.5|X|24.7|X|15.3|X|
-|Total (107)|13539|9260|68.4%|2645| 19.5%|1634|12.1%|
+|Average |126.6|86.6|X|24.7|X|15.3|X|
+|Total (107)|13546|9266|68.4%|2645| 19.5%|1635|12.1%|
