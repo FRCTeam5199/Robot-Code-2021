@@ -14,7 +14,7 @@ public class ControllerEnums {
     /**
      * @see WiiController
      */
-    public enum WiiAxis {
+    public enum WiiAxis implements ControllerInterfaces.IContinuousInput {
         LEFT_RIGHT_NUMBERPAD(0), UP_DOWN_NUMBERPAD(1), ROTATIONAL_TILT(3), FORWARD_TILT(4);
 
         public final int AXIS_VALUE;
@@ -22,18 +22,55 @@ public class ControllerEnums {
         WiiAxis(int val) {
             AXIS_VALUE = val;
         }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
     }
 
     /**
      * @see WiiController
      */
-    public enum WiiButton {
+    public enum WiiButton implements ControllerInterfaces.IDiscreteInput {
         ONE(1), TWO(2), A(3), B(4), PLUS(5), MINUS(6), HOME(7);
 
         public final int AXIS_VALUE;
 
         WiiButton(int val) {
             AXIS_VALUE = val;
+        }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
+    }
+
+    public enum ResolvedCompassInput {
+        UP(315, 0, 45), DOWN(135, 180, 225), LEFT(270), RIGHT(90);
+
+        public final int[] ACCEPTED_VALUES;
+
+        ResolvedCompassInput(int... values) {
+            this.ACCEPTED_VALUES = values;
+        }
+
+        public boolean containsAngle(int angleIn) {
+            for (int angle : ACCEPTED_VALUES)
+                if (angle == angleIn)
+                    return true;
+                return false;
+        }
+    }
+
+    public enum RawCompassInput {
+        UP(0), DOWN(180), LEFT(270), RIGHT(90), UP_LEFT(315), UP_RIGHT(45), DOWN_LEFT(225), DOWN_RIGHT(135);
+
+        public final int POV_ANGLE;
+
+        RawCompassInput(int position) {
+            this.POV_ANGLE = position;
         }
     }
 
@@ -67,7 +104,7 @@ public class ControllerEnums {
     /**
      * @see XBoxController
      */
-    public enum XboxAxes {
+    public enum XboxAxes implements ControllerInterfaces.IContinuousInput {
         LEFT_JOY_X(0, robotSettings.XBOX_CONTROLLER_DEADZONE), LEFT_JOY_Y(1, robotSettings.XBOX_CONTROLLER_DEADZONE), LEFT_TRIGGER(2, 0), RIGHT_TRIGGER(3, 0), RIGHT_JOY_X(4, robotSettings.XBOX_CONTROLLER_DEADZONE), RIGHT_JOY_Y(5, robotSettings.XBOX_CONTROLLER_DEADZONE);
 
         public final int AXIS_VALUE;
@@ -77,12 +114,17 @@ public class ControllerEnums {
             this.AXIS_VALUE = axis;
             this.DEADZONE = deadzone;
         }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
     }
 
     /**
      * @see XBoxController
      */
-    public enum XBoxButtons {
+    public enum XBoxButtons implements ControllerInterfaces.IDiscreteInput {
         A_CROSS(1), B_CIRCLE(2), X_SQUARE(3), Y_TRIANGLE(4), LEFT_BUMPER(5), RIGHT_BUMPER(6), GUIDE(7), MENU(8);
 
         public final int AXIS_VALUE;
@@ -90,9 +132,14 @@ public class ControllerEnums {
         XBoxButtons(int axis) {
             this.AXIS_VALUE = axis;
         }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
     }
 
-    public enum XBoxPOVButtons {
+    public enum XBoxPOVButtons implements ControllerInterfaces.IDiscreteInput {
         UP(0), DOWN(180), LEFT(270), RIGHT(90), UP_LEFT(315), UP_RIGHT(45), DOWN_LEFT(225), DOWN_RIGHT(135);
 
         public final int POV_ANGLE;
@@ -100,18 +147,28 @@ public class ControllerEnums {
         XBoxPOVButtons(int position) {
             this.POV_ANGLE = position;
         }
+
+        @Override
+        public int getChannel() {
+            return POV_ANGLE;
+        }
     }
 
     /**
      * @see JoystickController
      */
-    public enum JoystickAxis {
+    public enum JoystickAxis implements ControllerInterfaces.IContinuousInput {
         X_AXIS(0), Y_AXIS(1), Z_ROTATE(2), SLIDER(3);
 
         public final int AXIS_VALUE;
 
         JoystickAxis(int value) {
             this.AXIS_VALUE = value;
+        }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
         }
     }
 
@@ -131,7 +188,7 @@ public class ControllerEnums {
     /**
      * @see JoystickController
      */
-    public enum JoystickButtons {
+    public enum JoystickButtons implements ControllerInterfaces.IDiscreteInput {
         ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), ELEVEN(11);
 
         public final int AXIS_VALUE;
@@ -139,12 +196,17 @@ public class ControllerEnums {
         JoystickButtons(int value) {
             this.AXIS_VALUE = value;
         }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
     }
 
     /**
      * @see ButtonPanelController
      */
-    public enum ButtonPanelButtons {
+    public enum ButtonPanelButtons implements ControllerInterfaces.IDiscreteInput {
         RAISE_CLIMBER(1), LOWER_CLIMBER(2), CLIMBER_LOCK(3), CLIMBER_UNLOCK(4), BUDDY_CLIMB(5), AUX_TOP(6), AUX_BOTTOM(7), INTAKE_UP(8), INTAKE_DOWN(9), HOPPER_IN(10), HOPPER_OUT(11), TARGET(12), SOLID_SPEED(13);
 
         public final int AXIS_VALUE;
@@ -152,12 +214,17 @@ public class ControllerEnums {
         ButtonPanelButtons(int value) {
             this.AXIS_VALUE = value;
         }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
     }
 
     /**
      * @see ButtonPanelController
      */
-    public enum ButtonPanelTapedButtons {
+    public enum ButtonPanelTapedButtons implements ControllerInterfaces.IDiscreteInput {
         RAISE_CLIMBER(1), LOWER_CLIMBER(2), CLIMBER_LOCK(3), CLIMBER_UNLOCK(4), BUDDY_CLIMB(5), AUX_TOP(6), HOOD_POS_1(7), SINGLE_SHOT(8), HOOD_POS_2(9), SOLID_SPEED(10), HOOD_POS_3(11), TARGET(12), HOOD_POS_4(13);
 
         public final int AXIS_VALUE;
@@ -165,9 +232,14 @@ public class ControllerEnums {
         ButtonPanelTapedButtons(int value) {
             this.AXIS_VALUE = value;
         }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
     }
 
-    public enum SixKeyGuitarButtons {
+    public enum SixKeyGuitarButtons implements ControllerInterfaces.IDiscreteInput {
         ONE(2), TWO(3), THREE(4), FOUR(1), FIVE(5), SIX(6), HERO_POWER(9), PAUSE(10), MENU(11), REFRESH(13);
 
         public final int AXIS_VALUE;
@@ -175,9 +247,14 @@ public class ControllerEnums {
         SixKeyGuitarButtons(int value) {
             this.AXIS_VALUE = value;
         }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
     }
 
-    public enum SixKeyGuitarAxis {
+    public enum SixKeyGuitarAxis implements ControllerInterfaces.IContinuousInput {
         STRUM(1), PITCH(2), WHAMMY(3);
 
         public final int AXIS_VALUE;
@@ -185,9 +262,14 @@ public class ControllerEnums {
         SixKeyGuitarAxis(int value) {
             this.AXIS_VALUE = value;
         }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
     }
 
-    public enum Drums {
+    public enum Drums implements ControllerInterfaces.IDiscreteInput {
         RED(3),
         YELLOW(4),
         BLUE(1),
@@ -198,9 +280,14 @@ public class ControllerEnums {
         Drums(int value) {
             this.AXIS_VALUE = value;
         }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
     }
 
-    public enum DrumButton {
+    public enum DrumButton implements ControllerInterfaces.IDiscreteInput {
         ONE(1),
         TWO(4),
         A(2),
@@ -215,9 +302,14 @@ public class ControllerEnums {
         DrumButton(int value) {
             this.AXIS_VALUE = value;
         }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
+        }
     }
 
-    public enum BopItButtons {
+    public enum BopItButtons implements ControllerInterfaces.IDiscreteInput {
         BOPIT(3),
         PULLIT(4),
         TWISTIT(1);
@@ -226,6 +318,11 @@ public class ControllerEnums {
 
         BopItButtons(int value) {
             AXIS_VALUE = value;
+        }
+
+        @Override
+        public int getChannel() {
+            return AXIS_VALUE;
         }
     }
 }

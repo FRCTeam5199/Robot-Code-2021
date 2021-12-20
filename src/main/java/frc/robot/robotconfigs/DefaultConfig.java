@@ -181,6 +181,7 @@ public Intake.IntakeControlStyles INTAKE_CONTROL_STYLE = Intake.IntakeControlSty
      * Must be one of the following: {@link I2C.Port} {@link SerialPort.Port} {@link SPI.Port}
      */
     public Object IMU_NAVX_PORT = I2C.Port.kMXP;
+    public boolean PERMIT_ROUGE_INPUT_MAPPING = false;
 
     private static String loadEnvVariable(String filename) {
         try {

@@ -5,6 +5,7 @@ import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.XBoxButtons;
 import frc.controllers.ControllerEnums.XBoxPOVButtons;
 import frc.controllers.ControllerEnums.XboxAxes;
+import frc.robot.Robot;
 
 /**
  * The lame and basic controller. Does it get any more simpleton than this?
@@ -30,13 +31,18 @@ public class XBoxController extends BaseController {
      *
      * @param axis xbox controller axis to query
      * @return the state of inputted axis on a scale of [-1,1]
-     * @see #get(XBoxButtons)
+     * @see #get(frc.controllers.ControllerInterfaces.IDiscreteInput)
      */
     @Override
-    public double get(XboxAxes axis) {
-        if (Math.abs(controller.getRawAxis(axis.AXIS_VALUE)) > axis.DEADZONE) //makes sure axis is outside of the deadzone
-            return controller.getRawAxis(axis.AXIS_VALUE);
-        return 0;
+    public double get(ControllerInterfaces.IContinuousInput axis) {
+        if (axis instanceof ControllerEnums.XboxAxes)
+            if (Math.abs(controller.getRawAxis(axis.getChannel())) > ((XboxAxes)axis).DEADZONE) //makes sure axis is outside of the deadzone
+                return controller.getRawAxis(axis.getChannel());
+            else
+                return 0;
+        else if (Robot.robotSettings.PERMIT_ROUGE_INPUT_MAPPING)
+            return controller.getRawAxis(axis.getChannel());
+        throw new IllegalArgumentException("Wrong mapping. Expected an enum of type " + ControllerEnums.XboxAxes.class.toString() + " but got " + axis.getClass().toString() + " instead");
     }
 
     /**
@@ -44,16 +50,23 @@ public class XBoxController extends BaseController {
      *
      * @param button the button to query
      * @return the status of queried button
-     * @see #get(XboxAxes)
+     * @see #get(frc.controllers.ControllerInterfaces.IContinuousInput)
      */
     @Override
-    public ButtonStatus get(XBoxButtons button) {
-        return ButtonStatus.get(controller.getRawButton(button.AXIS_VALUE));
+    public ButtonStatus get(ControllerInterfaces.IDiscreteInput button) {
+        if (button instanceof ControllerEnums.XBoxButtons || Robot.robotSettings.PERMIT_ROUGE_INPUT_MAPPING)
+            return ControllerEnums.ButtonStatus.get(controller.getRawButton(button.getChannel()));
+        throw new IllegalArgumentException("Wrong mapping. Expected an enum of type " + ControllerEnums.XBoxButtons.class.toString() + " but got " + button.getClass().toString() + " instead");
     }
 
     @Override
-    public ButtonStatus get(XBoxPOVButtons button) {
-        return ButtonStatus.get(controller.getPOV() == button.POV_ANGLE);
+    public boolean hatIsExactly(ControllerEnums.RawCompassInput direction) {
+        return direction.POV_ANGLE == controller.getPOV();
+    }
+
+    @Override
+    public boolean hatIs(ControllerEnums.ResolvedCompassInput direction) {
+        return direction.containsAngle(controller.getPOV());
     }
 
     @Override

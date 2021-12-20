@@ -19,6 +19,7 @@ public abstract class BaseController {
      * @see #createOrGet(int, Controllers)
      */
     protected static final BaseController[] allControllers = new BaseController[6];
+    private static final String GENERIC_ERROR_CLAUSE = "If you believe this is a mistake, please override the overloaded get in the appropriate class";
     protected final Joystick controller;
     private final int JOYSTICK_CHANNEL;
 
@@ -38,76 +39,28 @@ public abstract class BaseController {
         return controller.getRawAxis(channel);
     }
 
-    public ControllerEnums.ButtonStatus get(ControllerEnums.ButtonPanelButtons n) {
-        throw new UnsupportedOperationException("This controller does not support getting a button panel button. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    public ControllerEnums.ButtonStatus get(ControllerInterfaces.IDiscreteInput n) {
+        throw new UnsupportedOperationException("This controller does not support getting a button status. " + GENERIC_ERROR_CLAUSE);
     }
 
-    public ControllerEnums.ButtonStatus get(ControllerEnums.ButtonPanelTapedButtons n) {
-        throw new UnsupportedOperationException("This controller does not support getting a button panel button. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    public double get(ControllerInterfaces.IContinuousInput axis) {
+        throw new UnsupportedOperationException("This controller does not support getting a continuous input. " + GENERIC_ERROR_CLAUSE);
     }
 
-    public ControllerEnums.JoystickHatDirection getHat() throws IllegalStateException {
-        throw new UnsupportedOperationException("This controller does not support getting the hat direction. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    public double getPositive(ControllerInterfaces.IContinuousInput axis) {
+        throw new UnsupportedOperationException("This controller does not support getting a continuous input. " + GENERIC_ERROR_CLAUSE);
     }
 
-    public double get(ControllerEnums.JoystickAxis axis) {
-        throw new UnsupportedOperationException("This controller does not support getting a flight stick joystick axis. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    public boolean hatIsExactly(ControllerEnums.RawCompassInput direction) {
+        throw new UnsupportedOperationException("This controller does not have a hat. " + GENERIC_ERROR_CLAUSE);
     }
 
-    public double getPositive(ControllerEnums.JoystickAxis axis) {
-        throw new UnsupportedOperationException("This controller does not support getting a flight stick joystick axis. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public ControllerEnums.ButtonStatus get(ControllerEnums.JoystickButtons button) {
-        throw new UnsupportedOperationException("This controller does not support getting a flight stick button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public boolean hatIs(ControllerEnums.JoystickHatDirection direction) {
-        throw new UnsupportedOperationException("This controller does not support getting the flight stick hat status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public double get(ControllerEnums.XboxAxes axis) {
-        throw new UnsupportedOperationException("This controller does not support getting an xbox joystick status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public ControllerEnums.ButtonStatus get(ControllerEnums.XBoxButtons button) {
-        throw new UnsupportedOperationException("This controller does not support getting an xbox button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public ControllerEnums.ButtonStatus get(ControllerEnums.XBoxPOVButtons position) {
-        throw new UnsupportedOperationException("This controller does not support getting an xbox button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
+    public boolean hatIs(ControllerEnums.ResolvedCompassInput direction) {
+        throw new UnsupportedOperationException("This controller does not have a hat." + GENERIC_ERROR_CLAUSE);
     }
 
     public void rumble(double percent) {
-        throw new UnsupportedOperationException("This controller does not support rumbling. If you believe this is a mistake, please override the overloaded rumble in the appropriate class");
-    }
-
-    public double get(ControllerEnums.WiiAxis axis) {
-        throw new UnsupportedOperationException("This controller does not support getting an wii remote tilt status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public ControllerEnums.ButtonStatus get(ControllerEnums.WiiButton button) {
-        throw new UnsupportedOperationException("This controller does not support getting an wii remote button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public ControllerEnums.ButtonStatus get(ControllerEnums.SixKeyGuitarButtons button) {
-        throw new UnsupportedOperationException("This controller does not support getting an guitar button status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public double get(ControllerEnums.SixKeyGuitarAxis button) {
-        throw new UnsupportedOperationException("This controller does not support getting an guitar axis status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public ControllerEnums.ButtonStatus get(ControllerEnums.Drums drum) {
-        throw new UnsupportedOperationException("This controller does not support getting an guitar axis status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public ControllerEnums.ButtonStatus get(ControllerEnums.DrumButton drum) {
-        throw new UnsupportedOperationException("This controller does not support getting an guitar axis status. If you believe this is a mistake, please override the overloaded get in the appropriate class");
-    }
-
-    public ControllerEnums.ButtonStatus get(ControllerEnums.BopItButtons button) {
-        throw new UnsupportedOperationException("hehe");
+        throw new UnsupportedOperationException("This controller does not support rumbling. " + GENERIC_ERROR_CLAUSE);
     }
 
     //should NOT print BaseController (i hope)

@@ -4,6 +4,7 @@ import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.controllers.ControllerEnums.JoystickAxis;
 import frc.controllers.ControllerEnums.JoystickButtons;
 import frc.controllers.ControllerEnums.JoystickHatDirection;
+import frc.robot.Robot;
 
 /**
  * This is the flight stick that we use. It has a bunch of useless buttons so its special in my heart
@@ -43,8 +44,10 @@ public class JoystickController extends BaseController {
      * @param axis the joystick axis to query
      * @return axis.AXIS_VALUE
      */
-    public double get(JoystickAxis axis) {
-        return controller.getRawAxis(axis.AXIS_VALUE);//return ((1 - joy.getRawAxis(axis.AXIS_VALUE)) / 2);
+    public double get(ControllerInterfaces.IContinuousInput axis) {
+        if (axis instanceof JoystickAxis || Robot.robotSettings.PERMIT_ROUGE_INPUT_MAPPING)
+            return controller.getRawAxis(axis.getChannel());
+        throw new IllegalArgumentException("Wrong mapping. Expected an enum of type " + ControllerEnums.JoystickAxis.class.toString() + " but got " + axis.getClass().toString() + " instead");
     }
 
     /**
@@ -52,10 +55,12 @@ public class JoystickController extends BaseController {
      *
      * @param axis the joystick axis to query
      * @return positive axis value
-     * @see #get(JoystickAxis)
+     * @see #get(frc.controllers.ControllerInterfaces.IContinuousInput)
      */
-    public double getPositive(JoystickAxis axis) {
-        return ((1 - controller.getRawAxis(axis.AXIS_VALUE)) / 2);
+    public double getPositive(ControllerInterfaces.IContinuousInput axis) {
+        if (axis instanceof JoystickAxis || Robot.robotSettings.PERMIT_ROUGE_INPUT_MAPPING)
+            return ((1 - controller.getRawAxis(axis.getChannel())) / 2);
+        throw new IllegalArgumentException("Wrong mapping. Expected an enum of type " + ControllerEnums.JoystickAxis.class.toString() + " but got " + axis.getClass().toString() + " instead");
     }
 
     /**
@@ -64,8 +69,11 @@ public class JoystickController extends BaseController {
      * @param button the joystick button to query
      * @return button status
      */
-    public ButtonStatus get(JoystickButtons button) {
-        return ButtonStatus.get(controller.getRawButton(button.AXIS_VALUE));
+    @Override
+    public ControllerEnums.ButtonStatus get(ControllerInterfaces.IDiscreteInput button) {
+        if (button instanceof ControllerEnums.JoystickButtons || Robot.robotSettings.PERMIT_ROUGE_INPUT_MAPPING)
+            return ControllerEnums.ButtonStatus.get(controller.getRawButton(button.getChannel()));
+        throw new IllegalArgumentException("Wrong mapping. Expected an enum of type " + ControllerEnums.JoystickButtons.class.toString() + " but got " + button.getClass().toString() + " instead");
     }
 
     /**

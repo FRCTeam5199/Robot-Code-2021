@@ -1,5 +1,7 @@
 package frc.controllers;
 
+import frc.robot.Robot;
+
 /**
  * For mario kart drive. Google it if u dunno what it is Wii remote driver for windows:
  * https://www.julianloehr.de/educational-work/hid-wiimote/
@@ -18,19 +20,25 @@ public class WiiController extends BaseController {
      * Gets the Raw axis value starting at 0
      *
      * @return the state of passed axis on a scale of [-1,1]
-     * @see #get(ControllerEnums.WiiButton)
+     * @see #get(frc.controllers.ControllerInterfaces.IDiscreteInput)
      */
-    public double get(ControllerEnums.WiiAxis axis) {
-        return controller.getRawAxis(axis.AXIS_VALUE);
+    @Override
+    public double get(ControllerInterfaces.IContinuousInput axis) {
+        if (axis instanceof ControllerEnums.WiiAxis || Robot.robotSettings.PERMIT_ROUGE_INPUT_MAPPING)
+            return controller.getRawAxis(axis.getChannel());
+        throw new IllegalArgumentException("Wrong mapping. Expected an enum of type " + ControllerEnums.WiiAxis.class.toString() + " but got " + axis.getClass().toString() + " instead");
     }
 
     /**
      * Gets the Raw button value and returns true if it is pressed when it is run
      *
      * @return the status of the passed button
-     * @see #get(ControllerEnums.WiiAxis)
+     * @see #get(frc.controllers.ControllerInterfaces.IContinuousInput)
      */
-    public ControllerEnums.ButtonStatus get(ControllerEnums.WiiButton button) {
-        return ControllerEnums.ButtonStatus.get(controller.getRawButton(button.AXIS_VALUE));
+    @Override
+    public ControllerEnums.ButtonStatus get(ControllerInterfaces.IDiscreteInput button) {
+        if (button instanceof ControllerEnums.WiiButton || Robot.robotSettings.PERMIT_ROUGE_INPUT_MAPPING)
+            return ControllerEnums.ButtonStatus.get(controller.getRawButton(button.getChannel()));
+        throw new IllegalArgumentException("Wrong mapping. Expected an enum of type " + ControllerEnums.WiiButton.class.toString() + " but got " + button.getClass().toString() + " instead");
     }
 }

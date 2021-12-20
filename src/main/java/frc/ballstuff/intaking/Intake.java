@@ -98,9 +98,9 @@ public class Intake implements ISubsystem {
         switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case FLIGHT_STICK:
             case STANDARD:
-                if (joystick.hatIs(JoystickHatDirection.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
+                if (joystick.hatIs(ControllerEnums.ResolvedCompassInput.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
                     setIntake(IntakeDirection.IN);
-                } else if (joystick.hatIs(JoystickHatDirection.UP)) {
+                } else if (joystick.hatIs(ControllerEnums.ResolvedCompassInput.UP)) {
                     setIntake(IntakeDirection.OUT);
                 } else {
                     setIntake(IntakeDirection.OFF);
@@ -115,9 +115,9 @@ public class Intake implements ISubsystem {
             case ROBOT_2021:
                 if (robotSettings.ENABLE_INTAKE_SERVOS) {
                     //do servo-y things
-                    if (joystick.hatIs(JoystickHatDirection.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
+                    if (joystick.hatIs(ControllerEnums.ResolvedCompassInput.DOWN)) {//|| buttonPanel.get(ControllerEnums.ButtonPanelButtons.) {
                         setIntake(IntakeDirection.IN);
-                    } else if (joystick.hatIs(JoystickHatDirection.UP)) {
+                    } else if (joystick.hatIs(ControllerEnums.ResolvedCompassInput.UP)) {
                         setIntake(IntakeDirection.OUT);
                     } else {
                         setIntake(IntakeDirection.OFF);
