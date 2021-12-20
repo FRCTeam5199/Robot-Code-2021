@@ -44,6 +44,13 @@ public enum ShootingEnums {
         }
     }),
 
+    FIRE_SOLID_SPEED_XBOX_CONTROLLER(shooter -> {
+        shooter.setSpeed(shooter.speed);
+        if (robotSettings.ENABLE_HOPPER) {
+            hopper.setAll(shooter.isAtSpeed());
+        }
+    }),
+
     FIRE_TEST_SPEED(shooter -> {
         //shooter.setPercentSpeed(1);
         shooter.setSpeed(4200);

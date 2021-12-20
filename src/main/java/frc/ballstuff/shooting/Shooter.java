@@ -427,7 +427,7 @@ public class Shooter implements ISubsystem {
             }
             case XBOX_CONTROLLER: {
                 if (joystickController.get(ControllerEnums.XboxAxes.RIGHT_TRIGGER) > 0.1) {
-                    ShootingEnums.FIRE_TEST_SPEED.shoot(this);
+                    ShootingEnums.FIRE_SOLID_SPEED_XBOX_CONTROLLER.shoot(this);
                 } else {
                     leader.moveAtPercent(0);
                     shooting = false;
