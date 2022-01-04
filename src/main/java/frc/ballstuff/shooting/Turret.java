@@ -63,10 +63,8 @@ public class Turret implements ISubsystem {
         if (robotSettings.ENABLE_VISION) {
             visionCamera = IVision.manufactureGoalCamera(robotSettings.GOAL_CAMERA_TYPE);
         }
-        turretMotor.setInverted(false).setPid(robotSettings.TURRET_PID).setBrake(true);
-
+        turretMotor.setInverted(robotSettings.TURRET_INVERT).setPid(robotSettings.TURRET_PID).setBrake(true).resetEncoder();
         setBrake(true);
-        turretMotor.resetEncoder();
     }
 
     private void createControllers() {
@@ -181,7 +179,7 @@ public class Turret implements ISubsystem {
                         if (robotSettings.ENABLE_HOOD_ARTICULATION)
                             Robot.articulatedHood.unTargeted = true;
                         if (visionCamera.hasValidTarget()) {
-                            double angle = -visionCamera.getAngle() + camoffset;
+                            double angle = (visionCamera.getAngle() + camoffset) * (robotSettings.TURRET_INVERT ? 1 : -1);
                             if (angle > 0.005) {
                                 omegaSetpoint = 0.3;
                             } else if (angle < -0.005) {
@@ -201,7 +199,7 @@ public class Turret implements ISubsystem {
                     if (robotSettings.DEBUG && DEBUG) {
                         System.out.println("Joystick is at " + joy.get(ControllerEnums.JoystickAxis.Z_ROTATE));
                     }
-                    omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * -2;
+                    omegaSetpoint = joy.get(ControllerEnums.JoystickAxis.Z_ROTATE) * -2 * (robotSettings.TURRET_INVERT ? -1 : 1);
                 }
                 break;
             }
@@ -218,8 +216,8 @@ public class Turret implements ISubsystem {
                         if (robotSettings.ENABLE_HOOD_ARTICULATION)
                             Robot.articulatedHood.unTargeted = true;
                         if (visionCamera.hasValidTarget()) {
-                            double angle = -visionCamera.getAngle() + camoffset;
-                            omegaSetpoint = -HEADING_PID.calculate(angle);
+                            double angle = (visionCamera.getAngle() + camoffset) * (robotSettings.TURRET_INVERT ? 1 : -1);
+                            omegaSetpoint = HEADING_PID.calculate(angle);
                         } else {
                             omegaSetpoint = scan();
                         }
@@ -231,8 +229,8 @@ public class Turret implements ISubsystem {
                         if (robotSettings.ENABLE_HOOD_ARTICULATION)
                             Robot.articulatedHood.unTargeted = true;
                         if (visionCamera.hasValidTarget()) {
-                            double angle = -visionCamera.getAngle() + camoffset;
-                            omegaSetpoint = -HEADING_PID.calculate(angle);
+                            double angle = (visionCamera.getAngle() + camoffset) * (robotSettings.TURRET_INVERT ? 1 : -1);
+                            omegaSetpoint = HEADING_PID.calculate(angle);
                         } else {
                             omegaSetpoint = scan();
                         }
@@ -382,7 +380,7 @@ public class Turret implements ISubsystem {
     /**
      * Rotate the turret at a certain rad/sec
      *
-     * @param speed - % max speed to rotate at (too fast and the gremlins gonna eat u)
+     * @param speed % max speed to rotate at (too fast and the gremlins gonna eat u)
      */
     private void rotateTurret(double speed) {
         if (robotSettings.DEBUG && DEBUG) {
@@ -443,8 +441,7 @@ public class Turret implements ISubsystem {
             UserInterface.smartDashboardPutBoolean("AutoHoodSet", articulatedHood.autoHoodAngle());
             UserInterface.smartDashboardPutBoolean("Valid Target", shooter.isValidTarget());
             UserInterface.smartDashboardPutNumber("Angle", angle);
-        }
-        else {
+        } else {
             criteria = Math.abs(angle) < 1.5;
         }
 
@@ -498,8 +495,7 @@ public class Turret implements ISubsystem {
             UserInterface.smartDashboardPutBoolean("AutoHoodSet", check1);
             UserInterface.smartDashboardPutBoolean("Valid Target", shooter.isValidTarget());
             UserInterface.smartDashboardPutNumber("Angle", angle);
-        }
-        else {
+        } else {
             criteria = Math.abs(angle) < 1.8;
         }
         if (criteria) {

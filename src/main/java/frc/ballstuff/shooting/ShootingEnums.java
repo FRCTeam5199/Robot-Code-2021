@@ -139,7 +139,7 @@ public enum ShootingEnums {
                     shooter.ballsToShoot = -1; //Stop the routine, either there's no more balls or one got jammed
                     System.out.println("!!! If you didn't fire as many balls as you wanted, then one must've jammed !!!"); //yikes.
                 }
-                final boolean DEBUG = true;
+                final boolean DEBUG = false;
                 if (robotSettings.DEBUG && DEBUG) {
                     UserInterface.smartDashboardPutNumber("Balls To Shoot", shooter.ballsToShoot);
                     UserInterface.smartDashboardPutNumber("Balls Shot", shooter.ballsShot);

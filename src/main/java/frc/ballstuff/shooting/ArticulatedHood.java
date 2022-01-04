@@ -25,7 +25,7 @@ enum HoodSpecialAction {
  * the settings.
  */
 public class ArticulatedHood implements ISubsystem {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private final NetworkTableEntry HOOD_HEIGHT = UserInterface.HOOD_HEIGHT.getEntry(),
             HEIGHT_OVERRIDE = UserInterface.HOOD_OVERRIDE_HEIGHT.getEntry(),
             HOOD_OVERRIDE = UserInterface.HOOD_OVERRIDE_POSITION.getEntry(),
@@ -220,8 +220,10 @@ public class ArticulatedHood implements ISubsystem {
         if (DEBUG && robotSettings.DEBUG) {
             UserInterface.smartDashboardPutNumber("Hood Pos", hoodMotor.getRotations());
             UserInterface.smartDashboardPutNumber("Moving to pos", moveTo);
-            VISION_SIZE.setNumber(turret.visionCamera.getSize());
-            VISION_ESTIMATE_HEIGHT.setNumber(requiredArticulationForTargetSize(shooter.goalCamera.getSize(), robotSettings.CALIBRATED_HOOD_POSITION_ARRAY));
+            if (robotSettings.ENABLE_VISION) {
+                VISION_SIZE.setNumber(turret.visionCamera.getSize());
+                VISION_ESTIMATE_HEIGHT.setNumber(requiredArticulationForTargetSize(shooter.goalCamera.getSize(), robotSettings.CALIBRATED_HOOD_POSITION_ARRAY));
+            }
         }
         if (robotSettings.SHOOTER_CONTROL_STYLE != Shooter.ShootingControlStyles.STANDARD && robotSettings.SHOOTER_CONTROL_STYLE != Shooter.ShootingControlStyles.STANDARD_OFFSEASON_2021 && robotSettings.SHOOTER_CONTROL_STYLE != Shooter.ShootingControlStyles.EXPERIMENTAL_OFFSEASON_2021) //TODO update the old moveto value to use enums as it's kinda clunky
             moveToPos(moveTo, currentPos);
@@ -327,7 +329,7 @@ public class ArticulatedHood implements ISubsystem {
              */
             isAtWantedPosition = Math.abs(distanceNeededToTravel) < 0.5;
             hoodMotor.moveAtPosition(moveTo);
-            if (DEBUG ){//&& robotSettings.DEBUG) {
+            if (DEBUG) {//&& robotSettings.DEBUG) {
                 UserInterface.smartDashboardPutNumber("Moving to", moveTo);
                 UserInterface.smartDashboardPutNumber("Distance from target", distanceNeededToTravel);
             }

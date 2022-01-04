@@ -79,7 +79,6 @@ public class Intake implements ISubsystem {
             setIntake(robotSettings.autonComplete ? IntakeDirection.OFF : IntakeDirection.IN);
         }
         intakeMotor.moveAtPercent(0.8 * intakeMult);
-        //updateGeneric();
     }
 
     @Override
@@ -93,7 +92,6 @@ public class Intake implements ISubsystem {
         if (robotSettings.DEBUG && DEBUG) {
             UserInterface.smartDashboardPutNumber("Intake Speed", intakeMult);
         }
-        //System.out.println("Intake mult is " + intakeMult);
         double speed;
         switch (robotSettings.INTAKE_CONTROL_STYLE) {
             case FLIGHT_STICK:
@@ -234,6 +232,7 @@ public class Intake implements ISubsystem {
                 break;
             case XBOX_CONTROLLER:
                 joystick = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, BaseController.Controllers.XBOX_CONTROLLER);
+                break;
             case BOP_IT:
                 joystick = BaseController.createOrGet(3, BaseController.Controllers.BOP_IT_CONTROLLER);
                 break;
@@ -254,15 +253,13 @@ public class Intake implements ISubsystem {
     private void createMotors() {
         double s2rf;
         switch (robotSettings.INTAKE_MOTOR_TYPE) {
-            case CAN_SPARK_MAX: {
+            case CAN_SPARK_MAX:
                 s2rf = 1;
                 break;
-            }
-            case TALON_FX: {
+            case TALON_FX:
                 intakeMotor = new TalonMotorController(robotSettings.INTAKE_MOTOR_ID);
                 s2rf = 600.0 / 2048.0;
                 break;
-            }
             case VICTOR:
                 intakeMotor = new VictorMotorController(robotSettings.INTAKE_MOTOR_ID);
                 s2rf = 600.0 / 2048.0;
@@ -274,8 +271,8 @@ public class Intake implements ISubsystem {
     }
 
 
-    private void createServos(){
-        if(robotSettings.ENABLE_INTAKE_SERVOS) {
+    private void createServos() {
+        if (robotSettings.ENABLE_INTAKE_SERVOS) {
             intakeServo1 = new Servo(robotSettings.INTAKE_SERVO_L_ID);
             intakeServo2 = new Servo(robotSettings.INTAKE_SERVO_R_ID);
         }

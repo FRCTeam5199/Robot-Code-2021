@@ -13,7 +13,7 @@ import frc.misc.UtilFunctions;
 import static frc.robot.Robot.robotSettings;
 
 public class RobotTelemetryStandard extends AbstractRobotTelemetry implements ISubsystem {
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     private final NetworkTableEntry robotLocation = UserInterface.ROBOT_LOCATION.getEntry();
     public DifferentialDriveOdometry odometer;
 

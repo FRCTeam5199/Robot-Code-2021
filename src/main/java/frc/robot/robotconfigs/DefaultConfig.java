@@ -28,7 +28,7 @@ public abstract class DefaultConfig {
     public static final String BOTKEY = loadEnvVariable("bottoken");
     public static final String SLACKBOTKEY = loadEnvVariable("slackbottoken");
     public static final String SLACKSOCKETKEY = loadEnvVariable("slacksockettoken");
-    public final boolean DEBUG = false;
+    public final boolean DEBUG = true;
     public String AUTON_COMPLETE_NOISE = "";
     public boolean autonComplete = false;
     //Subsystems
@@ -144,6 +144,7 @@ public Intake.IntakeControlStyles INTAKE_CONTROL_STYLE = Intake.IntakeControlSty
 
     //turret
     public int TURRET_YAW_ID = 33; //550
+    public boolean TURRET_INVERT = false;
     //hopper
     public int AGITATOR_MOTOR_ID = 10; //victor
     public int INDEXER_MOTOR_ID = 11; //victor

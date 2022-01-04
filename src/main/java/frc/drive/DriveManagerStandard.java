@@ -34,7 +34,7 @@ import static frc.robot.Robot.robotSettings;
  * @see RobotTelemetryStandard
  */
 public class DriveManagerStandard extends AbstractDriveManager {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     public final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(robotSettings.DRIVEBASE_DISTANCE_BETWEEN_WHEELS);
     private final NetworkTableEntry
             P = UserInterface.DRIVE_P.getEntry(),
