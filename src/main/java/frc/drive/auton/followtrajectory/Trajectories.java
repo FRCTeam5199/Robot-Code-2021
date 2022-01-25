@@ -10,7 +10,8 @@ public enum Trajectories implements IAutonEnumPath {
     FORWARD("ForwardTinyBit"),
     BACKWARD("BackwardTinyBit"),
     SLALOM("Slalom"),
-    SLALOM2("Slalom_0");
+    SLALOM2("Slalom_0"),
+    TEST_SWERVE("SWERVE_TEST");
 
     /**
      * The file name that holds this trajectory. Leave off the generic file extension stuff

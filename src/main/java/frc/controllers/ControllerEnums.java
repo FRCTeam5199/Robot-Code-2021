@@ -175,19 +175,6 @@ public class ControllerEnums {
     /**
      * @see JoystickController
      */
-    public enum JoystickHatDirection {
-        UP(315, 0, 45), DOWN(135, 180, 225), LEFT(270), RIGHT(90);
-
-        public final int[] ACCEPTED_VALUES;
-
-        JoystickHatDirection(int... values) {
-            this.ACCEPTED_VALUES = values;
-        }
-    }
-
-    /**
-     * @see JoystickController
-     */
     public enum JoystickButtons implements ControllerInterfaces.IDiscreteInput {
         ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), ELEVEN(11);
 

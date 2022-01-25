@@ -89,6 +89,8 @@ public class DriveManagerSwerve extends AbstractDriveManager {
         driverFL.driver.setSensorToRealDistanceFactor(robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60);
         driverBL.driver.setSensorToRealDistanceFactor(robotSettings.DRIVE_GEARING * (robotSettings.WHEEL_DIAMETER / 12 * Math.PI) / 60);
         setupSteeringEncoders();
+
+        setDrivingPIDS(new PID(0.0000, 0, 0.000));
     }
 
     @Override
@@ -210,7 +212,7 @@ public class DriveManagerSwerve extends AbstractDriveManager {
      * @param BR {@link #driverBR} requested drive (-3.5, 3.5)
      */
     private void setDrive(double FL, double FR, double BL, double BR) {
-        double num = 3.5;
+        double num = 19;
         if (robotSettings.DEBUG && DEBUG) {
             System.out.println("FL: " + FL);
             System.out.println("FR: " + FR);

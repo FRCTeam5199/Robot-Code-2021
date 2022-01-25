@@ -56,7 +56,7 @@ public abstract class BaseController {
     }
 
     public boolean hatIs(ControllerEnums.ResolvedCompassInput direction) {
-        throw new UnsupportedOperationException("This controller does not have a hat." + GENERIC_ERROR_CLAUSE);
+        throw new UnsupportedOperationException("This controller does not have a hat. " + GENERIC_ERROR_CLAUSE);
     }
 
     public void rumble(double percent) {

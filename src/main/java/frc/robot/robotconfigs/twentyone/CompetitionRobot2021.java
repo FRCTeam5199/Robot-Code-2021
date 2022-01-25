@@ -13,8 +13,8 @@ import frc.vision.camera.IVision;
 
 public class CompetitionRobot2021 extends DefaultConfig {
     public CompetitionRobot2021() {
-        ENABLE_DRIVE = true;
-        ENABLE_INTAKE = false;
+        ENABLE_DRIVE = false;
+        ENABLE_INTAKE = true;
         ENABLE_TURRET = true;
         ENABLE_SHOOTER = true;
         ENABLE_HOPPER = true;
@@ -24,7 +24,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         ENABLE_HOOD_ARTICULATION = true;
         ENABLE_MEMES = false;
         ENABLE_OVERHEAT_DETECTION = false;
-        ENABLE_INTAKE_SERVOS = true;
+        ENABLE_INTAKE_SERVOS = false;
 
         DRIVE_INVERT_LEFT = true;
         DRIVE_INVERT_RIGHT = false;
@@ -56,7 +56,7 @@ public class CompetitionRobot2021 extends DefaultConfig {
         //UI Styles
         DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.STANDARD;
         SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD_OFFSEASON_2021;//ShootingControlStyles.ACCURACY_2021;
-        INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.ROBOT_2021;
+        INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
         IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
         AUTON_TYPE = AutonType.POINT_TO_POINT;

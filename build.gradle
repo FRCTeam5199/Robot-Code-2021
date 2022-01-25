@@ -1,9 +1,6 @@
-import edu.wpi.first.gradlerio.GradleRIOPlugin
-
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2021.2.2"
-    id 'maven'
+    id "edu.wpi.first.GradleRIO" version "2021.3.1"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -40,19 +37,21 @@ deploy {
     }
 }
 
+// Set this to true to enable desktop support.
+def includeDesktopSupport = false
+
 repositories {
-    jcenter()
+    //jcenter()
     maven {
         name 'm2-dv8tion'
         url 'https://m2.dv8tion.net/releases'
     }
 }
 
-// Set this to true to enable desktop support.
-def includeDesktopSupport = true
+test {
+    useJUnitPlatform()
+}
 
-// Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
-// Also defines JUnit 4.
 dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
     implementation wpi.deps.wpilib()
@@ -63,13 +62,6 @@ dependencies {
     implementation wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
-
-    //testImplementation 'junit:junit:4.12'
-
-    // Enable simulation gui support. Must check the box in vscode to enable support
-    // upon debugging
-    simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
-    simulation wpi.deps.sim.driverstation(wpi.platforms.desktop, false)
 
     // Websocket extensions require additional configuration.
     // simulation wpi.deps.sim.ws_server(wpi.platforms.desktop, false)
@@ -98,6 +90,20 @@ dependencies {
     implementation("javax.websocket:javax.websocket-api:1.1")
     implementation("org.glassfish.tyrus.bundles:tyrus-standalone-client:1.17")
     implementation("org.slf4j:slf4j-simple:1.7.30")
+
+    implementation platform("org.junit:junit-bom:5.8.2")
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+    // Enable simulation gui support. Must check the box in vscode to enable support
+    // upon debugging
+    simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
+    simulation wpi.deps.sim.driverstation(wpi.platforms.desktop, false)
+
+    // Websocket extensions require additional configuration.
+    // simulation wpi.deps.sim.ws_server(wpi.platforms.desktop, false)
+    // simulation wpi.deps.sim.ws_client(wpi.platforms.desktop, false)
 }
 
 // Simulation configuration (e.g. environment variables).
@@ -111,9 +117,5 @@ sim {
 // knows where to look for our Robot Class.
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
-}
-
-tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:deprecation"
+    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }

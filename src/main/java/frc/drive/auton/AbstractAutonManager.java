@@ -87,7 +87,10 @@ public abstract class AbstractAutonManager implements ISubsystem {
             Trajectory.State goal = trajectory.sample(timer.get());
             if (robotSettings.ENABLE_IMU) {
                 System.out.println("I am currently at (" + DRIVING_CHILD.guidance.fieldX() + "," + DRIVING_CHILD.guidance.fieldY() + ")\nI am going to (" + goal.poseMeters.getX() + "," + goal.poseMeters.getY() + ")");
-                DRIVING_CHILD.driveWithChassisSpeeds(controller.calculate(DRIVING_CHILD.guidance.robotPose, goal));
+                if (robotSettings.DRIVE_BASE == AbstractDriveManager.DriveBases.STANDARD)
+                    DRIVING_CHILD.driveWithChassisSpeeds(controller.calculate(DRIVING_CHILD.guidance.robotPose, goal));
+                else
+                    DRIVING_CHILD.driveWithChassisSpeeds(controller.calculate(DRIVING_CHILD.guidance.robotPose, goal)); //might need to be different
             }
             if (timer.get() > trajectory.getTotalTimeSeconds()) {
                 onFinish();

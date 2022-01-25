@@ -35,6 +35,7 @@ public class Swerve2021 extends DefaultConfig {
         USE_PHOTONVISION = false;
         ENABLE_IMU = true;
         IMU_NAVX_PORT = I2C.Port.kMXP;
+        IMU_ID = 22; //pigeon
 
         //SHOOTER
         SHOOTER_MOTOR_TYPE = AbstractMotorController.SupportedMotors.CAN_SPARK_MAX;//SupportedMotors.TALON_FX;
@@ -52,12 +53,12 @@ public class Swerve2021 extends DefaultConfig {
         SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.ACCURACY_2021;//ShootingControlStyles.ACCURACY_2021;
         INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
         DRIVE_MOTOR_TYPE = AbstractMotorController.SupportedMotors.TALON_FX;
-        IMU_TYPE = AbstractIMU.SupportedIMU.NAVX2;
+        IMU_TYPE = AbstractIMU.SupportedIMU.PIGEON;
         DRIVE_BASE = AbstractDriveManager.DriveBases.SWIVEL;
 
-        AUTON_TYPE = AutonType.GALACTIC_SEARCH;
+        AUTON_TYPE = AutonType.FOLLOW_PATH;
 
-        DRIVEBASE_PID = new PID(0.0075, 0, 0.002);
+        DRIVEBASE_PID = new PID(0.0000001, 0, 0.0001);
         SHOOTER_PID = new PID(0.001, 0.0000005, 0.03, 0);//Accuracy. SPEED = new PID(0.0004, 0.0000007, 0.03, 0);
         SHOOTER_CONST_SPEED_PID = new PID(0.0001, 0.0000007, 0.05, 0);
         SHOOTER_RECOVERY_PID = SHOOTER_PID;

@@ -5,8 +5,8 @@ import frc.misc.UserInterface;
 
 import java.util.function.Consumer;
 
-import static frc.robot.Robot.*;
-import static frc.robot.Robot.shooter;
+import static frc.robot.Robot.hopper;
+import static frc.robot.Robot.robotSettings;
 
 
 /**

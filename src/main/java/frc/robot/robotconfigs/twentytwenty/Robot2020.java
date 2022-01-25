@@ -27,7 +27,7 @@ public class Robot2020 extends DefaultConfig {
         ENABLE_HOOD_ARTICULATION = true;
         ENABLE_PNOOMATICS = true;
         ENABLE_CLIMBER = true;
-        ENABLE_BUDDY_CLIMBER = true;
+        ENABLE_BUDDY_CLIMBER = false;
 
         AUTON_COMPLETE_NOISE = "";//"LevelComplete_4_6000";
 
@@ -66,7 +66,7 @@ public class Robot2020 extends DefaultConfig {
         CLIMBER_MOTOR_IDS = new int[]{8, 9};
 
         //UI Style
-        DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.BALL_SHIFTING_STANDARD;
+        DRIVE_STYLE = AbstractDriveManager.DriveControlStyles.BALL_SHIFTING_EXPERIMENTAL;
         SHOOTER_CONTROL_STYLE = Shooter.ShootingControlStyles.STANDARD_OFFSEASON_2021;//OFFSEASON_2021;
         INTAKE_CONTROL_STYLE = Intake.IntakeControlStyles.STANDARD;
         CLIMBER_CONTROL_STYLE = Climber.ClimberControlStyles.STANDARD;

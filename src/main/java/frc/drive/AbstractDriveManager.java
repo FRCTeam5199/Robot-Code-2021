@@ -109,6 +109,7 @@ public abstract class AbstractDriveManager implements ISubsystem {
     public enum DriveControlStyles {
         STANDARD,
         BALL_SHIFTING_STANDARD,
+        BALL_SHIFTING_EXPERIMENTAL,
         EXPERIMENTAL,
         MARIO_KART,
         DRUM_TIME,

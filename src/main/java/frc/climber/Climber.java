@@ -2,7 +2,6 @@ package frc.climber;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.ballstuff.intaking.Intake;
 import frc.controllers.BaseController;
 import frc.controllers.ControllerEnums.ButtonStatus;
 import frc.misc.ISubsystem;

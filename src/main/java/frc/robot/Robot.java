@@ -133,7 +133,7 @@ public class Robot extends TimedRobot {
                     autonManager = new frc.drive.auton.galacticsearch.AutonManager(driver);
                     break;
                 case FOLLOW_PATH:
-                    autonManager = new frc.drive.auton.followtrajectory.AutonManager(Trajectories.SLALOM, driver);//Trajectories.TEST_PATH, driver);
+                    autonManager = new frc.drive.auton.followtrajectory.AutonManager(Trajectories.TEST_SWERVE, driver);//Trajectories.TEST_PATH, driver);
                     break;
                 case GALACTIC_SCAM:
                     autonManager = new frc.drive.auton.galacticsearchtest.AutonManager(driver);

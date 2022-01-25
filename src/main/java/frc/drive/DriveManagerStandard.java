@@ -2,6 +2,7 @@ package frc.drive;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
@@ -23,6 +24,7 @@ import frc.motors.followers.SparkFollowerMotorsController;
 import frc.motors.followers.TalonFollowerMotorController;
 import frc.selfdiagnostics.MotorDisconnectedIssue;
 import frc.telemetry.RobotTelemetryStandard;
+import frc.vision.camera.IVision;
 
 import static frc.robot.Robot.pneumatics;
 import static frc.robot.Robot.robotSettings;
@@ -49,7 +51,9 @@ public class DriveManagerStandard extends AbstractDriveManager {
     public AbstractFollowerMotorController followerL, followerR;
     private BaseController controller;
     private PID lastPID = PID.EMPTY_PID;
+    private PIDController HEADING_PID;
     private boolean ballShifterEnabled = false;
+    private IVision visionCamera;
 
     public DriveManagerStandard() throws UnsupportedOperationException, InitializationFailureException {
         super();
@@ -67,6 +71,9 @@ public class DriveManagerStandard extends AbstractDriveManager {
         initPID();
         initMisc();
         createTelem();
+        if (robotSettings.ENABLE_VISION) {
+            visionCamera = IVision.manufactureGoalCamera(robotSettings.GOAL_CAMERA_TYPE);
+        }
     }
 
     @Override
@@ -125,6 +132,17 @@ public class DriveManagerStandard extends AbstractDriveManager {
                 } else if (controller.get(ControllerEnums.XBoxPOVButtons.UP) == ButtonStatus.DOWN) {
                     pneumatics.ballShifter.set(DoubleSolenoid.Value.kReverse);
                     ballShifterEnabled = false;
+                }
+            }
+            case BALL_SHIFTING_EXPERIMENTAL: {
+                double invertedDrive = robotSettings.DRIVE_INVERT_LEFT ? -1 : 1;
+                double dynamic_gear_R = controller.get(XBoxButtons.RIGHT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+                double dynamic_gear_L = controller.get(XBoxButtons.LEFT_BUMPER) == ButtonStatus.DOWN ? 0.25 : 1;
+
+                if (controller.get(XboxAxes.LEFT_TRIGGER) > robotSettings.XBOX_CONTROLLER_DEADZONE) {
+                    double neededRot = adjustedRotation(HEADING_PID.calculate(-visionCamera.getAngle()));
+                    driveCringe(invertedDrive * dynamic_gear_L * controller.get(XboxAxes.LEFT_JOY_Y), -neededRot * dynamic_gear_R);
+                    break;
                 }
             }
             case STANDARD: {
@@ -386,6 +404,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
      */
     private void initPID() {
         setPID(robotSettings.DRIVEBASE_PID);
+        HEADING_PID = new PIDController(0.8, 0.01, 0.00003);
     }
 
     /**
@@ -398,6 +417,7 @@ public class DriveManagerStandard extends AbstractDriveManager {
         switch (robotSettings.DRIVE_STYLE) {
             case EXPERIMENTAL:
             case BALL_SHIFTING_STANDARD:
+            case BALL_SHIFTING_EXPERIMENTAL:
             case STANDARD:
                 controller = BaseController.createOrGet(robotSettings.XBOX_CONTROLLER_USB_SLOT, BaseController.Controllers.XBOX_CONTROLLER);
                 break;
